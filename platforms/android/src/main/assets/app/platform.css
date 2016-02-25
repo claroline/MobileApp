@@ -30,3 +30,8 @@
 	display: block;
 	width: 100%
 }
+
+.center{
+	vertical-align : middle;
+	width:95%;
+}

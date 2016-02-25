@@ -30,18 +30,5 @@ export class UserService {
     });
   }
 
-  register(user: User) {
-    var headers = new Headers();
-    headers.append("Content-Type", "application/json");
-
-    return this._http.post(
-      Config.apiUrl + "Users",
-      JSON.stringify({
-        Username: user.email,
-        Email: user.email,
-        Password: user.password
-      }),
-      { headers: headers }
-    );
-  }
+  
 }

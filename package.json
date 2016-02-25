@@ -1,10 +1,10 @@
 {
-	"name": "Groceries",
+	"name": "Claroline",
 	"version": "1.0.0",
-	"description": "A NativeScript-built iOS and Android app for managing grocery lists",
+	"description": "A NativeScript-Angular2 built iOS and Android app for managing Claroline Connect",
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/nativescript/sample-Groceries.git"
+		"url": "https://github.com/ngydat/connect.git"
 	},
 	"keywords": [
 		"NativeScript"
@@ -12,9 +12,9 @@
 	"author": "TJ VanToll <tj.vantoll@gmail.com> (http://tjvantoll.com/)",
 	"license": "MIT",
 	"bugs": {
-		"url": "https://github.com/nativescript/sample-Groceries/issues"
+		"url": "https://github.com/ngydat/connect/issues"
 	},
-	"homepage": "https://github.com/nativescript/sample-Groceries/groceries",
+	"homepage": "https://github.com/ngydat/connect",
 	"nativescript": {
 		"id": "org.nativescript.groceries",
 		"tns-android": {
