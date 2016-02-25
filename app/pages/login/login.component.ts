@@ -30,8 +30,4 @@ export class LoginPage {
         (error) => alert(error)
       );
   }
-
-  register() {
-    this._router.navigate(["Register"]);
-  }
 }
