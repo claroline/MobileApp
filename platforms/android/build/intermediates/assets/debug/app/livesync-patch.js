@@ -1,0 +1,26 @@
+"use strict";
+var application = require("application");
+global.__onLiveSync = function () {
+    if (application.android) {
+        //Force an app restart even for page reload livesyncs
+        var android = global.android;
+        var System = global.java.lang.System;
+        var Context = android.content.Context;
+        var Intent = android.content.Intent;
+        var PendingIntent = android.app.PendingIntent;
+        var AlarmManager = android.app.AlarmManager;
+        var context = application.android.context;
+        var launchIntent = context.getPackageManager().getLaunchIntentForPackage(context.getPackageName());
+        launchIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |
+            Intent.FLAG_ACTIVITY_CLEAR_TASK |
+            Intent.FLAG_ACTIVITY_NEW_TASK);
+        var pendingIntent = PendingIntent.getActivity(context, 123456, launchIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+        var alarmManager = context.getSystemService(Context.ALARM_SERVICE);
+        alarmManager.set(AlarmManager.RTC, System.currentTimeMillis(), pendingIntent);
+        android.os.Process.killProcess(android.os.Process.myPid());
+    }
+    else {
+        console.log("Single page update syncs not supported.");
+    }
+};
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoibGl2ZXN5bmMtcGF0Y2guanMiLCJzb3VyY2VSb290IjoiIiwic291cmNlcyI6WyJsaXZlc3luYy1wYXRjaC50cyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiO0FBQUEsSUFBWSxXQUFXLFdBQU0sYUFBYSxDQUFDLENBQUE7QUFHM0MsTUFBTSxDQUFDLFlBQVksR0FBRztJQUNsQixFQUFFLENBQUMsQ0FBQyxXQUFXLENBQUMsT0FBTyxDQUFDLENBQUMsQ0FBQztRQUN0QixxREFBcUQ7UUFDckQsSUFBTSxPQUFPLEdBQUcsTUFBTSxDQUFDLE9BQU8sQ0FBQztRQUMvQixJQUFNLE1BQU0sR0FBRyxNQUFNLENBQUMsSUFBSSxDQUFDLElBQUksQ0FBQyxNQUFNLENBQUM7UUFDdkMsSUFBTSxPQUFPLEdBQUcsT0FBTyxDQUFDLE9BQU8sQ0FBQyxPQUFPLENBQUM7UUFDeEMsSUFBTSxNQUFNLEdBQUcsT0FBTyxDQUFDLE9BQU8sQ0FBQyxNQUFNLENBQUM7UUFDdEMsSUFBTSxhQUFhLEdBQUcsT0FBTyxDQUFDLEdBQUcsQ0FBQyxhQUFhLENBQUM7UUFDaEQsSUFBTSxZQUFZLEdBQUcsT0FBTyxDQUFDLEdBQUcsQ0FBQyxZQUFZLENBQUM7UUFFOUMsSUFBTSxPQUFPLEdBQUcsV0FBVyxDQUFDLE9BQU8sQ0FBQyxPQUFPLENBQUM7UUFDNUMsSUFBTSxZQUFZLEdBQUcsT0FBTyxDQUFDLGlCQUFpQixFQUFFLENBQUMseUJBQXlCLENBQUMsT0FBTyxDQUFDLGNBQWMsRUFBRSxDQUFDLENBQUM7UUFFckcsWUFBWSxDQUFDLFFBQVEsQ0FDakIsTUFBTSxDQUFDLHVCQUF1QjtZQUM5QixNQUFNLENBQUMsd0JBQXdCO1lBQy9CLE1BQU0sQ0FBQyxzQkFBc0IsQ0FDaEMsQ0FBQztRQUNGLElBQU0sYUFBYSxHQUFHLGFBQWEsQ0FBQyxXQUFXLENBQUMsT0FBTyxFQUFFLE1BQU0sRUFBRSxZQUFZLEVBQ3pFLGFBQWEsQ0FBQyxtQkFBbUIsQ0FBQyxDQUFDO1FBRXZDLElBQU0sWUFBWSxHQUFHLE9BQU8sQ0FBQyxnQkFBZ0IsQ0FBQyxPQUFPLENBQUMsYUFBYSxDQUFDLENBQUM7UUFDckUsWUFBWSxDQUFDLEdBQUcsQ0FBQyxZQUFZLENBQUMsR0FBRyxFQUFFLE1BQU0sQ0FBQyxpQkFBaUIsRUFBRSxFQUFFLGFBQWEsQ0FBQyxDQUFDO1FBRTlFLE9BQU8sQ0FBQyxFQUFFLENBQUMsT0FBTyxDQUFDLFdBQVcsQ0FBQyxPQUFPLENBQUMsRUFBRSxDQUFDLE9BQU8sQ0FBQyxLQUFLLEVBQUUsQ0FBQyxDQUFDO0lBQy9ELENBQUM7SUFBQyxJQUFJLENBQUMsQ0FBQztRQUNKLE9BQU8sQ0FBQyxHQUFHLENBQUMseUNBQXlDLENBQUMsQ0FBQztJQUMzRCxDQUFDO0FBQ0wsQ0FBQyxDQUFBIn0=
