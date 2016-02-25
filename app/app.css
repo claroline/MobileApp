@@ -8,12 +8,7 @@ TextField {
     margin: 10;
     padding: 10;
 }
-Image {
-    margin-top: 20;
-    margin-left: 0;
-    margin-right: 0;
-    margin-bottom: 80;
-}
+
 Button {
     margin: 10;
     padding: 10;
@@ -28,3 +23,46 @@ ActionBar {
 .medium-spacing {
     margin: 10;
 }
+
+.btn {
+    display: inline-block;
+    margin-bottom: 0;
+    font-weight: 400;
+    text-align: center;
+    vertical-align: middle;
+    -ms-touch-action: manipulation;
+    touch-action: manipulation;
+    cursor: pointer;
+    background-image: none;
+    border: 1px solid transparent;
+    white-space: nowrap;
+    padding: 6px 12px;
+    font-size: 14px;
+    line-height: 1.42857143;
+    border-radius: 4px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none
+}
+
+.btn-success {
+    color: #fff;
+    background-color: #5cb85c;
+    border-color: #4cae4c
+}
+
+.btn-block {
+    display: block;
+    width: 100%
+}
+
+#login{
+    width:95%;
+}
+
+#claroline{
+     max-height: 50%;
+    width:auto;
+}
+

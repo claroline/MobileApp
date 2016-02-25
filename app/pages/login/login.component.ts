@@ -19,7 +19,7 @@ export class LoginPage {
     this.user = new User();
 
     // Hardcode a few values to make testing easy
-    this.user.email = "nativescriptrocks@telerik.com";
+    this.user.email = "formalibre@claroline.net";
     this.user.password = "password";
   }
 
