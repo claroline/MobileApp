@@ -218,13 +218,13 @@
     <string name="abc_toolbar_collapse_description">Collapse</string>
     <!-- From: file:/home/dat/nativescript_angular2/claroline/platforms/android/src/main/res/values/strings.xml -->
     <eat-comment/>
-    <string name="app_name">claroline</string>
+    <string name="app_name">Claroline Connect</string>
     <!-- From: file:/home/dat/nativescript_angular2/claroline/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.1.1/res/values/values.xml -->
     <eat-comment/>
     <string name="status_bar_notification_info_overflow">999+</string>
     <!-- From: file:/home/dat/nativescript_angular2/claroline/platforms/android/src/main/res/values/strings.xml -->
     <eat-comment/>
-    <string name="title_activity_kimera">claroline</string>
+    <string name="title_activity_kimera">Claroline Connect</string>
     <!-- From: file:/home/dat/nativescript_angular2/claroline/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.1.1/res/values/values.xml -->
     <eat-comment/>
     <style name="AlertDialog.AppCompat" parent="Base.AlertDialog.AppCompat"/>

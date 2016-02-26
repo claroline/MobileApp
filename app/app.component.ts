@@ -5,6 +5,7 @@ import {NS_ROUTER_DIRECTIVES} from "nativescript-angular/router";
 
 import {LoginPage} from "./pages/login/login.component";
 import {ListPage} from "./pages/list/list.component";
+import {HomePage} from './pages/home/home.component';
 
 @Component({
     selector: "main",
@@ -21,7 +22,7 @@ import {ListPage} from "./pages/list/list.component";
 })
 @RouteConfig([
     { path: "/", component: LoginPage, as: "Login" },
-    { path: "/List", component: ListPage, as: "List" }
+    { path: "/Home", component: HomePage, as: "Home" }
 ])
 export class AppComponent {
 	

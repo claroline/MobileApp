@@ -19,15 +19,19 @@ export class LoginPage {
     this.user = new User();
 
     // Hardcode a few values to make testing easy
-    this.user.email = "formalibre@claroline.net";
-    this.user.password = "password";
+    this.user.username = "stan";
+    this.user.password = "stan";
   }
 
   signIn() {
+    this._router.navigate(["Home"]);
+    /*
     this._userService.login(this.user)
       .subscribe(
         () => this._router.navigate(["List"]),
-        (error) => alert(error)
+        (error) => alert("Mauvais nom d'utilisateur et/ou mot de passe")
       );
+     */
   }
+
 }
