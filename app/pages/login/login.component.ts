@@ -24,14 +24,14 @@ export class LoginPage {
   }
 
   signIn() {
-    this._router.navigate(["Home"]);
-    /*
+    //this._router.navigate(["Home"]);
+    
     this._userService.login(this.user)
       .subscribe(
         () => this._router.navigate(["List"]),
         (error) => alert("Mauvais nom d'utilisateur et/ou mot de passe")
       );
-     */
+    
   }
 
 }
