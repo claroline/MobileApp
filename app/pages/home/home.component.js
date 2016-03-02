@@ -9,17 +9,22 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 var core_1 = require("angular2/core");
+var router_1 = require("angular2/router");
+var user_service_1 = require("../../shared/user/user.service");
 var HomePage = (function () {
-    function HomePage() {
+    function HomePage(_userService, _router) {
+        this._userService = _userService;
+        this._router = _router;
     }
     HomePage = __decorate([
         core_1.Component({
             selector: 'home',
-            templateUrl: 'pages/home/home.html'
+            templateUrl: 'pages/home/home.html',
+            providers: [user_service_1.UserService]
         }), 
-        __metadata('design:paramtypes', [])
+        __metadata('design:paramtypes', [user_service_1.UserService, router_1.Router])
     ], HomePage);
     return HomePage;
 }());
 exports.HomePage = HomePage;
-//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiaG9tZS5jb21wb25lbnQuanMiLCJzb3VyY2VSb290IjoiIiwic291cmNlcyI6WyJob21lLmNvbXBvbmVudC50cyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiOzs7Ozs7Ozs7O0FBQUEscUJBQXdCLGVBQWUsQ0FBQyxDQUFBO0FBVXhDO0lBRUM7SUFBYyxDQUFDO0lBUmhCO1FBQUMsZ0JBQVMsQ0FBQztZQUNWLFFBQVEsRUFBQyxNQUFNO1lBQ2YsV0FBVyxFQUFDLHNCQUFzQjtTQUNsQyxDQUFDOztnQkFBQTtJQU1GLGVBQUM7QUFBRCxDQUFDLEFBSEQsSUFHQztBQUhZLGdCQUFRLFdBR3BCLENBQUEifQ==
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiaG9tZS5jb21wb25lbnQuanMiLCJzb3VyY2VSb290IjoiIiwic291cmNlcyI6WyJob21lLmNvbXBvbmVudC50cyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiOzs7Ozs7Ozs7O0FBQUEscUJBQXdCLGVBQWUsQ0FBQyxDQUFBO0FBRXhDLHVCQUFxQixpQkFBaUIsQ0FBQyxDQUFBO0FBQ3ZDLDZCQUEwQixnQ0FBZ0MsQ0FBQyxDQUFBO0FBUzNEO0lBRUMsa0JBQ1MsWUFBMEIsRUFDMUIsT0FBZ0I7UUFEaEIsaUJBQVksR0FBWixZQUFZLENBQWM7UUFDMUIsWUFBTyxHQUFQLE9BQU8sQ0FBUztJQUN6QixDQUFDO0lBWkY7UUFBQyxnQkFBUyxDQUFDO1lBQ1YsUUFBUSxFQUFDLE1BQU07WUFDZixXQUFXLEVBQUMsc0JBQXNCO1lBQ2xDLFNBQVMsRUFBQyxDQUFDLDBCQUFXLENBQUM7U0FDdkIsQ0FBQzs7Z0JBQUE7SUFTRixlQUFDO0FBQUQsQ0FBQyxBQU5ELElBTUM7QUFOWSxnQkFBUSxXQU1wQixDQUFBIn0=

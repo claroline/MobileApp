@@ -20,5 +20,9 @@ export class UserService {
     );
   }
 
+  getNotifications(){
+    alert("COUCOU");
+  }
+
   
 }

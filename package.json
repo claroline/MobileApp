@@ -1,46 +1,47 @@
 {
-	"name": "Claroline",
-	"version": "1.0.0",
-	"description": "A NativeScript-Angular2 built iOS and Android app for managing Claroline Connect",
-	"repository": {
-		"type": "git",
-		"url": "https://github.com/ngydat/connect.git"
-	},
-	"keywords": [
-		"NativeScript"
-	],
-	"author": "TJ VanToll <tj.vantoll@gmail.com> (http://tjvantoll.com/)",
-	"license": "MIT",
-	"bugs": {
-		"url": "https://github.com/ngydat/connect/issues"
-	},
-	"homepage": "https://github.com/ngydat/connect",
-	"nativescript": {
-		"id": "org.nativescript.groceries",
-		"tns-android": {
-			"version": "1.6.2"
-		},
-		"tns-ios": {
-			"version": "1.6.0"
-		}
-	},
-	"dependencies": {
-		"email-validator": "^1.0.3",
-		"nativescript-social-share": "^1.1.0",
-		"tns-core-modules": "^1.7.0-angular-0",
-		"angular2": "2.0.0-beta.7",
-		"nativescript-angular": "0.0.34",
-		"parse5": "1.4.2",
-		"punycode": "1.3.2",
-		"querystring": "0.2.0",
-		"url": "0.10.3",
-		"reflect-metadata": "0.1.2",
-		"rxjs": "5.0.0-beta.2",
-		"zone.js": "0.5.15"
-	},
-	"devDependencies": {
-		"nativescript-dev-typescript": "^0.3.1",
-		"shelljs": "^0.5.3",
-		"typescript": "^1.8.2"
-	}
+  "name": "Claroline",
+  "version": "1.0.0",
+  "description": "A NativeScript-Angular2 built iOS and Android app for managing Claroline Connect",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ngydat/connect.git"
+  },
+  "keywords": [
+    "NativeScript"
+  ],
+  "author": "TJ VanToll <tj.vantoll@gmail.com> (http://tjvantoll.com/)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ngydat/connect/issues"
+  },
+  "homepage": "https://github.com/ngydat/connect",
+  "nativescript": {
+    "id": "org.nativescript.groceries",
+    "tns-android": {
+      "version": "1.6.2"
+    },
+    "tns-ios": {
+      "version": "1.6.0"
+    }
+  },
+  "dependencies": {
+    "angular2": "2.0.0-beta.7",
+    "email-validator": "^1.0.3",
+    "nativescript-angular": "0.0.34",
+    "nativescript-push-notifications": "0.0.15",
+    "nativescript-social-share": "^1.1.0",
+    "parse5": "1.4.2",
+    "punycode": "1.3.2",
+    "querystring": "0.2.0",
+    "reflect-metadata": "0.1.2",
+    "rxjs": "5.0.0-beta.2",
+    "tns-core-modules": "^1.7.0-angular-0",
+    "url": "0.10.3",
+    "zone.js": "0.5.15"
+  },
+  "devDependencies": {
+    "nativescript-dev-typescript": "^0.3.1",
+    "shelljs": "^0.5.3",
+    "typescript": "^1.8.2"
+  }
 }

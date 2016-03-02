@@ -1,0 +1,48 @@
+{
+  "name": "nativescript-push-notifications",
+  "version": "0.0.15",
+  "main": "push-plugin.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/NativeScript/push-plugin.git"
+  },
+  "license": "Apache-2.0",
+  "nativescript": {
+    "platforms": {
+      "ios": "1.0.0",
+      "android": "1.0.0"
+    }
+  },
+  "gitHead": "b16bf4c73887e9e05266792246a383533ff0060a",
+  "description": "The code for the Push Plugin for NativeScript.",
+  "bugs": {
+    "url": "https://github.com/NativeScript/push-plugin/issues"
+  },
+  "homepage": "https://github.com/NativeScript/push-plugin",
+  "_id": "nativescript-push-notifications@0.0.15",
+  "scripts": {},
+  "_shasum": "90cd590ed42d67f873c041f248b4bb5b7142efab",
+  "_from": "nativescript-push-notifications@latest",
+  "_npmVersion": "1.4.28",
+  "_npmUser": {
+    "name": "everlive-system",
+    "email": "alexander.filipov@telerik.com"
+  },
+  "maintainers": [
+    {
+      "name": "everlive-system",
+      "email": "alexander.filipov@telerik.com"
+    }
+  ],
+  "dist": {
+    "shasum": "90cd590ed42d67f873c041f248b4bb5b7142efab",
+    "tarball": "http://registry.npmjs.org/nativescript-push-notifications/-/nativescript-push-notifications-0.0.15.tgz"
+  },
+  "_npmOperationalInternal": {
+    "host": "packages-6-west.internal.npmjs.com",
+    "tmp": "tmp/nativescript-push-notifications-0.0.15.tgz_1455025459157_0.49441473302431405"
+  },
+  "directories": {},
+  "_resolved": "https://registry.npmjs.org/nativescript-push-notifications/-/nativescript-push-notifications-0.0.15.tgz",
+  "readme": "ERROR: No README data found!"
+}
