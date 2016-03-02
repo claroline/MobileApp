@@ -2,7 +2,7 @@
 	<StackLayout>
 	  <Image src="~/claroline3.png" id="claroline"></Image>
 	  <TextField [(ngModel)]="user.username" id="username" hint="Nom d'utilisateur ou courriel" keyboardType="email" autocorrect="false" autocapitalizationType="none"></TextField>
-	  <TextField [(ngModel)]="user.password" id="password" secure="true"  hint="Password"></TextField>
+	  <TextField [(ngModel)]="user.password" id="password" secure="true"  hint="Mot de passe"></TextField>
 
 	  <Button text="Connexion" (tap)="signIn()" class="btn btn-success btn-block" id="login"></Button>
 	</StackLayout>
