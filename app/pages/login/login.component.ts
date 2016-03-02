@@ -19,8 +19,8 @@ export class LoginPage {
     this.user = new User();
 
     // Hardcode a few values to make testing easy
-    this.user.username = "dat";
-    this.user.password = "dat";
+    //this.user.username = "dat";
+    //this.user.password = "dat";
   }
 
   signIn() {
@@ -28,7 +28,7 @@ export class LoginPage {
     this._userService.login(this.user)
       .subscribe(
         () => this._router.navigate(["Home"]),
-        (error) => alert(JSON.stringify(error))
+        (error) => alert("Mauvais nom d'utilisateur et/ou mot de passe !")
       );
     
   }
