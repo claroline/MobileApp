@@ -17,20 +17,13 @@ var UserService = (function () {
         this._http = _http;
     }
     UserService.prototype.login = function (user) {
-        var headers = new http_1.Headers();
-        headers.append("Content-Type", "application/x-www-form-urlencoded");
-        return this._http.post(config_1.Config.apiUrl + "oauth/v2/token", JSON.stringify({
-            username: user.username,
-            password: user.password,
-            grant_type: "password",
-            client_id: "427148477482-rr9vl5g6cgtam2afro3l4vne3mpkoo1b.apps.googleusercontent.com"
-        }), { headers: headers })
-            .map(function (res) { return res.json(); })
-            .map(function (data) {
-            // TODO: This shouldn’t be necessary
-            data = JSON.parse(data);
-            config_1.Config.token = data.Result.access_token;
-        });
+        return this._http.get(config_1.Config.apiUrl + "oauth/v2/token?client_id=1_4li11e6wsm0woo8ws0s0c8s0oc00gwwoggwgc0wo88o0gkos08&client_secret=55zefc59r6o08cgk4okk80www4kkwwwk04gcw0s4wggkow0gc4&grant_type=password&username=" + user.username + "&password=" + user.password) /*
+        .map(res => res.json())
+        .map(data => {
+         
+    
+          Config.token = data.Result.access_token;
+        })*/;
     };
     UserService = __decorate([
         core_1.Injectable(), 
@@ -39,4 +32,4 @@ var UserService = (function () {
     return UserService;
 }());
 exports.UserService = UserService;
-//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoidXNlci5zZXJ2aWNlLmpzIiwic291cmNlUm9vdCI6IiIsInNvdXJjZXMiOlsidXNlci5zZXJ2aWNlLnRzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiI7Ozs7Ozs7Ozs7QUFBQSxxQkFBeUIsZUFBZSxDQUFDLENBQUE7QUFDekMscUJBQTRCLGVBQWUsQ0FBQyxDQUFBO0FBRTVDLHVCQUFxQixXQUFXLENBQUMsQ0FBQTtBQUNqQyxRQUFPLHVCQUF1QixDQUFDLENBQUE7QUFLL0I7SUFDRSxxQkFBb0IsS0FBVztRQUFYLFVBQUssR0FBTCxLQUFLLENBQU07SUFBRyxDQUFDO0lBRW5DLDJCQUFLLEdBQUwsVUFBTSxJQUFVO1FBQ2QsSUFBSSxPQUFPLEdBQUcsSUFBSSxjQUFPLEVBQUUsQ0FBQztRQUM1QixPQUFPLENBQUMsTUFBTSxDQUFDLGNBQWMsRUFBRSxtQ0FBbUMsQ0FBQyxDQUFDO1FBRXBFLE1BQU0sQ0FBQyxJQUFJLENBQUMsS0FBSyxDQUFDLElBQUksQ0FDcEIsZUFBTSxDQUFDLE1BQU0sR0FBRyxnQkFBZ0IsRUFDaEMsSUFBSSxDQUFDLFNBQVMsQ0FBQztZQUNiLFFBQVEsRUFBRSxJQUFJLENBQUMsUUFBUTtZQUN2QixRQUFRLEVBQUUsSUFBSSxDQUFDLFFBQVE7WUFDdkIsVUFBVSxFQUFFLFVBQVU7WUFDdEIsU0FBUyxFQUFFLDBFQUEwRTtTQUN0RixDQUFDLEVBQ0YsRUFBRSxPQUFPLEVBQUUsT0FBTyxFQUFFLENBQ3JCO2FBQ0EsR0FBRyxDQUFDLFVBQUEsR0FBRyxJQUFJLE9BQUEsR0FBRyxDQUFDLElBQUksRUFBRSxFQUFWLENBQVUsQ0FBQzthQUN0QixHQUFHLENBQUMsVUFBQSxJQUFJO1lBQ1Asb0NBQW9DO1lBQ3BDLElBQUksR0FBRyxJQUFJLENBQUMsS0FBSyxDQUFDLElBQUksQ0FBQyxDQUFDO1lBRXhCLGVBQU0sQ0FBQyxLQUFLLEdBQUcsSUFBSSxDQUFDLE1BQU0sQ0FBQyxZQUFZLENBQUM7UUFDMUMsQ0FBQyxDQUFDLENBQUM7SUFDTCxDQUFDO0lBekJIO1FBQUMsaUJBQVUsRUFBRTs7bUJBQUE7SUE0QmIsa0JBQUM7QUFBRCxDQUFDLEFBM0JELElBMkJDO0FBM0JZLG1CQUFXLGNBMkJ2QixDQUFBIn0=
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoidXNlci5zZXJ2aWNlLmpzIiwic291cmNlUm9vdCI6IiIsInNvdXJjZXMiOlsidXNlci5zZXJ2aWNlLnRzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiI7Ozs7Ozs7Ozs7QUFBQSxxQkFBeUIsZUFBZSxDQUFDLENBQUE7QUFDekMscUJBQTRCLGVBQWUsQ0FBQyxDQUFBO0FBRTVDLHVCQUFxQixXQUFXLENBQUMsQ0FBQTtBQUNqQyxRQUFPLHVCQUF1QixDQUFDLENBQUE7QUFLL0I7SUFDRSxxQkFBb0IsS0FBVztRQUFYLFVBQUssR0FBTCxLQUFLLENBQU07SUFBRyxDQUFDO0lBRW5DLDJCQUFLLEdBQUwsVUFBTSxJQUFVO1FBRWQsTUFBTSxDQUFDLElBQUksQ0FBQyxLQUFLLENBQUMsR0FBRyxDQUNuQixlQUFNLENBQUMsTUFBTSxHQUFHLDhLQUE4SyxHQUFDLElBQUksQ0FBQyxRQUFRLEdBQUMsWUFBWSxHQUFDLElBQUksQ0FBQyxRQUFRLENBQ3hPLENBQUE7Ozs7OztZQU1HLENBQUM7SUFDUCxDQUFDO0lBZkg7UUFBQyxpQkFBVSxFQUFFOzttQkFBQTtJQWtCYixrQkFBQztBQUFELENBQUMsQUFqQkQsSUFpQkM7QUFqQlksbUJBQVcsY0FpQnZCLENBQUEifQ==

@@ -19,17 +19,16 @@ export class LoginPage {
     this.user = new User();
 
     // Hardcode a few values to make testing easy
-    this.user.username = "stan";
-    this.user.password = "stan";
+    this.user.username = "dat";
+    this.user.password = "dat";
   }
 
   signIn() {
-    //this._router.navigate(["Home"]);
     
     this._userService.login(this.user)
       .subscribe(
         () => this._router.navigate(["Home"]),
-        (error) => alert(error)
+        (error) => alert(JSON.stringify(error))
       );
     
   }
