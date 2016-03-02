@@ -29,7 +29,7 @@ export class LoginPage {
     this._userService.login(this.user)
       .subscribe(
         () => this._router.navigate(["Home"]),
-        (error) => alert("Mauvais nom d'utilisateur et/ou mot de passe")
+        (error) => alert(error)
       );
     
   }
