@@ -2,7 +2,6 @@ import {Component} from "angular2/core";
 import {Router} from "angular2/router";
 import {User} from "../../shared/user/user";
 import {UserService} from "../../shared/user/user.service";
-import {Config} from "../../shared/config";
 
 "use strict";
 @Component({
@@ -20,8 +19,8 @@ export class LoginPage {
     this.user = new User();
 
     // Hardcode a few values to make testing easy
-    this.user.username = "dat";
-    this.user.password = "dat";
+    //this.user.username = "dat";
+    //this.user.password = "dat";
   }
 
   signIn() {

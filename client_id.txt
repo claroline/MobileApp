@@ -11,4 +11,11 @@ Claroline.net
 1_4li11e6wsm0woo8ws0s0c8s0oc00gwwoggwgc0wo88o0gkos08 (client_id)
 55zefc59r6o08cgk4okk80www4kkwwwk04gcw0s4wggkow0gc4 (client_secret)
 
+
+dat.claroline.com
+-----------------------------------------------------------------------
+
+1_49psizc7y8kko4w8w4w0w8c8w8cwscwc8owg8wgk4w8ww0owg8 (client_id)
+2swn3xys6vwgkg0w0kkg8sowc84kscswg8w84ckko8c8oswgow (client_secret)
+
 redirect url : http://claroline.net/desktop/open

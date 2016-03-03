@@ -14,14 +14,11 @@ export class UserService {
   login(user: User) {
 
     let headers = new Headers();
-    //headers.append("Content-Type","application/x-www-form-urlencoded");
     headers.append("Content-Type","application/json");
-
-    let client_id = "1_4li11e6wsm0woo8ws0s0c8s0oc00gwwoggwgc0wo88o0gkos08";
-    let client_secret = "55zefc59r6o08cgk4okk80www4kkwwwk04gcw0s4wggkow0gc4";
+    let client_id = "1_49psizc7y8kko4w8w4w0w8c8w8cwscwc8owg8wgk4w8ww0owg8";
+    let client_secret = "2swn3xys6vwgkg0w0kkg8sowc84kscswg8w84ckko8c8oswgow";
     let grant_type = "password";
     let url = Config.apiUrl+"oauth/v2/token";
-    //let body = "client_id="+client_id+"&client_secret="+client_secret+"&grant_type="+grant_type+"&username="+user.username+"&password="+user.password;
     let body = JSON.stringify({
       client_id : client_id,
       client_secret : client_secret,
