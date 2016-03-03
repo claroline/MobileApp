@@ -15,5 +15,12 @@
         sha1="d6c29804211e0647863088aef195939e297e73cc">
         <dex dex="/home/dat/nativescript_angular2/claroline/platforms/android/build/intermediates/pre-dexed/debug/nativescript-1c3344d2814813c75be623d4b90d9b073159a2e7.jar" />
     </item>
+    <item
+        jar="/home/dat/nativescript_angular2/claroline/node_modules/nativescript-push-notifications/platforms/android/libs/pushplugin.jar"
+        jumboMode="false"
+        revision="23.0.2"
+        sha1="675d57ba588768abdd43fa1f48246cc28a0e3342">
+        <dex dex="/home/dat/nativescript_angular2/claroline/platforms/android/build/intermediates/pre-dexed/nativescript-push-notifications/debug/pushplugin-83ad015b950f37a2fe4ce34801246609bdf9358c.jar" />
+    </item>
 
 </items>
