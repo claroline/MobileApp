@@ -5,32 +5,54 @@ import {Config} from "../config";
 import "rxjs/add/operator/map";
 
 "use strict";
+const CLIENT_ID = "1_49psizc7y8kko4w8w4w0w8c8w8cwscwc8owg8wgk4w8ww0owg8";
+const CLIENT_SECRET = "2swn3xys6vwgkg0w0kkg8sowc84kscswg8w84ckko8c8oswgow";
 
 
 @Injectable()
 export class UserService {
+
+
   constructor(private _http: Http) {}
 
   login(user: User) {
 
     let headers = new Headers();
     headers.append("Content-Type","application/json");
-    let client_id = "1_49psizc7y8kko4w8w4w0w8c8w8cwscwc8owg8wgk4w8ww0owg8";
-    let client_secret = "2swn3xys6vwgkg0w0kkg8sowc84kscswg8w84ckko8c8oswgow";
-    let grant_type = "password";
-    let url = Config.apiUrl+"oauth/v2/token";
     let body = JSON.stringify({
-      client_id : client_id,
-      client_secret : client_secret,
-      grant_type : grant_type,
+      client_id : CLIENT_ID,
+      client_secret : CLIENT_SECRET,
+      grant_type : "password",
       username : user.username,
       password : user.password
     });
     return this._http.post(
-      url,
+      Config.apiUrl + "oauth/v2/token",
       body,
       {headers : headers}
     );
+  }
+
+  refreshToken(){
+    let headers = new Headers();
+    headers.append("Content-Type","application/json");
+    let body = JSON.stringify({
+      client_id: CLIENT_ID,
+      client_secret: CLIENT_SECRET,
+      grant_type: "refresh_token",
+      refresh_token: Config.refresh_token
+    });
+    return this._http.post(
+      Config.apiUrl + "oauth/v2/token",
+      body,
+      { headers: headers }
+    )
+      .subscribe(
+        (data) => {
+          Config.access_token = data.json().access_token;
+          Config.refresh_token = data.json().refresh_token;
+        }
+      );
   }
 
   getNotifications(){
