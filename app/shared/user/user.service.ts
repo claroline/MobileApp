@@ -42,17 +42,11 @@ export class UserService {
       grant_type: "refresh_token",
       refresh_token: Config.refresh_token
     });
-    return this._http.post(
+     return this._http.post(
       Config.apiUrl + "oauth/v2/token",
       body,
       { headers: headers }
-    )
-      .subscribe(
-        (data) => {
-          Config.access_token = data.json().access_token;
-          Config.refresh_token = data.json().refresh_token;
-        }
-      );
+    );
   }
 
   getNotifications(){
