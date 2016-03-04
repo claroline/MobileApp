@@ -2,7 +2,7 @@
 var Config = (function () {
     function Config() {
     }
-    Config.apiUrl = "http://www.claroline.net/";
+    Config.apiUrl = "http://dat.claroline.com/";
     Config.token = "";
     return Config;
 }());
