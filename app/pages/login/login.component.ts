@@ -28,9 +28,9 @@ export class LoginPage {
     this._userService.login(this.user)
       .subscribe(
         (data) => {
-            Config.token = data.json().access_token;
+            Config.access_token = data.json().access_token;
+            Config.refresh_token = data.json().refresh_token;
             this._router.navigate(['Home']);
-            console.log(Config.token);
         },
         (error) => alert("Mauvaise combinaison nom d'utilisateur/mot de passe !")
       );

@@ -2,6 +2,7 @@ import {Page} from "ui/page";
 
 export class Config {
     static apiUrl = "http://dat.claroline.com/";
-    static token = "";
+    static access_token = "";
+    static refresh_token = "";
     static page: Page;
 }
