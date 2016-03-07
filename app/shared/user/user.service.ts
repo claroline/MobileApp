@@ -58,8 +58,13 @@ export class UserService {
   }
 
   getNotifications(){
-    alert("COUCOU");
+    return this._http.get(
+      Config.apiUrl + "icap_notification/api/notifications.json?access_token=" + Config.access_token
+    )
+    .map(res => res.json());
   }
+
+
 
   
 }

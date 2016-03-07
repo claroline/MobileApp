@@ -1,6 +1,10 @@
 <StackLayout orientation="vertical">
-	<Button text="Let's refresh token" (tap) = "refresh()"></Button>
-	<Button text="Let's display tokens" (tap)="display()"></Button>
+	<Label text="Tap the button to trigger the register function"></Label>
+	<Button text="REGISTER" (tap)="registerTap()"></Button>
+	<Label text="Your device id/token" textWrap="true"></Label>
+	<TextView text="{{registrationID}}" textWrap="true"></TextView>
+	<Label text="{{message}}" textWrap="true"></Label>
+
 </StackLayout>
 
 

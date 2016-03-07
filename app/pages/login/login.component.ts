@@ -31,9 +31,6 @@ export class LoginPage {
             Config.access_token = data.json().access_token;
             Config.refresh_token = data.json().refresh_token;
             this._router.navigate(['Home']);
-
-            console.log("Access token au login :" + Config.access_token);
-            console.log("Refresh token au login :" + Config.refresh_token);
         },
         (error) => alert("Mauvaise combinaison nom d'utilisateur/mot de passe !")
       );

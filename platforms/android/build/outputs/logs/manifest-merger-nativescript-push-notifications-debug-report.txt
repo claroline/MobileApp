@@ -6,7 +6,9 @@ ADDED from /home/dat/nativescript_angular2/mobile/platforms/android/src/main/And
 		ADDED from /home/dat/nativescript_angular2/mobile/platforms/android/src/main/AndroidManifest.xml:3:2-38
 	android:versionName
 		ADDED from /home/dat/nativescript_angular2/mobile/platforms/android/src/main/AndroidManifest.xml:5:2-27
+		INJECTED from /home/dat/nativescript_angular2/mobile/platforms/android/src/main/AndroidManifest.xml
 		ADDED from /home/dat/nativescript_angular2/mobile/platforms/android/src/main/AndroidManifest.xml:5:2-27
+		INJECTED from /home/dat/nativescript_angular2/mobile/platforms/android/src/nativescript-push-notifications/AndroidManifest.xml
 	android:versionCode
 		ADDED from /home/dat/nativescript_angular2/mobile/platforms/android/src/main/AndroidManifest.xml:4:2-25
 		INJECTED from /home/dat/nativescript_angular2/mobile/platforms/android/src/main/AndroidManifest.xml

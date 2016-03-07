@@ -12,4 +12,3 @@
     <item
         android:drawable="@drawable/common_google_signin_btn_icon_light_normal" />
 </selector>
-<!-- From: file:/home/dat/nativescript_angular2/mobile/platforms/android/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/8.4.0/res/drawable/common_google_signin_btn_icon_light.xml -->

@@ -11,18 +11,37 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var core_1 = require("angular2/core");
 var router_1 = require("angular2/router");
 var user_service_1 = require("../../shared/user/user.service");
-var config_1 = require("../../shared/config");
+var pushPlugin = require('nativescript-push-notifications');
 var HomePage = (function () {
     function HomePage(_userService, _router) {
         this._userService = _userService;
         this._router = _router;
     }
-    HomePage.prototype.refresh = function () {
-        this._userService.refreshToken();
-    };
-    HomePage.prototype.display = function () {
-        console.log("Access token après refresh :" + config_1.Config.access_token);
-        console.log("Refresh token après refresh :" + config_1.Config.refresh_token);
+    HomePage.prototype.registerTap = function (args) {
+        var settings = {
+            //Android settings
+            senderID: '427148477482',
+            notificationCallbackAndroid: function (message) {
+                alert(JSON.stringify(message));
+            },
+            //iOS settings
+            badge: true,
+            sound: true,
+            alert: true,
+            //Callback to invoke when a push is received on iOS
+            notificationCallbackIOS: function (message) {
+                alert(JSON.stringify(message));
+            }
+        };
+        pushPlugin.register(settings, function (token) {
+            if (pushPlugin.onMessageReceived) {
+                pushPlugin.onMessageReceived(settings.notificationCallbackAndroid);
+            }
+            alert('Device registered successfully : ' + token);
+        }, function (error) {
+            console.log(error);
+            alert(error.message);
+        });
     };
     HomePage = __decorate([
         core_1.Component({
@@ -35,4 +54,4 @@ var HomePage = (function () {
     return HomePage;
 }());
 exports.HomePage = HomePage;
-//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiaG9tZS5jb21wb25lbnQuanMiLCJzb3VyY2VSb290IjoiIiwic291cmNlcyI6WyJob21lLmNvbXBvbmVudC50cyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiOzs7Ozs7Ozs7O0FBQUEscUJBQXdCLGVBQWUsQ0FBQyxDQUFBO0FBRXhDLHVCQUFxQixpQkFBaUIsQ0FBQyxDQUFBO0FBQ3ZDLDZCQUEwQixnQ0FBZ0MsQ0FBQyxDQUFBO0FBQzNELHVCQUFxQixxQkFBcUIsQ0FBQyxDQUFBO0FBUzNDO0lBRUMsa0JBQ1MsWUFBMEIsRUFDMUIsT0FBZ0I7UUFEaEIsaUJBQVksR0FBWixZQUFZLENBQWM7UUFDMUIsWUFBTyxHQUFQLE9BQU8sQ0FBUztJQUN6QixDQUFDO0lBRUQsMEJBQU8sR0FBUDtRQUNDLElBQUksQ0FBQyxZQUFZLENBQUMsWUFBWSxFQUFFLENBQUM7SUFDbEMsQ0FBQztJQUVELDBCQUFPLEdBQVA7UUFDQyxPQUFPLENBQUMsR0FBRyxDQUFDLDhCQUE4QixHQUFHLGVBQU0sQ0FBQyxZQUFZLENBQUMsQ0FBQztRQUNsRSxPQUFPLENBQUMsR0FBRyxDQUFDLCtCQUErQixHQUFHLGVBQU0sQ0FBQyxhQUFhLENBQUMsQ0FBQztJQUNyRSxDQUFDO0lBckJGO1FBQUMsZ0JBQVMsQ0FBQztZQUNWLFFBQVEsRUFBQyxNQUFNO1lBQ2YsV0FBVyxFQUFDLHNCQUFzQjtZQUNsQyxTQUFTLEVBQUMsQ0FBQywwQkFBVyxDQUFDO1NBQ3ZCLENBQUM7O2dCQUFBO0lBcUJGLGVBQUM7QUFBRCxDQUFDLEFBbEJELElBa0JDO0FBbEJZLGdCQUFRLFdBa0JwQixDQUFBIn0=
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiaG9tZS5jb21wb25lbnQuanMiLCJzb3VyY2VSb290IjoiIiwic291cmNlcyI6WyJob21lLmNvbXBvbmVudC50cyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFBQSxZQUFZLENBQUM7Ozs7Ozs7Ozs7QUFFYixxQkFBd0IsZUFBZSxDQUFDLENBQUE7QUFFeEMsdUJBQXFCLGlCQUFpQixDQUFDLENBQUE7QUFDdkMsNkJBQTBCLGdDQUFnQyxDQUFDLENBQUE7QUFHM0QsSUFBSSxVQUFVLEdBQUcsT0FBTyxDQUFDLGlDQUFpQyxDQUFDLENBQUM7QUFTNUQ7SUFJQyxrQkFDUyxZQUEwQixFQUMxQixPQUFnQjtRQURoQixpQkFBWSxHQUFaLFlBQVksQ0FBYztRQUMxQixZQUFPLEdBQVAsT0FBTyxDQUFTO0lBQ3pCLENBQUM7SUFFRCw4QkFBVyxHQUFYLFVBQVksSUFBSTtRQUNmLElBQUksUUFBUSxHQUFHO1lBQ2Qsa0JBQWtCO1lBQ2xCLFFBQVEsRUFBRSxjQUFjO1lBQ3hCLDJCQUEyQixFQUFFLFVBQUMsT0FBTztnQkFDcEMsS0FBSyxDQUFDLElBQUksQ0FBQyxTQUFTLENBQUMsT0FBTyxDQUFDLENBQUMsQ0FBQztZQUNoQyxDQUFDO1lBQ0QsY0FBYztZQUNkLEtBQUssRUFBQyxJQUFJO1lBQ1YsS0FBSyxFQUFDLElBQUk7WUFDVixLQUFLLEVBQUMsSUFBSTtZQUVWLG1EQUFtRDtZQUNuRCx1QkFBdUIsRUFBRyxVQUFDLE9BQU87Z0JBQ2pDLEtBQUssQ0FBQyxJQUFJLENBQUMsU0FBUyxDQUFDLE9BQU8sQ0FBQyxDQUFDLENBQUM7WUFDaEMsQ0FBQztTQUNELENBQUM7UUFFRixVQUFVLENBQUMsUUFBUSxDQUFDLFFBQVEsRUFDM0IsVUFBQyxLQUFLO1lBQ0wsRUFBRSxDQUFDLENBQUMsVUFBVSxDQUFDLGlCQUFpQixDQUFDLENBQUMsQ0FBQztnQkFDbEMsVUFBVSxDQUFDLGlCQUFpQixDQUFDLFFBQVEsQ0FBQywyQkFBMkIsQ0FBQyxDQUFDO1lBQ3BFLENBQUM7WUFDRCxLQUFLLENBQUMsbUNBQW1DLEdBQUcsS0FBSyxDQUFDLENBQUM7UUFDcEQsQ0FBQyxFQUNELFVBQUMsS0FBSztZQUNMLE9BQU8sQ0FBQyxHQUFHLENBQUMsS0FBSyxDQUFDLENBQUM7WUFDbkIsS0FBSyxDQUFDLEtBQUssQ0FBQyxPQUFPLENBQUMsQ0FBQztRQUN0QixDQUFDLENBQUMsQ0FBQztJQUVMLENBQUM7SUE5Q0Y7UUFBQyxnQkFBUyxDQUFDO1lBQ1YsUUFBUSxFQUFDLE1BQU07WUFDZixXQUFXLEVBQUMsc0JBQXNCO1lBQ2xDLFNBQVMsRUFBQyxDQUFDLDBCQUFXLENBQUM7U0FDdkIsQ0FBQzs7Z0JBQUE7SUFnREYsZUFBQztBQUFELENBQUMsQUE3Q0QsSUE2Q0M7QUE3Q1ksZ0JBQVEsV0E2Q3BCLENBQUEifQ==

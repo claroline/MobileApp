@@ -1,12 +1,15 @@
 "use strict";
 //Import globals before the zone, so the latter can patch the global functions
 require('globals');
-//prevent a crash in zone patches
-global.HTMLElement = function () { };
-global.document = {};
+//prevent a crash in zone patches. pretend we're node.js
+global.process = {};
+var oldToString = Object.prototype.toString;
+Object.prototype.toString = function () {
+    return "[object process]";
+};
 require("zone.js/dist/zone.js");
-global.HTMLElement = undefined;
-global.document = undefined;
+Object.prototype.toString = oldToString;
+delete global.process;
 require('reflect-metadata');
 require('./polyfills/array');
 var lang_1 = require('angular2/src/facade/lang');

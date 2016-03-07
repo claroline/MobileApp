@@ -17,19 +17,21 @@
   "homepage": "https://github.com/ngydat/connect",
   "nativescript": {
     "id": "org.nativescript.groceries",
-    "tns-android": {
-      "version": "1.6.2"
-    },
     "tns-ios": {
       "version": "1.6.0"
+    },
+    "tns-android": {
+      "version": "1.6.3"
     }
   },
   "dependencies": {
     "angular2": "2.0.0-beta.7",
     "email-validator": "^1.0.3",
-    "nativescript-angular": "0.0.34",
+    "nativescript-angular": "0.0.35",
     "nativescript-push-notifications": "0.0.15",
     "nativescript-social-share": "^1.1.0",
+    "nativescript-telerik-ui": "^0.2.4",
+    "nativescript-toast": "^1.2.0",
     "parse5": "1.4.2",
     "punycode": "1.3.2",
     "querystring": "0.2.0",
@@ -42,6 +44,6 @@
   "devDependencies": {
     "nativescript-dev-typescript": "^0.3.1",
     "shelljs": "^0.5.3",
-    "typescript": "^1.8.2"
+    "typescript": "^1.8.7"
   }
 }
