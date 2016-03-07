@@ -25,6 +25,7 @@ ActionBar {
 }
 
 .btn {
+    width: 95%;
     display: inline-block;
     margin-bottom: 0;
     font-weight: 400;
@@ -43,7 +44,8 @@ ActionBar {
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
-    user-select: none
+    user-select: none;
+
 }
 
 .btn-success {
@@ -57,12 +59,13 @@ ActionBar {
     width: 100%
 }
 
-.login{
-    width:95%;
-}
 
 #claroline{
      max-height: 50%;
     width:auto;
+}
+
+#login{
+    width: 95%;
 }
 
