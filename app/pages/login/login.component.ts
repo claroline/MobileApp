@@ -20,8 +20,8 @@ export class LoginPage {
     this.user = new User();
 
     // Hardcode a few values to make testing easy
-    //this.user.username = "dat";
-    //this.user.password = "dat";
+    this.user.username = "plambin";
+    this.user.password = "plambin";
   }
 
   signIn() {
@@ -31,6 +31,7 @@ export class LoginPage {
             Config.access_token = data.json().access_token;
             Config.refresh_token = data.json().refresh_token;
             this._router.navigate(['Home']);
+            console.log("Access token :" + Config.access_token);
         },
         (error) => alert("Mauvaise combinaison nom d'utilisateur/mot de passe !")
       );
