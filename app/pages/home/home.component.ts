@@ -1,6 +1,6 @@
 "use strict";
 
-import {Component} from "angular2/core";
+import {Component, OnInit} from "angular2/core";
 import {Router} from "angular2/router";
 import {UserService} from "../../shared/user/user.service";
 import {Config} from "../../shared/config";
@@ -14,9 +14,12 @@ import {Config} from "../../shared/config";
 })
 
 
-export class HomePage {
+export class HomePage implements OnInit {
 
+	//TODO ajouter la méthode de récupération des notifications
+	ngOnInit(){
 
+	}
 
 	constructor(
 		private _userService: UserService,
