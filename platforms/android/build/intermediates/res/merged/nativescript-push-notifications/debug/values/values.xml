@@ -1,8 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:ns1="urn:oasis:names:tc:xliff:document:1.2">
+    <attr format="boolean" name="applyDefaultPalette"/>
+    <attr format="boolean" name="areBarsRounded"/>
+    <attr format="boolean" name="clipToPlotArea"/>
     <attr format="reference" name="drawerArrowStyle"/>
+    <attr format="color" name="fillColor"/>
+    <attr format="float" name="gapLength"/>
     <attr format="dimension" name="height"/>
     <attr format="boolean" name="isLightTheme"/>
+    <attr format="color" name="labelColor"/>
+    <attr format="string" name="labelFont"/>
+    <attr format="integer" name="labelFontStyle"/>
+    <attr format="string" name="labelFormat"/>
+    <attr format="dimension" name="labelMargin"/>
+    <attr format="dimension" name="labelSize"/>
+    <attr format="dimension" name="lineThickness"/>
+    <attr name="plotMode">
+        <enum name="BetweenTicks" value="0"/>
+        <enum name="OnTicks" value="1"/>
+        <enum name="OnTicksPadded" value="2"/>
+    </attr>
+    <attr format="float" name="roundBarsRadius"/>
+    <attr format="boolean" name="showLabels"/>
+    <attr format="color" name="strokeColor"/>
+    <attr format="dimension" name="strokeWidth"/>
     <attr format="string" name="title"/>
     <bool name="abc_action_bar_embed_tabs">true</bool>
     <bool name="abc_action_bar_embed_tabs_pre_jb">false</bool>
@@ -22,6 +43,7 @@
     <color name="background_floating_material_light">@android:color/white</color>
     <color name="background_material_dark">@color/material_grey_850</color>
     <color name="background_material_light">@color/material_grey_50</color>
+    <color name="black">#FF000000</color>
     <color name="bright_foreground_disabled_material_dark">#80ffffff</color>
     <color name="bright_foreground_disabled_material_light">#80000000</color>
     <color name="bright_foreground_inverse_material_dark">@color/bright_foreground_material_light</color>
@@ -47,16 +69,20 @@
     <color name="common_plus_signin_btn_text_light_disabled">#FFAAAAAA</color>
     <color name="common_plus_signin_btn_text_light_focused">#FF737373</color>
     <color name="common_plus_signin_btn_text_light_pressed">#DE000000</color>
+    <color name="data_form_list_selected">#cccccc</color>
     <color name="dim_foreground_disabled_material_dark">#80bebebe</color>
     <color name="dim_foreground_disabled_material_light">#80323232</color>
     <color name="dim_foreground_material_dark">#ffbebebe</color>
     <color name="dim_foreground_material_light">#ff323232</color>
     <color name="foreground_material_dark">@android:color/white</color>
     <color name="foreground_material_light">@android:color/black</color>
+    <color name="groupHeaderTextColor">#88000000</color>
     <color name="highlighted_text_material_dark">#6680cbc4</color>
     <color name="highlighted_text_material_light">#66009688</color>
     <color name="hint_foreground_material_dark">@color/bright_foreground_disabled_material_dark</color>
     <color name="hint_foreground_material_light">@color/bright_foreground_disabled_material_light</color>
+    <color name="listAccentColor">#FF009688</color>
+    <color name="listItemTextColor">#DF000000</color>
     <color name="material_blue_grey_800">#ff37474f</color>
     <color name="material_blue_grey_900">#ff263238</color>
     <color name="material_blue_grey_950">#ff21272b</color>
@@ -72,6 +98,7 @@
     <color name="ns_accent">#33B5E5</color>
     <color name="ns_primary">#F5F5F5</color>
     <color name="ns_primaryDark">#757575</color>
+    <color name="pressedColor">#16000000</color>
     <color name="primary_dark_material_dark">@android:color/black</color>
     <color name="primary_dark_material_light">@color/material_grey_600</color>
     <color name="primary_material_dark">@color/material_grey_900</color>
@@ -80,16 +107,22 @@
     <color name="primary_text_default_material_light">#de000000</color>
     <color name="primary_text_disabled_material_dark">#4Dffffff</color>
     <color name="primary_text_disabled_material_light">#39000000</color>
+    <color name="red">#FFFF0000</color>
     <color name="ripple_material_dark">#33ffffff</color>
     <color name="ripple_material_light">#1f000000</color>
     <color name="secondary_text_default_material_dark">#b3ffffff</color>
     <color name="secondary_text_default_material_light">#8a000000</color>
     <color name="secondary_text_disabled_material_dark">#36ffffff</color>
     <color name="secondary_text_disabled_material_light">#24000000</color>
+    <color name="selectionColor">#20000000</color>
+    <color name="shadeColor">#22000000</color>
+    <color name="shadeColorCenter">#05000000</color>
     <color name="switch_thumb_disabled_material_dark">#ff616161</color>
     <color name="switch_thumb_disabled_material_light">#ffbdbdbd</color>
     <color name="switch_thumb_normal_material_dark">#ffbdbdbd</color>
     <color name="switch_thumb_normal_material_light">#fff1f1f1</color>
+    <color name="transparent">#00000000</color>
+    <color name="white">#FFFFFFFF</color>
     <declare-styleable name="ActionBar"><attr name="navigationMode"><enum name="normal" value="0"/><enum name="listMode" value="1"/><enum name="tabMode" value="2"/></attr><attr name="displayOptions"><flag name="none" value="0"/><flag name="useLogo" value="0x1"/><flag name="showHome" value="0x2"/><flag name="homeAsUp" value="0x4"/><flag name="showTitle" value="0x8"/><flag name="showCustom" value="0x10"/><flag name="disableHome" value="0x20"/></attr><attr name="title"/><attr format="string" name="subtitle"/><attr format="reference" name="titleTextStyle"/><attr format="reference" name="subtitleTextStyle"/><attr format="reference" name="icon"/><attr format="reference" name="logo"/><attr format="reference" name="divider"/><attr format="reference" name="background"/><attr format="reference|color" name="backgroundStacked"/><attr format="reference|color" name="backgroundSplit"/><attr format="reference" name="customNavigationLayout"/><attr name="height"/><attr format="reference" name="homeLayout"/><attr format="reference" name="progressBarStyle"/><attr format="reference" name="indeterminateProgressStyle"/><attr format="dimension" name="progressBarPadding"/><attr name="homeAsUpIndicator"/><attr format="dimension" name="itemPadding"/><attr format="boolean" name="hideOnContentScroll"/><attr format="dimension" name="contentInsetStart"/><attr format="dimension" name="contentInsetEnd"/><attr format="dimension" name="contentInsetLeft"/><attr format="dimension" name="contentInsetRight"/><attr format="dimension" name="elevation"/><attr format="reference" name="popupTheme"/></declare-styleable>
     <declare-styleable name="ActionBarLayout"><attr name="android:layout_gravity"/></declare-styleable>
     <declare-styleable name="ActionMenuItemView"><attr name="android:minWidth"/></declare-styleable>
@@ -98,9 +131,27 @@
     <declare-styleable name="ActivityChooserView"><attr format="string" name="initialActivityCount"/><attr format="reference" name="expandActivityOverflowButtonDrawable"/></declare-styleable>
     <declare-styleable name="AlertDialog"><attr name="android:layout"/><attr format="reference" name="buttonPanelSideLayout"/><attr format="reference" name="listLayout"/><attr format="reference" name="multiChoiceItemLayout"/><attr format="reference" name="singleChoiceItemLayout"/><attr format="reference" name="listItemLayout"/></declare-styleable>
     <declare-styleable name="AppCompatTextView"><attr format="reference|boolean" name="textAllCaps"/><attr name="android:textAppearance"/></declare-styleable>
+    <declare-styleable name="AreaSeries"><attr name="fillColor"/></declare-styleable>
+    <declare-styleable name="Axis"><attr format="float" name="labelRotationAngle"/><attr name="lineThickness"/><attr format="enum" name="axisLastLabelVisibility"><enum name="Visible" value="0"/><enum name="Hidden" value="1"/><enum name="Clip" value="2"/></attr><attr name="labelSize"/><attr name="labelColor"/><attr name="labelMargin"/><attr name="labelFont"/><attr name="labelFontStyle"/><attr format="integer" name="majorTickOffset"/><attr format="integer" name="labelOffset"/><attr name="showLabels"/><attr name="labelFormat"/><attr format="enum" name="axisLabelFitMode"><enum name="None" value="0"/><enum name="Multiline" value="1"/><enum name="Rotate" value="2"/></attr><attr format="string" name="axisTitle"/><attr format="dimension" name="tickThickness"/><attr format="integer" name="labelInterval"/></declare-styleable>
+    <declare-styleable name="BarSeries"><attr name="strokeWidth"/><attr name="strokeColor"/><attr name="fillColor"/><attr name="areBarsRounded"/><attr name="roundBarsRadius"/></declare-styleable>
     <declare-styleable name="ButtonBarLayout"><attr format="boolean" name="allowStacking"/></declare-styleable>
+    <declare-styleable name="CalendarCellState"><attr format="boolean" name="state_calendar_cell_today"/></declare-styleable>
+    <declare-styleable name="CalendarTheme"><attr format="reference" name="calendarStyle"/></declare-styleable>
+    <declare-styleable name="CartesianAxis"><attr format="enum" name="horizontalLocation"><enum name="Left" value="0"/><enum name="Right" value="1"/></attr><attr format="enum" name="verticalLocation"><enum name="Bottom" value="0"/><enum name="Top" value="1"/></attr></declare-styleable>
+    <declare-styleable name="CartesianCustomAnnotation"><attr format="float" name="horizontalOffset"/><attr format="float" name="verticalOffset"/><attr format="reference" name="content"/><attr format="enum" name="horizontalAlignment"><enum name="left" value="0"/><enum name="center" value="1"/><enum name="right" value="2"/></attr><attr format="enum" name="verticalAlignment"><enum name="top" value="0"/><enum name="bottom" value="1"/><enum name="center" value="2"/></attr></declare-styleable>
+    <declare-styleable name="CartesianPlotBandAnnotation"><attr name="fillColor"/></declare-styleable>
+    <declare-styleable name="CartesianStrokedAnnotation"><attr name="strokeColor"/><attr name="strokeWidth"/><attr format="string" name="label"/></declare-styleable>
+    <declare-styleable name="CategoricalAxis"><attr format="integer" name="majorTickInterval"/><attr name="plotMode"/><attr name="gapLength"/></declare-styleable>
+    <declare-styleable name="CategoricalSeries"><attr format="enum" name="combineMode"><enum name="None" value="0"/><enum name="Cluster" value="1"/><enum name="Stack" value="2"/><enum name="Stack100" value="3"/></attr></declare-styleable>
+    <declare-styleable name="CategoricalStrokedSeries"><attr name="strokeColor"/><attr name="strokeWidth"/></declare-styleable>
+    <declare-styleable name="ChartAnnotation"><attr name="clipToPlotArea"/></declare-styleable>
+    <declare-styleable name="ChartSeries"><attr name="clipToPlotArea"/><attr name="showLabels"/><attr name="labelColor"/><attr name="labelSize"/><attr name="labelFont"/><attr name="labelFontStyle"/><attr name="labelFormat"/></declare-styleable>
+    <declare-styleable name="ChartTheme"><attr format="reference" name="AxisStyle"/><attr format="reference" name="CartesianAxisStyle"/><attr format="reference" name="CategoricalAxisStyle"/><attr format="reference" name="DateTimeCategoricalAxisStyle"/><attr format="reference" name="DateTimeContinuousAxisStyle"/><attr format="reference" name="RadChartBaseStyle"/><attr format="reference" name="ChartSeriesStyle"/><attr format="reference" name="LineAxisStyle"/><attr format="reference" name="BarSeriesStyle"/><attr format="reference" name="RangeBarSeriesStyle"/><attr format="reference" name="CategoricalSeriesStyle"/><attr format="reference" name="CategoricalStrokedSeriesStyle"/><attr format="reference" name="AreaSeriesStyle"/><attr format="reference" name="ChartAnnotationStyle"/><attr format="reference" name="CartesianStrokedAnnotationStyle"/><attr format="reference" name="CartesianPlotBandAnnotationStyle"/><attr format="reference" name="CartesianCustomAnnotationStyle"/><attr format="reference" name="TestBarSeriesStyle"/></declare-styleable>
     <declare-styleable name="CompoundButton"><attr name="android:button"/><attr format="color" name="buttonTint"/><attr name="buttonTintMode"><enum name="src_over" value="3"/><enum name="src_in" value="5"/><enum name="src_atop" value="9"/><enum name="multiply" value="14"/><enum name="screen" value="15"/></attr></declare-styleable>
+    <declare-styleable name="DateTimeCategoricalAxis"><attr format="string" name="dateFormat"/><attr format="enum" name="dateTimeComponent"><enum name="Year" value="0"/><enum name="Quarter" value="1"/><enum name="Month" value="2"/><enum name="Week" value="3"/><enum name="Hour" value="4"/><enum name="Minute" value="5"/><enum name="Second" value="6"/><enum name="Millisecond" value="7"/><enum name="Date" value="8"/><enum name="TimeOfDay" value="9"/><enum name="Day" value="10"/><enum name="DayOfWeek" value="11"/><enum name="DayOfYear" value="12"/></attr></declare-styleable>
+    <declare-styleable name="DateTimeContinuousAxis"><attr format="integer" name="maximumTicks"/><attr name="gapLength"/><attr format="float" name="majorStep"/><attr format="enum" name="majorStepUnit"><enum name="Year" value="0"/><enum name="Quarter" value="1"/><enum name="Month" value="2"/><enum name="Week" value="3"/><enum name="Day" value="4"/><enum name="Hour" value="5"/><enum name="Minute" value="6"/><enum name="Second" value="7"/><enum name="Millisecond" value="8"/></attr><attr name="plotMode"/></declare-styleable>
     <declare-styleable name="DrawerArrowToggle"><attr format="color" name="color"/><attr format="boolean" name="spinBars"/><attr format="dimension" name="drawableSize"/><attr format="dimension" name="gapBetweenBars"/><attr format="dimension" name="arrowHeadLength"/><attr format="dimension" name="arrowShaftLength"/><attr format="dimension" name="barLength"/><attr format="dimension" name="thickness"/></declare-styleable>
+    <declare-styleable name="LineAxis"><attr format="color" name="lineColor"/></declare-styleable>
     <declare-styleable name="LinearLayoutCompat"><attr name="android:orientation"/><attr name="android:gravity"/><attr name="android:baselineAligned"/><attr name="android:baselineAlignedChildIndex"/><attr name="android:weightSum"/><attr format="boolean" name="measureWithLargestChild"/><attr name="divider"/><attr name="showDividers"><flag name="none" value="0"/><flag name="beginning" value="1"/><flag name="middle" value="2"/><flag name="end" value="4"/></attr><attr format="dimension" name="dividerPadding"/></declare-styleable>
     <declare-styleable name="LinearLayoutCompat_Layout"><attr name="android:layout_width"/><attr name="android:layout_height"/><attr name="android:layout_weight"/><attr name="android:layout_gravity"/></declare-styleable>
     <declare-styleable name="ListPopupWindow"><attr name="android:dropDownVerticalOffset"/><attr name="android:dropDownHorizontalOffset"/></declare-styleable>
@@ -108,8 +159,14 @@
     <declare-styleable name="MenuGroup"><attr name="android:id"/><attr name="android:menuCategory"/><attr name="android:orderInCategory"/><attr name="android:checkableBehavior"/><attr name="android:visible"/><attr name="android:enabled"/></declare-styleable>
     <declare-styleable name="MenuItem"><attr name="android:id"/><attr name="android:menuCategory"/><attr name="android:orderInCategory"/><attr name="android:title"/><attr name="android:titleCondensed"/><attr name="android:icon"/><attr name="android:alphabeticShortcut"/><attr name="android:numericShortcut"/><attr name="android:checkable"/><attr name="android:checked"/><attr name="android:visible"/><attr name="android:enabled"/><attr name="android:onClick"/><attr name="showAsAction"><flag name="never" value="0"/><flag name="ifRoom" value="1"/><flag name="always" value="2"/><flag name="withText" value="4"/><flag name="collapseActionView" value="8"/></attr><attr format="reference" name="actionLayout"/><attr format="string" name="actionViewClass"/><attr format="string" name="actionProviderClass"/></declare-styleable>
     <declare-styleable name="MenuView"><attr name="android:itemTextAppearance"/><attr name="android:horizontalDivider"/><attr name="android:verticalDivider"/><attr name="android:headerBackground"/><attr name="android:itemBackground"/><attr name="android:windowAnimationStyle"/><attr name="android:itemIconDisabledAlpha"/><attr format="boolean" name="preserveIconSpacing"/></declare-styleable>
+    <declare-styleable name="PointerLayout"><attr format="dimension" name="pointerSize"/><attr format="dimension" name="pointerMargin"/><attr format="color" name="pointerFill"/></declare-styleable>
     <declare-styleable name="PopupWindow"><attr format="boolean" name="overlapAnchor"/><attr name="android:popupBackground"/></declare-styleable>
     <declare-styleable name="PopupWindowBackgroundState"><attr format="boolean" name="state_above_anchor"/></declare-styleable>
+    <declare-styleable name="RadCalendarView"><attr format="color" name="calendarBackground"/><attr format="boolean" name="showTitle"/><attr format="boolean" name="showDayNames"/><attr format="boolean" name="showGridLines"/><attr format="boolean" name="showCellDecorations"/><attr format="enum" name="selectionMode"><enum name="Single" value="0"/><enum name="Range" value="1"/><enum name="Multiple" value="2"/></attr><attr format="enum" name="displayMode"><enum name="Month" value="0"/><enum name="Year" value="1"/><enum name="Week" value="2"/></attr><attr format="enum" name="weekNumberDisplayMode"><enum name="None" value="0"/><enum name="Inline" value="1"/><enum name="Block" value="2"/></attr><attr format="boolean" name="isYearModeCompact"/></declare-styleable>
+    <declare-styleable name="RadChartViewBase"><attr format="string" name="pan"/><attr format="string" name="zoom"/><attr format="string" name="maxZoom"/><attr format="boolean" name="clipToBounds"/><attr format="string" name="emptyContent"/><attr format="string" name="palette"/></declare-styleable>
+    <declare-styleable name="RadScrollView"><attr format="boolean" name="fillViewport"/><attr name="scrollMode"><flag name="vertical" value="1"/><flag name="horizontal" value="2"/></attr></declare-styleable>
+    <declare-styleable name="RadScrollViewTheme"><attr format="reference" name="radScrollViewStyle"/></declare-styleable>
+    <declare-styleable name="RangeBarSeries"><attr name="strokeWidth"/><attr name="strokeColor"/><attr name="fillColor"/><attr name="areBarsRounded"/><attr name="roundBarsRadius"/></declare-styleable>
     <declare-styleable name="SearchView"><attr format="reference" name="layout"/><attr format="boolean" name="iconifiedByDefault"/><attr name="android:maxWidth"/><attr format="string" name="queryHint"/><attr format="string" name="defaultQueryHint"/><attr name="android:imeOptions"/><attr name="android:inputType"/><attr format="reference" name="closeIcon"/><attr format="reference" name="goIcon"/><attr format="reference" name="searchIcon"/><attr format="reference" name="searchHintIcon"/><attr format="reference" name="voiceIcon"/><attr format="reference" name="commitIcon"/><attr format="reference" name="suggestionRowLayout"/><attr format="reference" name="queryBackground"/><attr format="reference" name="submitBackground"/><attr name="android:focusable"/></declare-styleable>
     <declare-styleable name="SignInButton"><attr format="reference|enum" name="buttonSize"><enum name="standard" value="0"/><enum name="wide" value="1"/><enum name="icon_only" value="2"/></attr><attr format="reference|enum" name="colorScheme"><enum name="dark" value="0"/><enum name="light" value="1"/><enum name="auto" value="2"/></attr><attr format="reference|string" name="scopeUris"/></declare-styleable>
     <declare-styleable name="Spinner"><attr name="android:prompt"/><attr name="popupTheme"/><attr name="android:popupBackground"/><attr name="android:dropDownWidth"/></declare-styleable>
@@ -187,14 +244,18 @@
     <dimen name="abc_text_size_subtitle_material_toolbar">16dp</dimen>
     <dimen name="abc_text_size_title_material">20sp</dimen>
     <dimen name="abc_text_size_title_material_toolbar">20dp</dimen>
+    <dimen name="card_deck_translation">8dp</dimen>
+    <dimen name="date_text_size_year_mode">10sp</dimen>
     <item format="float" name="disabled_alpha_material_dark" type="dimen">0.30</item>
     <item format="float" name="disabled_alpha_material_light" type="dimen">0.26</item>
     <item format="float" name="highlight_alpha_material_colored" type="dimen">0.26</item>
     <item format="float" name="highlight_alpha_material_dark" type="dimen">0.20</item>
     <item format="float" name="highlight_alpha_material_light" type="dimen">0.12</item>
+    <dimen name="legend_stroke_width">1dp</dimen>
     <dimen name="notification_large_icon_height">64dp</dimen>
     <dimen name="notification_large_icon_width">64dp</dimen>
     <dimen name="notification_subtext_size">12dp</dimen>
+    <dimen name="trackball_indicator_radius">5dp</dimen>
     <drawable name="notification_template_icon_bg">#3333B5E5</drawable>
     <item name="action_bar_activity_content" type="id"/>
     <item name="action_bar_spinner" type="id"/>
@@ -230,7 +291,7 @@
     <string name="abc_shareactionprovider_share_with">Share with</string>
     <string name="abc_shareactionprovider_share_with_application">Share with %s</string>
     <string name="abc_toolbar_collapse_description">Collapse</string>
-    <string name="app_name">mobile</string>
+    <string name="app_name">Claroline Connect</string>
     <string name="auth_google_play_services_client_facebook_display_name">Facebook</string>
     <string name="auth_google_play_services_client_google_display_name">Google</string>
     <string name="common_google_play_services_api_unavailable_text"><ns1:g id="app_name">%1$s</ns1:g> requires one or more Google Play services that are not currently available. Please contact the developer for assistance.</string>
@@ -262,8 +323,13 @@
     <string name="common_open_on_phone">Open on phone</string>
     <string name="common_signin_button_text">Sign in</string>
     <string name="common_signin_button_text_long">Sign in with Google</string>
+    <string name="list_view_default_empty_content">No items</string>
+    <string name="on_demand_manual_button_busy">LOADING…</string>
+    <string name="on_demand_manual_button_idle">LOAD MORE</string>
     <string name="status_bar_notification_info_overflow">999+</string>
-    <string name="title_activity_kimera">mobile</string>
+    <string name="title_activity_kimera">Claroline Connect</string>
+    <string name="trial_message">To get access to the latest updates across Android suite and Telerik\'s dedicated support please purchase a commercial license now.</string>
+    <string name="trial_message_caption">Telerik UI for Android Trial</string>
     <style name="AlertDialog.AppCompat" parent="Base.AlertDialog.AppCompat"/>
     <style name="AlertDialog.AppCompat.Light" parent="Base.AlertDialog.AppCompat.Light"/>
     <style name="Animation.AppCompat.Dialog" parent="Base.Animation.AppCompat.Dialog"/>
@@ -276,6 +342,31 @@
 		<item name="colorPrimary">@color/ns_primary</item>
     	<item name="colorPrimaryDark">@color/ns_primaryDark</item>
 		<item name="colorAccent">@color/ns_accent</item>
+    </style>
+    <style name="AxisStyle">
+        <item name="lineThickness">1dp</item>
+        <item name="tickThickness">1dp</item>
+        <item name="labelSize">12sp</item>
+        <item name="labelMargin">2dp</item>
+    </style>
+    <style name="AxisStyle.LineAxisStyle">
+        <item name="lineColor">#000000</item>
+    </style>
+    <style name="AxisStyle.LineAxisStyle.CartesianAxisStyle">
+        <item name="verticalLocation">Bottom</item>
+    </style>
+    <style name="AxisStyle.LineAxisStyle.CartesianAxisStyle.CategoricalAxisStyle">
+        <item name="gapLength">0.3</item>
+    </style>
+    <style name="AxisStyle.LineAxisStyle.CartesianAxisStyle.CategoricalAxisStyle.DateTimeCategoricalAxisStyle">
+        <item name="dateTimeComponent">Date</item>
+    </style>
+    <style name="AxisStyle.LineAxisStyle.CartesianAxisStyle.CategoricalAxisStyle.TestDateTimeCategoricalAxisStyle">
+        <item name="dateTimeComponent">DayOfWeek</item>
+        <item name="dateFormat">ddmmyy</item>
+    </style>
+    <style name="AxisStyle.LineAxisStyle.CartesianAxisStyle.DateTimeContinuousAxisStyle">
+
     </style>
     <style name="Base.AlertDialog.AppCompat" parent="android:Widget">
         <item name="android:layout">@layout/abc_alert_dialog_material</item>
@@ -1212,6 +1303,57 @@
         <item name="android:minWidth">56dp</item>
         <item name="android:scaleType">center</item>
     </style>
+    <style name="ChartAnnotationStyle">
+        <item name="clipToPlotArea">true</item>
+    </style>
+    <style name="ChartAnnotationStyle.CartesianCustomAnnotationStyle">
+        <item name="horizontalAlignment">center</item>
+        <item name="verticalAlignment">center</item>
+    </style>
+    <style name="ChartAnnotationStyle.CartesianStrokedAnnotationStyle">
+        <item name="strokeColor">#ff0000</item>
+        <item name="strokeWidth">1dp</item>
+    </style>
+    <style name="ChartAnnotationStyle.CartesianStrokedAnnotationStyle.CartesianPlotBandAnnotationStyle">
+        <item name="fillColor">#aa0000ff</item>
+    </style>
+    <style name="ChartSeriesStyle">
+        <item name="labelSize">13sp</item>
+        <item name="showLabels">false</item>
+        <item name="labelColor">#000000</item>
+        <item name="labelFormat">%.2f</item>
+    </style>
+    <style name="ChartSeriesStyle.CategoricalSeriesStyle">
+        <item name="combineMode">None</item>
+    </style>
+    <style name="ChartSeriesStyle.CategoricalSeriesStyle.BarSeriesStyle">
+        <item name="fillColor">#ff0000</item>
+        <item name="strokeColor">#000000</item>
+        <item name="strokeWidth">2dp</item>
+        <item name="areBarsRounded">false</item>
+        <item name="roundBarsRadius">5</item>
+    </style>
+    <style name="ChartSeriesStyle.CategoricalSeriesStyle.CategoricalStrokedSeriesStyle">
+        <item name="strokeColor">#ff3300</item>
+        <item name="strokeWidth">2dp</item>
+    </style>
+    <style name="ChartSeriesStyle.CategoricalSeriesStyle.CategoricalStrokedSeriesStyle.AreaSeriesStyle">
+        <item name="fillColor">#efae43</item>
+    </style>
+    <style name="ChartSeriesStyle.CategoricalSeriesStyle.RangeBarSeriesStyle">
+        <item name="fillColor">#ff0000</item>
+        <item name="strokeColor">#000000</item>
+        <item name="strokeWidth">2dp</item>
+        <item name="areBarsRounded">false</item>
+        <item name="roundBarsRadius">5</item>
+    </style>
+    <style name="ChartSeriesStyle.CategoricalSeriesStyle.TestBarSeriesStyle">
+        <item name="fillColor">#ff00ff00</item>
+        <item name="strokeColor">#ff00ff00</item>
+        <item name="strokeWidth">1dp</item>
+        <item name="areBarsRounded">true</item>
+        <item name="roundBarsRadius">2</item>
+    </style>
     <style name="NativeScriptToolbarStyle" parent="NativeScriptToolbarStyleBase">
     </style>
     <style name="NativeScriptToolbarStyleBase" parent="Widget.AppCompat.Toolbar">
@@ -1317,6 +1459,14 @@
         <item name="android:dropDownItemStyle">@style/Widget.AppCompat.DropDownItem.Spinner</item>
     </style>
     <style name="Platform.Widget.AppCompat.Spinner" parent="android:Widget.Spinner"/>
+    <style name="RadChartBaseStyle"/>
+    <style name="RadScrollViewStyle">
+        <item name="fillViewport">false</item>
+        <item name="scrollMode">vertical</item>
+    </style>
+    <style name="RadScrollViewTheme">
+        <item name="radScrollViewStyle">@style/RadScrollViewStyle</item>
+    </style>
     <style name="RtlOverlay.DialogWindowTitle.AppCompat" parent="Base.DialogWindowTitle.AppCompat">
     </style>
     <style name="RtlOverlay.Widget.AppCompat.ActionBar.TitleItem" parent="android:Widget">
@@ -1451,6 +1601,44 @@
     <style name="Theme.AppCompat.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
+    </style>
+    <style name="Theme.ChartTheme" parent="android:Theme.Light">
+        <item name="AxisStyle">@style/AxisStyle</item>
+        <item name="LineAxisStyle">@style/AxisStyle.LineAxisStyle</item>
+        <item name="CartesianAxisStyle">@style/AxisStyle.LineAxisStyle.CartesianAxisStyle</item>
+        <item name="CategoricalAxisStyle">
+            @style/AxisStyle.LineAxisStyle.CartesianAxisStyle.CategoricalAxisStyle
+        </item>
+        <item name="DateTimeCategoricalAxisStyle">
+            @style/AxisStyle.LineAxisStyle.CartesianAxisStyle.CategoricalAxisStyle.DateTimeCategoricalAxisStyle
+        </item>
+        <item name="DateTimeContinuousAxisStyle">
+            @style/AxisStyle.LineAxisStyle.CartesianAxisStyle.DateTimeContinuousAxisStyle
+        </item>
+        <item name="RadChartBaseStyle">@style/RadChartBaseStyle</item>
+        <item name="ChartSeriesStyle">@style/ChartSeriesStyle</item>
+        <item name="BarSeriesStyle">@style/ChartSeriesStyle.CategoricalSeriesStyle.BarSeriesStyle
+        </item>
+        <item name="RangeBarSeriesStyle">
+            @style/ChartSeriesStyle.CategoricalSeriesStyle.RangeBarSeriesStyle
+        </item>
+        <item name="CategoricalSeriesStyle">@style/ChartSeriesStyle.CategoricalSeriesStyle</item>
+        <item name="CategoricalStrokedSeriesStyle">
+            @style/ChartSeriesStyle.CategoricalSeriesStyle.CategoricalStrokedSeriesStyle
+        </item>
+        <item name="AreaSeriesStyle">
+            @style/ChartSeriesStyle.CategoricalSeriesStyle.CategoricalStrokedSeriesStyle.AreaSeriesStyle
+        </item>
+        <item name="ChartAnnotationStyle">@style/ChartAnnotationStyle</item>
+        <item name="CartesianStrokedAnnotationStyle">
+            @style/ChartAnnotationStyle.CartesianStrokedAnnotationStyle
+        </item>
+        <item name="CartesianPlotBandAnnotationStyle">
+            @style/ChartAnnotationStyle.CartesianStrokedAnnotationStyle.CartesianPlotBandAnnotationStyle
+        </item>
+        <item name="CartesianCustomAnnotationStyle">
+            @style/ChartAnnotationStyle.CartesianCustomAnnotationStyle
+        </item>
     </style>
     <style name="ThemeOverlay.AppCompat" parent="Base.ThemeOverlay.AppCompat"/>
     <style name="ThemeOverlay.AppCompat.ActionBar" parent="Base.ThemeOverlay.AppCompat.ActionBar"/>

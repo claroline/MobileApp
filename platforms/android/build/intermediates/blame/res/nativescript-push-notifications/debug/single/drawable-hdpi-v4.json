@@ -236,6 +236,10 @@
         "source": "/home/dat/nativescript_angular2/mobile/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.1.1/res/drawable-hdpi/abc_btn_rating_star_on_mtrl_alpha.png"
     },
     {
+        "merged": "/home/dat/nativescript_angular2/mobile/platforms/android/build/intermediates/res/merged/nativescript-push-notifications/debug/drawable-hdpi-v4/hmb.png",
+        "source": "/home/dat/nativescript_angular2/mobile/platforms/android/build/intermediates/exploded-aar/Primitives-2015.3.1307-trial-release/res/drawable-hdpi/hmb.png"
+    },
+    {
         "merged": "/home/dat/nativescript_angular2/mobile/platforms/android/build/intermediates/res/merged/nativescript-push-notifications/debug/drawable-hdpi-v4/abc_btn_radio_to_on_mtrl_000.png",
         "source": "/home/dat/nativescript_angular2/mobile/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.1.1/res/drawable-hdpi/abc_btn_radio_to_on_mtrl_000.png"
     },

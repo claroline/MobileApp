@@ -2,6 +2,13 @@
 <items version="2" >
 
     <item
+        jar="/home/dat/android-sdk/extras/android/m2repository/com/android/support/support-annotations/23.1.1/support-annotations-23.1.1.jar"
+        jumboMode="false"
+        revision="23.0.2"
+        sha1="8d680ba5a623724d1fb0e81c36a790f023a6cede">
+        <dex dex="/home/dat/nativescript_angular2/mobile/platforms/android/build/intermediates/pre-dexed/nativescript-push-notifications/debug/support-annotations-23.1.1_dbdde81f08c0a62b2c9be69bc09345f64e9639c5.jar" />
+    </item>
+    <item
         jar="/home/dat/nativescript_angular2/mobile/node_modules/nativescript-push-notifications/platforms/android/libs/pushplugin.jar"
         jumboMode="false"
         revision="23.0.2"
@@ -14,13 +21,6 @@
         revision="23.0.2"
         sha1="732130cb703823699f2566a51c33f4690168995a">
         <dex dex="/home/dat/nativescript_angular2/mobile/platforms/android/build/intermediates/pre-dexed/nativescript-push-notifications/debug/nativescript_d6e04831488b5eb46c139cd43f1261bc11ddabdf.jar" />
-    </item>
-    <item
-        jar="/home/dat/android-sdk/extras/android/m2repository/com/android/support/support-annotations/23.1.1/support-annotations-23.1.1.jar"
-        jumboMode="false"
-        revision="23.0.2"
-        sha1="8d680ba5a623724d1fb0e81c36a790f023a6cede">
-        <dex dex="/home/dat/nativescript_angular2/mobile/platforms/android/build/intermediates/pre-dexed/nativescript-push-notifications/debug/support-annotations-23.1.1_dbdde81f08c0a62b2c9be69bc09345f64e9639c5.jar" />
     </item>
 
 </items>

@@ -64,6 +64,10 @@
         "source": "/home/dat/nativescript_angular2/mobile/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.1.1/res/drawable-mdpi/abc_ic_menu_selectall_mtrl_alpha.png"
     },
     {
+        "merged": "/home/dat/nativescript_angular2/mobile/platforms/android/build/intermediates/res/merged/nativescript-push-notifications/debug/drawable-mdpi-v4/hmb.png",
+        "source": "/home/dat/nativescript_angular2/mobile/platforms/android/build/intermediates/exploded-aar/Primitives-2015.3.1307-trial-release/res/drawable-mdpi/hmb.png"
+    },
+    {
         "merged": "/home/dat/nativescript_angular2/mobile/platforms/android/build/intermediates/res/merged/nativescript-push-notifications/debug/drawable-mdpi-v4/abc_textfield_search_default_mtrl_alpha.9.png",
         "source": "/home/dat/nativescript_angular2/mobile/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.1.1/res/drawable-mdpi/abc_textfield_search_default_mtrl_alpha.9.png"
     },

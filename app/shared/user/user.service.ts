@@ -58,10 +58,16 @@ export class UserService {
   }
 
   getNotifications(){
-    return this._http.get(
-      Config.apiUrl + "icap_notification/api/notifications.json?access_token=" + Config.access_token
-    )
-    .map(res => res.json());
+    /*return fetch(Config.apiUrl + "icap_notification/api/notifications.json?access_token=" + Config.access_token)
+    .then((response)=> response.text());*/
+    var http = require('http');
+    var url = Config.apiUrl + "icap_notification/api/notifications.json?access_token=" + Config.access_token;
+    console.log(url);
+    return http.getJSON(url)
+      .then(
+      function(r) { console.log("COUCOU : " + JSON.stringify(r)) },
+      function(e) { console.log("ERROR " + e) }
+       );
   }
 
 

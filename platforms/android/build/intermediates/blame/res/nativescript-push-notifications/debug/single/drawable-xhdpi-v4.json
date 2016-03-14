@@ -192,6 +192,10 @@
         "source": "/home/dat/nativescript_angular2/mobile/platforms/android/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/8.4.0/res/drawable-xhdpi/common_plus_signin_btn_text_dark_normal.9.png"
     },
     {
+        "merged": "/home/dat/nativescript_angular2/mobile/platforms/android/build/intermediates/res/merged/nativescript-push-notifications/debug/drawable-xhdpi-v4/hmb.png",
+        "source": "/home/dat/nativescript_angular2/mobile/platforms/android/build/intermediates/exploded-aar/Primitives-2015.3.1307-trial-release/res/drawable-xhdpi/hmb.png"
+    },
+    {
         "merged": "/home/dat/nativescript_angular2/mobile/platforms/android/build/intermediates/res/merged/nativescript-push-notifications/debug/drawable-xhdpi-v4/abc_textfield_default_mtrl_alpha.9.png",
         "source": "/home/dat/nativescript_angular2/mobile/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.1.1/res/drawable-xhdpi/abc_textfield_default_mtrl_alpha.9.png"
     },

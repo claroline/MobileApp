@@ -1,6 +1,6 @@
 -- Merging decision tree log ---
 manifest
-ADDED from /home/dat/nativescript_angular2/mobile/platforms/android/src/main/AndroidManifest.xml:2:1-40:12
+ADDED from /home/dat/nativescript_angular2/mobile/platforms/android/src/main/AndroidManifest.xml:2:1-60:12
 	package
 		ADDED from /home/dat/nativescript_angular2/mobile/platforms/android/src/main/AndroidManifest.xml:3:2-38
 		ADDED from /home/dat/nativescript_angular2/mobile/platforms/android/src/main/AndroidManifest.xml:3:2-38
@@ -39,6 +39,12 @@ MERGED from [com.google.android.gms:play-services-measurement:8.4.0] /home/dat/n
 MERGED from [com.google.android.gms:play-services-basement:8.4.0] /home/dat/nativescript_angular2/mobile/platforms/android/build/intermediates/exploded-aar/com.google.android.gms/play-services-basement/8.4.0/AndroidManifest.xml:18:5-42
 MERGED from [com.android.support:support-v4:23.1.1] /home/dat/nativescript_angular2/mobile/platforms/android/build/intermediates/exploded-aar/com.android.support/support-v4/23.1.1/AndroidManifest.xml:20:5-43
 MERGED from [:widgets-release:] /home/dat/nativescript_angular2/mobile/platforms/android/build/intermediates/exploded-aar/widgets-release/AndroidManifest.xml:7:5-9:41
+MERGED from [:Data-2015.3.1307-trial-release:] /home/dat/nativescript_angular2/mobile/platforms/android/build/intermediates/exploded-aar/Data-2015.3.1307-trial-release/AndroidManifest.xml:7:5-9:41
+MERGED from [:Input-2015.3.1307-trial-release:] /home/dat/nativescript_angular2/mobile/platforms/android/build/intermediates/exploded-aar/Input-2015.3.1307-trial-release/AndroidManifest.xml:7:5-9:41
+MERGED from [:Primitives-2015.3.1307-trial-release:] /home/dat/nativescript_angular2/mobile/platforms/android/build/intermediates/exploded-aar/Primitives-2015.3.1307-trial-release/AndroidManifest.xml:7:5-9:41
+MERGED from [:Chart-2015.3.1307-trial-release:] /home/dat/nativescript_angular2/mobile/platforms/android/build/intermediates/exploded-aar/Chart-2015.3.1307-trial-release/AndroidManifest.xml:7:5-9:41
+MERGED from [:Common-2015.3.1307-trial-release:] /home/dat/nativescript_angular2/mobile/platforms/android/build/intermediates/exploded-aar/Common-2015.3.1307-trial-release/AndroidManifest.xml:7:5-9:41
+MERGED from [:List-2015.3.1307-trial-release:] /home/dat/nativescript_angular2/mobile/platforms/android/build/intermediates/exploded-aar/List-2015.3.1307-trial-release/AndroidManifest.xml:7:5-9:41
 	android:targetSdkVersion
 		ADDED from /home/dat/nativescript_angular2/mobile/platforms/android/src/main/AndroidManifest.xml:15:3-32
 		INJECTED from /home/dat/nativescript_angular2/mobile/platforms/android/src/main/AndroidManifest.xml
@@ -61,9 +67,25 @@ MERGED from [com.google.android.gms:play-services-gcm:8.4.0] /home/dat/nativescr
 MERGED from [com.google.android.gms:play-services-measurement:8.4.0] /home/dat/nativescript_angular2/mobile/platforms/android/build/intermediates/exploded-aar/com.google.android.gms/play-services-measurement/8.4.0/AndroidManifest.xml:21:5-67
 	android:name
 		ADDED from /home/dat/nativescript_angular2/mobile/platforms/android/src/main/AndroidManifest.xml:19:19-61
+uses-permission#android.permission.GET_ACCOUNTS
+ADDED from /home/dat/nativescript_angular2/mobile/platforms/android/src/main/AndroidManifest.xml:20:2-68
+	android:name
+		ADDED from /home/dat/nativescript_angular2/mobile/platforms/android/src/main/AndroidManifest.xml:20:19-65
+uses-permission#android.permission.WAKE_LOCK
+ADDED from /home/dat/nativescript_angular2/mobile/platforms/android/src/main/AndroidManifest.xml:21:5-68
+MERGED from /home/dat/nativescript_angular2/mobile/platforms/android/src/main/AndroidManifest.xml:21:5-68
+MERGED from [com.google.android.gms:play-services-measurement:8.4.0] /home/dat/nativescript_angular2/mobile/platforms/android/build/intermediates/exploded-aar/com.google.android.gms/play-services-measurement/8.4.0/AndroidManifest.xml:24:5-67
+	android:name
+		ADDED from /home/dat/nativescript_angular2/mobile/platforms/android/src/main/AndroidManifest.xml:21:22-65
+uses-permission#com.google.android.c2dm.permission.RECEIVE
+ADDED from /home/dat/nativescript_angular2/mobile/platforms/android/src/main/AndroidManifest.xml:22:5-82
+MERGED from /home/dat/nativescript_angular2/mobile/platforms/android/src/main/AndroidManifest.xml:22:5-82
+MERGED from [com.google.android.gms:play-services-gcm:8.4.0] /home/dat/nativescript_angular2/mobile/platforms/android/build/intermediates/exploded-aar/com.google.android.gms/play-services-gcm/8.4.0/AndroidManifest.xml:21:5-82
+	android:name
+		ADDED from /home/dat/nativescript_angular2/mobile/platforms/android/src/main/AndroidManifest.xml:22:22-79
 application
-ADDED from /home/dat/nativescript_angular2/mobile/platforms/android/src/main/AndroidManifest.xml:21:2-39:16
-MERGED from /home/dat/nativescript_angular2/mobile/platforms/android/src/main/AndroidManifest.xml:21:2-39:16
+ADDED from /home/dat/nativescript_angular2/mobile/platforms/android/src/main/AndroidManifest.xml:24:2-59:16
+MERGED from /home/dat/nativescript_angular2/mobile/platforms/android/src/main/AndroidManifest.xml:24:2-59:16
 MERGED from [com.android.support:support-v4:23.1.1] /home/dat/nativescript_angular2/mobile/platforms/android/build/intermediates/exploded-aar/com.android.support/support-v4/23.1.1/AndroidManifest.xml:22:5-20
 MERGED from [com.android.support:appcompat-v7:23.1.1] /home/dat/nativescript_angular2/mobile/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.1.1/AndroidManifest.xml:22:5-20
 MERGED from [com.android.support:support-v4:23.1.1] /home/dat/nativescript_angular2/mobile/platforms/android/build/intermediates/exploded-aar/com.android.support/support-v4/23.1.1/AndroidManifest.xml:22:5-20
@@ -74,45 +96,82 @@ MERGED from [com.google.android.gms:play-services-measurement:8.4.0] /home/dat/n
 MERGED from [com.google.android.gms:play-services-basement:8.4.0] /home/dat/nativescript_angular2/mobile/platforms/android/build/intermediates/exploded-aar/com.google.android.gms/play-services-basement/8.4.0/AndroidManifest.xml:20:5-24:19
 MERGED from [com.android.support:support-v4:23.1.1] /home/dat/nativescript_angular2/mobile/platforms/android/build/intermediates/exploded-aar/com.android.support/support-v4/23.1.1/AndroidManifest.xml:22:5-20
 MERGED from [:widgets-release:] /home/dat/nativescript_angular2/mobile/platforms/android/build/intermediates/exploded-aar/widgets-release/AndroidManifest.xml:11:5-12:19
+MERGED from [:Data-2015.3.1307-trial-release:] /home/dat/nativescript_angular2/mobile/platforms/android/build/intermediates/exploded-aar/Data-2015.3.1307-trial-release/AndroidManifest.xml:11:5-12:19
+MERGED from [:Input-2015.3.1307-trial-release:] /home/dat/nativescript_angular2/mobile/platforms/android/build/intermediates/exploded-aar/Input-2015.3.1307-trial-release/AndroidManifest.xml:11:5-12:19
+MERGED from [:Primitives-2015.3.1307-trial-release:] /home/dat/nativescript_angular2/mobile/platforms/android/build/intermediates/exploded-aar/Primitives-2015.3.1307-trial-release/AndroidManifest.xml:11:5-12:19
+MERGED from [:Chart-2015.3.1307-trial-release:] /home/dat/nativescript_angular2/mobile/platforms/android/build/intermediates/exploded-aar/Chart-2015.3.1307-trial-release/AndroidManifest.xml:11:5-12:19
+MERGED from [:Common-2015.3.1307-trial-release:] /home/dat/nativescript_angular2/mobile/platforms/android/build/intermediates/exploded-aar/Common-2015.3.1307-trial-release/AndroidManifest.xml:11:5-12:19
+MERGED from [:List-2015.3.1307-trial-release:] /home/dat/nativescript_angular2/mobile/platforms/android/build/intermediates/exploded-aar/List-2015.3.1307-trial-release/AndroidManifest.xml:11:5-12:19
 	android:label
-		ADDED from /home/dat/nativescript_angular2/mobile/platforms/android/src/main/AndroidManifest.xml:25:3-35
-		ADDED from /home/dat/nativescript_angular2/mobile/platforms/android/src/main/AndroidManifest.xml:25:3-35
+		ADDED from /home/dat/nativescript_angular2/mobile/platforms/android/src/main/AndroidManifest.xml:28:3-35
+		ADDED from /home/dat/nativescript_angular2/mobile/platforms/android/src/main/AndroidManifest.xml:28:3-35
 	android:allowBackup
-		ADDED from /home/dat/nativescript_angular2/mobile/platforms/android/src/main/AndroidManifest.xml:23:3-29
-		ADDED from /home/dat/nativescript_angular2/mobile/platforms/android/src/main/AndroidManifest.xml:23:3-29
+		ADDED from /home/dat/nativescript_angular2/mobile/platforms/android/src/main/AndroidManifest.xml:26:3-29
+		ADDED from /home/dat/nativescript_angular2/mobile/platforms/android/src/main/AndroidManifest.xml:26:3-29
 	android:icon
-		ADDED from /home/dat/nativescript_angular2/mobile/platforms/android/src/main/AndroidManifest.xml:24:3-32
-		ADDED from /home/dat/nativescript_angular2/mobile/platforms/android/src/main/AndroidManifest.xml:24:3-32
+		ADDED from /home/dat/nativescript_angular2/mobile/platforms/android/src/main/AndroidManifest.xml:27:3-32
+		ADDED from /home/dat/nativescript_angular2/mobile/platforms/android/src/main/AndroidManifest.xml:27:3-32
 	android:theme
-		ADDED from /home/dat/nativescript_angular2/mobile/platforms/android/src/main/AndroidManifest.xml:26:3-34
-		ADDED from /home/dat/nativescript_angular2/mobile/platforms/android/src/main/AndroidManifest.xml:26:3-34
+		ADDED from /home/dat/nativescript_angular2/mobile/platforms/android/src/main/AndroidManifest.xml:29:3-34
+		ADDED from /home/dat/nativescript_angular2/mobile/platforms/android/src/main/AndroidManifest.xml:29:3-34
 	android:name
-		ADDED from /home/dat/nativescript_angular2/mobile/platforms/android/src/main/AndroidManifest.xml:22:3-49
-		ADDED from /home/dat/nativescript_angular2/mobile/platforms/android/src/main/AndroidManifest.xml:22:3-49
+		ADDED from /home/dat/nativescript_angular2/mobile/platforms/android/src/main/AndroidManifest.xml:25:3-49
+		ADDED from /home/dat/nativescript_angular2/mobile/platforms/android/src/main/AndroidManifest.xml:25:3-49
 activity#com.tns.NativeScriptActivity
-ADDED from /home/dat/nativescript_angular2/mobile/platforms/android/src/main/AndroidManifest.xml:27:3-37:14
+ADDED from /home/dat/nativescript_angular2/mobile/platforms/android/src/main/AndroidManifest.xml:30:3-40:14
 	android:label
-		ADDED from /home/dat/nativescript_angular2/mobile/platforms/android/src/main/AndroidManifest.xml:29:4-49
+		ADDED from /home/dat/nativescript_angular2/mobile/platforms/android/src/main/AndroidManifest.xml:32:4-49
 	android:configChanges
-		ADDED from /home/dat/nativescript_angular2/mobile/platforms/android/src/main/AndroidManifest.xml:30:4-65
+		ADDED from /home/dat/nativescript_angular2/mobile/platforms/android/src/main/AndroidManifest.xml:33:4-65
 	android:name
-		ADDED from /home/dat/nativescript_angular2/mobile/platforms/android/src/main/AndroidManifest.xml:28:4-47
+		ADDED from /home/dat/nativescript_angular2/mobile/platforms/android/src/main/AndroidManifest.xml:31:4-47
 intent-filter#android.intent.action.MAIN+android.intent.category.LAUNCHER
-ADDED from /home/dat/nativescript_angular2/mobile/platforms/android/src/main/AndroidManifest.xml:32:4-36:20
+ADDED from /home/dat/nativescript_angular2/mobile/platforms/android/src/main/AndroidManifest.xml:35:4-39:20
 action#android.intent.action.MAIN
-ADDED from /home/dat/nativescript_angular2/mobile/platforms/android/src/main/AndroidManifest.xml:33:5-57
+ADDED from /home/dat/nativescript_angular2/mobile/platforms/android/src/main/AndroidManifest.xml:36:5-57
 	android:name
-		ADDED from /home/dat/nativescript_angular2/mobile/platforms/android/src/main/AndroidManifest.xml:33:13-54
+		ADDED from /home/dat/nativescript_angular2/mobile/platforms/android/src/main/AndroidManifest.xml:36:13-54
 category#android.intent.category.LAUNCHER
-ADDED from /home/dat/nativescript_angular2/mobile/platforms/android/src/main/AndroidManifest.xml:35:5-65
+ADDED from /home/dat/nativescript_angular2/mobile/platforms/android/src/main/AndroidManifest.xml:38:5-65
 	android:name
-		ADDED from /home/dat/nativescript_angular2/mobile/platforms/android/src/main/AndroidManifest.xml:35:15-62
+		ADDED from /home/dat/nativescript_angular2/mobile/platforms/android/src/main/AndroidManifest.xml:38:15-62
 activity#com.tns.ErrorReportActivity
-ADDED from /home/dat/nativescript_angular2/mobile/platforms/android/src/main/AndroidManifest.xml:38:3-57
+ADDED from /home/dat/nativescript_angular2/mobile/platforms/android/src/main/AndroidManifest.xml:41:3-57
 	android:name
-		ADDED from /home/dat/nativescript_angular2/mobile/platforms/android/src/main/AndroidManifest.xml:38:13-55
-uses-permission#com.google.android.c2dm.permission.RECEIVE
-MERGED from [com.google.android.gms:play-services-gcm:8.4.0] /home/dat/nativescript_angular2/mobile/platforms/android/build/intermediates/exploded-aar/com.google.android.gms/play-services-gcm/8.4.0/AndroidManifest.xml:21:5-82
+		ADDED from /home/dat/nativescript_angular2/mobile/platforms/android/src/main/AndroidManifest.xml:41:13-55
+activity#com.telerik.pushplugin.PushHandlerActivity
+ADDED from /home/dat/nativescript_angular2/mobile/platforms/android/src/main/AndroidManifest.xml:42:3-72
+MERGED from /home/dat/nativescript_angular2/mobile/platforms/android/src/main/AndroidManifest.xml:42:3-72
+	android:name
+		ADDED from /home/dat/nativescript_angular2/mobile/platforms/android/src/main/AndroidManifest.xml:42:13-70
+receiver#com.google.android.gms.gcm.GcmReceiver
+ADDED from /home/dat/nativescript_angular2/mobile/platforms/android/src/main/AndroidManifest.xml:43:5-51:16
+MERGED from /home/dat/nativescript_angular2/mobile/platforms/android/src/main/AndroidManifest.xml:43:5-51:16
+	android:exported
+		ADDED from /home/dat/nativescript_angular2/mobile/platforms/android/src/main/AndroidManifest.xml:45:9-32
+	android:permission
+		ADDED from /home/dat/nativescript_angular2/mobile/platforms/android/src/main/AndroidManifest.xml:46:9-69
+	android:name
+		ADDED from /home/dat/nativescript_angular2/mobile/platforms/android/src/main/AndroidManifest.xml:44:9-62
+intent-filter#com.google.android.c2dm.intent.RECEIVE+com.pushApp.gcm
+ADDED from /home/dat/nativescript_angular2/mobile/platforms/android/src/main/AndroidManifest.xml:47:9-50:25
+action#com.google.android.c2dm.intent.RECEIVE
+ADDED from /home/dat/nativescript_angular2/mobile/platforms/android/src/main/AndroidManifest.xml:48:13-77
+	android:name
+		ADDED from /home/dat/nativescript_angular2/mobile/platforms/android/src/main/AndroidManifest.xml:48:21-74
+category#com.pushApp.gcm
+ADDED from /home/dat/nativescript_angular2/mobile/platforms/android/src/main/AndroidManifest.xml:49:13-56
+	android:name
+		ADDED from /home/dat/nativescript_angular2/mobile/platforms/android/src/main/AndroidManifest.xml:49:23-53
+service#com.telerik.pushplugin.PushPlugin
+ADDED from /home/dat/nativescript_angular2/mobile/platforms/android/src/main/AndroidManifest.xml:52:5-58:15
+MERGED from /home/dat/nativescript_angular2/mobile/platforms/android/src/main/AndroidManifest.xml:52:5-58:15
+	android:exported
+		ADDED from /home/dat/nativescript_angular2/mobile/platforms/android/src/main/AndroidManifest.xml:54:9-33
+	android:name
+		ADDED from /home/dat/nativescript_angular2/mobile/platforms/android/src/main/AndroidManifest.xml:53:9-57
+intent-filter#com.google.android.c2dm.intent.RECEIVE
+ADDED from /home/dat/nativescript_angular2/mobile/platforms/android/src/main/AndroidManifest.xml:55:9-57:25
 meta-data#com.google.android.gms.version
 ADDED from [com.google.android.gms:play-services-basement:8.4.0] /home/dat/nativescript_angular2/mobile/platforms/android/build/intermediates/exploded-aar/com.google.android.gms/play-services-basement/8.4.0/AndroidManifest.xml:21:9-23:69
 MERGED from [com.google.android.gms:play-services-basement:8.4.0] /home/dat/nativescript_angular2/mobile/platforms/android/build/intermediates/exploded-aar/com.google.android.gms/play-services-basement/8.4.0/AndroidManifest.xml:21:9-23:69
@@ -124,8 +183,6 @@ uses-permission#android.permission.ACCESS_NETWORK_STATE
 ADDED from [com.google.android.gms:play-services-measurement:8.4.0] /home/dat/nativescript_angular2/mobile/platforms/android/build/intermediates/exploded-aar/com.google.android.gms/play-services-measurement/8.4.0/AndroidManifest.xml:22:5-79
 	android:name
 		ADDED from [com.google.android.gms:play-services-measurement:8.4.0] /home/dat/nativescript_angular2/mobile/platforms/android/build/intermediates/exploded-aar/com.google.android.gms/play-services-measurement/8.4.0/AndroidManifest.xml:22:22-76
-uses-permission#android.permission.WAKE_LOCK
-MERGED from [com.google.android.gms:play-services-measurement:8.4.0] /home/dat/nativescript_angular2/mobile/platforms/android/build/intermediates/exploded-aar/com.google.android.gms/play-services-measurement/8.4.0/AndroidManifest.xml:24:5-67
 provider#com.google.android.gms.measurement.AppMeasurementContentProvider
 ADDED from [com.google.android.gms:play-services-measurement:8.4.0] /home/dat/nativescript_angular2/mobile/platforms/android/build/intermediates/exploded-aar/com.google.android.gms/play-services-measurement/8.4.0/AndroidManifest.xml:28:7-31:37
 	android:authorities

@@ -18,7 +18,7 @@ export class HomePage implements OnInit {
 
 	//TODO ajouter la méthode de récupération des notifications
 	ngOnInit(){
-
+		this._userService.getNotifications();
 	}
 
 	constructor(
@@ -26,10 +26,5 @@ export class HomePage implements OnInit {
 		private _router: Router) {
 	}
 
-	display() {
-		this._userService.getNotifications()
-			.subscribe(
-			
-		);
-	}
+	
 }
