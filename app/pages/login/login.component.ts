@@ -19,9 +19,9 @@ export class LoginPage {
 
     this.user = new User();
 
-    // Hardcode a few values to make testing easy
-    this.user.username = "plambin";
-    this.user.password = "plambin";
+    // Harcoded values to avoid typing them
+    this.user.username = "stan";
+    this.user.password = "stan";
   }
 
   signIn() {

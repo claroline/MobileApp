@@ -1,10 +1,10 @@
 import {Page} from "ui/page";
 
 export class Config {
-    static apiUrl = "http://dat.claroline.com/";
+    static apiUrl = "http://192.10.1.45/pam/Claroline/web/app_dev.php/";
     static access_token = "";
     static refresh_token = "";
-    static client_id = "1_49psizc7y8kko4w8w4w0w8c8w8cwscwc8owg8wgk4w8ww0owg8";
-    static client_secret = "2swn3xys6vwgkg0w0kkg8sowc84kscswg8w84ckko8c8oswgow";
+    static client_id = "1_1a6cezzsry5cook8wooowcwscg0skos44k8o4kgsg8scsgg0g4";
+    static client_secret = "4v4d09ngiv4048ks4cg8okgg4skosokw0wk0k480go800844wo";
     static page: Page;
 }

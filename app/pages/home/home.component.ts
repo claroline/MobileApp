@@ -16,14 +16,18 @@ import {Config} from "../../shared/config";
 
 export class HomePage implements OnInit {
 
-	//TODO ajouter la méthode de récupération des notifications
+	
 	ngOnInit(){
-		this._userService.getNotifications();
+		this._userService.getNotifications()
+		 .then(
+      data =>  console.log("Notifications : " + JSON.stringify(data))
+       );
 	}
 
 	constructor(
 		private _userService: UserService,
 		private _router: Router) {
+		
 	}
 
 	
