@@ -13,5 +13,9 @@
     "exclude": [
         "node_modules",
         "platforms"
-    ]
+    ],
+    "atom": {
+      "rewriteTsconfig": true,
+      "formatOnSave" : true
+    }
 }

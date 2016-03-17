@@ -8,27 +8,28 @@ import {Config} from "../../shared/config";
 
 
 @Component({
-	selector: 'home',
-	templateUrl: 'pages/home/home.html',
-	providers: [UserService]
+    selector: 'home',
+    templateUrl: 'pages/home/home.html',
+    providers: [UserService]
 })
 
 
 export class HomePage implements OnInit {
 
-	
-	ngOnInit(){
-		this._userService.getNotifications()
-		 .then(
-      data =>  console.log("Notifications : " + JSON.stringify(data))
-       );
-	}
 
-	constructor(
-		private _userService: UserService,
-		private _router: Router) {
-		
-	}
+    ngOnInit() {
+        this._userService.getNotifications()
+            .then(
+            data => console.log("Notifications : " + JSON.stringify(data)),
+            error => console.error(JSON.stringify(error))
+            );
+    }
 
-	
+    constructor(
+        private _userService: UserService,
+        private _router: Router) {
+
+    }
+
+
 }
