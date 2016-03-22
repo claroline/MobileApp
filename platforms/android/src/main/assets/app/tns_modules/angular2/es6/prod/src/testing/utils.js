@@ -17,7 +17,9 @@ export let Log = class {
     }
     add(value) { this._result.push(value); }
     fn(value) {
-        return (a1 = null, a2 = null, a3 = null, a4 = null, a5 = null) => { this._result.push(value); };
+        return (a1 = null, a2 = null, a3 = null, a4 = null, a5 = null) => {
+            this._result.push(value);
+        };
     }
     clear() { this._result = []; }
     result() { return this._result.join("; "); }

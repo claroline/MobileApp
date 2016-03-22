@@ -88,8 +88,7 @@ export let AsyncPipe = class {
     _subscribe(obj) {
         this._obj = obj;
         this._strategy = this._selectStrategy(obj);
-        this._subscription =
-            this._strategy.createSubscription(obj, value => this._updateLatestValue(obj, value));
+        this._subscription = this._strategy.createSubscription(obj, (value) => this._updateLatestValue(obj, value));
     }
     /** @internal */
     _selectStrategy(obj) {

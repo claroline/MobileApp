@@ -24,13 +24,15 @@ function isContentView(view) {
     return view instanceof content_view_1.ContentView;
 }
 exports.isContentView = isContentView;
-function isComplexProperty(view) {
-    var name = view.nodeName;
-    return types_1.isString(name) && name.indexOf(".") !== -1;
-}
 function insertChild(parent, child, atIndex) {
     if (atIndex === void 0) { atIndex = -1; }
-    if (isLayout(parent)) {
+    if (!parent || child.meta.skipAddToDom) {
+        return;
+    }
+    if (parent.meta && parent.meta.insertChild) {
+        parent.meta.insertChild(parent, child, atIndex);
+    }
+    else if (isLayout(parent)) {
         if (atIndex !== -1) {
             parent.insertChild(child, atIndex);
         }
@@ -41,12 +43,21 @@ function insertChild(parent, child, atIndex) {
     else if (isContentView(parent)) {
         parent.content = child;
     }
+    else if (parent && parent._addChildFromBuilder) {
+        parent._addChildFromBuilder(child.nodeName, child);
+    }
     else {
     }
 }
 exports.insertChild = insertChild;
 function removeChild(parent, child) {
-    if (isLayout(parent)) {
+    if (!parent || child.meta.skipAddToDom) {
+        return;
+    }
+    if (parent.meta && parent.meta.removeChild) {
+        parent.meta.removeChild(parent, child);
+    }
+    else if (isLayout(parent)) {
         parent.removeChild(child);
     }
     else if (isContentView(parent)) {
@@ -72,21 +83,25 @@ function getChildIndex(parent, child) {
     }
 }
 exports.getChildIndex = getChildIndex;
-function createAndAttach(name, viewClass, parent) {
+function createAndAttach(name, viewClass, parent, beforeAttach) {
     var view = new viewClass();
     view.nodeName = name;
+    view.meta = element_registry_1.getViewMeta(name);
+    if (beforeAttach) {
+        beforeAttach(view);
+    }
     if (parent) {
         insertChild(parent, view);
     }
     return view;
 }
-function createView(name, parent) {
+function createView(name, parent, beforeAttach) {
     if (element_registry_1.isKnownView(name)) {
         var viewClass = element_registry_1.getViewClass(name);
-        return createAndAttach(name, viewClass, parent);
+        return createAndAttach(name, viewClass, parent, beforeAttach);
     }
     else {
-        return createViewContainer(name, parent);
+        return createViewContainer(name, parent, beforeAttach);
     }
 }
 exports.createView = createView;
@@ -94,20 +109,21 @@ function createText(value) {
     var text = new placeholder_1.Placeholder();
     text.nodeName = "#text";
     text.visibility = "collapse";
+    text.meta = element_registry_1.getViewMeta("Placeholder");
     return text;
 }
 exports.createText = createText;
-function createViewContainer(name, parentElement) {
+function createViewContainer(name, parentElement, beforeAttach) {
     //HACK: Using a ContentView here, so that it creates a native View object
     traceLog('Creating view container in:' + parentElement);
-    var layout = createView('ProxyViewContainer', parentElement);
+    var layout = createView('ProxyViewContainer', parentElement, beforeAttach);
     layout.nodeName = 'ProxyViewContainer';
     return layout;
 }
 exports.createViewContainer = createViewContainer;
 function createTemplateAnchor(parentElement) {
     //HACK: Using a ContentView here, so that it creates a native View object
-    var anchor = createAndAttach('ContentView', content_view_1.ContentView, parentElement);
+    var anchor = createAndAttach('template', content_view_1.ContentView, parentElement);
     anchor.visibility = "collapse";
     anchor.templateParent = parentElement;
     return anchor;
@@ -123,6 +139,28 @@ function isXMLAttribute(name) {
     }
 }
 function setProperty(view, attributeName, value) {
+    if (attributeName.indexOf(".") !== -1) {
+        // Handle nested properties
+        var properties = attributeName.split(".");
+        attributeName = properties[properties.length - 1];
+        var propMap = getProperties(view);
+        var i = 0;
+        while (i < properties.length - 1 && types_1.isDefined(view)) {
+            var prop = properties[i];
+            if (propMap.has(prop)) {
+                prop = propMap.get(prop);
+            }
+            view = view[prop];
+            propMap = getProperties(view);
+            i++;
+        }
+    }
+    if (types_1.isDefined(view)) {
+        setPropertyInternal(view, attributeName, value);
+    }
+}
+exports.setProperty = setProperty;
+function setPropertyInternal(view, attributeName, value) {
     traceLog('Setting attribute: ' + attributeName);
     var specialSetter = special_properties_1.getSpecialPropertySetter(attributeName);
     var propMap = getProperties(view);
@@ -138,14 +176,28 @@ function setProperty(view, attributeName, value) {
     else if (propMap.has(attributeName)) {
         // We have a lower-upper case mapped property.
         var propertyName = propMap.get(attributeName);
-        view[propertyName] = value;
+        view[propertyName] = convertValue(value);
     }
     else {
         // Unknown attribute value -- just set it to our object as is.
-        view[attributeName] = value;
+        view[attributeName] = convertValue(value);
     }
 }
-exports.setProperty = setProperty;
+function convertValue(value) {
+    if (typeof (value) !== "string" || value === "") {
+        return value;
+    }
+    var valueAsNumber = +value;
+    if (!isNaN(valueAsNumber)) {
+        return valueAsNumber;
+    }
+    else if (value && (value.toLowerCase() === "true" || value.toLowerCase() === "false")) {
+        return value.toLowerCase() === "true" ? true : false;
+    }
+    else {
+        return value;
+    }
+}
 var propertyMaps = new Map();
 function getProperties(instance) {
     var type = instance && instance.constructor;

@@ -47,8 +47,10 @@ var Source = (function () {
     return Source;
 }());
 exports.Source = Source;
-var ScopeError = (function () {
+var ScopeError = (function (_super) {
+    __extends(ScopeError, _super);
     function ScopeError(child, message) {
+        _super.call(this, message);
         if (!child) {
             throw new Error("Required child error!");
         }
@@ -89,7 +91,7 @@ var ScopeError = (function () {
     });
     ScopeError.prototype.toString = function () { return "Error: " + this.message; };
     return ScopeError;
-}());
+}(Error));
 exports.ScopeError = ScopeError;
 var SourceError = (function (_super) {
     __extends(SourceError, _super);

@@ -3,12 +3,35 @@ var frame = require("ui/frame");
 var observable = require("data/observable");
 global.moduleMerge(appModule, exports);
 var typedExports = exports;
+var NativeScriptApplication = (function (_super) {
+    __extends(NativeScriptApplication, _super);
+    function NativeScriptApplication() {
+        _super.call(this);
+        return global.__native(this);
+    }
+    NativeScriptApplication.prototype.onCreate = function () {
+        androidApp.init(this);
+        setupOrientationListener(androidApp);
+    };
+    NativeScriptApplication.prototype.onLowMemory = function () {
+        gc();
+        java.lang.System.gc();
+        _super.prototype.onLowMemory.call(this);
+        typedExports.notify({ eventName: typedExports.lowMemoryEvent, object: this, android: this });
+    };
+    NativeScriptApplication.prototype.onTrimMemory = function (level) {
+        gc();
+        java.lang.System.gc();
+        _super.prototype.onTrimMemory.call(this, level);
+    };
+    NativeScriptApplication = __decorate([
+        JavaProxy("com.tns.NativeScriptApplication")
+    ], NativeScriptApplication);
+    return NativeScriptApplication;
+}(android.app.Application));
 function initEvents() {
     var lifecycleCallbacks = new android.app.Application.ActivityLifecycleCallbacks({
         onActivityCreated: function (activity, bundle) {
-            if (!(activity instanceof com.tns.NativeScriptActivity)) {
-                return;
-            }
             if (!androidApp.startActivity) {
                 androidApp.startActivity = activity;
                 androidApp.notify({ eventName: "activityCreated", object: androidApp, activity: activity, bundle: bundle });
@@ -19,9 +42,6 @@ function initEvents() {
             androidApp.currentContext = activity;
         },
         onActivityDestroyed: function (activity) {
-            if (!(activity instanceof com.tns.NativeScriptActivity)) {
-                return;
-            }
             if (activity === androidApp.foregroundActivity) {
                 androidApp.foregroundActivity = undefined;
             }
@@ -42,9 +62,6 @@ function initEvents() {
             gc();
         },
         onActivityPaused: function (activity) {
-            if (!(activity instanceof com.tns.NativeScriptActivity)) {
-                return;
-            }
             androidApp.paused = true;
             if (activity === androidApp.foregroundActivity) {
                 if (typedExports.onSuspend) {
@@ -58,9 +75,6 @@ function initEvents() {
             }
         },
         onActivityResumed: function (activity) {
-            if (!(activity instanceof com.tns.NativeScriptActivity)) {
-                return;
-            }
             androidApp.paused = false;
             if (activity === androidApp.foregroundActivity) {
                 if (typedExports.onResume) {
@@ -74,18 +88,12 @@ function initEvents() {
             }
         },
         onActivitySaveInstanceState: function (activity, bundle) {
-            if (!(activity instanceof com.tns.NativeScriptActivity)) {
-                return;
-            }
             androidApp.notify({ eventName: "saveActivityState", object: androidApp, activity: activity, bundle: bundle });
             if (androidApp.onSaveActivityState) {
                 androidApp.onSaveActivityState(activity, bundle);
             }
         },
         onActivityStarted: function (activity) {
-            if (!(activity instanceof com.tns.NativeScriptActivity)) {
-                return;
-            }
             androidApp.foregroundActivity = activity;
             androidApp.notify({ eventName: "activityStarted", object: androidApp, activity: activity });
             if (androidApp.onActivityStarted) {
@@ -93,9 +101,6 @@ function initEvents() {
             }
         },
         onActivityStopped: function (activity) {
-            if (!(activity instanceof com.tns.NativeScriptActivity)) {
-                return;
-            }
             androidApp.notify({ eventName: "activityStopped", object: androidApp, activity: activity });
             if (androidApp.onActivityStopped) {
                 androidApp.onActivityStopped(activity);
@@ -111,9 +116,6 @@ var AndroidApplication = (function (_super) {
         this._registeredReceivers = {};
         this._pendingReceiverRegistrations = new Array();
     }
-    AndroidApplication.prototype.getActivity = function (intent) {
-        return frame.getActivity();
-    };
     AndroidApplication.prototype.init = function (nativeApp) {
         this.nativeApp = nativeApp;
         this.packageName = nativeApp.getPackageName();
@@ -168,6 +170,8 @@ var AndroidApplication = (function (_super) {
     return AndroidApplication;
 }(observable.Observable));
 exports.AndroidApplication = AndroidApplication;
+var androidApp = new AndroidApplication();
+typedExports.android = androidApp;
 var BroadcastReceiverClass;
 function ensureBroadCastReceiverClass() {
     if (BroadcastReceiverClass) {
@@ -189,16 +193,6 @@ function ensureBroadCastReceiverClass() {
     }(android.content.BroadcastReceiver));
     BroadcastReceiverClass = BroadcastReceiver;
 }
-global.__onUncaughtError = function (error) {
-    var types = require("utils/types");
-    if (types.isFunction(typedExports.onUncaughtError)) {
-        typedExports.onUncaughtError(error);
-    }
-    typedExports.notify({ eventName: typedExports.uncaughtErrorEvent, object: appModule.android, android: error });
-};
-function loadCss() {
-    typedExports.cssSelectorsCache = typedExports.loadCss(typedExports.cssFile);
-}
 var started = false;
 function start(entry) {
     if (started) {
@@ -208,21 +202,9 @@ function start(entry) {
     if (entry) {
         typedExports.mainEntry = entry;
     }
-    app.init({
-        getActivity: function (activity) {
-            var intent = activity.getIntent();
-            return androidApp.getActivity(intent);
-        },
-        onCreate: function () {
-            androidApp.init(this);
-            setupOrientationListener(androidApp);
-        }
-    });
     loadCss();
 }
 exports.start = start;
-var androidApp = new AndroidApplication();
-typedExports.android = androidApp;
 var currentOrientation;
 function setupOrientationListener(androidApp) {
     androidApp.registerBroadcastReceiver(android.content.Intent.ACTION_CONFIGURATION_CHANGED, onConfigurationChanged);
@@ -253,6 +235,9 @@ function onConfigurationChanged(context, intent) {
         });
     }
 }
+function loadCss() {
+    typedExports.cssSelectorsCache = typedExports.loadCss(typedExports.cssFile);
+}
 global.__onLiveSync = function () {
     if (typedExports.android && typedExports.android.paused) {
         return;
@@ -261,4 +246,11 @@ global.__onLiveSync = function () {
     fileResolver.clearCache();
     loadCss();
     frame.reloadPage();
+};
+global.__onUncaughtError = function (error) {
+    var types = require("utils/types");
+    if (types.isFunction(typedExports.onUncaughtError)) {
+        typedExports.onUncaughtError(error);
+    }
+    typedExports.notify({ eventName: typedExports.uncaughtErrorEvent, object: appModule.android, android: error });
 };

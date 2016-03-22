@@ -79,15 +79,17 @@ var WebView = (function (_super) {
             eventName: WebView.loadFinishedEvent,
             object: this,
             url: url,
+            navigationType: undefined,
             error: error
         };
         this.notify(args);
     };
-    WebView.prototype._onLoadStarted = function (url) {
+    WebView.prototype._onLoadStarted = function (url, navigationType) {
         var args = {
             eventName: WebView.loadStartedEvent,
             object: this,
             url: url,
+            navigationType: navigationType,
             error: undefined
         };
         this.notify(args);
@@ -108,6 +110,14 @@ var WebView = (function (_super) {
     });
     WebView.loadStartedEvent = "loadStarted";
     WebView.loadFinishedEvent = "loadFinished";
+    WebView.navigationTypes = [
+        "linkClicked",
+        "formSubmitted",
+        "backForward",
+        "reload",
+        "formResubmitted",
+        "other"
+    ];
     WebView.urlProperty = urlProperty;
     WebView.srcProperty = srcProperty;
     return WebView;

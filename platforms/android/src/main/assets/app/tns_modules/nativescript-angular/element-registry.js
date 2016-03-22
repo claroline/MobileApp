@@ -1,38 +1,50 @@
 "use strict";
+var defaultViewMeta = {
+    skipAddToDom: false,
+};
 var elementMap = new Map();
-function registerElement(elementName, resolver) {
+function registerElement(elementName, resolver, meta) {
     if (elementMap.has(elementName)) {
         throw new Error("Element for " + elementName + " already registered.");
     }
     else {
-        elementMap.set(elementName, resolver);
-        elementMap.set(elementName.toLowerCase(), resolver);
+        var entry = { resolver: resolver, meta: meta };
+        elementMap.set(elementName, entry);
+        elementMap.set(elementName.toLowerCase(), entry);
     }
 }
 exports.registerElement = registerElement;
 function getViewClass(elementName) {
-    var resolver = elementMap.get(elementName) ||
+    var entry = elementMap.get(elementName) ||
         elementMap.get(elementName.toLowerCase());
-    if (!resolver) {
+    if (!entry) {
         throw new TypeError("No known component for element " + elementName + ".");
     }
     try {
-        return resolver();
+        return entry.resolver();
     }
     catch (e) {
-        throw new TypeError("Could not load view for: " + elementName + ".\n\n" + e);
+        throw new TypeError("Could not load view for: " + elementName + "." + e);
     }
 }
 exports.getViewClass = getViewClass;
+function getViewMeta(nodeName) {
+    var meta = defaultViewMeta;
+    var entry = elementMap.get(nodeName) || elementMap.get(nodeName.toLowerCase());
+    if (entry && entry.meta) {
+        meta = entry.meta;
+    }
+    return meta;
+}
+exports.getViewMeta = getViewMeta;
 function isKnownView(elementName) {
     return elementMap.has(elementName) ||
         elementMap.has(elementName.toLowerCase());
 }
 exports.isKnownView = isKnownView;
 //Register default NativeScript components
+//Note: ActionBar related components are registerd together with action-bar directives.
 registerElement("AbsoluteLayout", function () { return require("ui/layouts/absolute-layout").AbsoluteLayout; });
-registerElement("ActionBar", function () { return require("ui/action-bar").ActionBar; });
-registerElement("ActionItem", function () { return require("ui/action-bar").ActionItem; });
 registerElement("ActivityIndicator", function () { return require("ui/activity-indicator").ActivityIndicator; });
 registerElement("Border", function () { return require("ui/border").Border; });
 registerElement("Button", function () { return require("ui/button").Button; });
@@ -50,6 +62,7 @@ registerElement("ListView", function () { return require("ui/list-view").ListVie
 registerElement("Page", function () { return require("ui/page").Page; });
 registerElement("Placeholder", function () { return require("ui/placeholder").Placeholder; });
 registerElement("Progress", function () { return require("ui/progress").Progress; });
+registerElement("ProxyViewContainer", function () { return require("ui/proxy-view-container").ProxyViewContainer; });
 registerElement("Repeater", function () { return require("ui/repeater").Repeater; });
 registerElement("ScrollView", function () { return require("ui/scroll-view").ScrollView; });
 registerElement("SearchBar", function () { return require("ui/search-bar").SearchBar; });
@@ -63,5 +76,5 @@ registerElement("TextView", function () { return require("ui/text-view").TextVie
 registerElement("TimePicker", function () { return require("ui/time-picker").TimePicker; });
 registerElement("WebView", function () { return require("ui/web-view").WebView; });
 registerElement("WrapLayout", function () { return require("ui/layouts/wrap-layout").WrapLayout; });
-registerElement("ProxyViewContainer", function () { return require("ui/proxy-view-container").ProxyViewContainer; });
+registerElement("DetachedContainer", function () { return require("ui/proxy-view-container").ProxyViewContainer; }, { skipAddToDom: true });
 //# sourceMappingURL=element-registry.js.map

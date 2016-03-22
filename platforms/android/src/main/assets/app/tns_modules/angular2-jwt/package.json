@@ -16,7 +16,9 @@
     "name": "ryanchenkie"
   },
   "_npmVersion": "2.14.12",
-  "_phantomChildren": {},
+  "_phantomChildren": {
+    "es6-promise": "3.1.2"
+  },
   "_requested": {
     "name": "angular2-jwt",
     "raw": "angular2-jwt",

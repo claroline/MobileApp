@@ -1,4 +1,9 @@
 "use strict";
+var __extends = (this && this.__extends) || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+};
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -11,41 +16,45 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var core_1 = require('angular2/core');
 var control_value_accessor_1 = require('angular2/src/common/forms/directives/control_value_accessor');
 var lang_1 = require('angular2/src/facade/lang');
-var CHECKED_VALUE_ACCESSOR = lang_1.CONST_EXPR(new core_1.Provider(control_value_accessor_1.NG_VALUE_ACCESSOR, { useExisting: core_1.forwardRef(function () { return CheckedValueAccessor; }), multi: true }));
+var base_value_accessor_1 = require('./base-value-accessor');
+var CHECKED_VALUE_ACCESSOR = core_1.provide(control_value_accessor_1.NG_VALUE_ACCESSOR, { useExisting: core_1.forwardRef(function () { return CheckedValueAccessor; }), multi: true });
 /**
- * The accessor for writing a text and listening to changes that is used by the
- * {@link NgModel}, {@link NgFormControl}, and {@link NgControlName} directives.
+ * The accessor for setting a checked property and listening to changes that is used by the
+ * {@link NgModel} directives.
  *
  *  ### Example
  *  ```
  *  <Switch [(ngModel)]='model.test'>
  *  ```
  */
-var CheckedValueAccessor = (function () {
-    function CheckedValueAccessor(_renderer, _elementRef) {
-        this._renderer = _renderer;
-        this._elementRef = _elementRef;
-        this.onChange = function (_) { };
+var CheckedValueAccessor = (function (_super) {
+    __extends(CheckedValueAccessor, _super);
+    function CheckedValueAccessor(elementRef) {
+        _super.call(this, elementRef.nativeElement);
         this.onTouched = function () { };
     }
     CheckedValueAccessor.prototype.writeValue = function (value) {
-        var normalizedValue = lang_1.isBlank(value) ? false : value;
-        this._renderer.setElementProperty(this._elementRef.nativeElement, 'checked', normalizedValue);
+        var normalizedValue = false;
+        if (!lang_1.isBlank(value)) {
+            if (typeof value === 'string') {
+                normalizedValue = value.toLowerCase() === 'true' ? true : false;
+            }
+            else {
+                normalizedValue = !!value;
+            }
+        }
+        this.view.checked = normalizedValue;
     };
-    CheckedValueAccessor.prototype.registerOnChange = function (fn) { this.onChange = fn; };
     CheckedValueAccessor.prototype.registerOnTouched = function (fn) { this.onTouched = fn; };
     CheckedValueAccessor = __decorate([
         core_1.Directive({
             selector: 'Switch[ngModel]',
-            // TODO: vsavkin replace the above selector with the one below it once
-            // https://github.com/angular/angular/issues/3011 is implemented
-            // selector: '[ngControl],[ngModel],[ngFormControl]',
             host: { '(checkedChange)': 'onChange($event.value)' },
             bindings: [CHECKED_VALUE_ACCESSOR]
         }), 
-        __metadata('design:paramtypes', [core_1.Renderer, core_1.ElementRef])
+        __metadata('design:paramtypes', [core_1.ElementRef])
     ], CheckedValueAccessor);
     return CheckedValueAccessor;
-}());
+}(base_value_accessor_1.BaseValueAccessor));
 exports.CheckedValueAccessor = CheckedValueAccessor;
 //# sourceMappingURL=checked-value-accessor.js.map

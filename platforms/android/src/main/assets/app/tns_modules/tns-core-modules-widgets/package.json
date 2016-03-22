@@ -1,42 +1,42 @@
 {
   "_args": [
     [
-      "tns-core-modules-widgets@1.6.1",
-      "/home/dat/nativescript_angular2/mobile/node_modules/nativescript-telerik-ui/node_modules/tns-core-modules"
+      "tns-core-modules-widgets@1.7.0",
+      "/home/dat/nativescript_angular2/mobile/node_modules/tns-core-modules"
     ]
   ],
-  "_from": "tns-core-modules-widgets@1.6.1",
-  "_id": "tns-core-modules-widgets@1.6.1",
+  "_from": "tns-core-modules-widgets@1.7.0",
+  "_id": "tns-core-modules-widgets@1.7.0",
   "_inCache": true,
   "_installable": true,
-  "_location": "/nativescript-telerik-ui/tns-core-modules-widgets",
-  "_nodeVersion": "4.2.2",
+  "_location": "/tns-core-modules-widgets",
+  "_nodeVersion": "5.4.1",
   "_npmOperationalInternal": {
-    "host": "packages-6-west.internal.npmjs.com",
-    "tmp": "tmp/tns-core-modules-widgets-1.6.1.tgz_1455717231562_0.3811068623326719"
+    "host": "packages-13-west.internal.npmjs.com",
+    "tmp": "tmp/tns-core-modules-widgets-1.7.0.tgz_1458130178786_0.14874762017279863"
   },
   "_npmUser": {
-    "email": "vladimir.enchev@gmail.com",
-    "name": "enchev"
+    "email": "erjan.gavalji@gmail.com",
+    "name": "erjangavalji"
   },
-  "_npmVersion": "2.14.7",
+  "_npmVersion": "3.3.12",
   "_phantomChildren": {},
   "_requested": {
     "name": "tns-core-modules-widgets",
-    "raw": "tns-core-modules-widgets@1.6.1",
-    "rawSpec": "1.6.1",
+    "raw": "tns-core-modules-widgets@1.7.0",
+    "rawSpec": "1.7.0",
     "scope": null,
-    "spec": "1.6.1",
+    "spec": "1.7.0",
     "type": "version"
   },
   "_requiredBy": [
-    "/nativescript-telerik-ui/tns-core-modules"
+    "/tns-core-modules"
   ],
-  "_resolved": "https://registry.npmjs.org/tns-core-modules-widgets/-/tns-core-modules-widgets-1.6.1.tgz",
-  "_shasum": "d92e44711709ac330830e879f8b2dc17b8ae79f4",
+  "_resolved": "https://registry.npmjs.org/tns-core-modules-widgets/-/tns-core-modules-widgets-1.7.0.tgz",
+  "_shasum": "7461530335baaa1a4ccd274350166342bbf1ddec",
   "_shrinkwrap": null,
-  "_spec": "tns-core-modules-widgets@1.6.1",
-  "_where": "/home/dat/nativescript_angular2/mobile/node_modules/nativescript-telerik-ui/node_modules/tns-core-modules",
+  "_spec": "tns-core-modules-widgets@1.7.0",
+  "_where": "/home/dat/nativescript_angular2/mobile/node_modules/tns-core-modules",
   "author": {
     "name": "NativeScript team"
   },
@@ -48,8 +48,8 @@
   "devDependencies": {},
   "directories": {},
   "dist": {
-    "shasum": "d92e44711709ac330830e879f8b2dc17b8ae79f4",
-    "tarball": "http://registry.npmjs.org/tns-core-modules-widgets/-/tns-core-modules-widgets-1.6.1.tgz"
+    "shasum": "7461530335baaa1a4ccd274350166342bbf1ddec",
+    "tarball": "http://registry.npmjs.org/tns-core-modules-widgets/-/tns-core-modules-widgets-1.7.0.tgz"
   },
   "homepage": "https://github.com/NativeScript/android-widgets#readme",
   "license": "Apache-2.0",
@@ -86,5 +86,5 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "version": "1.6.1"
+  "version": "1.7.0"
 }

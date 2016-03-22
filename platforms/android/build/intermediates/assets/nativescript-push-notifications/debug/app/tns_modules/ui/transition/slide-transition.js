@@ -1,6 +1,5 @@
 var transition = require("ui/transition");
 var platform = require("platform");
-var floatType = java.lang.Float.class.getField("TYPE").get(null);
 var screenWidth = platform.screen.mainScreen.widthPixels;
 var screenHeight = platform.screen.mainScreen.heightPixels;
 var SlideTransition = (function (_super) {
@@ -10,7 +9,7 @@ var SlideTransition = (function (_super) {
         this._direction = direction;
     }
     SlideTransition.prototype.createAndroidAnimator = function (transitionType) {
-        var translationValues = java.lang.reflect.Array.newInstance(floatType, 2);
+        var translationValues = Array.create("float", 2);
         switch (this._direction) {
             case "left":
                 switch (transitionType) {

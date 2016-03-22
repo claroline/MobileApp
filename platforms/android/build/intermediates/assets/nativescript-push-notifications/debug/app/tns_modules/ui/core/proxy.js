@@ -1,6 +1,5 @@
 var bindable = require("ui/core/bindable");
 var dependencyObservable = require("ui/core/dependency-observable");
-var platform = require("platform");
 var types = require("utils/types");
 var observable = require("data/observable");
 var PropertyMetadata = (function (_super) {
@@ -62,11 +61,14 @@ var ProxyObject = (function (_super) {
         };
         this._eachSetProperty(eachPropertyCallback);
     };
+    ProxyObject.prototype._canApplyNativeProperty = function () {
+        return false;
+    };
     ProxyObject.prototype._trySetNativeValue = function (property, oldValue, newValue) {
         if (this._updatingJSPropertiesDict[property.name]) {
             return;
         }
-        if (platform.device.os === platform.platformNames.android && !this.android) {
+        if (!this._canApplyNativeProperty()) {
             return;
         }
         var metadata = property.metadata;

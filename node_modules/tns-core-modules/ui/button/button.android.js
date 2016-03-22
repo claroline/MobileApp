@@ -27,6 +27,16 @@ var Button = (function (_super) {
             }
         }));
     };
+    Button.prototype._onTextPropertyChanged = function (data) {
+        if (this.android) {
+            this.android.setText(data.newValue + "");
+        }
+    };
+    Button.prototype._setFormattedTextPropertyToNative = function (value) {
+        if (this.android) {
+            this.android.setText(value._formattedText);
+        }
+    };
     return Button;
 }(common.Button));
 exports.Button = Button;

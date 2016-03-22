@@ -22,13 +22,13 @@ export function setUpControl(control, dir) {
     control.asyncValidator = Validators.composeAsync([control.asyncValidator, dir.asyncValidator]);
     dir.valueAccessor.writeValue(control.value);
     // view -> model
-    dir.valueAccessor.registerOnChange(newValue => {
+    dir.valueAccessor.registerOnChange((newValue) => {
         dir.viewToModelUpdate(newValue);
         control.updateValue(newValue, { emitModelToViewChange: false });
         control.markAsDirty();
     });
     // model -> view
-    control.registerOnChange(newValue => dir.valueAccessor.writeValue(newValue));
+    control.registerOnChange((newValue) => dir.valueAccessor.writeValue(newValue));
     // touched
     dir.valueAccessor.registerOnTouched(() => control.markAsTouched());
 }
@@ -63,7 +63,7 @@ export function selectValueAccessor(dir, valueAccessors) {
     var defaultAccessor;
     var builtinAccessor;
     var customAccessor;
-    valueAccessors.forEach(v => {
+    valueAccessors.forEach((v) => {
         if (hasConstructor(v, DefaultValueAccessor)) {
             defaultAccessor = v;
         }

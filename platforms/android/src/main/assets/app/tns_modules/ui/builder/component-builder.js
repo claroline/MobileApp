@@ -57,12 +57,13 @@ function getComponentModule(elementName, namespace, attributes, exports) {
                 if (codeFilePath.indexOf("~/") === 0) {
                     codeFilePath = file_system_1.path.join(file_system_1.knownFolders.currentApp().path, codeFilePath.replace("~/", ""));
                 }
-                try {
+                var codeFilePathWithExt = codeFilePath.indexOf(".js") !== -1 ? codeFilePath : codeFilePath + ".js";
+                if (file_system_1.File.exists(codeFilePathWithExt)) {
                     exports = global.loadModule(codeFilePath);
                     instance.exports = exports;
                 }
-                catch (ex) {
-                    throw new Error("Code file with path \"" + codeFilePath + "\" cannot be found!");
+                else {
+                    throw new Error("Code file with path \"" + codeFilePathWithExt + "\" cannot be found!");
                 }
             }
             else {

@@ -325,7 +325,7 @@ var Frame = (function (_super) {
                 return entry.transitioniOS;
             }
             if (platform.device.os === platform.platformNames.android && types_1.isDefined(entry.transitionAndroid)) {
-                return entry.transitioniOS;
+                return entry.transitionAndroid;
             }
             if (entry && types_1.isDefined(entry.transition)) {
                 return entry.transition;

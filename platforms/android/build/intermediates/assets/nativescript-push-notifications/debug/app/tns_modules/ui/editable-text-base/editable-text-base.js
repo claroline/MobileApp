@@ -77,6 +77,8 @@ var EditableTextBase = (function (_super) {
                         actionId === android.view.inputmethod.EditorInfo.IME_ACTION_SEND ||
                         actionId === android.view.inputmethod.EditorInfo.IME_ACTION_NEXT) {
                         owner.dismissSoftInput();
+                    }
+                    if (event && event.getKeyCode() === android.view.KeyEvent.KEYCODE_ENTER) {
                         owner._onReturnPress();
                     }
                 }

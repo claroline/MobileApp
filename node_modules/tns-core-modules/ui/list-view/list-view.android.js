@@ -1,5 +1,6 @@
 var common = require("./list-view-common");
 var stackLayout = require("ui/layouts/stack-layout");
+var proxy_view_container_1 = require("ui/proxy-view-container");
 var layoutBase = require("ui/layouts/layout-base");
 var color;
 function ensureColor() {
@@ -187,7 +188,8 @@ function ensureListViewAdapterClass() {
                 }
                 this._listView._prepareItem(args.view, index);
                 if (!args.view.parent) {
-                    if (args.view instanceof layoutBase.LayoutBase) {
+                    if (args.view instanceof layoutBase.LayoutBase &&
+                        !(args.view instanceof proxy_view_container_1.ProxyViewContainer)) {
                         this._listView._addView(args.view);
                         convertView = args.view.android;
                     }

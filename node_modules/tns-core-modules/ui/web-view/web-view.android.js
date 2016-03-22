@@ -27,7 +27,7 @@ function ensureWebViewClientClass() {
             _super.prototype.onPageStarted.call(this, view, url, favicon);
             if (this._view) {
                 trace.write("WebViewClientClass.onPageStarted(" + url + ", " + favicon + ")", trace.categories.Debug);
-                this._view._onLoadStarted(url);
+                this._view._onLoadStarted(url, common.WebView.navigationTypes[common.WebView.navigationTypes.indexOf("linkClicked")]);
             }
         };
         WebViewClientClassInner.prototype.onPageFinished = function (view, url) {

@@ -1,7 +1,7 @@
 android { 
     productFlavors {
         "nativescript-push-notifications" {
-            dimension "nativescriptpushnotifications"
+            dimension "nativescript-push-notifications"
         }
     }
 }

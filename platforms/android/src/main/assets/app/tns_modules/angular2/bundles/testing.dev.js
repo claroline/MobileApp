@@ -291,7 +291,7 @@ System.register("angular2/src/mock/view_resolver_mock", ["angular2/src/core/di",
   return module.exports;
 });
 
-System.register("angular2/src/router/location_strategy", ["angular2/src/facade/lang", "angular2/core"], true, function(require, exports, module) {
+System.register("angular2/src/router/location/location_strategy", ["angular2/src/facade/lang", "angular2/core"], true, function(require, exports, module) {
   var global = System.global,
       __define = global.define;
   global.define = undefined;
@@ -601,7 +601,7 @@ System.register("angular2/src/testing/utils", ["angular2/core", "angular2/src/fa
   return module.exports;
 });
 
-System.register("angular2/src/mock/mock_location_strategy", ["angular2/src/core/di", "angular2/src/facade/async", "angular2/src/router/location_strategy"], true, function(require, exports, module) {
+System.register("angular2/src/mock/mock_location_strategy", ["angular2/src/core/di", "angular2/src/facade/async", "angular2/src/router/location/location_strategy"], true, function(require, exports, module) {
   var global = System.global,
       __define = global.define;
   global.define = undefined;
@@ -632,7 +632,7 @@ System.register("angular2/src/mock/mock_location_strategy", ["angular2/src/core/
   };
   var di_1 = require("angular2/src/core/di");
   var async_1 = require("angular2/src/facade/async");
-  var location_strategy_1 = require("angular2/src/router/location_strategy");
+  var location_strategy_1 = require("angular2/src/router/location/location_strategy");
   var MockLocationStrategy = (function(_super) {
     __extends(MockLocationStrategy, _super);
     function MockLocationStrategy() {
@@ -857,7 +857,7 @@ System.register("angular2/src/testing/test_component_builder", ["angular2/core",
   return module.exports;
 });
 
-System.register("angular2/platform/testing/browser_static", ["angular2/core", "angular2/src/platform/browser_common", "angular2/src/platform/browser/browser_adapter", "angular2/src/animate/animation_builder", "angular2/src/mock/animation_builder_mock", "angular2/src/mock/directive_resolver_mock", "angular2/src/mock/view_resolver_mock", "angular2/src/mock/mock_location_strategy", "angular2/src/router/location_strategy", "angular2/src/mock/ng_zone_mock", "angular2/src/platform/browser/xhr_impl", "angular2/compiler", "angular2/src/testing/test_component_builder", "angular2/src/testing/utils", "angular2/platform/common_dom", "angular2/src/facade/lang", "angular2/src/testing/utils"], true, function(require, exports, module) {
+System.register("angular2/platform/testing/browser_static", ["angular2/core", "angular2/src/platform/browser_common", "angular2/src/platform/browser/browser_adapter", "angular2/src/animate/animation_builder", "angular2/src/mock/animation_builder_mock", "angular2/src/mock/directive_resolver_mock", "angular2/src/mock/view_resolver_mock", "angular2/src/mock/mock_location_strategy", "angular2/src/router/location/location_strategy", "angular2/src/mock/ng_zone_mock", "angular2/src/platform/browser/xhr_impl", "angular2/compiler", "angular2/src/testing/test_component_builder", "angular2/src/testing/utils", "angular2/platform/common_dom", "angular2/src/facade/lang", "angular2/src/testing/utils"], true, function(require, exports, module) {
   var global = System.global,
       __define = global.define;
   global.define = undefined;
@@ -869,7 +869,7 @@ System.register("angular2/platform/testing/browser_static", ["angular2/core", "a
   var directive_resolver_mock_1 = require("angular2/src/mock/directive_resolver_mock");
   var view_resolver_mock_1 = require("angular2/src/mock/view_resolver_mock");
   var mock_location_strategy_1 = require("angular2/src/mock/mock_location_strategy");
-  var location_strategy_1 = require("angular2/src/router/location_strategy");
+  var location_strategy_1 = require("angular2/src/router/location/location_strategy");
   var ng_zone_mock_1 = require("angular2/src/mock/ng_zone_mock");
   var xhr_impl_1 = require("angular2/src/platform/browser/xhr_impl");
   var compiler_1 = require("angular2/compiler");
@@ -1858,6 +1858,10 @@ System.register("angular2/src/testing/test_injector", ["angular2/core", "angular
       return this._injector;
     };
     TestInjector.prototype.execute = function(fn) {
+      var additionalProviders = fn.additionalProviders();
+      if (additionalProviders.length > 0) {
+        this.addProviders(additionalProviders);
+      }
       if (!this._instantiated) {
         this.createInjector();
       }
@@ -1902,15 +1906,39 @@ System.register("angular2/src/testing/test_injector", ["angular2/core", "angular
     return new FunctionWithParamTokens(tokens, fn, false);
   }
   exports.inject = inject;
+  var InjectSetupWrapper = (function() {
+    function InjectSetupWrapper(_providers) {
+      this._providers = _providers;
+    }
+    InjectSetupWrapper.prototype.inject = function(tokens, fn) {
+      return new FunctionWithParamTokens(tokens, fn, false, this._providers);
+    };
+    InjectSetupWrapper.prototype.injectAsync = function(tokens, fn) {
+      return new FunctionWithParamTokens(tokens, fn, true, this._providers);
+    };
+    return InjectSetupWrapper;
+  })();
+  exports.InjectSetupWrapper = InjectSetupWrapper;
+  function withProviders(providers) {
+    return new InjectSetupWrapper(providers);
+  }
+  exports.withProviders = withProviders;
   function injectAsync(tokens, fn) {
     return new FunctionWithParamTokens(tokens, fn, true);
   }
   exports.injectAsync = injectAsync;
+  function emptyArray() {
+    return [];
+  }
   var FunctionWithParamTokens = (function() {
-    function FunctionWithParamTokens(_tokens, _fn, isAsync) {
+    function FunctionWithParamTokens(_tokens, _fn, isAsync, additionalProviders) {
+      if (additionalProviders === void 0) {
+        additionalProviders = emptyArray;
+      }
       this._tokens = _tokens;
       this._fn = _fn;
       this.isAsync = isAsync;
+      this.additionalProviders = additionalProviders;
     }
     FunctionWithParamTokens.prototype.execute = function(injector) {
       var params = this._tokens.map(function(t) {

@@ -363,6 +363,9 @@ var xml2ui;
                             this.rootComponentModule = componentModule;
                             if (this.rootComponentModule && this.rootComponentModule.component instanceof page_1.Page) {
                                 this.currentPage = this.rootComponentModule.component;
+                                if (this.currentPage.exports) {
+                                    this.context = this.currentPage.exports;
+                                }
                             }
                         }
                         this.parents.push(componentModule);

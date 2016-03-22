@@ -1,12 +1,11 @@
 var transition_1 = require("ui/transition");
-var floatType = java.lang.Float.class.getField("TYPE").get(null);
 var FadeTransition = (function (_super) {
     __extends(FadeTransition, _super);
     function FadeTransition() {
         _super.apply(this, arguments);
     }
     FadeTransition.prototype.createAndroidAnimator = function (transitionType) {
-        var alphaValues = java.lang.reflect.Array.newInstance(floatType, 2);
+        var alphaValues = Array.create("float", 2);
         switch (transitionType) {
             case transition_1.AndroidTransitionType.enter:
             case transition_1.AndroidTransitionType.popEnter:

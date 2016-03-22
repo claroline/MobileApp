@@ -16,8 +16,8 @@ import { isBlank, isPresent, Type } from 'angular2/src/facade/lang';
 import { BaseException } from 'angular2/src/facade/exceptions';
 import { Inject, Injectable } from 'angular2/core';
 import { RouteRegistry, ROUTER_PRIMARY_COMPONENT } from './route_registry';
-import { Location } from './location';
-import { getCanActivateHook } from './route_lifecycle_reflector';
+import { Location } from './location/location';
+import { getCanActivateHook } from './lifecycle/route_lifecycle_reflector';
 let _resolveToTrue = PromiseWrapper.resolve(true);
 let _resolveToFalse = PromiseWrapper.resolve(false);
 /**
@@ -37,13 +37,17 @@ let _resolveToFalse = PromiseWrapper.resolve(false);
  * `Instruction`.
  * The router uses the `RouteRegistry` to get an `Instruction`.
  */
-export class Router {
-    constructor(registry, parent, hostComponent) {
+export let Router = class {
+    constructor(registry, parent, hostComponent, root) {
         this.registry = registry;
         this.parent = parent;
         this.hostComponent = hostComponent;
+        this.root = root;
         this.navigating = false;
-        this._currentInstruction = null;
+        /**
+         * The current `Instruction` for the router
+         */
+        this.currentInstruction = null;
         this._currentNavigation = _resolveToTrue;
         this._outlet = null;
         this._auxRouters = new Map();
@@ -70,11 +74,25 @@ export class Router {
         if (isPresent(outlet.name)) {
             throw new BaseException(`registerPrimaryOutlet expects to be called with an unnamed outlet.`);
         }
+        if (isPresent(this._outlet)) {
+            throw new BaseException(`Primary outlet is already registered.`);
+        }
         this._outlet = outlet;
-        if (isPresent(this._currentInstruction)) {
-            return this.commit(this._currentInstruction, false);
+        if (isPresent(this.currentInstruction)) {
+            return this.commit(this.currentInstruction, false);
         }
         return _resolveToTrue;
+    }
+    /**
+     * Unregister an outlet (because it was destroyed, etc).
+     *
+     * You probably don't need to use this unless you're writing a custom outlet implementation.
+     */
+    unregisterPrimaryOutlet(outlet) {
+        if (isPresent(outlet.name)) {
+            throw new BaseException(`registerPrimaryOutlet expects to be called with an unnamed outlet.`);
+        }
+        this._outlet = null;
     }
     /**
      * Register an outlet to notified of auxiliary route changes.
@@ -90,8 +108,8 @@ export class Router {
         this._auxRouters.set(outletName, router);
         router._outlet = outlet;
         var auxInstruction;
-        if (isPresent(this._currentInstruction) &&
-            isPresent(auxInstruction = this._currentInstruction.auxInstruction[outletName])) {
+        if (isPresent(this.currentInstruction) &&
+            isPresent(auxInstruction = this.currentInstruction.auxInstruction[outletName])) {
             return router.commit(auxInstruction);
         }
         return _resolveToTrue;
@@ -106,8 +124,8 @@ export class Router {
             router = router.parent;
             instruction = instruction.child;
         }
-        return isPresent(this._currentInstruction) &&
-            this._currentInstruction.component == instruction.component;
+        return isPresent(this.currentInstruction) &&
+            this.currentInstruction.component == instruction.component;
     }
     /**
      * Dynamically update the routing configuration and trigger a navigation.
@@ -174,6 +192,22 @@ export class Router {
         });
     }
     /** @internal */
+    _settleInstruction(instruction) {
+        return instruction.resolveComponent().then((_) => {
+            var unsettledInstructions = [];
+            if (isPresent(instruction.component)) {
+                instruction.component.reuse = false;
+            }
+            if (isPresent(instruction.child)) {
+                unsettledInstructions.push(this._settleInstruction(instruction.child));
+            }
+            StringMapWrapper.forEach(instruction.auxInstruction, (instruction, _) => {
+                unsettledInstructions.push(this._settleInstruction(instruction));
+            });
+            return PromiseWrapper.all(unsettledInstructions);
+        });
+    }
+    /** @internal */
     _navigate(instruction, _skipLocationChange) {
         return this._settleInstruction(instruction)
             .then((_) => this._routerCanReuse(instruction))
@@ -192,22 +226,6 @@ export class Router {
                     });
                 }
             });
-        });
-    }
-    /** @internal */
-    _settleInstruction(instruction) {
-        return instruction.resolveComponent().then((_) => {
-            var unsettledInstructions = [];
-            if (isPresent(instruction.component)) {
-                instruction.component.reuse = false;
-            }
-            if (isPresent(instruction.child)) {
-                unsettledInstructions.push(this._settleInstruction(instruction.child));
-            }
-            StringMapWrapper.forEach(instruction.auxInstruction, (instruction, _) => {
-                unsettledInstructions.push(this._settleInstruction(instruction));
-            });
-            return PromiseWrapper.all(unsettledInstructions);
         });
     }
     _emitNavigationFinish(url) { ObservableWrapper.callEmit(this._subject, url); }
@@ -237,7 +255,7 @@ export class Router {
         });
     }
     _canActivate(nextInstruction) {
-        return canActivateOne(nextInstruction, this._currentInstruction);
+        return canActivateOne(nextInstruction, this.currentInstruction);
     }
     _routerCanDeactivate(instruction) {
         if (isBlank(this._outlet)) {
@@ -273,7 +291,7 @@ export class Router {
      * Updates this router and all descendant routers according to the given instruction
      */
     commit(instruction, _skipLocationChange = false) {
-        this._currentInstruction = instruction;
+        this.currentInstruction = instruction;
         var next = _resolveToTrue;
         if (isPresent(this._outlet) && isPresent(instruction.component)) {
             var componentInstruction = instruction.component;
@@ -338,10 +356,10 @@ export class Router {
         return this.registry.recognize(url, ancestorComponents);
     }
     _getAncestorInstructions() {
-        var ancestorInstructions = [this._currentInstruction];
+        var ancestorInstructions = [this.currentInstruction];
         var ancestorRouter = this;
         while (isPresent(ancestorRouter = ancestorRouter.parent)) {
-            ancestorInstructions.unshift(ancestorRouter._currentInstruction);
+            ancestorInstructions.unshift(ancestorRouter.currentInstruction);
         }
         return ancestorInstructions;
     }
@@ -362,10 +380,15 @@ export class Router {
         var ancestorInstructions = this._getAncestorInstructions();
         return this.registry.generate(linkParams, ancestorInstructions);
     }
-}
+};
+Router = __decorate([
+    Injectable(), 
+    __metadata('design:paramtypes', [RouteRegistry, Router, Object, Router])
+], Router);
 export let RootRouter = class extends Router {
     constructor(registry, location, primaryComponent) {
         super(registry, null, primaryComponent);
+        this.root = this;
         this._location = location;
         this._locationSub = this._location.subscribe((change) => {
             // we call recognize ourselves
@@ -427,7 +450,7 @@ RootRouter = __decorate([
 ], RootRouter);
 class ChildRouter extends Router {
     constructor(parent, hostComponent) {
-        super(parent.registry, parent, hostComponent);
+        super(parent.registry, parent, hostComponent, parent.root);
         this.parent = parent;
     }
     navigateByUrl(url, _skipLocationChange = false) {

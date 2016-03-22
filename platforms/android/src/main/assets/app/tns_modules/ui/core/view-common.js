@@ -1044,6 +1044,11 @@ var View = (function (_super) {
     };
     View.prototype._setNativeViewFrame = function (nativeView, frame) {
     };
+    View.prototype._onStylePropertyChanged = function (property) {
+    };
+    View.prototype._canApplyNativeProperty = function () {
+        return !!this._nativeView;
+    };
     View.loadedEvent = "loaded";
     View.unloadedEvent = "unloaded";
     View.automationTextProperty = automationTextProperty;

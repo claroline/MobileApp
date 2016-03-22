@@ -23,6 +23,7 @@ export declare class TestabilityRegistry {
     registerApplication(token: any, testability: Testability): void;
     getTestability(elem: any): Testability;
     getAllTestabilities(): Testability[];
+    getAllRootElements(): any[];
     findTestabilityInTree(elem: Node, findInAncestors?: boolean): Testability;
 }
 /**

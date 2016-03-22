@@ -70,6 +70,19 @@ export class Validators {
         };
     }
     /**
+     * Validator that requires a control to match a regex to its value.
+     */
+    static pattern(pattern) {
+        return (control) => {
+            if (isPresent(Validators.required(control)))
+                return null;
+            let regex = new RegExp(`^${pattern}$`);
+            let v = control.value;
+            return regex.test(v) ? null :
+                { "pattern": { "requiredPattern": `^${pattern}$`, "actualValue": v } };
+        };
+    }
+    /**
      * No-op validator.
      */
     static nullValidator(c) { return null; }

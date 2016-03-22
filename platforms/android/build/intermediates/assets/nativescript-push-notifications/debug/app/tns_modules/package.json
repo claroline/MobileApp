@@ -1,45 +1,44 @@
 {
   "_args": [
     [
-      "tns-core-modules@^1.7.0-angular-0",
-      "/home/dat/nativescript_angular2/claroline"
+      "tns-core-modules@^1.7.0",
+      "/home/dat/nativescript_angular2/mobile/node_modules/nativescript-angular"
     ]
   ],
-  "_from": "tns-core-modules@>=1.7.0-angular-0 <2.0.0",
-  "_id": "tns-core-modules@1.7.0-angular-0",
+  "_from": "tns-core-modules@>=1.7.0 <2.0.0",
+  "_id": "tns-core-modules@1.7.0",
   "_inCache": true,
   "_installable": true,
-  "_location": "/tns-core-modules",
-  "_nodeVersion": "5.5.0",
+  "_location": "/nativescript-angular/tns-core-modules",
+  "_nodeVersion": "5.4.1",
   "_npmOperationalInternal": {
-    "host": "packages-9-west.internal.npmjs.com",
-    "tmp": "tmp/tns-core-modules-1.7.0-angular-0.tgz_1456306797986_0.8409782957751304"
+    "host": "packages-13-west.internal.npmjs.com",
+    "tmp": "tmp/tns-core-modules-1.7.0.tgz_1458130162666_0.3412402579560876"
   },
   "_npmUser": {
-    "email": "hristo@deshev.com",
-    "name": "hdeshev"
+    "email": "erjan.gavalji@gmail.com",
+    "name": "erjangavalji"
   },
-  "_npmVersion": "3.7.1",
+  "_npmVersion": "3.3.12",
   "_phantomChildren": {},
   "_requested": {
     "name": "tns-core-modules",
-    "raw": "tns-core-modules@^1.7.0-angular-0",
-    "rawSpec": "^1.7.0-angular-0",
+    "raw": "tns-core-modules@^1.7.0",
+    "rawSpec": "^1.7.0",
     "scope": null,
-    "spec": ">=1.7.0-angular-0 <2.0.0",
+    "spec": ">=1.7.0 <2.0.0",
     "type": "range"
   },
   "_requiredBy": [
-    "/",
     "/nativescript-angular"
   ],
-  "_resolved": "https://registry.npmjs.org/tns-core-modules/-/tns-core-modules-1.7.0-angular-0.tgz",
-  "_shasum": "4c85f125b61e515553a9122c7264dcbce4cca882",
+  "_resolved": "https://registry.npmjs.org/tns-core-modules/-/tns-core-modules-1.7.0.tgz",
+  "_shasum": "c59196f7ed081b136bf3edfaeb862b07cd050927",
   "_shrinkwrap": null,
-  "_spec": "tns-core-modules@^1.7.0-angular-0",
-  "_where": "/home/dat/nativescript_angular2/claroline",
+  "_spec": "tns-core-modules@^1.7.0",
+  "_where": "/home/dat/nativescript_angular2/mobile/node_modules/nativescript-angular",
   "dependencies": {
-    "tns-core-modules-widgets": "1.6.0"
+    "tns-core-modules-widgets": "1.7.0"
   },
   "description": "Telerik NativeScript Core Modules",
   "devDependencies": {
@@ -65,15 +64,22 @@
   },
   "directories": {},
   "dist": {
-    "shasum": "4c85f125b61e515553a9122c7264dcbce4cca882",
-    "tarball": "http://registry.npmjs.org/tns-core-modules/-/tns-core-modules-1.7.0-angular-0.tgz"
+    "shasum": "c59196f7ed081b136bf3edfaeb862b07cd050927",
+    "tarball": "http://registry.npmjs.org/tns-core-modules/-/tns-core-modules-1.7.0.tgz"
   },
   "files": [
-    "**/*.*",
-    "**/*",
-    "!.baseDir.*",
+    "**/*.d.ts",
+    "**/*.js",
+    "!android17.d.ts",
+    "!ios.d.ts",
+    "!bin/",
+    "!apps/",
+    "!build/",
     "!node-tests/",
-    "!apps/"
+    "!declarations.android.d.ts",
+    "!declarations.ios.d.ts",
+    "!gruntfile.js",
+    "!org.nativescript.widgets.d.ts"
   ],
   "homepage": "https://www.nativescript.org",
   "license": "Apache-2.0",
@@ -107,6 +113,10 @@
       "name": "sdobrev"
     },
     {
+      "email": "tsvetan.raikov@telerik.com",
+      "name": "tzraikov"
+    },
+    {
       "email": "valio.stoychev@gmail.com",
       "name": "valio.stoychev"
     }
@@ -114,17 +124,17 @@
   "name": "tns-core-modules",
   "nativescript": {
     "platforms": {
-      "android": "1.3.0",
-      "ios": "1.3.0"
+      "android": "1.6.2",
+      "ios": "1.6.0"
     }
   },
   "optionalDependencies": {},
   "readme": "ERROR: No README data found!",
   "repository": {
     "type": "git",
-    "url": "https://github.com/NativeScript/NativeScript/commit/5ad215bb89706907665a6cf66e4d3ecc27ae0b6a"
+    "url": "https://github.com/NativeScript/NativeScript/commit/391f014232b382c91760bc5091d14333dbde93e3"
   },
   "scripts": {},
   "typings": "tns-core-modules.d.ts",
-  "version": "1.7.0-angular-0"
+  "version": "1.7.0"
 }

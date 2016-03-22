@@ -100,6 +100,11 @@ if (typeof global.__metadata !== "function") {
         }
     };
 }
+if (typeof global.__param !== "function") {
+    global.__param = (global && global.__param) || function (paramIndex, decorator) {
+        return function (target, key) { decorator(target, key, paramIndex); };
+    };
+}
 function Deprecated(target, key, descriptor) {
     if (descriptor) {
         var originalMethod = descriptor.value;

@@ -62,3 +62,7 @@ exports.remove = function (key) {
     editor.remove(key);
     editor.commit();
 };
+exports.clear = function () {
+    ensureSharedPreferences();
+    sharedPreferences.edit().clear().commit();
+};

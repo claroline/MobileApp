@@ -1,27 +1,27 @@
 /*
-*   Script builds apk in release or debug mode
-*   To run: 
-*           gradle buildapk -Prelease (release mode)
-*           gradle buildapk (debug mode -> default)
-*   Options:
-*           -Prelease  //this flag will run build in release mode
-*           -PksPath=[path_to_keystore_file]
-*           -PksPassword=[password_for_keystore_file]
-*           -Palias=[alias_to_use_from_keystore_file]
-*           -Ppassword=[password_for_alias]
+*	Script builds apk in release or debug mode
+*	To run: 
+*			gradle buildapk -Prelease (release mode)
+*			gradle buildapk (debug mode -> default)
+* 	Options:
+*			-Prelease  //this flag will run build in release mode
+*			-PksPath=[path_to_keystore_file]
+*			-PksPassword=[password_for_keystore_file]
+*			-Palias=[alias_to_use_from_keystore_file]
+*			-Ppassword=[password_for_alias]
 *
-*           -PtargetSdk=[target_sdk] (default is 22)
-*           -PbuildToolsVersion=[build_tools_version] (default is 22.0.1)
-*           -PsupportVersion=[support_version] (default (22.2.0)
-*           -PcompileSdk=[compile_sdk_version] (default 22)
+*			-PtargetSdk=[target_sdk] (default is 22)
+*			-PbuildToolsVersion=[build_tools_version] (default is 22.0.1)
+*			-PsupportVersion=[support_version] (default (22.2.0)
+*			-PcompileSdk=[compile_sdk_version] (default 22)
 *
-*           -PrunSBGenerator //this flag will triger static binding generation
+*			-PrunSBGenerator //this flag will triger static binding generation
 */
 
 buildscript {
-	repositories {
-		jcenter()
-	}
+    repositories {
+        jcenter()
+    }
 
 	dependencies {
 		classpath "com.android.tools.build:gradle:1.5.0"
@@ -40,13 +40,15 @@ def nodeModulesDir = "../../node_modules/"
 def libDir = "../../lib/Android/"
 def pluginNames = new ArrayList<String>()
 def configDir = file(configurationsDir)
+def appResExists = false
+def appResourcesName = "NativescriptAppResources"
 
 def compiteCompileSdkVersion () {
 	if(project.hasProperty("compileSdk")) {
 		return compileSdk
 	}
 	else {
-		return 22
+		return 23
 	}
 }
 
@@ -55,7 +57,7 @@ def computeTargetSdkVersion() {
 		return targetSdk
 	}
 	else {
-		return 22
+		return 23
 	}
 }
 
@@ -67,6 +69,7 @@ def computeBuildToolsVersion() {
 		return "22.0.1"
 	}
 }
+project.ext.selectedBuildType = project.hasProperty("release") ? "release" : "debug"
 
 def renameResultApks (variant) {
 	def name
@@ -85,14 +88,13 @@ def renameResultApks (variant) {
 	}    
 }
 
-
 ////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////// CONFIGURATIONS ///////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////
 
 android {
 	compileSdkVersion compiteCompileSdkVersion()
-	buildToolsVersion computeBuildToolsVersion()
+    buildToolsVersion computeBuildToolsVersion()
 	
 	defaultConfig {
 		minSdkVersion 17
@@ -100,12 +102,12 @@ android {
 	}
 	
 	sourceSets.main {
-		jniLibs.srcDir "libs/jni"
-	}
+        jniLibs.srcDir "libs/jni"
+    }
 	
 	signingConfigs {
-		release {
-			if(project.hasProperty("release")) {
+        release {
+            if(project.hasProperty("release")) {
 				if(project.hasProperty("ksPath") &&
 					project.hasProperty("ksPassword") &&
 					project.hasProperty("alias") &&
@@ -117,34 +119,32 @@ android {
 					keyPassword password
 				}
 			}
-		}
-	}
-	buildTypes {
-		release {
-			signingConfig signingConfigs.release
-		}
-	}
+        }
+    }
+    buildTypes {
+        release {
+            signingConfig signingConfigs.release
+        }
+    }
 	
 	applicationVariants.all { variant ->
 		renameResultApks(variant)
+	}
 	
-		def mergeAssetsTask = variant.mergeAssets
-		if(project.hasProperty("runSBGenerator")) {
-			runBindingGenerator.dependsOn(copyMetadata)
-			rbg.dependsOn(runBindingGenerator)
-			mergeAssetsTask.dependsOn(rbg)
-		}
-		else {
-			mergeAssetsTask.dependsOn(copyMetadata)
-		}
+	
+	applicationVariants.all { variant ->
+		def variantName = variant.name.capitalize()
+		def compileSourcesTaskName = "compile${variantName}Sources"
+		def compileSourcesTask = project.tasks.findByName(compileSourcesTaskName)
+		compileSourcesTask.finalizedBy "buildMetadata"
 	}
 }
 
 repositories {
-	jcenter()
-	// used for local *.AAR files
-	flatDir {
-		dirs 'libs/aar'
+    jcenter()
+    // used for local *.AAR files
+    flatDir {
+    	dirs 'libs/aar'
 	}
 }
 
@@ -154,10 +154,10 @@ dependencies {
 		suppotVer = supportVersion
 	}
 	
-	compile "com.android.support:support-v4:$suppotVer"
-	compile "com.android.support:appcompat-v7:$suppotVer"
+    compile "com.android.support:support-v4:$suppotVer"
+    compile "com.android.support:appcompat-v7:$suppotVer"
 
-	// take all jars within the libs dir
+    // take all jars within the libs dir
 	compile fileTree(dir: "libs", include: ["**/*.jar"])
 
 	// take all jars within the node_modules dir
@@ -168,8 +168,8 @@ dependencies {
 	
 	//when gradle has aar support this will be preferred instead of addAarDependencies
 	// compile files("$rootDir/libs/aar") {
-		// builtBy 'copyAarDependencies'
-	// }
+        // builtBy 'copyAarDependencies'
+    // }
 
 }
 
@@ -177,6 +177,22 @@ dependencies {
 ////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////// CONFIGURATION PHASE //////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////
+
+task pluginStructureCheck {
+	def ft = fileTree(dir: nodeModulesDir, include: ["**/platforms/android/**/*.*"], exclude: '**/.bin/**')
+	ft.files.each { f ->
+		def fileName = f.getName();
+		if(
+				!fileName.endsWith(".aar")
+				&&
+				!fileName.equals("include.gradle")
+				&&
+				!fileName.endsWith(".jar")
+			){
+			println "WARNING: The file: " + f + " is depricated, you can read more about what will be the expected plugin structure here: https://www.nativescript.org/blog/migrating-n-android-plugins-from-version-1.7-to-2.0" 
+		}
+	}
+}
 
 def createIncludeFile (filePath, fileName, dimensionName) {
 	println "\t+creating include.gradle file for: " + filePath
@@ -285,6 +301,7 @@ task pluginExtend {
 // createPluginsConfigFile.dependsOn(createDefaultIncludeFiles)
 // pluginExtend.dependsOn(createPluginsConfigFile)
 
+
 ////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////// BEFORE EXECUTION /////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////
@@ -318,12 +335,8 @@ task cleanLocalAarFiles(type: Delete) {
 	delete fileTree(dir: "libs/aar", include: ["*.aar"])
 }
 
-task deleteJavaDir (type: Delete) {
-	delete "$rootDir/src/main/java"
-}
-
 task ensureMetadataOutDir {
-	def outputDir = file("$rootDir/metadata/output")
+	def outputDir = file("$rootDir/metadata/output/assets/metadata")
 	outputDir.mkdirs()
 }
 
@@ -348,37 +361,42 @@ task collectAllJars {
 		}
 		
 		metadataParams.add("metadata-generator.jar")
-		metadataParams.add("../metadata/output")
+		metadataParams.add("../metadata/output/assets/metadata")
 		for(def i = 0; i < allJarPaths.size(); i++) {
 			metadataParams.add(allJarPaths.get(i));
+		}
+
+		def classesDir = "$rootDir/build/intermediates/classes"
+
+		def classesSubDirs = new File(classesDir).listFiles()
+
+		def selectedBuildType = project.ext.selectedBuildType
+
+		for (File subDir: classesSubDirs) {
+			if (!subDir.getName().equals(selectedBuildType)) {
+				def subDirBuildType = new File(subDir, selectedBuildType)
+				if (subDirBuildType.exists()) {
+					metadataParams.add(subDirBuildType.getAbsolutePath());
+				}
+			}
+		}
+
+		def classesDirBuildType = new File(classesDir, selectedBuildType)
+		if (classesDirBuildType.exists()) {
+			metadataParams.add(classesDirBuildType.getAbsolutePath())
 		}
 	}
 }
 
-task isMetadataGenerationNecessary {
-	description "checks if new metadata is necessary based on jar and aar dependencies used"
-	def inputFile = new File("build/metadataUTD")
-	def metadataDir = new File("metadata/output");
-	
-	inputs.file inputFile
-	outputs.upToDateWhen {
-		inputFile.exists() && 
-		metadataDir.exists() &&
-		metadataDir.list().length == 3 &&
-		(inputFile.text.trim() == metadataParams.toString().trim())
-	}
-	
-	doLast {
-		inputFile.text = metadataParams
-	}
-}
 
 task buildMetadata (type: JavaExec) {
 	description "builds metadata with provided jar dependencies"
-	outputs.upToDateWhen {
-		!isMetadataGenerationNecessary.didWork
-	}
 	
+	inputs.files(allJarPaths)
+	inputs.dir("build/intermediates/classes")
+
+	outputs.files("metadata/output/assets/metadata/treeNodeStream.dat", "metadata/output/assets/metadata/treeStringsStream.dat", "metadata/output/assets/metadata/treeValueStream.dat")
+
 	doFirst {
 		workingDir "build-tools"
 
@@ -386,28 +404,58 @@ task buildMetadata (type: JavaExec) {
 
 		args metadataParams.toArray()
 	}
-}
-
-task copyMetadata(type: Copy) {
-	description "moves metadata to the right place before packaging is done"
-	outputs.upToDateWhen {
-		!buildMetadata.didWork
+	
+	doLast {
+		copy {
+			from "metadata/output/assets/metadata"
+			into "src/main/assets/metadata"
+		}
+		
+		def files = new File("${buildDir}/intermediates/res").listFiles()
+		def tmpResourceAPK = null
+		for (File f: files) {
+			def name = f.getName();
+			if (name.endsWith(".ap_")) {
+				tmpResourceAPK = f;
+				break;
+			}
+		}
+		
+		def aaptCommand = "${android.getSdkDirectory().getAbsolutePath()}/build-tools/${android.buildToolsVersion}/aapt"
+		if (isWinOs) {
+			aaptCommand += ".exe"
+		}
+		
+		def tmpAPKPath = tmpResourceAPK.getPath()
+		
+		def removeCmdParams = new ArrayList<String>([aaptCommand, "remove", tmpAPKPath, "assets/metadata/treeNodeStream.dat", "assets/metadata/treeStringsStream.dat", "assets/metadata/treeValueStream.dat"])
+		
+		exec {
+			ignoreExitValue true
+			workingDir "metadata/output"
+			commandLine removeCmdParams.toArray()
+		}
+		
+		def addCmdParams = new ArrayList<String>([aaptCommand, "add", tmpAPKPath, "assets/metadata/treeNodeStream.dat", "assets/metadata/treeStringsStream.dat", "assets/metadata/treeValueStream.dat"])
+		
+		exec {
+			workingDir "metadata/output"
+			commandLine addCmdParams.toArray()
+		}
 	}
-
-	from "metadata/output"
-	into "src/main/assets/metadata"
 }
 
 
 task deleteExplodedAarFolder (type: Delete) {
 
 	outputs.upToDateWhen {
-		!isMetadataGenerationNecessary.didWork
+		!buildMetadata.didWork
 	}
 	
 	def explodedAarDir = project.buildDir.getAbsolutePath() + "/intermediates/exploded-aar"
 	delete explodedAarDir
 }
+
 
 
 ////////////////////////////////////////////////////////////////////////////////////
@@ -419,6 +467,7 @@ task runBindingGenerator(dependsOn: "ing:jar") {
 runBindingGenerator.dependsOn("bg:jar")
 
 task rbg (dependsOn: "asbg:generatebindings")
+
 
 
 ////////////////////////////////////////////////////////////////////////////////////
@@ -433,12 +482,9 @@ task rbg (dependsOn: "asbg:generatebindings")
 // 5. plugin extend (apply from include files)
 
 // --execution phase
-deleteJavaDir.dependsOn(cleanLocalAarFiles)
-ensureMetadataOutDir.dependsOn(deleteJavaDir)
+ensureMetadataOutDir.dependsOn(cleanLocalAarFiles)
 collectAllJars.dependsOn(ensureMetadataOutDir)
-isMetadataGenerationNecessary.dependsOn(collectAllJars)
-buildMetadata.dependsOn(isMetadataGenerationNecessary)
-copyMetadata.dependsOn(buildMetadata)
+buildMetadata.dependsOn(collectAllJars)
 
 //DO NOT UNCOMMENT
 // mergeAssets.dependsOn(copyMetadata) -> look in CONFIGURATIONS(top) in android.applicationVariants to see how it's done
@@ -447,7 +493,8 @@ task buildapk {
 	// problem is compile dependencies need to be changed before configuration stage
 	// and this is the only way so far
 	tasks.copyAarDependencies.execute()
-	tasks.addAarDependencies.execute()
+    tasks.addAarDependencies.execute()
+
 	//done to build only necessary apk
 	if(project.hasProperty("release")) {
 		dependsOn assembleRelease
@@ -458,3 +505,4 @@ task buildapk {
 	
 	dependsOn deleteExplodedAarFolder
 }
+

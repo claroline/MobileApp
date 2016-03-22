@@ -85,11 +85,17 @@ var XMLHttpRequest = (function () {
         this._setReadyState(this.DONE);
     };
     XMLHttpRequest.prototype._setResponseType = function () {
-        var contentType = this.getResponseHeader('Content-Type').toLowerCase();
-        if (contentType.indexOf('application/json') >= 0) {
-            this.responseType = XMLHttpRequestResponseType.json;
+        var header = this.getResponseHeader('Content-Type');
+        var contentType = header && header.toLowerCase();
+        if (contentType) {
+            if (contentType.indexOf('application/json') >= 0) {
+                this.responseType = XMLHttpRequestResponseType.json;
+            }
+            else if (contentType.indexOf('text/plain') >= 0) {
+                this.responseType = XMLHttpRequestResponseType.text;
+            }
         }
-        else if (contentType.indexOf('text/plain') >= 0) {
+        else {
             this.responseType = XMLHttpRequestResponseType.text;
         }
     };

@@ -1396,6 +1396,11 @@ System.register("angular2/src/facade/collection", ["angular2/src/facade/lang"], 
     ListWrapper.clone = function(array) {
       return array.slice(0);
     };
+    ListWrapper.createImmutable = function(array) {
+      var result = ListWrapper.clone(array);
+      Object.seal(result);
+      return result;
+    };
     ListWrapper.forEachWithIndex = function(array, fn) {
       for (var i = 0; i < array.length; i++) {
         fn(array[i], i);
@@ -1517,6 +1522,9 @@ System.register("angular2/src/facade/collection", ["angular2/src/facade/lang"], 
       }
       return solution;
     };
+    ListWrapper.isImmutable = function(list) {
+      return Object.isSealed(list);
+    };
     return ListWrapper;
   })();
   exports.ListWrapper = ListWrapper;
@@ -1591,12 +1599,79 @@ System.register("angular2/src/facade/collection", ["angular2/src/facade/lang"], 
   return module.exports;
 });
 
-System.register("angular2/src/facade/exception_handler", ["angular2/src/facade/lang", "angular2/src/facade/exceptions", "angular2/src/facade/collection"], true, function(require, exports, module) {
+System.register("angular2/src/facade/base_wrapped_exception", [], true, function(require, exports, module) {
+  var global = System.global,
+      __define = global.define;
+  global.define = undefined;
+  var __extends = (this && this.__extends) || function(d, b) {
+    for (var p in b)
+      if (b.hasOwnProperty(p))
+        d[p] = b[p];
+    function __() {
+      this.constructor = d;
+    }
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+  };
+  var BaseWrappedException = (function(_super) {
+    __extends(BaseWrappedException, _super);
+    function BaseWrappedException(message) {
+      _super.call(this, message);
+    }
+    Object.defineProperty(BaseWrappedException.prototype, "wrapperMessage", {
+      get: function() {
+        return '';
+      },
+      enumerable: true,
+      configurable: true
+    });
+    Object.defineProperty(BaseWrappedException.prototype, "wrapperStack", {
+      get: function() {
+        return null;
+      },
+      enumerable: true,
+      configurable: true
+    });
+    Object.defineProperty(BaseWrappedException.prototype, "originalException", {
+      get: function() {
+        return null;
+      },
+      enumerable: true,
+      configurable: true
+    });
+    Object.defineProperty(BaseWrappedException.prototype, "originalStack", {
+      get: function() {
+        return null;
+      },
+      enumerable: true,
+      configurable: true
+    });
+    Object.defineProperty(BaseWrappedException.prototype, "context", {
+      get: function() {
+        return null;
+      },
+      enumerable: true,
+      configurable: true
+    });
+    Object.defineProperty(BaseWrappedException.prototype, "message", {
+      get: function() {
+        return '';
+      },
+      enumerable: true,
+      configurable: true
+    });
+    return BaseWrappedException;
+  })(Error);
+  exports.BaseWrappedException = BaseWrappedException;
+  global.define = __define;
+  return module.exports;
+});
+
+System.register("angular2/src/facade/exception_handler", ["angular2/src/facade/lang", "angular2/src/facade/base_wrapped_exception", "angular2/src/facade/collection"], true, function(require, exports, module) {
   var global = System.global,
       __define = global.define;
   global.define = undefined;
   var lang_1 = require("angular2/src/facade/lang");
-  var exceptions_1 = require("angular2/src/facade/exceptions");
+  var base_wrapped_exception_1 = require("angular2/src/facade/base_wrapped_exception");
   var collection_1 = require("angular2/src/facade/collection");
   var _ArrayLogger = (function() {
     function _ArrayLogger() {
@@ -1669,14 +1744,14 @@ System.register("angular2/src/facade/exception_handler", ["angular2/src/facade/l
         throw exception;
     };
     ExceptionHandler.prototype._extractMessage = function(exception) {
-      return exception instanceof exceptions_1.WrappedException ? exception.wrapperMessage : exception.toString();
+      return exception instanceof base_wrapped_exception_1.BaseWrappedException ? exception.wrapperMessage : exception.toString();
     };
     ExceptionHandler.prototype._longStackTrace = function(stackTrace) {
       return collection_1.isListLikeIterable(stackTrace) ? stackTrace.join("\n\n-----async gap-----\n") : stackTrace.toString();
     };
     ExceptionHandler.prototype._findContext = function(exception) {
       try {
-        if (!(exception instanceof exceptions_1.WrappedException))
+        if (!(exception instanceof base_wrapped_exception_1.BaseWrappedException))
           return null;
         return lang_1.isPresent(exception.context) ? exception.context : this._findContext(exception.originalException);
       } catch (e) {
@@ -1684,22 +1759,22 @@ System.register("angular2/src/facade/exception_handler", ["angular2/src/facade/l
       }
     };
     ExceptionHandler.prototype._findOriginalException = function(exception) {
-      if (!(exception instanceof exceptions_1.WrappedException))
+      if (!(exception instanceof base_wrapped_exception_1.BaseWrappedException))
         return null;
       var e = exception.originalException;
-      while (e instanceof exceptions_1.WrappedException && lang_1.isPresent(e.originalException)) {
+      while (e instanceof base_wrapped_exception_1.BaseWrappedException && lang_1.isPresent(e.originalException)) {
         e = e.originalException;
       }
       return e;
     };
     ExceptionHandler.prototype._findOriginalStack = function(exception) {
-      if (!(exception instanceof exceptions_1.WrappedException))
+      if (!(exception instanceof base_wrapped_exception_1.BaseWrappedException))
         return null;
       var e = exception;
       var stack = exception.originalStack;
-      while (e instanceof exceptions_1.WrappedException && lang_1.isPresent(e.originalException)) {
+      while (e instanceof base_wrapped_exception_1.BaseWrappedException && lang_1.isPresent(e.originalException)) {
         e = e.originalException;
-        if (e instanceof exceptions_1.WrappedException && lang_1.isPresent(e.originalException)) {
+        if (e instanceof base_wrapped_exception_1.BaseWrappedException && lang_1.isPresent(e.originalException)) {
           stack = e.originalStack;
         }
       }
@@ -2047,22 +2122,66 @@ System.register("angular2/src/core/reflection/reflection_capabilities", ["angula
   return module.exports;
 });
 
-System.register("angular2/src/core/di/type_literal", [], true, function(require, exports, module) {
+System.register("angular2/src/core/di/key", ["angular2/src/facade/lang", "angular2/src/facade/exceptions", "angular2/src/core/di/forward_ref"], true, function(require, exports, module) {
   var global = System.global,
       __define = global.define;
   global.define = undefined;
-  var TypeLiteral = (function() {
-    function TypeLiteral() {}
-    Object.defineProperty(TypeLiteral.prototype, "type", {
+  var lang_1 = require("angular2/src/facade/lang");
+  var exceptions_1 = require("angular2/src/facade/exceptions");
+  var forward_ref_1 = require("angular2/src/core/di/forward_ref");
+  var Key = (function() {
+    function Key(token, id) {
+      this.token = token;
+      this.id = id;
+      if (lang_1.isBlank(token)) {
+        throw new exceptions_1.BaseException('Token must be defined!');
+      }
+    }
+    Object.defineProperty(Key.prototype, "displayName", {
       get: function() {
-        throw new Error("Type literals are only supported in Dart");
+        return lang_1.stringify(this.token);
       },
       enumerable: true,
       configurable: true
     });
-    return TypeLiteral;
+    Key.get = function(token) {
+      return _globalKeyRegistry.get(forward_ref_1.resolveForwardRef(token));
+    };
+    Object.defineProperty(Key, "numberOfKeys", {
+      get: function() {
+        return _globalKeyRegistry.numberOfKeys;
+      },
+      enumerable: true,
+      configurable: true
+    });
+    return Key;
   })();
-  exports.TypeLiteral = TypeLiteral;
+  exports.Key = Key;
+  var KeyRegistry = (function() {
+    function KeyRegistry() {
+      this._allKeys = new Map();
+    }
+    KeyRegistry.prototype.get = function(token) {
+      if (token instanceof Key)
+        return token;
+      if (this._allKeys.has(token)) {
+        return this._allKeys.get(token);
+      }
+      var newKey = new Key(token, Key.numberOfKeys);
+      this._allKeys.set(token, newKey);
+      return newKey;
+    };
+    Object.defineProperty(KeyRegistry.prototype, "numberOfKeys", {
+      get: function() {
+        return this._allKeys.size;
+      },
+      enumerable: true,
+      configurable: true
+    });
+    return KeyRegistry;
+  })();
+  exports.KeyRegistry = KeyRegistry;
+  var _globalKeyRegistry = new KeyRegistry();
   global.define = __define;
   return module.exports;
 });
@@ -2469,22 +2588,25 @@ System.register("angular2/src/core/change_detection/differs/default_iterable_dif
       var item;
       var itemTrackBy;
       if (lang_2.isArray(collection)) {
-        var list = collection;
-        this._length = collection.length;
-        for (index = 0; index < this._length; index++) {
-          item = list[index];
-          itemTrackBy = this._trackByFn(index, item);
-          if (record === null || !lang_2.looseIdentical(record.trackById, itemTrackBy)) {
-            record = this._mismatch(record, item, itemTrackBy, index);
-            mayBeDirty = true;
-          } else {
-            if (mayBeDirty) {
-              record = this._verifyReinsertion(record, item, itemTrackBy, index);
+        if (collection !== this._collection || !collection_1.ListWrapper.isImmutable(collection)) {
+          var list = collection;
+          this._length = collection.length;
+          for (index = 0; index < this._length; index++) {
+            item = list[index];
+            itemTrackBy = this._trackByFn(index, item);
+            if (record === null || !lang_2.looseIdentical(record.trackById, itemTrackBy)) {
+              record = this._mismatch(record, item, itemTrackBy, index);
+              mayBeDirty = true;
+            } else {
+              if (mayBeDirty) {
+                record = this._verifyReinsertion(record, item, itemTrackBy, index);
+              }
+              if (!lang_2.looseIdentical(record.item, item))
+                this._addIdentityChange(record, item);
             }
-            if (!lang_2.looseIdentical(record.item, item))
-              this._addIdentityChange(record, item);
+            record = record._next;
           }
-          record = record._next;
+          this._truncate(record);
         }
       } else {
         index = 0;
@@ -2504,8 +2626,8 @@ System.register("angular2/src/core/change_detection/differs/default_iterable_dif
           index++;
         });
         this._length = index;
+        this._truncate(record);
       }
-      this._truncate(record);
       this._collection = collection;
       return this.isDirty;
     };
@@ -2591,6 +2713,9 @@ System.register("angular2/src/core/change_detection/differs/default_iterable_dif
       }
       if (this._removalsTail !== null) {
         this._removalsTail._nextRemoved = null;
+      }
+      if (this._identityChangesTail !== null) {
+        this._identityChangesTail._nextIdentityChange = null;
       }
     };
     DefaultIterableDiffer.prototype._reinsertAfter = function(record, prevRecord, index) {
@@ -3040,7 +3165,7 @@ System.register("angular2/src/core/change_detection/differs/default_keyvalue_dif
           if (records.has(key)) {
             newSeqRecord = records.get(key);
           } else {
-            newSeqRecord = new KVChangeRecord(key);
+            newSeqRecord = new KeyValueChangeRecord(key);
             records.set(key, newSeqRecord);
             newSeqRecord.currentValue = value;
             _this._addToAdditions(newSeqRecord);
@@ -3183,8 +3308,8 @@ System.register("angular2/src/core/change_detection/differs/default_keyvalue_dif
     return DefaultKeyValueDiffer;
   })();
   exports.DefaultKeyValueDiffer = DefaultKeyValueDiffer;
-  var KVChangeRecord = (function() {
-    function KVChangeRecord(key) {
+  var KeyValueChangeRecord = (function() {
+    function KeyValueChangeRecord(key) {
       this.key = key;
       this.previousValue = null;
       this.currentValue = null;
@@ -3195,12 +3320,12 @@ System.register("angular2/src/core/change_detection/differs/default_keyvalue_dif
       this._prevRemoved = null;
       this._nextChanged = null;
     }
-    KVChangeRecord.prototype.toString = function() {
+    KeyValueChangeRecord.prototype.toString = function() {
       return lang_1.looseIdentical(this.previousValue, this.currentValue) ? lang_1.stringify(this.key) : (lang_1.stringify(this.key) + '[' + lang_1.stringify(this.previousValue) + '->' + lang_1.stringify(this.currentValue) + ']');
     };
-    return KVChangeRecord;
+    return KeyValueChangeRecord;
   })();
-  exports.KVChangeRecord = KVChangeRecord;
+  exports.KeyValueChangeRecord = KeyValueChangeRecord;
   global.define = __define;
   return module.exports;
 });
@@ -4929,10 +5054,9 @@ System.register("angular2/src/core/change_detection/constants", ["angular2/src/f
     ChangeDetectionStrategy[ChangeDetectionStrategy["Detached"] = 3] = "Detached";
     ChangeDetectionStrategy[ChangeDetectionStrategy["OnPush"] = 4] = "OnPush";
     ChangeDetectionStrategy[ChangeDetectionStrategy["Default"] = 5] = "Default";
-    ChangeDetectionStrategy[ChangeDetectionStrategy["OnPushObserve"] = 6] = "OnPushObserve";
   })(exports.ChangeDetectionStrategy || (exports.ChangeDetectionStrategy = {}));
   var ChangeDetectionStrategy = exports.ChangeDetectionStrategy;
-  exports.CHANGE_DETECTION_STRATEGY_VALUES = [ChangeDetectionStrategy.CheckOnce, ChangeDetectionStrategy.Checked, ChangeDetectionStrategy.CheckAlways, ChangeDetectionStrategy.Detached, ChangeDetectionStrategy.OnPush, ChangeDetectionStrategy.Default, ChangeDetectionStrategy.OnPushObserve];
+  exports.CHANGE_DETECTION_STRATEGY_VALUES = [ChangeDetectionStrategy.CheckOnce, ChangeDetectionStrategy.Checked, ChangeDetectionStrategy.CheckAlways, ChangeDetectionStrategy.Detached, ChangeDetectionStrategy.OnPush, ChangeDetectionStrategy.Default];
   exports.CHANGE_DETECTOR_STATE_VALUES = [ChangeDetectorState.NeverChecked, ChangeDetectorState.CheckedBefore, ChangeDetectorState.Errored];
   function isDefaultChangeDetectionStrategy(changeDetectionStrategy) {
     return lang_1.isBlank(changeDetectionStrategy) || changeDetectionStrategy === ChangeDetectionStrategy.Default;
@@ -5227,18 +5351,6 @@ System.register("angular2/src/core/profile/wtf_impl", ["angular2/src/facade/lang
     trace.endTimeRange(range);
   }
   exports.endTimeRange = endTimeRange;
-  global.define = __define;
-  return module.exports;
-});
-
-System.register("angular2/src/core/change_detection/observable_facade", [], true, function(require, exports, module) {
-  var global = System.global,
-      __define = global.define;
-  global.define = undefined;
-  function isObservable(value) {
-    return false;
-  }
-  exports.isObservable = isObservable;
   global.define = __define;
   return module.exports;
 });
@@ -6144,6 +6256,9 @@ System.register("angular2/src/core/testability/testability", ["angular2/src/core
     TestabilityRegistry.prototype.getAllTestabilities = function() {
       return collection_1.MapWrapper.values(this._applications);
     };
+    TestabilityRegistry.prototype.getAllRootElements = function() {
+      return collection_1.MapWrapper.keys(this._applications);
+    };
     TestabilityRegistry.prototype.findTestabilityInTree = function(elem, findInAncestors) {
       if (findInAncestors === void 0) {
         findInAncestors = true;
@@ -6485,6 +6600,9 @@ System.register("angular2/src/core/linker/query_list", ["angular2/src/facade/col
     QueryList.prototype.reduce = function(fn, init) {
       return this._results.reduce(fn, init);
     };
+    QueryList.prototype.forEach = function(fn) {
+      this._results.forEach(fn);
+    };
     QueryList.prototype.toArray = function() {
       return collection_1.ListWrapper.clone(this._results);
     };
@@ -6711,7 +6829,7 @@ System.register("angular2/src/core/render/util", ["angular2/src/facade/lang"], t
   return module.exports;
 });
 
-System.register("angular2/src/core/linker/view_manager", ["angular2/src/core/di", "angular2/src/facade/lang", "angular2/src/facade/collection", "angular2/src/facade/exceptions", "angular2/src/core/linker/view", "angular2/src/core/linker/element", "angular2/src/core/render/api", "angular2/src/core/profile/profile", "angular2/src/core/application_tokens", "angular2/src/core/linker/view_type"], true, function(require, exports, module) {
+System.register("angular2/src/core/linker/view_manager", ["angular2/src/core/di", "angular2/src/facade/lang", "angular2/src/facade/collection", "angular2/src/facade/exceptions", "angular2/src/core/linker/view", "angular2/src/core/render/api", "angular2/src/core/profile/profile", "angular2/src/core/application_tokens", "angular2/src/core/linker/view_type"], true, function(require, exports, module) {
   var global = System.global,
       __define = global.define;
   global.define = undefined;
@@ -6750,7 +6868,6 @@ System.register("angular2/src/core/linker/view_manager", ["angular2/src/core/di"
   var collection_1 = require("angular2/src/facade/collection");
   var exceptions_1 = require("angular2/src/facade/exceptions");
   var view_1 = require("angular2/src/core/linker/view");
-  var element_1 = require("angular2/src/core/linker/element");
   var api_1 = require("angular2/src/core/render/api");
   var profile_1 = require("angular2/src/core/profile/profile");
   var application_tokens_1 = require("angular2/src/core/application_tokens");
@@ -6875,12 +6992,7 @@ System.register("angular2/src/core/linker/view_manager", ["angular2/src/core/di"
         refNode = vcAppElement.nativeElement;
       }
       if (lang_1.isPresent(refNode)) {
-        var refRenderNode;
-        if (refNode instanceof element_1.AppElement) {
-          refRenderNode = refNode.nativeElement;
-        } else {
-          refRenderNode = refNode;
-        }
+        var refRenderNode = view_1.findLastRenderNode(refNode);
         view.renderer.attachViewAfter(refRenderNode, view_1.flattenNestedViewRenderNodes(view.rootNodesOrAppElements));
       }
       vcAppElement.parentView.changeDetector.addContentChild(view.changeDetector);
@@ -7482,195 +7594,6 @@ System.register("angular2/src/common/pipes/invalid_pipe_argument_exception", ["a
   return module.exports;
 });
 
-System.register("angular2/src/common/pipes/uppercase_pipe", ["angular2/src/facade/lang", "angular2/core", "angular2/src/common/pipes/invalid_pipe_argument_exception"], true, function(require, exports, module) {
-  var global = System.global,
-      __define = global.define;
-  global.define = undefined;
-  var __decorate = (this && this.__decorate) || function(decorators, target, key, desc) {
-    var c = arguments.length,
-        r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc,
-        d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function")
-      r = Reflect.decorate(decorators, target, key, desc);
-    else
-      for (var i = decorators.length - 1; i >= 0; i--)
-        if (d = decorators[i])
-          r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-  };
-  var __metadata = (this && this.__metadata) || function(k, v) {
-    if (typeof Reflect === "object" && typeof Reflect.metadata === "function")
-      return Reflect.metadata(k, v);
-  };
-  var lang_1 = require("angular2/src/facade/lang");
-  var core_1 = require("angular2/core");
-  var invalid_pipe_argument_exception_1 = require("angular2/src/common/pipes/invalid_pipe_argument_exception");
-  var UpperCasePipe = (function() {
-    function UpperCasePipe() {}
-    UpperCasePipe.prototype.transform = function(value, args) {
-      if (args === void 0) {
-        args = null;
-      }
-      if (lang_1.isBlank(value))
-        return value;
-      if (!lang_1.isString(value)) {
-        throw new invalid_pipe_argument_exception_1.InvalidPipeArgumentException(UpperCasePipe, value);
-      }
-      return value.toUpperCase();
-    };
-    UpperCasePipe = __decorate([lang_1.CONST(), core_1.Pipe({name: 'uppercase'}), core_1.Injectable(), __metadata('design:paramtypes', [])], UpperCasePipe);
-    return UpperCasePipe;
-  })();
-  exports.UpperCasePipe = UpperCasePipe;
-  global.define = __define;
-  return module.exports;
-});
-
-System.register("angular2/src/common/pipes/lowercase_pipe", ["angular2/src/facade/lang", "angular2/core", "angular2/src/common/pipes/invalid_pipe_argument_exception"], true, function(require, exports, module) {
-  var global = System.global,
-      __define = global.define;
-  global.define = undefined;
-  var __decorate = (this && this.__decorate) || function(decorators, target, key, desc) {
-    var c = arguments.length,
-        r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc,
-        d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function")
-      r = Reflect.decorate(decorators, target, key, desc);
-    else
-      for (var i = decorators.length - 1; i >= 0; i--)
-        if (d = decorators[i])
-          r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-  };
-  var __metadata = (this && this.__metadata) || function(k, v) {
-    if (typeof Reflect === "object" && typeof Reflect.metadata === "function")
-      return Reflect.metadata(k, v);
-  };
-  var lang_1 = require("angular2/src/facade/lang");
-  var core_1 = require("angular2/core");
-  var invalid_pipe_argument_exception_1 = require("angular2/src/common/pipes/invalid_pipe_argument_exception");
-  var LowerCasePipe = (function() {
-    function LowerCasePipe() {}
-    LowerCasePipe.prototype.transform = function(value, args) {
-      if (args === void 0) {
-        args = null;
-      }
-      if (lang_1.isBlank(value))
-        return value;
-      if (!lang_1.isString(value)) {
-        throw new invalid_pipe_argument_exception_1.InvalidPipeArgumentException(LowerCasePipe, value);
-      }
-      return value.toLowerCase();
-    };
-    LowerCasePipe = __decorate([lang_1.CONST(), core_1.Pipe({name: 'lowercase'}), core_1.Injectable(), __metadata('design:paramtypes', [])], LowerCasePipe);
-    return LowerCasePipe;
-  })();
-  exports.LowerCasePipe = LowerCasePipe;
-  global.define = __define;
-  return module.exports;
-});
-
-System.register("angular2/src/common/pipes/json_pipe", ["angular2/src/facade/lang", "angular2/core"], true, function(require, exports, module) {
-  var global = System.global,
-      __define = global.define;
-  global.define = undefined;
-  var __decorate = (this && this.__decorate) || function(decorators, target, key, desc) {
-    var c = arguments.length,
-        r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc,
-        d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function")
-      r = Reflect.decorate(decorators, target, key, desc);
-    else
-      for (var i = decorators.length - 1; i >= 0; i--)
-        if (d = decorators[i])
-          r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-  };
-  var __metadata = (this && this.__metadata) || function(k, v) {
-    if (typeof Reflect === "object" && typeof Reflect.metadata === "function")
-      return Reflect.metadata(k, v);
-  };
-  var lang_1 = require("angular2/src/facade/lang");
-  var core_1 = require("angular2/core");
-  var JsonPipe = (function() {
-    function JsonPipe() {}
-    JsonPipe.prototype.transform = function(value, args) {
-      if (args === void 0) {
-        args = null;
-      }
-      return lang_1.Json.stringify(value);
-    };
-    JsonPipe = __decorate([lang_1.CONST(), core_1.Pipe({
-      name: 'json',
-      pure: false
-    }), core_1.Injectable(), __metadata('design:paramtypes', [])], JsonPipe);
-    return JsonPipe;
-  })();
-  exports.JsonPipe = JsonPipe;
-  global.define = __define;
-  return module.exports;
-});
-
-System.register("angular2/src/common/pipes/slice_pipe", ["angular2/src/facade/lang", "angular2/src/facade/exceptions", "angular2/src/facade/collection", "angular2/core", "angular2/src/common/pipes/invalid_pipe_argument_exception"], true, function(require, exports, module) {
-  var global = System.global,
-      __define = global.define;
-  global.define = undefined;
-  var __decorate = (this && this.__decorate) || function(decorators, target, key, desc) {
-    var c = arguments.length,
-        r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc,
-        d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function")
-      r = Reflect.decorate(decorators, target, key, desc);
-    else
-      for (var i = decorators.length - 1; i >= 0; i--)
-        if (d = decorators[i])
-          r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-  };
-  var __metadata = (this && this.__metadata) || function(k, v) {
-    if (typeof Reflect === "object" && typeof Reflect.metadata === "function")
-      return Reflect.metadata(k, v);
-  };
-  var lang_1 = require("angular2/src/facade/lang");
-  var exceptions_1 = require("angular2/src/facade/exceptions");
-  var collection_1 = require("angular2/src/facade/collection");
-  var core_1 = require("angular2/core");
-  var invalid_pipe_argument_exception_1 = require("angular2/src/common/pipes/invalid_pipe_argument_exception");
-  var SlicePipe = (function() {
-    function SlicePipe() {}
-    SlicePipe.prototype.transform = function(value, args) {
-      if (args === void 0) {
-        args = null;
-      }
-      if (lang_1.isBlank(args) || args.length == 0) {
-        throw new exceptions_1.BaseException('Slice pipe requires one argument');
-      }
-      if (!this.supports(value)) {
-        throw new invalid_pipe_argument_exception_1.InvalidPipeArgumentException(SlicePipe, value);
-      }
-      if (lang_1.isBlank(value))
-        return value;
-      var start = args[0];
-      var end = args.length > 1 ? args[1] : null;
-      if (lang_1.isString(value)) {
-        return lang_1.StringWrapper.slice(value, start, end);
-      }
-      return collection_1.ListWrapper.slice(value, start, end);
-    };
-    SlicePipe.prototype.supports = function(obj) {
-      return lang_1.isString(obj) || lang_1.isArray(obj);
-    };
-    SlicePipe = __decorate([core_1.Pipe({
-      name: 'slice',
-      pure: false
-    }), core_1.Injectable(), __metadata('design:paramtypes', [])], SlicePipe);
-    return SlicePipe;
-  })();
-  exports.SlicePipe = SlicePipe;
-  global.define = __define;
-  return module.exports;
-});
-
 System.register("angular2/src/facade/intl", [], true, function(require, exports, module) {
   var global = System.global,
       __define = global.define;
@@ -7786,6 +7709,151 @@ System.register("angular2/src/facade/intl", [], true, function(require, exports,
     return DateFormatter;
   })();
   exports.DateFormatter = DateFormatter;
+  global.define = __define;
+  return module.exports;
+});
+
+System.register("angular2/src/common/pipes/json_pipe", ["angular2/src/facade/lang", "angular2/core"], true, function(require, exports, module) {
+  var global = System.global,
+      __define = global.define;
+  global.define = undefined;
+  var __decorate = (this && this.__decorate) || function(decorators, target, key, desc) {
+    var c = arguments.length,
+        r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc,
+        d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function")
+      r = Reflect.decorate(decorators, target, key, desc);
+    else
+      for (var i = decorators.length - 1; i >= 0; i--)
+        if (d = decorators[i])
+          r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+  };
+  var __metadata = (this && this.__metadata) || function(k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function")
+      return Reflect.metadata(k, v);
+  };
+  var lang_1 = require("angular2/src/facade/lang");
+  var core_1 = require("angular2/core");
+  var JsonPipe = (function() {
+    function JsonPipe() {}
+    JsonPipe.prototype.transform = function(value, args) {
+      if (args === void 0) {
+        args = null;
+      }
+      return lang_1.Json.stringify(value);
+    };
+    JsonPipe = __decorate([lang_1.CONST(), core_1.Pipe({
+      name: 'json',
+      pure: false
+    }), core_1.Injectable(), __metadata('design:paramtypes', [])], JsonPipe);
+    return JsonPipe;
+  })();
+  exports.JsonPipe = JsonPipe;
+  global.define = __define;
+  return module.exports;
+});
+
+System.register("angular2/src/common/pipes/slice_pipe", ["angular2/src/facade/lang", "angular2/src/facade/exceptions", "angular2/src/facade/collection", "angular2/core", "angular2/src/common/pipes/invalid_pipe_argument_exception"], true, function(require, exports, module) {
+  var global = System.global,
+      __define = global.define;
+  global.define = undefined;
+  var __decorate = (this && this.__decorate) || function(decorators, target, key, desc) {
+    var c = arguments.length,
+        r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc,
+        d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function")
+      r = Reflect.decorate(decorators, target, key, desc);
+    else
+      for (var i = decorators.length - 1; i >= 0; i--)
+        if (d = decorators[i])
+          r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+  };
+  var __metadata = (this && this.__metadata) || function(k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function")
+      return Reflect.metadata(k, v);
+  };
+  var lang_1 = require("angular2/src/facade/lang");
+  var exceptions_1 = require("angular2/src/facade/exceptions");
+  var collection_1 = require("angular2/src/facade/collection");
+  var core_1 = require("angular2/core");
+  var invalid_pipe_argument_exception_1 = require("angular2/src/common/pipes/invalid_pipe_argument_exception");
+  var SlicePipe = (function() {
+    function SlicePipe() {}
+    SlicePipe.prototype.transform = function(value, args) {
+      if (args === void 0) {
+        args = null;
+      }
+      if (lang_1.isBlank(args) || args.length == 0) {
+        throw new exceptions_1.BaseException('Slice pipe requires one argument');
+      }
+      if (!this.supports(value)) {
+        throw new invalid_pipe_argument_exception_1.InvalidPipeArgumentException(SlicePipe, value);
+      }
+      if (lang_1.isBlank(value))
+        return value;
+      var start = args[0];
+      var end = args.length > 1 ? args[1] : null;
+      if (lang_1.isString(value)) {
+        return lang_1.StringWrapper.slice(value, start, end);
+      }
+      return collection_1.ListWrapper.slice(value, start, end);
+    };
+    SlicePipe.prototype.supports = function(obj) {
+      return lang_1.isString(obj) || lang_1.isArray(obj);
+    };
+    SlicePipe = __decorate([core_1.Pipe({
+      name: 'slice',
+      pure: false
+    }), core_1.Injectable(), __metadata('design:paramtypes', [])], SlicePipe);
+    return SlicePipe;
+  })();
+  exports.SlicePipe = SlicePipe;
+  global.define = __define;
+  return module.exports;
+});
+
+System.register("angular2/src/common/pipes/lowercase_pipe", ["angular2/src/facade/lang", "angular2/core", "angular2/src/common/pipes/invalid_pipe_argument_exception"], true, function(require, exports, module) {
+  var global = System.global,
+      __define = global.define;
+  global.define = undefined;
+  var __decorate = (this && this.__decorate) || function(decorators, target, key, desc) {
+    var c = arguments.length,
+        r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc,
+        d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function")
+      r = Reflect.decorate(decorators, target, key, desc);
+    else
+      for (var i = decorators.length - 1; i >= 0; i--)
+        if (d = decorators[i])
+          r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+  };
+  var __metadata = (this && this.__metadata) || function(k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function")
+      return Reflect.metadata(k, v);
+  };
+  var lang_1 = require("angular2/src/facade/lang");
+  var core_1 = require("angular2/core");
+  var invalid_pipe_argument_exception_1 = require("angular2/src/common/pipes/invalid_pipe_argument_exception");
+  var LowerCasePipe = (function() {
+    function LowerCasePipe() {}
+    LowerCasePipe.prototype.transform = function(value, args) {
+      if (args === void 0) {
+        args = null;
+      }
+      if (lang_1.isBlank(value))
+        return value;
+      if (!lang_1.isString(value)) {
+        throw new invalid_pipe_argument_exception_1.InvalidPipeArgumentException(LowerCasePipe, value);
+      }
+      return value.toLowerCase();
+    };
+    LowerCasePipe = __decorate([lang_1.CONST(), core_1.Pipe({name: 'lowercase'}), core_1.Injectable(), __metadata('design:paramtypes', [])], LowerCasePipe);
+    return LowerCasePipe;
+  })();
+  exports.LowerCasePipe = LowerCasePipe;
   global.define = __define;
   return module.exports;
 });
@@ -7916,6 +7984,239 @@ System.register("angular2/src/common/pipes/number_pipe", ["angular2/src/facade/l
   return module.exports;
 });
 
+System.register("angular2/src/common/pipes/uppercase_pipe", ["angular2/src/facade/lang", "angular2/core", "angular2/src/common/pipes/invalid_pipe_argument_exception"], true, function(require, exports, module) {
+  var global = System.global,
+      __define = global.define;
+  global.define = undefined;
+  var __decorate = (this && this.__decorate) || function(decorators, target, key, desc) {
+    var c = arguments.length,
+        r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc,
+        d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function")
+      r = Reflect.decorate(decorators, target, key, desc);
+    else
+      for (var i = decorators.length - 1; i >= 0; i--)
+        if (d = decorators[i])
+          r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+  };
+  var __metadata = (this && this.__metadata) || function(k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function")
+      return Reflect.metadata(k, v);
+  };
+  var lang_1 = require("angular2/src/facade/lang");
+  var core_1 = require("angular2/core");
+  var invalid_pipe_argument_exception_1 = require("angular2/src/common/pipes/invalid_pipe_argument_exception");
+  var UpperCasePipe = (function() {
+    function UpperCasePipe() {}
+    UpperCasePipe.prototype.transform = function(value, args) {
+      if (args === void 0) {
+        args = null;
+      }
+      if (lang_1.isBlank(value))
+        return value;
+      if (!lang_1.isString(value)) {
+        throw new invalid_pipe_argument_exception_1.InvalidPipeArgumentException(UpperCasePipe, value);
+      }
+      return value.toUpperCase();
+    };
+    UpperCasePipe = __decorate([lang_1.CONST(), core_1.Pipe({name: 'uppercase'}), core_1.Injectable(), __metadata('design:paramtypes', [])], UpperCasePipe);
+    return UpperCasePipe;
+  })();
+  exports.UpperCasePipe = UpperCasePipe;
+  global.define = __define;
+  return module.exports;
+});
+
+System.register("angular2/src/common/pipes/replace_pipe", ["angular2/src/facade/lang", "angular2/src/facade/exceptions", "angular2/core", "angular2/src/common/pipes/invalid_pipe_argument_exception"], true, function(require, exports, module) {
+  var global = System.global,
+      __define = global.define;
+  global.define = undefined;
+  var __decorate = (this && this.__decorate) || function(decorators, target, key, desc) {
+    var c = arguments.length,
+        r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc,
+        d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function")
+      r = Reflect.decorate(decorators, target, key, desc);
+    else
+      for (var i = decorators.length - 1; i >= 0; i--)
+        if (d = decorators[i])
+          r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+  };
+  var __metadata = (this && this.__metadata) || function(k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function")
+      return Reflect.metadata(k, v);
+  };
+  var lang_1 = require("angular2/src/facade/lang");
+  var exceptions_1 = require("angular2/src/facade/exceptions");
+  var core_1 = require("angular2/core");
+  var invalid_pipe_argument_exception_1 = require("angular2/src/common/pipes/invalid_pipe_argument_exception");
+  var ReplacePipe = (function() {
+    function ReplacePipe() {}
+    ReplacePipe.prototype.transform = function(value, args) {
+      if (lang_1.isBlank(args) || args.length !== 2) {
+        throw new exceptions_1.BaseException('ReplacePipe requires two arguments');
+      }
+      if (lang_1.isBlank(value)) {
+        return value;
+      }
+      if (!this._supportedInput(value)) {
+        throw new invalid_pipe_argument_exception_1.InvalidPipeArgumentException(ReplacePipe, value);
+      }
+      var input = value.toString();
+      var pattern = args[0];
+      var replacement = args[1];
+      if (!this._supportedPattern(pattern)) {
+        throw new invalid_pipe_argument_exception_1.InvalidPipeArgumentException(ReplacePipe, pattern);
+      }
+      if (!this._supportedReplacement(replacement)) {
+        throw new invalid_pipe_argument_exception_1.InvalidPipeArgumentException(ReplacePipe, replacement);
+      }
+      if (lang_1.isFunction(replacement)) {
+        var rgxPattern = lang_1.isString(pattern) ? lang_1.RegExpWrapper.create(pattern) : pattern;
+        return lang_1.StringWrapper.replaceAllMapped(input, rgxPattern, replacement);
+      }
+      if (pattern instanceof RegExp) {
+        return lang_1.StringWrapper.replaceAll(input, pattern, replacement);
+      }
+      return lang_1.StringWrapper.replace(input, pattern, replacement);
+    };
+    ReplacePipe.prototype._supportedInput = function(input) {
+      return lang_1.isString(input) || lang_1.isNumber(input);
+    };
+    ReplacePipe.prototype._supportedPattern = function(pattern) {
+      return lang_1.isString(pattern) || pattern instanceof RegExp;
+    };
+    ReplacePipe.prototype._supportedReplacement = function(replacement) {
+      return lang_1.isString(replacement) || lang_1.isFunction(replacement);
+    };
+    ReplacePipe = __decorate([core_1.Pipe({name: 'replace'}), core_1.Injectable(), __metadata('design:paramtypes', [])], ReplacePipe);
+    return ReplacePipe;
+  })();
+  exports.ReplacePipe = ReplacePipe;
+  global.define = __define;
+  return module.exports;
+});
+
+System.register("angular2/src/common/pipes/i18n_plural_pipe", ["angular2/src/facade/lang", "angular2/core", "angular2/src/common/pipes/invalid_pipe_argument_exception"], true, function(require, exports, module) {
+  var global = System.global,
+      __define = global.define;
+  global.define = undefined;
+  var __decorate = (this && this.__decorate) || function(decorators, target, key, desc) {
+    var c = arguments.length,
+        r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc,
+        d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function")
+      r = Reflect.decorate(decorators, target, key, desc);
+    else
+      for (var i = decorators.length - 1; i >= 0; i--)
+        if (d = decorators[i])
+          r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+  };
+  var __metadata = (this && this.__metadata) || function(k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function")
+      return Reflect.metadata(k, v);
+  };
+  var lang_1 = require("angular2/src/facade/lang");
+  var core_1 = require("angular2/core");
+  var invalid_pipe_argument_exception_1 = require("angular2/src/common/pipes/invalid_pipe_argument_exception");
+  var interpolationExp = lang_1.RegExpWrapper.create('#');
+  var I18nPluralPipe = (function() {
+    function I18nPluralPipe() {}
+    I18nPluralPipe.prototype.transform = function(value, args) {
+      if (args === void 0) {
+        args = null;
+      }
+      var key;
+      var valueStr;
+      var pluralMap = args[0];
+      if (!lang_1.isStringMap(pluralMap)) {
+        throw new invalid_pipe_argument_exception_1.InvalidPipeArgumentException(I18nPluralPipe, pluralMap);
+      }
+      key = value === 0 || value === 1 ? "=" + value : 'other';
+      valueStr = lang_1.isPresent(value) ? value.toString() : '';
+      return lang_1.StringWrapper.replaceAll(pluralMap[key], interpolationExp, valueStr);
+    };
+    I18nPluralPipe = __decorate([lang_1.CONST(), core_1.Pipe({
+      name: 'i18nPlural',
+      pure: true
+    }), core_1.Injectable(), __metadata('design:paramtypes', [])], I18nPluralPipe);
+    return I18nPluralPipe;
+  })();
+  exports.I18nPluralPipe = I18nPluralPipe;
+  global.define = __define;
+  return module.exports;
+});
+
+System.register("angular2/src/common/pipes/i18n_select_pipe", ["angular2/src/facade/lang", "angular2/src/facade/collection", "angular2/core", "angular2/src/common/pipes/invalid_pipe_argument_exception"], true, function(require, exports, module) {
+  var global = System.global,
+      __define = global.define;
+  global.define = undefined;
+  var __decorate = (this && this.__decorate) || function(decorators, target, key, desc) {
+    var c = arguments.length,
+        r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc,
+        d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function")
+      r = Reflect.decorate(decorators, target, key, desc);
+    else
+      for (var i = decorators.length - 1; i >= 0; i--)
+        if (d = decorators[i])
+          r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+  };
+  var __metadata = (this && this.__metadata) || function(k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function")
+      return Reflect.metadata(k, v);
+  };
+  var lang_1 = require("angular2/src/facade/lang");
+  var collection_1 = require("angular2/src/facade/collection");
+  var core_1 = require("angular2/core");
+  var invalid_pipe_argument_exception_1 = require("angular2/src/common/pipes/invalid_pipe_argument_exception");
+  var I18nSelectPipe = (function() {
+    function I18nSelectPipe() {}
+    I18nSelectPipe.prototype.transform = function(value, args) {
+      if (args === void 0) {
+        args = null;
+      }
+      var mapping = args[0];
+      if (!lang_1.isStringMap(mapping)) {
+        throw new invalid_pipe_argument_exception_1.InvalidPipeArgumentException(I18nSelectPipe, mapping);
+      }
+      return collection_1.StringMapWrapper.contains(mapping, value) ? mapping[value] : mapping['other'];
+    };
+    I18nSelectPipe = __decorate([lang_1.CONST(), core_1.Pipe({
+      name: 'i18nSelect',
+      pure: true
+    }), core_1.Injectable(), __metadata('design:paramtypes', [])], I18nSelectPipe);
+    return I18nSelectPipe;
+  })();
+  exports.I18nSelectPipe = I18nSelectPipe;
+  global.define = __define;
+  return module.exports;
+});
+
+System.register("angular2/src/common/pipes/common_pipes", ["angular2/src/common/pipes/async_pipe", "angular2/src/common/pipes/uppercase_pipe", "angular2/src/common/pipes/lowercase_pipe", "angular2/src/common/pipes/json_pipe", "angular2/src/common/pipes/slice_pipe", "angular2/src/common/pipes/date_pipe", "angular2/src/common/pipes/number_pipe", "angular2/src/common/pipes/replace_pipe", "angular2/src/common/pipes/i18n_plural_pipe", "angular2/src/common/pipes/i18n_select_pipe", "angular2/src/facade/lang"], true, function(require, exports, module) {
+  var global = System.global,
+      __define = global.define;
+  global.define = undefined;
+  var async_pipe_1 = require("angular2/src/common/pipes/async_pipe");
+  var uppercase_pipe_1 = require("angular2/src/common/pipes/uppercase_pipe");
+  var lowercase_pipe_1 = require("angular2/src/common/pipes/lowercase_pipe");
+  var json_pipe_1 = require("angular2/src/common/pipes/json_pipe");
+  var slice_pipe_1 = require("angular2/src/common/pipes/slice_pipe");
+  var date_pipe_1 = require("angular2/src/common/pipes/date_pipe");
+  var number_pipe_1 = require("angular2/src/common/pipes/number_pipe");
+  var replace_pipe_1 = require("angular2/src/common/pipes/replace_pipe");
+  var i18n_plural_pipe_1 = require("angular2/src/common/pipes/i18n_plural_pipe");
+  var i18n_select_pipe_1 = require("angular2/src/common/pipes/i18n_select_pipe");
+  var lang_1 = require("angular2/src/facade/lang");
+  exports.COMMON_PIPES = lang_1.CONST_EXPR([async_pipe_1.AsyncPipe, uppercase_pipe_1.UpperCasePipe, lowercase_pipe_1.LowerCasePipe, json_pipe_1.JsonPipe, slice_pipe_1.SlicePipe, number_pipe_1.DecimalPipe, number_pipe_1.PercentPipe, number_pipe_1.CurrencyPipe, date_pipe_1.DatePipe, replace_pipe_1.ReplacePipe, i18n_plural_pipe_1.I18nPluralPipe, i18n_select_pipe_1.I18nSelectPipe]);
+  global.define = __define;
+  return module.exports;
+});
+
 System.register("angular2/src/common/directives/ng_class", ["angular2/src/facade/lang", "angular2/core", "angular2/src/facade/collection"], true, function(require, exports, module) {
   var global = System.global,
       __define = global.define;
@@ -7964,30 +8265,30 @@ System.register("angular2/src/common/directives/ng_class", ["angular2/src/facade
           v = v.split(' ');
         }
         this._rawClass = v;
+        this._iterableDiffer = null;
+        this._keyValueDiffer = null;
         if (lang_1.isPresent(v)) {
           if (collection_1.isListLikeIterable(v)) {
-            this._differ = this._iterableDiffers.find(v).create(null);
-            this._mode = 'iterable';
+            this._iterableDiffer = this._iterableDiffers.find(v).create(null);
           } else {
-            this._differ = this._keyValueDiffers.find(v).create(null);
-            this._mode = 'keyValue';
+            this._keyValueDiffer = this._keyValueDiffers.find(v).create(null);
           }
-        } else {
-          this._differ = null;
         }
       },
       enumerable: true,
       configurable: true
     });
     NgClass.prototype.ngDoCheck = function() {
-      if (lang_1.isPresent(this._differ)) {
-        var changes = this._differ.diff(this._rawClass);
+      if (lang_1.isPresent(this._iterableDiffer)) {
+        var changes = this._iterableDiffer.diff(this._rawClass);
         if (lang_1.isPresent(changes)) {
-          if (this._mode == 'iterable') {
-            this._applyIterableChanges(changes);
-          } else {
-            this._applyKeyValueChanges(changes);
-          }
+          this._applyIterableChanges(changes);
+        }
+      }
+      if (lang_1.isPresent(this._keyValueDiffer)) {
+        var changes = this._keyValueDiffer.diff(this._rawClass);
+        if (lang_1.isPresent(changes)) {
+          this._applyKeyValueChanges(changes);
         }
       }
     };
@@ -8040,7 +8341,7 @@ System.register("angular2/src/common/directives/ng_class", ["angular2/src/facade
           });
         } else {
           collection_1.StringMapWrapper.forEach(rawClassVal, function(expVal, className) {
-            if (expVal)
+            if (lang_1.isPresent(expVal))
               _this._toggleClass(className, !isCleanup);
           });
         }
@@ -9174,6 +9475,18 @@ System.register("angular2/src/common/forms/validators", ["angular2/src/facade/la
             "requiredLength": maxLength,
             "actualLength": v.length
           }} : null;
+      };
+    };
+    Validators.pattern = function(pattern) {
+      return function(control) {
+        if (lang_1.isPresent(Validators.required(control)))
+          return null;
+        var regex = new RegExp("^" + pattern + "$");
+        var v = control.value;
+        return regex.test(v) ? null : {"pattern": {
+            "requiredPattern": "^" + pattern + "$",
+            "actualValue": v
+          }};
       };
     };
     Validators.nullValidator = function(c) {
@@ -10419,6 +10732,26 @@ System.register("angular2/src/common/forms/directives/validators", ["angular2/co
     return MaxLengthValidator;
   })();
   exports.MaxLengthValidator = MaxLengthValidator;
+  var PATTERN_VALIDATOR = lang_1.CONST_EXPR(new core_1.Provider(validators_1.NG_VALIDATORS, {
+    useExisting: core_1.forwardRef(function() {
+      return PatternValidator;
+    }),
+    multi: true
+  }));
+  var PatternValidator = (function() {
+    function PatternValidator(pattern) {
+      this._validator = validators_1.Validators.pattern(pattern);
+    }
+    PatternValidator.prototype.validate = function(c) {
+      return this._validator(c);
+    };
+    PatternValidator = __decorate([core_1.Directive({
+      selector: '[pattern][ngControl],[pattern][ngFormControl],[pattern][ngModel]',
+      providers: [PATTERN_VALIDATOR]
+    }), __param(0, core_1.Attribute("pattern")), __metadata('design:paramtypes', [String])], PatternValidator);
+    return PatternValidator;
+  })();
+  exports.PatternValidator = PatternValidator;
   global.define = __define;
   return module.exports;
 });
@@ -17179,32 +17512,6 @@ System.register("angular2/src/web_workers/shared/post_message_bus", ["angular2/s
   var async_1 = require("angular2/src/facade/async");
   var collection_1 = require("angular2/src/facade/collection");
   var di_1 = require("angular2/src/core/di");
-  var PostMessageBus = (function() {
-    function PostMessageBus(sink, source) {
-      this.sink = sink;
-      this.source = source;
-    }
-    PostMessageBus.prototype.attachToZone = function(zone) {
-      this.source.attachToZone(zone);
-      this.sink.attachToZone(zone);
-    };
-    PostMessageBus.prototype.initChannel = function(channel, runInZone) {
-      if (runInZone === void 0) {
-        runInZone = true;
-      }
-      this.source.initChannel(channel, runInZone);
-      this.sink.initChannel(channel, runInZone);
-    };
-    PostMessageBus.prototype.from = function(channel) {
-      return this.source.from(channel);
-    };
-    PostMessageBus.prototype.to = function(channel) {
-      return this.sink.to(channel);
-    };
-    PostMessageBus = __decorate([di_1.Injectable(), __metadata('design:paramtypes', [PostMessageBusSink, PostMessageBusSource])], PostMessageBus);
-    return PostMessageBus;
-  })();
-  exports.PostMessageBus = PostMessageBus;
   var PostMessageBusSink = (function() {
     function PostMessageBusSink(_postMessageTarget) {
       this._postMessageTarget = _postMessageTarget;
@@ -17228,7 +17535,7 @@ System.register("angular2/src/web_workers/shared/post_message_bus", ["angular2/s
       if (collection_1.StringMapWrapper.contains(this._channels, channel)) {
         throw new exceptions_1.BaseException(channel + " has already been initialized");
       }
-      var emitter = new async_1.EventEmitter();
+      var emitter = new async_1.EventEmitter(false);
       var channelInfo = new _Channel(emitter, runInZone);
       this._channels[channel] = channelInfo;
       emitter.subscribe(function(data) {
@@ -17286,7 +17593,7 @@ System.register("angular2/src/web_workers/shared/post_message_bus", ["angular2/s
       if (collection_1.StringMapWrapper.contains(this._channels, channel)) {
         throw new exceptions_1.BaseException(channel + " has already been initialized");
       }
-      var emitter = new async_1.EventEmitter();
+      var emitter = new async_1.EventEmitter(false);
       var channelInfo = new _Channel(emitter, runInZone);
       this._channels[channel] = channelInfo;
     };
@@ -17319,6 +17626,32 @@ System.register("angular2/src/web_workers/shared/post_message_bus", ["angular2/s
     return PostMessageBusSource;
   })();
   exports.PostMessageBusSource = PostMessageBusSource;
+  var PostMessageBus = (function() {
+    function PostMessageBus(sink, source) {
+      this.sink = sink;
+      this.source = source;
+    }
+    PostMessageBus.prototype.attachToZone = function(zone) {
+      this.source.attachToZone(zone);
+      this.sink.attachToZone(zone);
+    };
+    PostMessageBus.prototype.initChannel = function(channel, runInZone) {
+      if (runInZone === void 0) {
+        runInZone = true;
+      }
+      this.source.initChannel(channel, runInZone);
+      this.sink.initChannel(channel, runInZone);
+    };
+    PostMessageBus.prototype.from = function(channel) {
+      return this.source.from(channel);
+    };
+    PostMessageBus.prototype.to = function(channel) {
+      return this.sink.to(channel);
+    };
+    PostMessageBus = __decorate([di_1.Injectable(), __metadata('design:paramtypes', [PostMessageBusSink, PostMessageBusSource])], PostMessageBus);
+    return PostMessageBus;
+  })();
+  exports.PostMessageBus = PostMessageBus;
   var _Channel = (function() {
     function _Channel(emitter, runInZone) {
       this.emitter = emitter;
@@ -18904,14 +19237,25 @@ System.register("angular2/src/compiler/parse_util", [], true, function(require, 
     return ParseSourceFile;
   })();
   exports.ParseSourceFile = ParseSourceFile;
+  var ParseSourceSpan = (function() {
+    function ParseSourceSpan(start, end) {
+      this.start = start;
+      this.end = end;
+    }
+    ParseSourceSpan.prototype.toString = function() {
+      return this.start.file.content.substring(this.start.offset, this.end.offset);
+    };
+    return ParseSourceSpan;
+  })();
+  exports.ParseSourceSpan = ParseSourceSpan;
   var ParseError = (function() {
-    function ParseError(location, msg) {
-      this.location = location;
+    function ParseError(span, msg) {
+      this.span = span;
       this.msg = msg;
     }
     ParseError.prototype.toString = function() {
-      var source = this.location.file.content;
-      var ctxStart = this.location.offset;
+      var source = this.span.start.file.content;
+      var ctxStart = this.span.start.offset;
       if (ctxStart > source.length - 1) {
         ctxStart = source.length - 1;
       }
@@ -18938,23 +19282,12 @@ System.register("angular2/src/compiler/parse_util", [], true, function(require, 
           }
         }
       }
-      var context = source.substring(ctxStart, this.location.offset) + '[ERROR ->]' + source.substring(this.location.offset, ctxEnd + 1);
-      return this.msg + " (\"" + context + "\"): " + this.location;
+      var context = source.substring(ctxStart, this.span.start.offset) + '[ERROR ->]' + source.substring(this.span.start.offset, ctxEnd + 1);
+      return this.msg + " (\"" + context + "\"): " + this.span.start;
     };
     return ParseError;
   })();
   exports.ParseError = ParseError;
-  var ParseSourceSpan = (function() {
-    function ParseSourceSpan(start, end) {
-      this.start = start;
-      this.end = end;
-    }
-    ParseSourceSpan.prototype.toString = function() {
-      return this.start.file.content.substring(this.start.offset, this.end.offset);
-    };
-    return ParseSourceSpan;
-  })();
-  exports.ParseSourceSpan = ParseSourceSpan;
   global.define = __define;
   return module.exports;
 });
@@ -19377,6 +19710,10 @@ System.register("angular2/src/compiler/html_tags", ["angular2/src/facade/lang"],
     return splitNsName(elementName)[0];
   }
   exports.getNsPrefix = getNsPrefix;
+  function mergeNsAndName(prefix, localName) {
+    return lang_1.isPresent(prefix) ? "@" + prefix + ":" + localName : localName;
+  }
+  exports.mergeNsAndName = mergeNsAndName;
   global.define = __define;
   return module.exports;
 });
@@ -19759,7 +20096,7 @@ System.register("angular2/src/core/angular_entrypoint", ["angular2/src/facade/la
   return module.exports;
 });
 
-System.register("angular2/src/router/platform_location", [], true, function(require, exports, module) {
+System.register("angular2/src/router/location/platform_location", [], true, function(require, exports, module) {
   var global = System.global,
       __define = global.define;
   global.define = undefined;
@@ -19772,7 +20109,7 @@ System.register("angular2/src/router/platform_location", [], true, function(requ
   return module.exports;
 });
 
-System.register("angular2/src/web_workers/worker/platform_location", ["angular2/src/core/di", "angular2/src/router/platform_location", "angular2/src/web_workers/shared/client_message_broker", "angular2/src/web_workers/shared/messaging_api", "angular2/src/web_workers/shared/serialized_types", "angular2/src/facade/async", "angular2/src/facade/exceptions", "angular2/src/web_workers/shared/serializer", "angular2/src/web_workers/shared/message_bus", "angular2/src/facade/collection", "angular2/src/facade/lang", "angular2/src/web_workers/worker/event_deserializer"], true, function(require, exports, module) {
+System.register("angular2/src/web_workers/worker/platform_location", ["angular2/src/core/di", "angular2/src/router/location/platform_location", "angular2/src/web_workers/shared/client_message_broker", "angular2/src/web_workers/shared/messaging_api", "angular2/src/web_workers/shared/serialized_types", "angular2/src/facade/async", "angular2/src/facade/exceptions", "angular2/src/web_workers/shared/serializer", "angular2/src/web_workers/shared/message_bus", "angular2/src/facade/collection", "angular2/src/facade/lang", "angular2/src/web_workers/worker/event_deserializer"], true, function(require, exports, module) {
   var global = System.global,
       __define = global.define;
   global.define = undefined;
@@ -19802,7 +20139,7 @@ System.register("angular2/src/web_workers/worker/platform_location", ["angular2/
       return Reflect.metadata(k, v);
   };
   var di_1 = require("angular2/src/core/di");
-  var platform_location_1 = require("angular2/src/router/platform_location");
+  var platform_location_1 = require("angular2/src/router/location/platform_location");
   var client_message_broker_1 = require("angular2/src/web_workers/shared/client_message_broker");
   var messaging_api_1 = require("angular2/src/web_workers/shared/messaging_api");
   var serialized_types_1 = require("angular2/src/web_workers/shared/serialized_types");
@@ -19928,7 +20265,7 @@ System.register("angular2/src/web_workers/worker/platform_location", ["angular2/
   return module.exports;
 });
 
-System.register("angular2/src/router/location_strategy", ["angular2/src/facade/lang", "angular2/core"], true, function(require, exports, module) {
+System.register("angular2/src/router/location/location_strategy", ["angular2/src/facade/lang", "angular2/core"], true, function(require, exports, module) {
   var global = System.global,
       __define = global.define;
   global.define = undefined;
@@ -19971,7 +20308,7 @@ System.register("angular2/src/router/location_strategy", ["angular2/src/facade/l
   return module.exports;
 });
 
-System.register("angular2/src/router/path_location_strategy", ["angular2/core", "angular2/src/facade/lang", "angular2/src/facade/exceptions", "angular2/src/router/location_strategy", "angular2/src/router/platform_location"], true, function(require, exports, module) {
+System.register("angular2/src/router/location/path_location_strategy", ["angular2/core", "angular2/src/facade/lang", "angular2/src/facade/exceptions", "angular2/src/router/location/location_strategy", "angular2/src/router/location/platform_location"], true, function(require, exports, module) {
   var global = System.global,
       __define = global.define;
   global.define = undefined;
@@ -20008,8 +20345,8 @@ System.register("angular2/src/router/path_location_strategy", ["angular2/core", 
   var core_1 = require("angular2/core");
   var lang_1 = require("angular2/src/facade/lang");
   var exceptions_1 = require("angular2/src/facade/exceptions");
-  var location_strategy_1 = require("angular2/src/router/location_strategy");
-  var platform_location_1 = require("angular2/src/router/platform_location");
+  var location_strategy_1 = require("angular2/src/router/location/location_strategy");
+  var platform_location_1 = require("angular2/src/router/location/platform_location");
   var PathLocationStrategy = (function(_super) {
     __extends(PathLocationStrategy, _super);
     function PathLocationStrategy(_platformLocation, href) {
@@ -20058,10 +20395,19 @@ System.register("angular2/src/router/path_location_strategy", ["angular2/core", 
   return module.exports;
 });
 
-System.register("angular2/src/router/route_config_impl", ["angular2/src/facade/lang"], true, function(require, exports, module) {
+System.register("angular2/src/router/route_config/route_config_impl", ["angular2/src/facade/lang"], true, function(require, exports, module) {
   var global = System.global,
       __define = global.define;
   global.define = undefined;
+  var __extends = (this && this.__extends) || function(d, b) {
+    for (var p in b)
+      if (b.hasOwnProperty(p))
+        d[p] = b[p];
+    function __() {
+      this.constructor = d;
+    }
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+  };
   var __decorate = (this && this.__decorate) || function(decorators, target, key, desc) {
     var c = arguments.length,
         r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc,
@@ -20087,78 +20433,360 @@ System.register("angular2/src/router/route_config_impl", ["angular2/src/facade/l
     return RouteConfig;
   })();
   exports.RouteConfig = RouteConfig;
-  var Route = (function() {
-    function Route(_a) {
-      var path = _a.path,
-          component = _a.component,
-          name = _a.name,
-          data = _a.data,
-          useAsDefault = _a.useAsDefault;
-      this.aux = null;
-      this.loader = null;
-      this.redirectTo = null;
-      this.path = path;
-      this.component = component;
+  var AbstractRoute = (function() {
+    function AbstractRoute(_a) {
+      var name = _a.name,
+          useAsDefault = _a.useAsDefault,
+          path = _a.path,
+          regex = _a.regex,
+          serializer = _a.serializer,
+          data = _a.data;
       this.name = name;
-      this.data = data;
       this.useAsDefault = useAsDefault;
+      this.path = path;
+      this.regex = regex;
+      this.serializer = serializer;
+      this.data = data;
+    }
+    AbstractRoute = __decorate([lang_1.CONST(), __metadata('design:paramtypes', [Object])], AbstractRoute);
+    return AbstractRoute;
+  })();
+  exports.AbstractRoute = AbstractRoute;
+  var Route = (function(_super) {
+    __extends(Route, _super);
+    function Route(_a) {
+      var name = _a.name,
+          useAsDefault = _a.useAsDefault,
+          path = _a.path,
+          regex = _a.regex,
+          serializer = _a.serializer,
+          data = _a.data,
+          component = _a.component;
+      _super.call(this, {
+        name: name,
+        useAsDefault: useAsDefault,
+        path: path,
+        regex: regex,
+        serializer: serializer,
+        data: data
+      });
+      this.aux = null;
+      this.component = component;
     }
     Route = __decorate([lang_1.CONST(), __metadata('design:paramtypes', [Object])], Route);
     return Route;
-  })();
+  })(AbstractRoute);
   exports.Route = Route;
-  var AuxRoute = (function() {
+  var AuxRoute = (function(_super) {
+    __extends(AuxRoute, _super);
     function AuxRoute(_a) {
-      var path = _a.path,
-          component = _a.component,
-          name = _a.name;
-      this.data = null;
-      this.aux = null;
-      this.loader = null;
-      this.redirectTo = null;
-      this.useAsDefault = false;
-      this.path = path;
+      var name = _a.name,
+          useAsDefault = _a.useAsDefault,
+          path = _a.path,
+          regex = _a.regex,
+          serializer = _a.serializer,
+          data = _a.data,
+          component = _a.component;
+      _super.call(this, {
+        name: name,
+        useAsDefault: useAsDefault,
+        path: path,
+        regex: regex,
+        serializer: serializer,
+        data: data
+      });
       this.component = component;
-      this.name = name;
     }
     AuxRoute = __decorate([lang_1.CONST(), __metadata('design:paramtypes', [Object])], AuxRoute);
     return AuxRoute;
-  })();
+  })(AbstractRoute);
   exports.AuxRoute = AuxRoute;
-  var AsyncRoute = (function() {
+  var AsyncRoute = (function(_super) {
+    __extends(AsyncRoute, _super);
     function AsyncRoute(_a) {
-      var path = _a.path,
-          loader = _a.loader,
-          name = _a.name,
+      var name = _a.name,
+          useAsDefault = _a.useAsDefault,
+          path = _a.path,
+          regex = _a.regex,
+          serializer = _a.serializer,
           data = _a.data,
-          useAsDefault = _a.useAsDefault;
+          loader = _a.loader;
+      _super.call(this, {
+        name: name,
+        useAsDefault: useAsDefault,
+        path: path,
+        regex: regex,
+        serializer: serializer,
+        data: data
+      });
       this.aux = null;
-      this.path = path;
       this.loader = loader;
-      this.name = name;
-      this.data = data;
-      this.useAsDefault = useAsDefault;
     }
     AsyncRoute = __decorate([lang_1.CONST(), __metadata('design:paramtypes', [Object])], AsyncRoute);
     return AsyncRoute;
-  })();
+  })(AbstractRoute);
   exports.AsyncRoute = AsyncRoute;
-  var Redirect = (function() {
+  var Redirect = (function(_super) {
+    __extends(Redirect, _super);
     function Redirect(_a) {
-      var path = _a.path,
+      var name = _a.name,
+          useAsDefault = _a.useAsDefault,
+          path = _a.path,
+          regex = _a.regex,
+          serializer = _a.serializer,
+          data = _a.data,
           redirectTo = _a.redirectTo;
-      this.name = null;
-      this.loader = null;
-      this.data = null;
-      this.aux = null;
-      this.useAsDefault = false;
-      this.path = path;
+      _super.call(this, {
+        name: name,
+        useAsDefault: useAsDefault,
+        path: path,
+        regex: regex,
+        serializer: serializer,
+        data: data
+      });
       this.redirectTo = redirectTo;
     }
     Redirect = __decorate([lang_1.CONST(), __metadata('design:paramtypes', [Object])], Redirect);
     return Redirect;
-  })();
+  })(AbstractRoute);
   exports.Redirect = Redirect;
+  global.define = __define;
+  return module.exports;
+});
+
+System.register("angular2/src/router/url_parser", ["angular2/src/facade/collection", "angular2/src/facade/lang", "angular2/src/facade/exceptions"], true, function(require, exports, module) {
+  var global = System.global,
+      __define = global.define;
+  global.define = undefined;
+  var __extends = (this && this.__extends) || function(d, b) {
+    for (var p in b)
+      if (b.hasOwnProperty(p))
+        d[p] = b[p];
+    function __() {
+      this.constructor = d;
+    }
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+  };
+  var collection_1 = require("angular2/src/facade/collection");
+  var lang_1 = require("angular2/src/facade/lang");
+  var exceptions_1 = require("angular2/src/facade/exceptions");
+  function convertUrlParamsToArray(urlParams) {
+    var paramsArray = [];
+    if (lang_1.isBlank(urlParams)) {
+      return [];
+    }
+    collection_1.StringMapWrapper.forEach(urlParams, function(value, key) {
+      paramsArray.push((value === true) ? key : key + '=' + value);
+    });
+    return paramsArray;
+  }
+  exports.convertUrlParamsToArray = convertUrlParamsToArray;
+  function serializeParams(urlParams, joiner) {
+    if (joiner === void 0) {
+      joiner = '&';
+    }
+    return convertUrlParamsToArray(urlParams).join(joiner);
+  }
+  exports.serializeParams = serializeParams;
+  var Url = (function() {
+    function Url(path, child, auxiliary, params) {
+      if (child === void 0) {
+        child = null;
+      }
+      if (auxiliary === void 0) {
+        auxiliary = lang_1.CONST_EXPR([]);
+      }
+      if (params === void 0) {
+        params = lang_1.CONST_EXPR({});
+      }
+      this.path = path;
+      this.child = child;
+      this.auxiliary = auxiliary;
+      this.params = params;
+    }
+    Url.prototype.toString = function() {
+      return this.path + this._matrixParamsToString() + this._auxToString() + this._childString();
+    };
+    Url.prototype.segmentToString = function() {
+      return this.path + this._matrixParamsToString();
+    };
+    Url.prototype._auxToString = function() {
+      return this.auxiliary.length > 0 ? ('(' + this.auxiliary.map(function(sibling) {
+        return sibling.toString();
+      }).join('//') + ')') : '';
+    };
+    Url.prototype._matrixParamsToString = function() {
+      var paramString = serializeParams(this.params, ';');
+      if (paramString.length > 0) {
+        return ';' + paramString;
+      }
+      return '';
+    };
+    Url.prototype._childString = function() {
+      return lang_1.isPresent(this.child) ? ('/' + this.child.toString()) : '';
+    };
+    return Url;
+  })();
+  exports.Url = Url;
+  var RootUrl = (function(_super) {
+    __extends(RootUrl, _super);
+    function RootUrl(path, child, auxiliary, params) {
+      if (child === void 0) {
+        child = null;
+      }
+      if (auxiliary === void 0) {
+        auxiliary = lang_1.CONST_EXPR([]);
+      }
+      if (params === void 0) {
+        params = null;
+      }
+      _super.call(this, path, child, auxiliary, params);
+    }
+    RootUrl.prototype.toString = function() {
+      return this.path + this._auxToString() + this._childString() + this._queryParamsToString();
+    };
+    RootUrl.prototype.segmentToString = function() {
+      return this.path + this._queryParamsToString();
+    };
+    RootUrl.prototype._queryParamsToString = function() {
+      if (lang_1.isBlank(this.params)) {
+        return '';
+      }
+      return '?' + serializeParams(this.params);
+    };
+    return RootUrl;
+  })(Url);
+  exports.RootUrl = RootUrl;
+  function pathSegmentsToUrl(pathSegments) {
+    var url = new Url(pathSegments[pathSegments.length - 1]);
+    for (var i = pathSegments.length - 2; i >= 0; i -= 1) {
+      url = new Url(pathSegments[i], url);
+    }
+    return url;
+  }
+  exports.pathSegmentsToUrl = pathSegmentsToUrl;
+  var SEGMENT_RE = lang_1.RegExpWrapper.create('^[^\\/\\(\\)\\?;=&#]+');
+  function matchUrlSegment(str) {
+    var match = lang_1.RegExpWrapper.firstMatch(SEGMENT_RE, str);
+    return lang_1.isPresent(match) ? match[0] : '';
+  }
+  var UrlParser = (function() {
+    function UrlParser() {}
+    UrlParser.prototype.peekStartsWith = function(str) {
+      return this._remaining.startsWith(str);
+    };
+    UrlParser.prototype.capture = function(str) {
+      if (!this._remaining.startsWith(str)) {
+        throw new exceptions_1.BaseException("Expected \"" + str + "\".");
+      }
+      this._remaining = this._remaining.substring(str.length);
+    };
+    UrlParser.prototype.parse = function(url) {
+      this._remaining = url;
+      if (url == '' || url == '/') {
+        return new Url('');
+      }
+      return this.parseRoot();
+    };
+    UrlParser.prototype.parseRoot = function() {
+      if (this.peekStartsWith('/')) {
+        this.capture('/');
+      }
+      var path = matchUrlSegment(this._remaining);
+      this.capture(path);
+      var aux = [];
+      if (this.peekStartsWith('(')) {
+        aux = this.parseAuxiliaryRoutes();
+      }
+      if (this.peekStartsWith(';')) {
+        this.parseMatrixParams();
+      }
+      var child = null;
+      if (this.peekStartsWith('/') && !this.peekStartsWith('//')) {
+        this.capture('/');
+        child = this.parseSegment();
+      }
+      var queryParams = null;
+      if (this.peekStartsWith('?')) {
+        queryParams = this.parseQueryParams();
+      }
+      return new RootUrl(path, child, aux, queryParams);
+    };
+    UrlParser.prototype.parseSegment = function() {
+      if (this._remaining.length == 0) {
+        return null;
+      }
+      if (this.peekStartsWith('/')) {
+        this.capture('/');
+      }
+      var path = matchUrlSegment(this._remaining);
+      this.capture(path);
+      var matrixParams = null;
+      if (this.peekStartsWith(';')) {
+        matrixParams = this.parseMatrixParams();
+      }
+      var aux = [];
+      if (this.peekStartsWith('(')) {
+        aux = this.parseAuxiliaryRoutes();
+      }
+      var child = null;
+      if (this.peekStartsWith('/') && !this.peekStartsWith('//')) {
+        this.capture('/');
+        child = this.parseSegment();
+      }
+      return new Url(path, child, aux, matrixParams);
+    };
+    UrlParser.prototype.parseQueryParams = function() {
+      var params = {};
+      this.capture('?');
+      this.parseParam(params);
+      while (this._remaining.length > 0 && this.peekStartsWith('&')) {
+        this.capture('&');
+        this.parseParam(params);
+      }
+      return params;
+    };
+    UrlParser.prototype.parseMatrixParams = function() {
+      var params = {};
+      while (this._remaining.length > 0 && this.peekStartsWith(';')) {
+        this.capture(';');
+        this.parseParam(params);
+      }
+      return params;
+    };
+    UrlParser.prototype.parseParam = function(params) {
+      var key = matchUrlSegment(this._remaining);
+      if (lang_1.isBlank(key)) {
+        return ;
+      }
+      this.capture(key);
+      var value = true;
+      if (this.peekStartsWith('=')) {
+        this.capture('=');
+        var valueMatch = matchUrlSegment(this._remaining);
+        if (lang_1.isPresent(valueMatch)) {
+          value = valueMatch;
+          this.capture(value);
+        }
+      }
+      params[key] = value;
+    };
+    UrlParser.prototype.parseAuxiliaryRoutes = function() {
+      var routes = [];
+      this.capture('(');
+      while (!this.peekStartsWith(')') && this._remaining.length > 0) {
+        routes.push(this.parseSegment());
+        if (this.peekStartsWith('//')) {
+          this.capture('//');
+        }
+      }
+      this.capture(')');
+      return routes;
+    };
+    return UrlParser;
+  })();
+  exports.UrlParser = UrlParser;
+  exports.parser = new UrlParser();
   global.define = __define;
   return module.exports;
 });
@@ -20303,9 +20931,6 @@ System.register("angular2/src/router/instruction", ["angular2/src/facade/collect
     function DefaultInstruction(component, child) {
       _super.call(this, component, child, {});
     }
-    DefaultInstruction.prototype.resolveComponent = function() {
-      return async_1.PromiseWrapper.resolve(this.component);
-    };
     DefaultInstruction.prototype.toLinkUrl = function() {
       return '';
     };
@@ -20313,7 +20938,7 @@ System.register("angular2/src/router/instruction", ["angular2/src/facade/collect
       return '';
     };
     return DefaultInstruction;
-  })(Instruction);
+  })(ResolvedInstruction);
   exports.DefaultInstruction = DefaultInstruction;
   var UnresolvedInstruction = (function(_super) {
     __extends(UnresolvedInstruction, _super);
@@ -20405,239 +21030,7 @@ System.register("angular2/src/router/instruction", ["angular2/src/facade/collect
   return module.exports;
 });
 
-System.register("angular2/src/router/url_parser", ["angular2/src/facade/collection", "angular2/src/facade/lang", "angular2/src/facade/exceptions"], true, function(require, exports, module) {
-  var global = System.global,
-      __define = global.define;
-  global.define = undefined;
-  var __extends = (this && this.__extends) || function(d, b) {
-    for (var p in b)
-      if (b.hasOwnProperty(p))
-        d[p] = b[p];
-    function __() {
-      this.constructor = d;
-    }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-  };
-  var collection_1 = require("angular2/src/facade/collection");
-  var lang_1 = require("angular2/src/facade/lang");
-  var exceptions_1 = require("angular2/src/facade/exceptions");
-  var Url = (function() {
-    function Url(path, child, auxiliary, params) {
-      if (child === void 0) {
-        child = null;
-      }
-      if (auxiliary === void 0) {
-        auxiliary = lang_1.CONST_EXPR([]);
-      }
-      if (params === void 0) {
-        params = null;
-      }
-      this.path = path;
-      this.child = child;
-      this.auxiliary = auxiliary;
-      this.params = params;
-    }
-    Url.prototype.toString = function() {
-      return this.path + this._matrixParamsToString() + this._auxToString() + this._childString();
-    };
-    Url.prototype.segmentToString = function() {
-      return this.path + this._matrixParamsToString();
-    };
-    Url.prototype._auxToString = function() {
-      return this.auxiliary.length > 0 ? ('(' + this.auxiliary.map(function(sibling) {
-        return sibling.toString();
-      }).join('//') + ')') : '';
-    };
-    Url.prototype._matrixParamsToString = function() {
-      if (lang_1.isBlank(this.params)) {
-        return '';
-      }
-      return ';' + serializeParams(this.params).join(';');
-    };
-    Url.prototype._childString = function() {
-      return lang_1.isPresent(this.child) ? ('/' + this.child.toString()) : '';
-    };
-    return Url;
-  })();
-  exports.Url = Url;
-  var RootUrl = (function(_super) {
-    __extends(RootUrl, _super);
-    function RootUrl(path, child, auxiliary, params) {
-      if (child === void 0) {
-        child = null;
-      }
-      if (auxiliary === void 0) {
-        auxiliary = lang_1.CONST_EXPR([]);
-      }
-      if (params === void 0) {
-        params = null;
-      }
-      _super.call(this, path, child, auxiliary, params);
-    }
-    RootUrl.prototype.toString = function() {
-      return this.path + this._auxToString() + this._childString() + this._queryParamsToString();
-    };
-    RootUrl.prototype.segmentToString = function() {
-      return this.path + this._queryParamsToString();
-    };
-    RootUrl.prototype._queryParamsToString = function() {
-      if (lang_1.isBlank(this.params)) {
-        return '';
-      }
-      return '?' + serializeParams(this.params).join('&');
-    };
-    return RootUrl;
-  })(Url);
-  exports.RootUrl = RootUrl;
-  function pathSegmentsToUrl(pathSegments) {
-    var url = new Url(pathSegments[pathSegments.length - 1]);
-    for (var i = pathSegments.length - 2; i >= 0; i -= 1) {
-      url = new Url(pathSegments[i], url);
-    }
-    return url;
-  }
-  exports.pathSegmentsToUrl = pathSegmentsToUrl;
-  var SEGMENT_RE = lang_1.RegExpWrapper.create('^[^\\/\\(\\)\\?;=&#]+');
-  function matchUrlSegment(str) {
-    var match = lang_1.RegExpWrapper.firstMatch(SEGMENT_RE, str);
-    return lang_1.isPresent(match) ? match[0] : '';
-  }
-  var UrlParser = (function() {
-    function UrlParser() {}
-    UrlParser.prototype.peekStartsWith = function(str) {
-      return this._remaining.startsWith(str);
-    };
-    UrlParser.prototype.capture = function(str) {
-      if (!this._remaining.startsWith(str)) {
-        throw new exceptions_1.BaseException("Expected \"" + str + "\".");
-      }
-      this._remaining = this._remaining.substring(str.length);
-    };
-    UrlParser.prototype.parse = function(url) {
-      this._remaining = url;
-      if (url == '' || url == '/') {
-        return new Url('');
-      }
-      return this.parseRoot();
-    };
-    UrlParser.prototype.parseRoot = function() {
-      if (this.peekStartsWith('/')) {
-        this.capture('/');
-      }
-      var path = matchUrlSegment(this._remaining);
-      this.capture(path);
-      var aux = [];
-      if (this.peekStartsWith('(')) {
-        aux = this.parseAuxiliaryRoutes();
-      }
-      if (this.peekStartsWith(';')) {
-        this.parseMatrixParams();
-      }
-      var child = null;
-      if (this.peekStartsWith('/') && !this.peekStartsWith('//')) {
-        this.capture('/');
-        child = this.parseSegment();
-      }
-      var queryParams = null;
-      if (this.peekStartsWith('?')) {
-        queryParams = this.parseQueryParams();
-      }
-      return new RootUrl(path, child, aux, queryParams);
-    };
-    UrlParser.prototype.parseSegment = function() {
-      if (this._remaining.length == 0) {
-        return null;
-      }
-      if (this.peekStartsWith('/')) {
-        this.capture('/');
-      }
-      var path = matchUrlSegment(this._remaining);
-      this.capture(path);
-      var matrixParams = null;
-      if (this.peekStartsWith(';')) {
-        matrixParams = this.parseMatrixParams();
-      }
-      var aux = [];
-      if (this.peekStartsWith('(')) {
-        aux = this.parseAuxiliaryRoutes();
-      }
-      var child = null;
-      if (this.peekStartsWith('/') && !this.peekStartsWith('//')) {
-        this.capture('/');
-        child = this.parseSegment();
-      }
-      return new Url(path, child, aux, matrixParams);
-    };
-    UrlParser.prototype.parseQueryParams = function() {
-      var params = {};
-      this.capture('?');
-      this.parseParam(params);
-      while (this._remaining.length > 0 && this.peekStartsWith('&')) {
-        this.capture('&');
-        this.parseParam(params);
-      }
-      return params;
-    };
-    UrlParser.prototype.parseMatrixParams = function() {
-      var params = {};
-      while (this._remaining.length > 0 && this.peekStartsWith(';')) {
-        this.capture(';');
-        this.parseParam(params);
-      }
-      return params;
-    };
-    UrlParser.prototype.parseParam = function(params) {
-      var key = matchUrlSegment(this._remaining);
-      if (lang_1.isBlank(key)) {
-        return ;
-      }
-      this.capture(key);
-      var value = true;
-      if (this.peekStartsWith('=')) {
-        this.capture('=');
-        var valueMatch = matchUrlSegment(this._remaining);
-        if (lang_1.isPresent(valueMatch)) {
-          value = valueMatch;
-          this.capture(value);
-        }
-      }
-      params[key] = value;
-    };
-    UrlParser.prototype.parseAuxiliaryRoutes = function() {
-      var routes = [];
-      this.capture('(');
-      while (!this.peekStartsWith(')') && this._remaining.length > 0) {
-        routes.push(this.parseSegment());
-        if (this.peekStartsWith('//')) {
-          this.capture('//');
-        }
-      }
-      this.capture(')');
-      return routes;
-    };
-    return UrlParser;
-  })();
-  exports.UrlParser = UrlParser;
-  exports.parser = new UrlParser();
-  function serializeParams(paramMap) {
-    var params = [];
-    if (lang_1.isPresent(paramMap)) {
-      collection_1.StringMapWrapper.forEach(paramMap, function(value, key) {
-        if (value === true) {
-          params.push(key);
-        } else {
-          params.push(key + '=' + value);
-        }
-      });
-    }
-    return params;
-  }
-  exports.serializeParams = serializeParams;
-  global.define = __define;
-  return module.exports;
-});
-
-System.register("angular2/src/router/async_route_handler", ["angular2/src/facade/lang", "angular2/src/router/instruction"], true, function(require, exports, module) {
+System.register("angular2/src/router/rules/route_handlers/async_route_handler", ["angular2/src/facade/lang", "angular2/src/router/instruction"], true, function(require, exports, module) {
   var global = System.global,
       __define = global.define;
   global.define = undefined;
@@ -20669,7 +21062,7 @@ System.register("angular2/src/router/async_route_handler", ["angular2/src/facade
   return module.exports;
 });
 
-System.register("angular2/src/router/sync_route_handler", ["angular2/src/facade/async", "angular2/src/facade/lang", "angular2/src/router/instruction"], true, function(require, exports, module) {
+System.register("angular2/src/router/rules/route_handlers/sync_route_handler", ["angular2/src/facade/async", "angular2/src/facade/lang", "angular2/src/router/instruction"], true, function(require, exports, module) {
   var global = System.global,
       __define = global.define;
   global.define = undefined;
@@ -20693,13 +21086,127 @@ System.register("angular2/src/router/sync_route_handler", ["angular2/src/facade/
   return module.exports;
 });
 
-System.register("angular2/src/router/route_config_decorator", ["angular2/src/router/route_config_impl", "angular2/src/core/util/decorators", "angular2/src/router/route_config_impl"], true, function(require, exports, module) {
+System.register("angular2/src/router/utils", ["angular2/src/facade/lang", "angular2/src/facade/collection"], true, function(require, exports, module) {
   var global = System.global,
       __define = global.define;
   global.define = undefined;
-  var route_config_impl_1 = require("angular2/src/router/route_config_impl");
+  var lang_1 = require("angular2/src/facade/lang");
+  var collection_1 = require("angular2/src/facade/collection");
+  var TouchMap = (function() {
+    function TouchMap(map) {
+      var _this = this;
+      this.map = {};
+      this.keys = {};
+      if (lang_1.isPresent(map)) {
+        collection_1.StringMapWrapper.forEach(map, function(value, key) {
+          _this.map[key] = lang_1.isPresent(value) ? value.toString() : null;
+          _this.keys[key] = true;
+        });
+      }
+    }
+    TouchMap.prototype.get = function(key) {
+      collection_1.StringMapWrapper.delete(this.keys, key);
+      return this.map[key];
+    };
+    TouchMap.prototype.getUnused = function() {
+      var _this = this;
+      var unused = {};
+      var keys = collection_1.StringMapWrapper.keys(this.keys);
+      keys.forEach(function(key) {
+        return unused[key] = collection_1.StringMapWrapper.get(_this.map, key);
+      });
+      return unused;
+    };
+    return TouchMap;
+  })();
+  exports.TouchMap = TouchMap;
+  function normalizeString(obj) {
+    if (lang_1.isBlank(obj)) {
+      return null;
+    } else {
+      return obj.toString();
+    }
+  }
+  exports.normalizeString = normalizeString;
+  global.define = __define;
+  return module.exports;
+});
+
+System.register("angular2/src/router/rules/route_paths/route_path", [], true, function(require, exports, module) {
+  var global = System.global,
+      __define = global.define;
+  global.define = undefined;
+  var MatchedUrl = (function() {
+    function MatchedUrl(urlPath, urlParams, allParams, auxiliary, rest) {
+      this.urlPath = urlPath;
+      this.urlParams = urlParams;
+      this.allParams = allParams;
+      this.auxiliary = auxiliary;
+      this.rest = rest;
+    }
+    return MatchedUrl;
+  })();
+  exports.MatchedUrl = MatchedUrl;
+  var GeneratedUrl = (function() {
+    function GeneratedUrl(urlPath, urlParams) {
+      this.urlPath = urlPath;
+      this.urlParams = urlParams;
+    }
+    return GeneratedUrl;
+  })();
+  exports.GeneratedUrl = GeneratedUrl;
+  global.define = __define;
+  return module.exports;
+});
+
+System.register("angular2/src/router/rules/route_paths/regex_route_path", ["angular2/src/facade/lang", "angular2/src/router/rules/route_paths/route_path"], true, function(require, exports, module) {
+  var global = System.global,
+      __define = global.define;
+  global.define = undefined;
+  var lang_1 = require("angular2/src/facade/lang");
+  var route_path_1 = require("angular2/src/router/rules/route_paths/route_path");
+  var RegexRoutePath = (function() {
+    function RegexRoutePath(_reString, _serializer) {
+      this._reString = _reString;
+      this._serializer = _serializer;
+      this.terminal = true;
+      this.specificity = '2';
+      this.hash = this._reString;
+      this._regex = lang_1.RegExpWrapper.create(this._reString);
+    }
+    RegexRoutePath.prototype.matchUrl = function(url) {
+      var urlPath = url.toString();
+      var params = {};
+      var matcher = lang_1.RegExpWrapper.matcher(this._regex, urlPath);
+      var match = lang_1.RegExpMatcherWrapper.next(matcher);
+      if (lang_1.isBlank(match)) {
+        return null;
+      }
+      for (var i = 0; i < match.length; i += 1) {
+        params[i.toString()] = match[i];
+      }
+      return new route_path_1.MatchedUrl(urlPath, [], params, [], null);
+    };
+    RegexRoutePath.prototype.generateUrl = function(params) {
+      return this._serializer(params);
+    };
+    RegexRoutePath.prototype.toString = function() {
+      return this._reString;
+    };
+    return RegexRoutePath;
+  })();
+  exports.RegexRoutePath = RegexRoutePath;
+  global.define = __define;
+  return module.exports;
+});
+
+System.register("angular2/src/router/route_config/route_config_decorator", ["angular2/src/router/route_config/route_config_impl", "angular2/src/core/util/decorators", "angular2/src/router/route_config/route_config_impl"], true, function(require, exports, module) {
+  var global = System.global,
+      __define = global.define;
+  global.define = undefined;
+  var route_config_impl_1 = require("angular2/src/router/route_config/route_config_impl");
   var decorators_1 = require("angular2/src/core/util/decorators");
-  var route_config_impl_2 = require("angular2/src/router/route_config_impl");
+  var route_config_impl_2 = require("angular2/src/router/route_config/route_config_impl");
   exports.Route = route_config_impl_2.Route;
   exports.Redirect = route_config_impl_2.Redirect;
   exports.AuxRoute = route_config_impl_2.AuxRoute;
@@ -20709,7 +21216,7 @@ System.register("angular2/src/router/route_config_decorator", ["angular2/src/rou
   return module.exports;
 });
 
-System.register("angular2/src/router/location", ["angular2/src/router/location_strategy", "angular2/src/facade/async", "angular2/core"], true, function(require, exports, module) {
+System.register("angular2/src/router/location/location", ["angular2/src/router/location/location_strategy", "angular2/src/facade/async", "angular2/core"], true, function(require, exports, module) {
   var global = System.global,
       __define = global.define;
   global.define = undefined;
@@ -20729,7 +21236,7 @@ System.register("angular2/src/router/location", ["angular2/src/router/location_s
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function")
       return Reflect.metadata(k, v);
   };
-  var location_strategy_1 = require("angular2/src/router/location_strategy");
+  var location_strategy_1 = require("angular2/src/router/location/location_strategy");
   var async_1 = require("angular2/src/facade/async");
   var core_1 = require("angular2/core");
   var Location = (function() {
@@ -20812,7 +21319,7 @@ System.register("angular2/src/router/location", ["angular2/src/router/location_s
   return module.exports;
 });
 
-System.register("angular2/src/router/lifecycle_annotations_impl", ["angular2/src/facade/lang"], true, function(require, exports, module) {
+System.register("angular2/src/router/lifecycle/lifecycle_annotations_impl", ["angular2/src/facade/lang"], true, function(require, exports, module) {
   var global = System.global,
       __define = global.define;
   global.define = undefined;
@@ -20928,7 +21435,7 @@ System.register("angular2/src/core/di/decorators", ["angular2/src/core/di/metada
   return module.exports;
 });
 
-System.register("angular2/src/facade/exceptions", ["angular2/src/facade/exception_handler", "angular2/src/facade/exception_handler"], true, function(require, exports, module) {
+System.register("angular2/src/facade/exceptions", ["angular2/src/facade/base_wrapped_exception", "angular2/src/facade/exception_handler", "angular2/src/facade/exception_handler"], true, function(require, exports, module) {
   var global = System.global,
       __define = global.define;
   global.define = undefined;
@@ -20941,6 +21448,7 @@ System.register("angular2/src/facade/exceptions", ["angular2/src/facade/exceptio
     }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
   };
+  var base_wrapped_exception_1 = require("angular2/src/facade/base_wrapped_exception");
   var exception_handler_1 = require("angular2/src/facade/exception_handler");
   var exception_handler_2 = require("angular2/src/facade/exception_handler");
   exports.ExceptionHandler = exception_handler_2.ExceptionHandler;
@@ -21016,7 +21524,7 @@ System.register("angular2/src/facade/exceptions", ["angular2/src/facade/exceptio
       return this.message;
     };
     return WrappedException;
-  })(Error);
+  })(base_wrapped_exception_1.BaseWrappedException);
   exports.WrappedException = WrappedException;
   function makeTypeError(message) {
     return new TypeError(message);
@@ -21040,78 +21548,6 @@ System.register("angular2/src/core/reflection/reflection", ["angular2/src/core/r
   exports.ReflectionInfo = reflector_2.ReflectionInfo;
   var reflection_capabilities_1 = require("angular2/src/core/reflection/reflection_capabilities");
   exports.reflector = new reflector_1.Reflector(new reflection_capabilities_1.ReflectionCapabilities());
-  global.define = __define;
-  return module.exports;
-});
-
-System.register("angular2/src/core/di/key", ["angular2/src/facade/lang", "angular2/src/facade/exceptions", "angular2/src/core/di/type_literal", "angular2/src/core/di/forward_ref", "angular2/src/core/di/type_literal"], true, function(require, exports, module) {
-  var global = System.global,
-      __define = global.define;
-  global.define = undefined;
-  var lang_1 = require("angular2/src/facade/lang");
-  var exceptions_1 = require("angular2/src/facade/exceptions");
-  var type_literal_1 = require("angular2/src/core/di/type_literal");
-  var forward_ref_1 = require("angular2/src/core/di/forward_ref");
-  var type_literal_2 = require("angular2/src/core/di/type_literal");
-  exports.TypeLiteral = type_literal_2.TypeLiteral;
-  var Key = (function() {
-    function Key(token, id) {
-      this.token = token;
-      this.id = id;
-      if (lang_1.isBlank(token)) {
-        throw new exceptions_1.BaseException('Token must be defined!');
-      }
-    }
-    Object.defineProperty(Key.prototype, "displayName", {
-      get: function() {
-        return lang_1.stringify(this.token);
-      },
-      enumerable: true,
-      configurable: true
-    });
-    Key.get = function(token) {
-      return _globalKeyRegistry.get(forward_ref_1.resolveForwardRef(token));
-    };
-    Object.defineProperty(Key, "numberOfKeys", {
-      get: function() {
-        return _globalKeyRegistry.numberOfKeys;
-      },
-      enumerable: true,
-      configurable: true
-    });
-    return Key;
-  })();
-  exports.Key = Key;
-  var KeyRegistry = (function() {
-    function KeyRegistry() {
-      this._allKeys = new Map();
-    }
-    KeyRegistry.prototype.get = function(token) {
-      if (token instanceof Key)
-        return token;
-      var theToken = token;
-      if (token instanceof type_literal_1.TypeLiteral) {
-        theToken = token.type;
-      }
-      token = theToken;
-      if (this._allKeys.has(token)) {
-        return this._allKeys.get(token);
-      }
-      var newKey = new Key(token, Key.numberOfKeys);
-      this._allKeys.set(token, newKey);
-      return newKey;
-    };
-    Object.defineProperty(KeyRegistry.prototype, "numberOfKeys", {
-      get: function() {
-        return this._allKeys.size;
-      },
-      enumerable: true,
-      configurable: true
-    });
-    return KeyRegistry;
-  })();
-  exports.KeyRegistry = KeyRegistry;
-  var _globalKeyRegistry = new KeyRegistry();
   global.define = __define;
   return module.exports;
 });
@@ -21372,21 +21808,19 @@ System.register("angular2/src/core/profile/profile", ["angular2/src/core/profile
   return module.exports;
 });
 
-System.register("angular2/src/core/change_detection/codegen_logic_util", ["angular2/src/facade/lang", "angular2/src/core/change_detection/codegen_facade", "angular2/src/core/change_detection/proto_record", "angular2/src/core/change_detection/constants", "angular2/src/facade/exceptions"], true, function(require, exports, module) {
+System.register("angular2/src/core/change_detection/codegen_logic_util", ["angular2/src/facade/lang", "angular2/src/core/change_detection/codegen_facade", "angular2/src/core/change_detection/proto_record", "angular2/src/facade/exceptions"], true, function(require, exports, module) {
   var global = System.global,
       __define = global.define;
   global.define = undefined;
   var lang_1 = require("angular2/src/facade/lang");
   var codegen_facade_1 = require("angular2/src/core/change_detection/codegen_facade");
   var proto_record_1 = require("angular2/src/core/change_detection/proto_record");
-  var constants_1 = require("angular2/src/core/change_detection/constants");
   var exceptions_1 = require("angular2/src/facade/exceptions");
   var CodegenLogicUtil = (function() {
-    function CodegenLogicUtil(_names, _utilName, _changeDetectorStateName, _changeDetection) {
+    function CodegenLogicUtil(_names, _utilName, _changeDetectorStateName) {
       this._names = _names;
       this._utilName = _utilName;
       this._changeDetectorStateName = _changeDetectorStateName;
-      this._changeDetection = _changeDetection;
     }
     CodegenLogicUtil.prototype.genPropertyBindingEvalValue = function(protoRec) {
       var _this = this;
@@ -21414,24 +21848,24 @@ System.register("angular2/src/core/change_detection/codegen_logic_util", ["angul
           rhs = codegen_facade_1.codify(protoRec.funcOrValue);
           break;
         case proto_record_1.RecordType.PropertyRead:
-          rhs = this._observe(context + "." + protoRec.name, protoRec);
+          rhs = context + "." + protoRec.name;
           break;
         case proto_record_1.RecordType.SafeProperty:
-          var read = this._observe(context + "." + protoRec.name, protoRec);
-          rhs = this._utilName + ".isValueBlank(" + context + ") ? null : " + this._observe(read, protoRec);
+          var read = context + "." + protoRec.name;
+          rhs = this._utilName + ".isValueBlank(" + context + ") ? null : " + read;
           break;
         case proto_record_1.RecordType.PropertyWrite:
           rhs = context + "." + protoRec.name + " = " + getLocalName(protoRec.args[0]);
           break;
         case proto_record_1.RecordType.Local:
-          rhs = this._observe(localsAccessor + ".get(" + codegen_facade_1.rawString(protoRec.name) + ")", protoRec);
+          rhs = localsAccessor + ".get(" + codegen_facade_1.rawString(protoRec.name) + ")";
           break;
         case proto_record_1.RecordType.InvokeMethod:
-          rhs = this._observe(context + "." + protoRec.name + "(" + argString + ")", protoRec);
+          rhs = context + "." + protoRec.name + "(" + argString + ")";
           break;
         case proto_record_1.RecordType.SafeMethodInvoke:
           var invoke = context + "." + protoRec.name + "(" + argString + ")";
-          rhs = this._utilName + ".isValueBlank(" + context + ") ? null : " + this._observe(invoke, protoRec);
+          rhs = this._utilName + ".isValueBlank(" + context + ") ? null : " + invoke;
           break;
         case proto_record_1.RecordType.InvokeClosure:
           rhs = context + "(" + argString + ")";
@@ -21446,7 +21880,7 @@ System.register("angular2/src/core/change_detection/codegen_logic_util", ["angul
           rhs = this._genInterpolation(protoRec);
           break;
         case proto_record_1.RecordType.KeyedRead:
-          rhs = this._observe(context + "[" + getLocalName(protoRec.args[0]) + "]", protoRec);
+          rhs = context + "[" + getLocalName(protoRec.args[0]) + "]";
           break;
         case proto_record_1.RecordType.KeyedWrite:
           rhs = context + "[" + getLocalName(protoRec.args[0]) + "] = " + getLocalName(protoRec.args[1]);
@@ -21458,13 +21892,6 @@ System.register("angular2/src/core/change_detection/codegen_logic_util", ["angul
           throw new exceptions_1.BaseException("Unknown operation " + protoRec.mode);
       }
       return getLocalName(protoRec.selfIndex) + " = " + rhs + ";";
-    };
-    CodegenLogicUtil.prototype._observe = function(exp, rec) {
-      if (this._changeDetection === constants_1.ChangeDetectionStrategy.OnPushObserve) {
-        return "this.observeValue(" + exp + ", " + rec.selfIndex + ")";
-      } else {
-        return exp;
-      }
     };
     CodegenLogicUtil.prototype.genPropertyBindingTargets = function(propertyBindingTargets, genDebugInfo) {
       var _this = this;
@@ -21541,12 +21968,7 @@ System.register("angular2/src/core/change_detection/codegen_logic_util", ["angul
       }
     };
     CodegenLogicUtil.prototype._genReadDirective = function(index) {
-      var directiveExpr = "this.getDirectiveFor(directives, " + index + ")";
-      if (this._changeDetection === constants_1.ChangeDetectionStrategy.OnPushObserve) {
-        return "this.observeDirective(" + directiveExpr + ", " + index + ")";
-      } else {
-        return directiveExpr;
-      }
+      return "this.getDirectiveFor(directives, " + index + ")";
     };
     CodegenLogicUtil.prototype.genHydrateDetectors = function(directiveRecords) {
       var res = [];
@@ -22782,9 +23204,10 @@ System.register("angular2/src/common/forms/directives", ["angular2/src/facade/la
   exports.RequiredValidator = validators_2.RequiredValidator;
   exports.MinLengthValidator = validators_2.MinLengthValidator;
   exports.MaxLengthValidator = validators_2.MaxLengthValidator;
+  exports.PatternValidator = validators_2.PatternValidator;
   var ng_control_1 = require("angular2/src/common/forms/directives/ng_control");
   exports.NgControl = ng_control_1.NgControl;
-  exports.FORM_DIRECTIVES = lang_1.CONST_EXPR([ng_control_name_1.NgControlName, ng_control_group_1.NgControlGroup, ng_form_control_1.NgFormControl, ng_model_1.NgModel, ng_form_model_1.NgFormModel, ng_form_1.NgForm, select_control_value_accessor_1.NgSelectOption, default_value_accessor_1.DefaultValueAccessor, number_value_accessor_1.NumberValueAccessor, checkbox_value_accessor_1.CheckboxControlValueAccessor, select_control_value_accessor_1.SelectControlValueAccessor, radio_control_value_accessor_1.RadioControlValueAccessor, ng_control_status_1.NgControlStatus, validators_1.RequiredValidator, validators_1.MinLengthValidator, validators_1.MaxLengthValidator]);
+  exports.FORM_DIRECTIVES = lang_1.CONST_EXPR([ng_control_name_1.NgControlName, ng_control_group_1.NgControlGroup, ng_form_control_1.NgFormControl, ng_model_1.NgModel, ng_form_model_1.NgFormModel, ng_form_1.NgForm, select_control_value_accessor_1.NgSelectOption, default_value_accessor_1.DefaultValueAccessor, number_value_accessor_1.NumberValueAccessor, checkbox_value_accessor_1.CheckboxControlValueAccessor, select_control_value_accessor_1.SelectControlValueAccessor, radio_control_value_accessor_1.RadioControlValueAccessor, ng_control_status_1.NgControlStatus, validators_1.RequiredValidator, validators_1.MinLengthValidator, validators_1.MaxLengthValidator, validators_1.PatternValidator]);
   global.define = __define;
   return module.exports;
 });
@@ -23976,7 +24399,12 @@ System.register("angular2/src/platform/dom/debug/ng_probe", ["angular2/src/facad
   var dom_renderer_1 = require("angular2/src/platform/dom/dom_renderer");
   var core_1 = require("angular2/core");
   var debug_renderer_1 = require("angular2/src/core/debug/debug_renderer");
+  var CORE_TOKENS = lang_1.CONST_EXPR({
+    'ApplicationRef': core_1.ApplicationRef,
+    'NgZone': core_1.NgZone
+  });
   var INSPECT_GLOBAL_NAME = 'ng.probe';
+  var CORE_TOKENS_GLOBAL_NAME = 'ng.coreTokens';
   function inspectNativeElement(element) {
     return debug_node_1.getDebugNode(element);
   }
@@ -23989,6 +24417,7 @@ System.register("angular2/src/platform/dom/debug/ng_probe", ["angular2/src/facad
   }
   function _createRootRenderer(rootRenderer) {
     dom_adapter_1.DOM.setGlobalVar(INSPECT_GLOBAL_NAME, inspectNativeElement);
+    dom_adapter_1.DOM.setGlobalVar(CORE_TOKENS_GLOBAL_NAME, CORE_TOKENS);
     return new debug_renderer_1.DebugDomRootRenderer(rootRenderer);
   }
   exports.ELEMENT_PROBE_PROVIDERS = lang_1.CONST_EXPR([new di_1.Provider(core_1.RootRenderer, {
@@ -24007,6 +24436,15 @@ System.register("angular2/src/compiler/directive_metadata", ["angular2/src/facad
   var global = System.global,
       __define = global.define;
   global.define = undefined;
+  var __extends = (this && this.__extends) || function(d, b) {
+    for (var p in b)
+      if (b.hasOwnProperty(p))
+        d[p] = b[p];
+    function __() {
+      this.constructor = d;
+    }
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+  };
   var lang_1 = require("angular2/src/facade/lang");
   var exceptions_1 = require("angular2/src/facade/exceptions");
   var collection_1 = require("angular2/src/facade/collection");
@@ -24016,8 +24454,26 @@ System.register("angular2/src/compiler/directive_metadata", ["angular2/src/facad
   var util_1 = require("angular2/src/compiler/util");
   var interfaces_1 = require("angular2/src/core/linker/interfaces");
   var HOST_REG_EXP = /^(?:(?:\[([^\]]+)\])|(?:\(([^\)]+)\)))$/g;
-  var CompileMetadataWithType = (function() {
-    function CompileMetadataWithType() {}
+  var CompileMetadataWithIdentifier = (function() {
+    function CompileMetadataWithIdentifier() {}
+    CompileMetadataWithIdentifier.fromJson = function(data) {
+      return _COMPILE_METADATA_FROM_JSON[data['class']](data);
+    };
+    Object.defineProperty(CompileMetadataWithIdentifier.prototype, "identifier", {
+      get: function() {
+        return exceptions_1.unimplemented();
+      },
+      enumerable: true,
+      configurable: true
+    });
+    return CompileMetadataWithIdentifier;
+  })();
+  exports.CompileMetadataWithIdentifier = CompileMetadataWithIdentifier;
+  var CompileMetadataWithType = (function(_super) {
+    __extends(CompileMetadataWithType, _super);
+    function CompileMetadataWithType() {
+      _super.apply(this, arguments);
+    }
     CompileMetadataWithType.fromJson = function(data) {
       return _COMPILE_METADATA_FROM_JSON[data['class']](data);
     };
@@ -24028,38 +24484,249 @@ System.register("angular2/src/compiler/directive_metadata", ["angular2/src/facad
       enumerable: true,
       configurable: true
     });
+    Object.defineProperty(CompileMetadataWithType.prototype, "identifier", {
+      get: function() {
+        return exceptions_1.unimplemented();
+      },
+      enumerable: true,
+      configurable: true
+    });
     return CompileMetadataWithType;
-  })();
+  })(CompileMetadataWithIdentifier);
   exports.CompileMetadataWithType = CompileMetadataWithType;
+  var CompileIdentifierMetadata = (function() {
+    function CompileIdentifierMetadata(_a) {
+      var _b = _a === void 0 ? {} : _a,
+          runtime = _b.runtime,
+          name = _b.name,
+          moduleUrl = _b.moduleUrl,
+          prefix = _b.prefix,
+          constConstructor = _b.constConstructor;
+      this.runtime = runtime;
+      this.name = name;
+      this.prefix = prefix;
+      this.moduleUrl = moduleUrl;
+      this.constConstructor = constConstructor;
+    }
+    CompileIdentifierMetadata.fromJson = function(data) {
+      return new CompileIdentifierMetadata({
+        name: data['name'],
+        prefix: data['prefix'],
+        moduleUrl: data['moduleUrl'],
+        constConstructor: data['constConstructor']
+      });
+    };
+    CompileIdentifierMetadata.prototype.toJson = function() {
+      return {
+        'class': 'Identifier',
+        'name': this.name,
+        'moduleUrl': this.moduleUrl,
+        'prefix': this.prefix,
+        'constConstructor': this.constConstructor
+      };
+    };
+    Object.defineProperty(CompileIdentifierMetadata.prototype, "identifier", {
+      get: function() {
+        return this;
+      },
+      enumerable: true,
+      configurable: true
+    });
+    return CompileIdentifierMetadata;
+  })();
+  exports.CompileIdentifierMetadata = CompileIdentifierMetadata;
+  var CompileDiDependencyMetadata = (function() {
+    function CompileDiDependencyMetadata(_a) {
+      var _b = _a === void 0 ? {} : _a,
+          isAttribute = _b.isAttribute,
+          isSelf = _b.isSelf,
+          isHost = _b.isHost,
+          isSkipSelf = _b.isSkipSelf,
+          isOptional = _b.isOptional,
+          query = _b.query,
+          viewQuery = _b.viewQuery,
+          token = _b.token;
+      this.isAttribute = lang_1.normalizeBool(isAttribute);
+      this.isSelf = lang_1.normalizeBool(isSelf);
+      this.isHost = lang_1.normalizeBool(isHost);
+      this.isSkipSelf = lang_1.normalizeBool(isSkipSelf);
+      this.isOptional = lang_1.normalizeBool(isOptional);
+      this.query = query;
+      this.viewQuery = viewQuery;
+      this.token = token;
+    }
+    CompileDiDependencyMetadata.fromJson = function(data) {
+      return new CompileDiDependencyMetadata({
+        token: objFromJson(data['token'], CompileIdentifierMetadata.fromJson),
+        query: objFromJson(data['query'], CompileQueryMetadata.fromJson),
+        viewQuery: objFromJson(data['viewQuery'], CompileQueryMetadata.fromJson),
+        isAttribute: data['isAttribute'],
+        isSelf: data['isSelf'],
+        isHost: data['isHost'],
+        isSkipSelf: data['isSkipSelf'],
+        isOptional: data['isOptional']
+      });
+    };
+    CompileDiDependencyMetadata.prototype.toJson = function() {
+      return {
+        'token': objToJson(this.token),
+        'query': objToJson(this.query),
+        'viewQuery': objToJson(this.viewQuery),
+        'isAttribute': this.isAttribute,
+        'isSelf': this.isSelf,
+        'isHost': this.isHost,
+        'isSkipSelf': this.isSkipSelf,
+        'isOptional': this.isOptional
+      };
+    };
+    return CompileDiDependencyMetadata;
+  })();
+  exports.CompileDiDependencyMetadata = CompileDiDependencyMetadata;
+  var CompileProviderMetadata = (function() {
+    function CompileProviderMetadata(_a) {
+      var token = _a.token,
+          useClass = _a.useClass,
+          useValue = _a.useValue,
+          useExisting = _a.useExisting,
+          useFactory = _a.useFactory,
+          deps = _a.deps,
+          multi = _a.multi;
+      this.token = token;
+      this.useClass = useClass;
+      this.useValue = useValue;
+      this.useExisting = useExisting;
+      this.useFactory = useFactory;
+      this.deps = deps;
+      this.multi = multi;
+    }
+    CompileProviderMetadata.fromJson = function(data) {
+      return new CompileProviderMetadata({
+        token: objFromJson(data['token'], CompileIdentifierMetadata.fromJson),
+        useClass: objFromJson(data['useClass'], CompileTypeMetadata.fromJson)
+      });
+    };
+    CompileProviderMetadata.prototype.toJson = function() {
+      return {
+        'token': objToJson(this.token),
+        'useClass': objToJson(this.useClass)
+      };
+    };
+    return CompileProviderMetadata;
+  })();
+  exports.CompileProviderMetadata = CompileProviderMetadata;
+  var CompileFactoryMetadata = (function() {
+    function CompileFactoryMetadata(_a) {
+      var runtime = _a.runtime,
+          name = _a.name,
+          moduleUrl = _a.moduleUrl,
+          constConstructor = _a.constConstructor,
+          diDeps = _a.diDeps;
+      this.runtime = runtime;
+      this.name = name;
+      this.moduleUrl = moduleUrl;
+      this.diDeps = diDeps;
+      this.constConstructor = constConstructor;
+    }
+    Object.defineProperty(CompileFactoryMetadata.prototype, "identifier", {
+      get: function() {
+        return this;
+      },
+      enumerable: true,
+      configurable: true
+    });
+    CompileFactoryMetadata.prototype.toJson = function() {
+      return null;
+    };
+    return CompileFactoryMetadata;
+  })();
+  exports.CompileFactoryMetadata = CompileFactoryMetadata;
   var CompileTypeMetadata = (function() {
     function CompileTypeMetadata(_a) {
       var _b = _a === void 0 ? {} : _a,
           runtime = _b.runtime,
           name = _b.name,
           moduleUrl = _b.moduleUrl,
-          isHost = _b.isHost;
+          prefix = _b.prefix,
+          isHost = _b.isHost,
+          constConstructor = _b.constConstructor,
+          diDeps = _b.diDeps;
       this.runtime = runtime;
       this.name = name;
       this.moduleUrl = moduleUrl;
+      this.prefix = prefix;
       this.isHost = lang_1.normalizeBool(isHost);
+      this.constConstructor = constConstructor;
+      this.diDeps = lang_1.normalizeBlank(diDeps);
     }
     CompileTypeMetadata.fromJson = function(data) {
       return new CompileTypeMetadata({
         name: data['name'],
         moduleUrl: data['moduleUrl'],
-        isHost: data['isHost']
+        prefix: data['prefix'],
+        isHost: data['isHost'],
+        constConstructor: data['constConstructor'],
+        diDeps: arrayFromJson(data['diDeps'], CompileDiDependencyMetadata.fromJson)
       });
     };
+    Object.defineProperty(CompileTypeMetadata.prototype, "identifier", {
+      get: function() {
+        return this;
+      },
+      enumerable: true,
+      configurable: true
+    });
+    Object.defineProperty(CompileTypeMetadata.prototype, "type", {
+      get: function() {
+        return this;
+      },
+      enumerable: true,
+      configurable: true
+    });
     CompileTypeMetadata.prototype.toJson = function() {
       return {
+        'class': 'Type',
         'name': this.name,
         'moduleUrl': this.moduleUrl,
-        'isHost': this.isHost
+        'prefix': this.prefix,
+        'isHost': this.isHost,
+        'constConstructor': this.constConstructor,
+        'diDeps': arrayToJson(this.diDeps)
       };
     };
     return CompileTypeMetadata;
   })();
   exports.CompileTypeMetadata = CompileTypeMetadata;
+  var CompileQueryMetadata = (function() {
+    function CompileQueryMetadata(_a) {
+      var _b = _a === void 0 ? {} : _a,
+          selectors = _b.selectors,
+          descendants = _b.descendants,
+          first = _b.first,
+          propertyName = _b.propertyName;
+      this.selectors = selectors;
+      this.descendants = descendants;
+      this.first = lang_1.normalizeBool(first);
+      this.propertyName = propertyName;
+    }
+    CompileQueryMetadata.fromJson = function(data) {
+      return new CompileQueryMetadata({
+        selectors: arrayFromJson(data['selectors'], CompileIdentifierMetadata.fromJson),
+        descendants: data['descendants'],
+        first: data['first'],
+        propertyName: data['propertyName']
+      });
+    };
+    CompileQueryMetadata.prototype.toJson = function() {
+      return {
+        'selectors': arrayToJson(this.selectors),
+        'descendants': this.descendants,
+        'first': this.first,
+        'propertyName': this.propertyName
+      };
+    };
+    return CompileQueryMetadata;
+  })();
+  exports.CompileQueryMetadata = CompileQueryMetadata;
   var CompileTemplateMetadata = (function() {
     function CompileTemplateMetadata(_a) {
       var _b = _a === void 0 ? {} : _a,
@@ -24114,6 +24781,10 @@ System.register("angular2/src/compiler/directive_metadata", ["angular2/src/facad
           hostProperties = _b.hostProperties,
           hostAttributes = _b.hostAttributes,
           lifecycleHooks = _b.lifecycleHooks,
+          providers = _b.providers,
+          viewProviders = _b.viewProviders,
+          queries = _b.queries,
+          viewQueries = _b.viewQueries,
           template = _b.template;
       this.type = type;
       this.isComponent = isComponent;
@@ -24127,6 +24798,10 @@ System.register("angular2/src/compiler/directive_metadata", ["angular2/src/facad
       this.hostProperties = hostProperties;
       this.hostAttributes = hostAttributes;
       this.lifecycleHooks = lifecycleHooks;
+      this.providers = lang_1.normalizeBlank(providers);
+      this.viewProviders = lang_1.normalizeBlank(viewProviders);
+      this.queries = queries;
+      this.viewQueries = viewQueries;
       this.template = template;
     }
     CompileDirectiveMetadata.create = function(_a) {
@@ -24141,6 +24816,10 @@ System.register("angular2/src/compiler/directive_metadata", ["angular2/src/facad
           outputs = _b.outputs,
           host = _b.host,
           lifecycleHooks = _b.lifecycleHooks,
+          providers = _b.providers,
+          viewProviders = _b.viewProviders,
+          queries = _b.queries,
+          viewQueries = _b.viewQueries,
           template = _b.template;
       var hostListeners = {};
       var hostProperties = {};
@@ -24184,9 +24863,20 @@ System.register("angular2/src/compiler/directive_metadata", ["angular2/src/facad
         hostProperties: hostProperties,
         hostAttributes: hostAttributes,
         lifecycleHooks: lang_1.isPresent(lifecycleHooks) ? lifecycleHooks : [],
+        providers: providers,
+        viewProviders: viewProviders,
+        queries: queries,
+        viewQueries: viewQueries,
         template: template
       });
     };
+    Object.defineProperty(CompileDirectiveMetadata.prototype, "identifier", {
+      get: function() {
+        return this.type;
+      },
+      enumerable: true,
+      configurable: true
+    });
     CompileDirectiveMetadata.fromJson = function(data) {
       return new CompileDirectiveMetadata({
         isComponent: data['isComponent'],
@@ -24203,7 +24893,8 @@ System.register("angular2/src/compiler/directive_metadata", ["angular2/src/facad
         lifecycleHooks: data['lifecycleHooks'].map(function(hookValue) {
           return interfaces_1.LIFECYCLE_HOOKS_VALUES[hookValue];
         }),
-        template: lang_1.isPresent(data['template']) ? CompileTemplateMetadata.fromJson(data['template']) : data['template']
+        template: lang_1.isPresent(data['template']) ? CompileTemplateMetadata.fromJson(data['template']) : data['template'],
+        providers: arrayFromJson(data['providers'], CompileProviderMetadata.fromJson)
       });
     };
     CompileDirectiveMetadata.prototype.toJson = function() {
@@ -24223,7 +24914,8 @@ System.register("angular2/src/compiler/directive_metadata", ["angular2/src/facad
         'lifecycleHooks': this.lifecycleHooks.map(function(hook) {
           return lang_1.serializeEnum(hook);
         }),
-        'template': lang_1.isPresent(this.template) ? this.template.toJson() : this.template
+        'template': lang_1.isPresent(this.template) ? this.template.toJson() : this.template,
+        'providers': arrayToJson(this.providers)
       };
     };
     return CompileDirectiveMetadata;
@@ -24252,7 +24944,11 @@ System.register("angular2/src/compiler/directive_metadata", ["angular2/src/facad
       lifecycleHooks: [],
       isComponent: true,
       dynamicLoadable: false,
-      selector: '*'
+      selector: '*',
+      providers: [],
+      viewProviders: [],
+      queries: [],
+      viewQueries: []
     });
   }
   exports.createHostComponentMeta = createHostComponentMeta;
@@ -24266,6 +24962,13 @@ System.register("angular2/src/compiler/directive_metadata", ["angular2/src/facad
       this.name = name;
       this.pure = lang_1.normalizeBool(pure);
     }
+    Object.defineProperty(CompilePipeMetadata.prototype, "identifier", {
+      get: function() {
+        return this.type;
+      },
+      enumerable: true,
+      configurable: true
+    });
     CompilePipeMetadata.fromJson = function(data) {
       return new CompilePipeMetadata({
         type: lang_1.isPresent(data['type']) ? CompileTypeMetadata.fromJson(data['type']) : data['type'],
@@ -24286,8 +24989,24 @@ System.register("angular2/src/compiler/directive_metadata", ["angular2/src/facad
   exports.CompilePipeMetadata = CompilePipeMetadata;
   var _COMPILE_METADATA_FROM_JSON = {
     'Directive': CompileDirectiveMetadata.fromJson,
-    'Pipe': CompilePipeMetadata.fromJson
+    'Pipe': CompilePipeMetadata.fromJson,
+    'Type': CompileTypeMetadata.fromJson,
+    'Identifier': CompileIdentifierMetadata.fromJson
   };
+  function arrayFromJson(obj, fn) {
+    return lang_1.isBlank(obj) ? null : obj.map(function(o) {
+      return objFromJson(o, fn);
+    });
+  }
+  function arrayToJson(obj) {
+    return lang_1.isBlank(obj) ? null : obj.map(objToJson);
+  }
+  function objFromJson(obj, fn) {
+    return (lang_1.isString(obj) || lang_1.isBlank(obj)) ? obj : fn(obj);
+  }
+  function objToJson(obj) {
+    return (lang_1.isString(obj) || lang_1.isBlank(obj)) ? obj : obj.toJson();
+  }
   global.define = __define;
   return module.exports;
 });
@@ -24959,8 +25678,8 @@ System.register("angular2/src/compiler/html_lexer", ["angular2/src/facade/lang",
   exports.HtmlToken = HtmlToken;
   var HtmlTokenError = (function(_super) {
     __extends(HtmlTokenError, _super);
-    function HtmlTokenError(errorMsg, tokenType, location) {
-      _super.call(this, location, errorMsg);
+    function HtmlTokenError(errorMsg, tokenType, span) {
+      _super.call(this, span, errorMsg);
       this.tokenType = tokenType;
     }
     return HtmlTokenError;
@@ -25077,6 +25796,15 @@ System.register("angular2/src/compiler/html_lexer", ["angular2/src/facade/lang",
     _HtmlTokenizer.prototype._getLocation = function() {
       return new parse_util_1.ParseLocation(this.file, this.index, this.line, this.column);
     };
+    _HtmlTokenizer.prototype._getSpan = function(start, end) {
+      if (lang_1.isBlank(start)) {
+        start = this._getLocation();
+      }
+      if (lang_1.isBlank(end)) {
+        end = this._getLocation();
+      }
+      return new parse_util_1.ParseSourceSpan(start, end);
+    };
     _HtmlTokenizer.prototype._beginToken = function(type, start) {
       if (start === void 0) {
         start = null;
@@ -25100,15 +25828,15 @@ System.register("angular2/src/compiler/html_lexer", ["angular2/src/facade/lang",
       this.currentTokenType = null;
       return token;
     };
-    _HtmlTokenizer.prototype._createError = function(msg, position) {
-      var error = new HtmlTokenError(msg, this.currentTokenType, position);
+    _HtmlTokenizer.prototype._createError = function(msg, span) {
+      var error = new HtmlTokenError(msg, this.currentTokenType, span);
       this.currentTokenStart = null;
       this.currentTokenType = null;
       return new ControlFlowError(error);
     };
     _HtmlTokenizer.prototype._advance = function() {
       if (this.index >= this.length) {
-        throw this._createError(unexpectedCharacterErrorMsg($EOF), this._getLocation());
+        throw this._createError(unexpectedCharacterErrorMsg($EOF), this._getSpan());
       }
       if (this.peek === $LF) {
         this.line++;
@@ -25136,7 +25864,7 @@ System.register("angular2/src/compiler/html_lexer", ["angular2/src/facade/lang",
     _HtmlTokenizer.prototype._requireCharCode = function(charCode) {
       var location = this._getLocation();
       if (!this._attemptCharCode(charCode)) {
-        throw this._createError(unexpectedCharacterErrorMsg(this.peek), location);
+        throw this._createError(unexpectedCharacterErrorMsg(this.peek), this._getSpan(location, location));
       }
     };
     _HtmlTokenizer.prototype._attemptStr = function(chars) {
@@ -25158,7 +25886,7 @@ System.register("angular2/src/compiler/html_lexer", ["angular2/src/facade/lang",
     _HtmlTokenizer.prototype._requireStr = function(chars) {
       var location = this._getLocation();
       if (!this._attemptStr(chars)) {
-        throw this._createError(unexpectedCharacterErrorMsg(this.peek), location);
+        throw this._createError(unexpectedCharacterErrorMsg(this.peek), this._getSpan(location));
       }
     };
     _HtmlTokenizer.prototype._attemptCharCodeUntilFn = function(predicate) {
@@ -25170,7 +25898,7 @@ System.register("angular2/src/compiler/html_lexer", ["angular2/src/facade/lang",
       var start = this._getLocation();
       this._attemptCharCodeUntilFn(predicate);
       if (this.index - start.offset < len) {
-        throw this._createError(unexpectedCharacterErrorMsg(this.peek), start);
+        throw this._createError(unexpectedCharacterErrorMsg(this.peek), this._getSpan(start, start));
       }
     };
     _HtmlTokenizer.prototype._attemptUntilChar = function(char) {
@@ -25195,7 +25923,7 @@ System.register("angular2/src/compiler/html_lexer", ["angular2/src/facade/lang",
         var numberStart = this._getLocation().offset;
         this._attemptCharCodeUntilFn(isDigitEntityEnd);
         if (this.peek != $SEMICOLON) {
-          throw this._createError(unexpectedCharacterErrorMsg(this.peek), this._getLocation());
+          throw this._createError(unexpectedCharacterErrorMsg(this.peek), this._getSpan());
         }
         this._advance();
         var strNum = this.input.substring(numberStart, this.index - 1);
@@ -25204,7 +25932,7 @@ System.register("angular2/src/compiler/html_lexer", ["angular2/src/facade/lang",
           return lang_1.StringWrapper.fromCharCode(charCode);
         } catch (e) {
           var entity = this.input.substring(start.offset + 1, this.index - 1);
-          throw this._createError(unknownEntityErrorMsg(entity), start);
+          throw this._createError(unknownEntityErrorMsg(entity), this._getSpan(start));
         }
       } else {
         var startPosition = this._savePosition();
@@ -25217,7 +25945,7 @@ System.register("angular2/src/compiler/html_lexer", ["angular2/src/facade/lang",
         var name_1 = this.input.substring(start.offset + 1, this.index - 1);
         var char = html_tags_1.NAMED_ENTITIES[name_1];
         if (lang_1.isBlank(char)) {
-          throw this._createError(unknownEntityErrorMsg(name_1), start);
+          throw this._createError(unknownEntityErrorMsg(name_1), this._getSpan(start));
         }
         return char;
       }
@@ -25292,7 +26020,7 @@ System.register("angular2/src/compiler/html_lexer", ["angular2/src/facade/lang",
       var lowercaseTagName;
       try {
         if (!isAsciiLetter(this.peek)) {
-          throw this._createError(unexpectedCharacterErrorMsg(this.peek), this._getLocation());
+          throw this._createError(unexpectedCharacterErrorMsg(this.peek), this._getSpan());
         }
         var nameStart = this.index;
         this._consumeTagOpenStart(start);
@@ -25647,379 +26375,355 @@ System.register("angular2/src/compiler/runtime_metadata", ["angular2/src/core/di
   return module.exports;
 });
 
-System.register("angular2/src/router/path_recognizer", ["angular2/src/facade/lang", "angular2/src/facade/exceptions", "angular2/src/facade/collection", "angular2/src/router/url_parser"], true, function(require, exports, module) {
+System.register("angular2/src/router/rules/rules", ["angular2/src/facade/lang", "angular2/src/facade/exceptions", "angular2/src/facade/promise", "angular2/src/facade/collection", "angular2/src/router/url_parser", "angular2/src/router/instruction"], true, function(require, exports, module) {
+  var global = System.global,
+      __define = global.define;
+  global.define = undefined;
+  var __extends = (this && this.__extends) || function(d, b) {
+    for (var p in b)
+      if (b.hasOwnProperty(p))
+        d[p] = b[p];
+    function __() {
+      this.constructor = d;
+    }
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+  };
+  var lang_1 = require("angular2/src/facade/lang");
+  var exceptions_1 = require("angular2/src/facade/exceptions");
+  var promise_1 = require("angular2/src/facade/promise");
+  var collection_1 = require("angular2/src/facade/collection");
+  var url_parser_1 = require("angular2/src/router/url_parser");
+  var instruction_1 = require("angular2/src/router/instruction");
+  var RouteMatch = (function() {
+    function RouteMatch() {}
+    return RouteMatch;
+  })();
+  exports.RouteMatch = RouteMatch;
+  var PathMatch = (function(_super) {
+    __extends(PathMatch, _super);
+    function PathMatch(instruction, remaining, remainingAux) {
+      _super.call(this);
+      this.instruction = instruction;
+      this.remaining = remaining;
+      this.remainingAux = remainingAux;
+    }
+    return PathMatch;
+  })(RouteMatch);
+  exports.PathMatch = PathMatch;
+  var RedirectMatch = (function(_super) {
+    __extends(RedirectMatch, _super);
+    function RedirectMatch(redirectTo, specificity) {
+      _super.call(this);
+      this.redirectTo = redirectTo;
+      this.specificity = specificity;
+    }
+    return RedirectMatch;
+  })(RouteMatch);
+  exports.RedirectMatch = RedirectMatch;
+  var RedirectRule = (function() {
+    function RedirectRule(_pathRecognizer, redirectTo) {
+      this._pathRecognizer = _pathRecognizer;
+      this.redirectTo = redirectTo;
+      this.hash = this._pathRecognizer.hash;
+    }
+    Object.defineProperty(RedirectRule.prototype, "path", {
+      get: function() {
+        return this._pathRecognizer.toString();
+      },
+      set: function(val) {
+        throw new exceptions_1.BaseException('you cannot set the path of a RedirectRule directly');
+      },
+      enumerable: true,
+      configurable: true
+    });
+    RedirectRule.prototype.recognize = function(beginningSegment) {
+      var match = null;
+      if (lang_1.isPresent(this._pathRecognizer.matchUrl(beginningSegment))) {
+        match = new RedirectMatch(this.redirectTo, this._pathRecognizer.specificity);
+      }
+      return promise_1.PromiseWrapper.resolve(match);
+    };
+    RedirectRule.prototype.generate = function(params) {
+      throw new exceptions_1.BaseException("Tried to generate a redirect.");
+    };
+    return RedirectRule;
+  })();
+  exports.RedirectRule = RedirectRule;
+  var RouteRule = (function() {
+    function RouteRule(_routePath, handler) {
+      this._routePath = _routePath;
+      this.handler = handler;
+      this._cache = new collection_1.Map();
+      this.specificity = this._routePath.specificity;
+      this.hash = this._routePath.hash;
+      this.terminal = this._routePath.terminal;
+    }
+    Object.defineProperty(RouteRule.prototype, "path", {
+      get: function() {
+        return this._routePath.toString();
+      },
+      set: function(val) {
+        throw new exceptions_1.BaseException('you cannot set the path of a RouteRule directly');
+      },
+      enumerable: true,
+      configurable: true
+    });
+    RouteRule.prototype.recognize = function(beginningSegment) {
+      var _this = this;
+      var res = this._routePath.matchUrl(beginningSegment);
+      if (lang_1.isBlank(res)) {
+        return null;
+      }
+      return this.handler.resolveComponentType().then(function(_) {
+        var componentInstruction = _this._getInstruction(res.urlPath, res.urlParams, res.allParams);
+        return new PathMatch(componentInstruction, res.rest, res.auxiliary);
+      });
+    };
+    RouteRule.prototype.generate = function(params) {
+      var generated = this._routePath.generateUrl(params);
+      var urlPath = generated.urlPath;
+      var urlParams = generated.urlParams;
+      return this._getInstruction(urlPath, url_parser_1.convertUrlParamsToArray(urlParams), params);
+    };
+    RouteRule.prototype.generateComponentPathValues = function(params) {
+      return this._routePath.generateUrl(params);
+    };
+    RouteRule.prototype._getInstruction = function(urlPath, urlParams, params) {
+      if (lang_1.isBlank(this.handler.componentType)) {
+        throw new exceptions_1.BaseException("Tried to get instruction before the type was loaded.");
+      }
+      var hashKey = urlPath + '?' + urlParams.join('&');
+      if (this._cache.has(hashKey)) {
+        return this._cache.get(hashKey);
+      }
+      var instruction = new instruction_1.ComponentInstruction(urlPath, urlParams, this.handler.data, this.handler.componentType, this.terminal, this.specificity, params);
+      this._cache.set(hashKey, instruction);
+      return instruction;
+    };
+    return RouteRule;
+  })();
+  exports.RouteRule = RouteRule;
+  global.define = __define;
+  return module.exports;
+});
+
+System.register("angular2/src/router/rules/route_paths/param_route_path", ["angular2/src/facade/lang", "angular2/src/facade/exceptions", "angular2/src/facade/collection", "angular2/src/router/utils", "angular2/src/router/url_parser", "angular2/src/router/rules/route_paths/route_path"], true, function(require, exports, module) {
   var global = System.global,
       __define = global.define;
   global.define = undefined;
   var lang_1 = require("angular2/src/facade/lang");
   var exceptions_1 = require("angular2/src/facade/exceptions");
   var collection_1 = require("angular2/src/facade/collection");
+  var utils_1 = require("angular2/src/router/utils");
   var url_parser_1 = require("angular2/src/router/url_parser");
-  var TouchMap = (function() {
-    function TouchMap(map) {
-      var _this = this;
-      this.map = {};
-      this.keys = {};
-      if (lang_1.isPresent(map)) {
-        collection_1.StringMapWrapper.forEach(map, function(value, key) {
-          _this.map[key] = lang_1.isPresent(value) ? value.toString() : null;
-          _this.keys[key] = true;
-        });
-      }
-    }
-    TouchMap.prototype.get = function(key) {
-      collection_1.StringMapWrapper.delete(this.keys, key);
-      return this.map[key];
-    };
-    TouchMap.prototype.getUnused = function() {
-      var _this = this;
-      var unused = {};
-      var keys = collection_1.StringMapWrapper.keys(this.keys);
-      keys.forEach(function(key) {
-        return unused[key] = collection_1.StringMapWrapper.get(_this.map, key);
-      });
-      return unused;
-    };
-    return TouchMap;
-  })();
-  function normalizeString(obj) {
-    if (lang_1.isBlank(obj)) {
-      return null;
-    } else {
-      return obj.toString();
-    }
-  }
-  var ContinuationSegment = (function() {
-    function ContinuationSegment() {
+  var route_path_1 = require("angular2/src/router/rules/route_paths/route_path");
+  var ContinuationPathSegment = (function() {
+    function ContinuationPathSegment() {
       this.name = '';
+      this.specificity = '';
+      this.hash = '...';
     }
-    ContinuationSegment.prototype.generate = function(params) {
+    ContinuationPathSegment.prototype.generate = function(params) {
       return '';
     };
-    ContinuationSegment.prototype.match = function(path) {
+    ContinuationPathSegment.prototype.match = function(path) {
       return true;
     };
-    return ContinuationSegment;
+    return ContinuationPathSegment;
   })();
-  var StaticSegment = (function() {
-    function StaticSegment(path) {
+  var StaticPathSegment = (function() {
+    function StaticPathSegment(path) {
       this.path = path;
       this.name = '';
+      this.specificity = '2';
+      this.hash = path;
     }
-    StaticSegment.prototype.match = function(path) {
+    StaticPathSegment.prototype.match = function(path) {
       return path == this.path;
     };
-    StaticSegment.prototype.generate = function(params) {
+    StaticPathSegment.prototype.generate = function(params) {
       return this.path;
     };
-    return StaticSegment;
+    return StaticPathSegment;
   })();
-  var DynamicSegment = (function() {
-    function DynamicSegment(name) {
+  var DynamicPathSegment = (function() {
+    function DynamicPathSegment(name) {
       this.name = name;
+      this.specificity = '1';
+      this.hash = ':';
     }
-    DynamicSegment.prototype.match = function(path) {
+    DynamicPathSegment.prototype.match = function(path) {
       return path.length > 0;
     };
-    DynamicSegment.prototype.generate = function(params) {
+    DynamicPathSegment.prototype.generate = function(params) {
       if (!collection_1.StringMapWrapper.contains(params.map, this.name)) {
         throw new exceptions_1.BaseException("Route generator for '" + this.name + "' was not included in parameters passed.");
       }
-      return normalizeString(params.get(this.name));
+      return utils_1.normalizeString(params.get(this.name));
     };
-    return DynamicSegment;
+    DynamicPathSegment.paramMatcher = /^:([^\/]+)$/g;
+    return DynamicPathSegment;
   })();
-  var StarSegment = (function() {
-    function StarSegment(name) {
+  var StarPathSegment = (function() {
+    function StarPathSegment(name) {
       this.name = name;
+      this.specificity = '0';
+      this.hash = '*';
     }
-    StarSegment.prototype.match = function(path) {
+    StarPathSegment.prototype.match = function(path) {
       return true;
     };
-    StarSegment.prototype.generate = function(params) {
-      return normalizeString(params.get(this.name));
+    StarPathSegment.prototype.generate = function(params) {
+      return utils_1.normalizeString(params.get(this.name));
     };
-    return StarSegment;
+    StarPathSegment.wildcardMatcher = /^\*([^\/]+)$/g;
+    return StarPathSegment;
   })();
-  var paramMatcher = /^:([^\/]+)$/g;
-  var wildcardMatcher = /^\*([^\/]+)$/g;
-  function parsePathString(route) {
-    if (route.startsWith("/")) {
-      route = route.substring(1);
-    }
-    var segments = splitBySlash(route);
-    var results = [];
-    var specificity = '';
-    if (segments.length == 0) {
-      specificity += '2';
-    }
-    var limit = segments.length - 1;
-    for (var i = 0; i <= limit; i++) {
-      var segment = segments[i],
-          match;
-      if (lang_1.isPresent(match = lang_1.RegExpWrapper.firstMatch(paramMatcher, segment))) {
-        results.push(new DynamicSegment(match[1]));
-        specificity += '1';
-      } else if (lang_1.isPresent(match = lang_1.RegExpWrapper.firstMatch(wildcardMatcher, segment))) {
-        results.push(new StarSegment(match[1]));
-        specificity += '0';
-      } else if (segment == '...') {
-        if (i < limit) {
-          throw new exceptions_1.BaseException("Unexpected \"...\" before the end of the path for \"" + route + "\".");
-        }
-        results.push(new ContinuationSegment());
-      } else {
-        results.push(new StaticSegment(segment));
-        specificity += '2';
-      }
-    }
-    return {
-      'segments': results,
-      'specificity': specificity
-    };
-  }
-  function pathDslHash(segments) {
-    return segments.map(function(segment) {
-      if (segment instanceof StarSegment) {
-        return '*';
-      } else if (segment instanceof ContinuationSegment) {
-        return '...';
-      } else if (segment instanceof DynamicSegment) {
-        return ':';
-      } else if (segment instanceof StaticSegment) {
-        return segment.path;
-      }
-    }).join('/');
-  }
-  function splitBySlash(url) {
-    return url.split('/');
-  }
-  var RESERVED_CHARS = lang_1.RegExpWrapper.create('//|\\(|\\)|;|\\?|=');
-  function assertPath(path) {
-    if (lang_1.StringWrapper.contains(path, '#')) {
-      throw new exceptions_1.BaseException("Path \"" + path + "\" should not include \"#\". Use \"HashLocationStrategy\" instead.");
-    }
-    var illegalCharacter = lang_1.RegExpWrapper.firstMatch(RESERVED_CHARS, path);
-    if (lang_1.isPresent(illegalCharacter)) {
-      throw new exceptions_1.BaseException("Path \"" + path + "\" contains \"" + illegalCharacter[0] + "\" which is not allowed in a route config.");
-    }
-  }
-  var PathRecognizer = (function() {
-    function PathRecognizer(path) {
-      this.path = path;
+  var ParamRoutePath = (function() {
+    function ParamRoutePath(routePath) {
+      this.routePath = routePath;
       this.terminal = true;
-      assertPath(path);
-      var parsed = parsePathString(path);
-      this._segments = parsed['segments'];
-      this.specificity = parsed['specificity'];
-      this.hash = pathDslHash(this._segments);
+      this._assertValidPath(routePath);
+      this._parsePathString(routePath);
+      this.specificity = this._calculateSpecificity();
+      this.hash = this._calculateHash();
       var lastSegment = this._segments[this._segments.length - 1];
-      this.terminal = !(lastSegment instanceof ContinuationSegment);
+      this.terminal = !(lastSegment instanceof ContinuationPathSegment);
     }
-    PathRecognizer.prototype.recognize = function(beginningSegment) {
-      var nextSegment = beginningSegment;
-      var currentSegment;
+    ParamRoutePath.prototype.matchUrl = function(url) {
+      var nextUrlSegment = url;
+      var currentUrlSegment;
       var positionalParams = {};
       var captured = [];
       for (var i = 0; i < this._segments.length; i += 1) {
-        var segment = this._segments[i];
-        currentSegment = nextSegment;
-        if (segment instanceof ContinuationSegment) {
+        var pathSegment = this._segments[i];
+        currentUrlSegment = nextUrlSegment;
+        if (pathSegment instanceof ContinuationPathSegment) {
           break;
         }
-        if (lang_1.isPresent(currentSegment)) {
-          if (segment instanceof StarSegment) {
-            positionalParams[segment.name] = currentSegment.toString();
-            captured.push(currentSegment.toString());
-            nextSegment = null;
+        if (lang_1.isPresent(currentUrlSegment)) {
+          if (pathSegment instanceof StarPathSegment) {
+            positionalParams[pathSegment.name] = currentUrlSegment.toString();
+            captured.push(currentUrlSegment.toString());
+            nextUrlSegment = null;
             break;
           }
-          captured.push(currentSegment.path);
-          if (segment instanceof DynamicSegment) {
-            positionalParams[segment.name] = currentSegment.path;
-          } else if (!segment.match(currentSegment.path)) {
+          captured.push(currentUrlSegment.path);
+          if (pathSegment instanceof DynamicPathSegment) {
+            positionalParams[pathSegment.name] = currentUrlSegment.path;
+          } else if (!pathSegment.match(currentUrlSegment.path)) {
             return null;
           }
-          nextSegment = currentSegment.child;
-        } else if (!segment.match('')) {
+          nextUrlSegment = currentUrlSegment.child;
+        } else if (!pathSegment.match('')) {
           return null;
         }
       }
-      if (this.terminal && lang_1.isPresent(nextSegment)) {
+      if (this.terminal && lang_1.isPresent(nextUrlSegment)) {
         return null;
       }
       var urlPath = captured.join('/');
-      var auxiliary;
-      var urlParams;
-      var allParams;
-      if (lang_1.isPresent(currentSegment)) {
-        var paramsSegment = beginningSegment instanceof url_parser_1.RootUrl ? beginningSegment : currentSegment;
-        allParams = lang_1.isPresent(paramsSegment.params) ? collection_1.StringMapWrapper.merge(paramsSegment.params, positionalParams) : positionalParams;
-        urlParams = url_parser_1.serializeParams(paramsSegment.params);
-        auxiliary = currentSegment.auxiliary;
-      } else {
-        allParams = positionalParams;
-        auxiliary = [];
-        urlParams = [];
+      var auxiliary = [];
+      var urlParams = [];
+      var allParams = positionalParams;
+      if (lang_1.isPresent(currentUrlSegment)) {
+        var paramsSegment = url instanceof url_parser_1.RootUrl ? url : currentUrlSegment;
+        if (lang_1.isPresent(paramsSegment.params)) {
+          allParams = collection_1.StringMapWrapper.merge(paramsSegment.params, positionalParams);
+          urlParams = url_parser_1.convertUrlParamsToArray(paramsSegment.params);
+        } else {
+          allParams = positionalParams;
+        }
+        auxiliary = currentUrlSegment.auxiliary;
       }
-      return {
-        urlPath: urlPath,
-        urlParams: urlParams,
-        allParams: allParams,
-        auxiliary: auxiliary,
-        nextSegment: nextSegment
-      };
+      return new route_path_1.MatchedUrl(urlPath, urlParams, allParams, auxiliary, nextUrlSegment);
     };
-    PathRecognizer.prototype.generate = function(params) {
-      var paramTokens = new TouchMap(params);
+    ParamRoutePath.prototype.generateUrl = function(params) {
+      var paramTokens = new utils_1.TouchMap(params);
       var path = [];
       for (var i = 0; i < this._segments.length; i++) {
         var segment = this._segments[i];
-        if (!(segment instanceof ContinuationSegment)) {
+        if (!(segment instanceof ContinuationPathSegment)) {
           path.push(segment.generate(paramTokens));
         }
       }
       var urlPath = path.join('/');
       var nonPositionalParams = paramTokens.getUnused();
-      var urlParams = url_parser_1.serializeParams(nonPositionalParams);
-      return {
-        urlPath: urlPath,
-        urlParams: urlParams
-      };
+      var urlParams = nonPositionalParams;
+      return new route_path_1.GeneratedUrl(urlPath, urlParams);
     };
-    return PathRecognizer;
+    ParamRoutePath.prototype.toString = function() {
+      return this.routePath;
+    };
+    ParamRoutePath.prototype._parsePathString = function(routePath) {
+      if (routePath.startsWith("/")) {
+        routePath = routePath.substring(1);
+      }
+      var segmentStrings = routePath.split('/');
+      this._segments = [];
+      var limit = segmentStrings.length - 1;
+      for (var i = 0; i <= limit; i++) {
+        var segment = segmentStrings[i],
+            match;
+        if (lang_1.isPresent(match = lang_1.RegExpWrapper.firstMatch(DynamicPathSegment.paramMatcher, segment))) {
+          this._segments.push(new DynamicPathSegment(match[1]));
+        } else if (lang_1.isPresent(match = lang_1.RegExpWrapper.firstMatch(StarPathSegment.wildcardMatcher, segment))) {
+          this._segments.push(new StarPathSegment(match[1]));
+        } else if (segment == '...') {
+          if (i < limit) {
+            throw new exceptions_1.BaseException("Unexpected \"...\" before the end of the path for \"" + routePath + "\".");
+          }
+          this._segments.push(new ContinuationPathSegment());
+        } else {
+          this._segments.push(new StaticPathSegment(segment));
+        }
+      }
+    };
+    ParamRoutePath.prototype._calculateSpecificity = function() {
+      var i,
+          length = this._segments.length,
+          specificity;
+      if (length == 0) {
+        specificity += '2';
+      } else {
+        specificity = '';
+        for (i = 0; i < length; i++) {
+          specificity += this._segments[i].specificity;
+        }
+      }
+      return specificity;
+    };
+    ParamRoutePath.prototype._calculateHash = function() {
+      var i,
+          length = this._segments.length;
+      var hashParts = [];
+      for (i = 0; i < length; i++) {
+        hashParts.push(this._segments[i].hash);
+      }
+      return hashParts.join('/');
+    };
+    ParamRoutePath.prototype._assertValidPath = function(path) {
+      if (lang_1.StringWrapper.contains(path, '#')) {
+        throw new exceptions_1.BaseException("Path \"" + path + "\" should not include \"#\". Use \"HashLocationStrategy\" instead.");
+      }
+      var illegalCharacter = lang_1.RegExpWrapper.firstMatch(ParamRoutePath.RESERVED_CHARS, path);
+      if (lang_1.isPresent(illegalCharacter)) {
+        throw new exceptions_1.BaseException("Path \"" + path + "\" contains \"" + illegalCharacter[0] + "\" which is not allowed in a route config.");
+      }
+    };
+    ParamRoutePath.RESERVED_CHARS = lang_1.RegExpWrapper.create('//|\\(|\\)|;|\\?|=');
+    return ParamRoutePath;
   })();
-  exports.PathRecognizer = PathRecognizer;
+  exports.ParamRoutePath = ParamRoutePath;
   global.define = __define;
   return module.exports;
 });
 
-System.register("angular2/src/router/component_recognizer", ["angular2/src/facade/lang", "angular2/src/facade/exceptions", "angular2/src/facade/collection", "angular2/src/facade/async", "angular2/src/router/route_recognizer", "angular2/src/router/route_config_impl", "angular2/src/router/async_route_handler", "angular2/src/router/sync_route_handler"], true, function(require, exports, module) {
+System.register("angular2/src/router/route_config/route_config_normalizer", ["angular2/src/router/route_config/route_config_decorator", "angular2/src/facade/lang", "angular2/src/facade/exceptions"], true, function(require, exports, module) {
   var global = System.global,
       __define = global.define;
   global.define = undefined;
-  var lang_1 = require("angular2/src/facade/lang");
-  var exceptions_1 = require("angular2/src/facade/exceptions");
-  var collection_1 = require("angular2/src/facade/collection");
-  var async_1 = require("angular2/src/facade/async");
-  var route_recognizer_1 = require("angular2/src/router/route_recognizer");
-  var route_config_impl_1 = require("angular2/src/router/route_config_impl");
-  var async_route_handler_1 = require("angular2/src/router/async_route_handler");
-  var sync_route_handler_1 = require("angular2/src/router/sync_route_handler");
-  var ComponentRecognizer = (function() {
-    function ComponentRecognizer() {
-      this.names = new collection_1.Map();
-      this.auxNames = new collection_1.Map();
-      this.auxRoutes = new collection_1.Map();
-      this.matchers = [];
-      this.defaultRoute = null;
-    }
-    ComponentRecognizer.prototype.config = function(config) {
-      var handler;
-      if (lang_1.isPresent(config.name) && config.name[0].toUpperCase() != config.name[0]) {
-        var suggestedName = config.name[0].toUpperCase() + config.name.substring(1);
-        throw new exceptions_1.BaseException("Route \"" + config.path + "\" with name \"" + config.name + "\" does not begin with an uppercase letter. Route names should be CamelCase like \"" + suggestedName + "\".");
-      }
-      if (config instanceof route_config_impl_1.AuxRoute) {
-        handler = new sync_route_handler_1.SyncRouteHandler(config.component, config.data);
-        var path = config.path.startsWith('/') ? config.path.substring(1) : config.path;
-        var recognizer = new route_recognizer_1.RouteRecognizer(config.path, handler);
-        this.auxRoutes.set(path, recognizer);
-        if (lang_1.isPresent(config.name)) {
-          this.auxNames.set(config.name, recognizer);
-        }
-        return recognizer.terminal;
-      }
-      var useAsDefault = false;
-      if (config instanceof route_config_impl_1.Redirect) {
-        var redirector = new route_recognizer_1.RedirectRecognizer(config.path, config.redirectTo);
-        this._assertNoHashCollision(redirector.hash, config.path);
-        this.matchers.push(redirector);
-        return true;
-      }
-      if (config instanceof route_config_impl_1.Route) {
-        handler = new sync_route_handler_1.SyncRouteHandler(config.component, config.data);
-        useAsDefault = lang_1.isPresent(config.useAsDefault) && config.useAsDefault;
-      } else if (config instanceof route_config_impl_1.AsyncRoute) {
-        handler = new async_route_handler_1.AsyncRouteHandler(config.loader, config.data);
-        useAsDefault = lang_1.isPresent(config.useAsDefault) && config.useAsDefault;
-      }
-      var recognizer = new route_recognizer_1.RouteRecognizer(config.path, handler);
-      this._assertNoHashCollision(recognizer.hash, config.path);
-      if (useAsDefault) {
-        if (lang_1.isPresent(this.defaultRoute)) {
-          throw new exceptions_1.BaseException("Only one route can be default");
-        }
-        this.defaultRoute = recognizer;
-      }
-      this.matchers.push(recognizer);
-      if (lang_1.isPresent(config.name)) {
-        this.names.set(config.name, recognizer);
-      }
-      return recognizer.terminal;
-    };
-    ComponentRecognizer.prototype._assertNoHashCollision = function(hash, path) {
-      this.matchers.forEach(function(matcher) {
-        if (hash == matcher.hash) {
-          throw new exceptions_1.BaseException("Configuration '" + path + "' conflicts with existing route '" + matcher.path + "'");
-        }
-      });
-    };
-    ComponentRecognizer.prototype.recognize = function(urlParse) {
-      var solutions = [];
-      this.matchers.forEach(function(routeRecognizer) {
-        var pathMatch = routeRecognizer.recognize(urlParse);
-        if (lang_1.isPresent(pathMatch)) {
-          solutions.push(pathMatch);
-        }
-      });
-      if (solutions.length == 0 && lang_1.isPresent(urlParse) && urlParse.auxiliary.length > 0) {
-        return [async_1.PromiseWrapper.resolve(new route_recognizer_1.PathMatch(null, null, urlParse.auxiliary))];
-      }
-      return solutions;
-    };
-    ComponentRecognizer.prototype.recognizeAuxiliary = function(urlParse) {
-      var routeRecognizer = this.auxRoutes.get(urlParse.path);
-      if (lang_1.isPresent(routeRecognizer)) {
-        return [routeRecognizer.recognize(urlParse)];
-      }
-      return [async_1.PromiseWrapper.resolve(null)];
-    };
-    ComponentRecognizer.prototype.hasRoute = function(name) {
-      return this.names.has(name);
-    };
-    ComponentRecognizer.prototype.componentLoaded = function(name) {
-      return this.hasRoute(name) && lang_1.isPresent(this.names.get(name).handler.componentType);
-    };
-    ComponentRecognizer.prototype.loadComponent = function(name) {
-      return this.names.get(name).handler.resolveComponentType();
-    };
-    ComponentRecognizer.prototype.generate = function(name, params) {
-      var pathRecognizer = this.names.get(name);
-      if (lang_1.isBlank(pathRecognizer)) {
-        return null;
-      }
-      return pathRecognizer.generate(params);
-    };
-    ComponentRecognizer.prototype.generateAuxiliary = function(name, params) {
-      var pathRecognizer = this.auxNames.get(name);
-      if (lang_1.isBlank(pathRecognizer)) {
-        return null;
-      }
-      return pathRecognizer.generate(params);
-    };
-    return ComponentRecognizer;
-  })();
-  exports.ComponentRecognizer = ComponentRecognizer;
-  global.define = __define;
-  return module.exports;
-});
-
-System.register("angular2/src/router/route_config_nomalizer", ["angular2/src/router/route_config_decorator", "angular2/src/facade/lang", "angular2/src/facade/exceptions"], true, function(require, exports, module) {
-  var global = System.global,
-      __define = global.define;
-  global.define = undefined;
-  var route_config_decorator_1 = require("angular2/src/router/route_config_decorator");
+  var route_config_decorator_1 = require("angular2/src/router/route_config/route_config_decorator");
   var lang_1 = require("angular2/src/facade/lang");
   var exceptions_1 = require("angular2/src/facade/exceptions");
   function normalizeRouteConfig(config, registry) {
@@ -26114,12 +26818,12 @@ System.register("angular2/src/router/route_config_nomalizer", ["angular2/src/rou
   return module.exports;
 });
 
-System.register("angular2/src/router/route_lifecycle_reflector", ["angular2/src/facade/lang", "angular2/src/router/lifecycle_annotations_impl", "angular2/src/core/reflection/reflection"], true, function(require, exports, module) {
+System.register("angular2/src/router/lifecycle/route_lifecycle_reflector", ["angular2/src/facade/lang", "angular2/src/router/lifecycle/lifecycle_annotations_impl", "angular2/src/core/reflection/reflection"], true, function(require, exports, module) {
   var global = System.global,
       __define = global.define;
   global.define = undefined;
   var lang_1 = require("angular2/src/facade/lang");
-  var lifecycle_annotations_impl_1 = require("angular2/src/router/lifecycle_annotations_impl");
+  var lifecycle_annotations_impl_1 = require("angular2/src/router/lifecycle/lifecycle_annotations_impl");
   var reflection_1 = require("angular2/src/core/reflection/reflection");
   function hasLifecycleHook(e, type) {
     if (!(type instanceof lang_1.Type))
@@ -26618,7 +27322,7 @@ System.register("angular2/src/core/di/provider", ["angular2/src/facade/lang", "a
   return module.exports;
 });
 
-System.register("angular2/src/core/change_detection/abstract_change_detector", ["angular2/src/facade/lang", "angular2/src/facade/collection", "angular2/src/core/change_detection/change_detection_util", "angular2/src/core/change_detection/change_detector_ref", "angular2/src/core/change_detection/exceptions", "angular2/src/core/change_detection/parser/locals", "angular2/src/core/change_detection/constants", "angular2/src/core/profile/profile", "angular2/src/core/change_detection/observable_facade", "angular2/src/facade/async"], true, function(require, exports, module) {
+System.register("angular2/src/core/change_detection/abstract_change_detector", ["angular2/src/facade/lang", "angular2/src/facade/collection", "angular2/src/core/change_detection/change_detection_util", "angular2/src/core/change_detection/change_detector_ref", "angular2/src/core/change_detection/exceptions", "angular2/src/core/change_detection/parser/locals", "angular2/src/core/change_detection/constants", "angular2/src/core/profile/profile", "angular2/src/facade/async"], true, function(require, exports, module) {
   var global = System.global,
       __define = global.define;
   global.define = undefined;
@@ -26630,7 +27334,6 @@ System.register("angular2/src/core/change_detection/abstract_change_detector", [
   var locals_1 = require("angular2/src/core/change_detection/parser/locals");
   var constants_1 = require("angular2/src/core/change_detection/constants");
   var profile_1 = require("angular2/src/core/profile/profile");
-  var observable_facade_1 = require("angular2/src/core/change_detection/observable_facade");
   var async_1 = require("angular2/src/facade/async");
   var _scope_check = profile_1.wtfCreateScope("ChangeDetector#check(ascii id, bool throwOnChange)");
   var _Context = (function() {
@@ -26737,9 +27440,6 @@ System.register("angular2/src/core/change_detection/abstract_change_detector", [
       this.dispatcher = dispatcher;
       this.mode = change_detection_util_1.ChangeDetectionUtil.changeDetectionMode(this.strategy);
       this.context = context;
-      if (this.strategy === constants_1.ChangeDetectionStrategy.OnPushObserve) {
-        this.observeComponent(context);
-      }
       this.locals = locals;
       this.pipes = pipes;
       this.hydrateDirectives(dispatcher);
@@ -26748,9 +27448,6 @@ System.register("angular2/src/core/change_detection/abstract_change_detector", [
     AbstractChangeDetector.prototype.hydrateDirectives = function(dispatcher) {};
     AbstractChangeDetector.prototype.dehydrate = function() {
       this.dehydrateDirectives(true);
-      if (this.strategy === constants_1.ChangeDetectionStrategy.OnPushObserve) {
-        this._unsubsribeFromObservables();
-      }
       this._unsubscribeFromOutputs();
       this.dispatcher = null;
       this.context = null;
@@ -26806,72 +27503,12 @@ System.register("angular2/src/core/change_detection/abstract_change_detector", [
         c = c.parent;
       }
     };
-    AbstractChangeDetector.prototype._unsubsribeFromObservables = function() {
-      if (lang_1.isPresent(this.subscriptions)) {
-        for (var i = 0; i < this.subscriptions.length; ++i) {
-          var s = this.subscriptions[i];
-          if (lang_1.isPresent(this.subscriptions[i])) {
-            s.cancel();
-            this.subscriptions[i] = null;
-          }
-        }
-      }
-    };
     AbstractChangeDetector.prototype._unsubscribeFromOutputs = function() {
       if (lang_1.isPresent(this.outputSubscriptions)) {
         for (var i = 0; i < this.outputSubscriptions.length; ++i) {
           async_1.ObservableWrapper.dispose(this.outputSubscriptions[i]);
           this.outputSubscriptions[i] = null;
         }
-      }
-    };
-    AbstractChangeDetector.prototype.observeValue = function(value, index) {
-      var _this = this;
-      if (observable_facade_1.isObservable(value)) {
-        this._createArrayToStoreObservables();
-        if (lang_1.isBlank(this.subscriptions[index])) {
-          this.streams[index] = value.changes;
-          this.subscriptions[index] = value.changes.listen(function(_) {
-            return _this.ref.markForCheck();
-          });
-        } else if (this.streams[index] !== value.changes) {
-          this.subscriptions[index].cancel();
-          this.streams[index] = value.changes;
-          this.subscriptions[index] = value.changes.listen(function(_) {
-            return _this.ref.markForCheck();
-          });
-        }
-      }
-      return value;
-    };
-    AbstractChangeDetector.prototype.observeDirective = function(value, index) {
-      var _this = this;
-      if (observable_facade_1.isObservable(value)) {
-        this._createArrayToStoreObservables();
-        var arrayIndex = this.numberOfPropertyProtoRecords + index + 2;
-        this.streams[arrayIndex] = value.changes;
-        this.subscriptions[arrayIndex] = value.changes.listen(function(_) {
-          return _this.ref.markForCheck();
-        });
-      }
-      return value;
-    };
-    AbstractChangeDetector.prototype.observeComponent = function(value) {
-      var _this = this;
-      if (observable_facade_1.isObservable(value)) {
-        this._createArrayToStoreObservables();
-        var index = this.numberOfPropertyProtoRecords + 1;
-        this.streams[index] = value.changes;
-        this.subscriptions[index] = value.changes.listen(function(_) {
-          return _this.ref.markForCheck();
-        });
-      }
-      return value;
-    };
-    AbstractChangeDetector.prototype._createArrayToStoreObservables = function() {
-      if (lang_1.isBlank(this.subscriptions)) {
-        this.subscriptions = collection_1.ListWrapper.createFixedSize(this.numberOfPropertyProtoRecords + this.directiveIndices.length + 2);
-        this.streams = collection_1.ListWrapper.createFixedSize(this.numberOfPropertyProtoRecords + this.directiveIndices.length + 2);
       }
     };
     AbstractChangeDetector.prototype.getDirectiveFor = function(directives, index) {
@@ -26955,7 +27592,7 @@ System.register("angular2/src/core/change_detection/change_detection_jit_generat
       this.eventBindings = eventBindingRecords;
       this.directiveRecords = definition.directiveRecords;
       this._names = new codegen_name_util_1.CodegenNameUtil(this.records, this.eventBindings, this.directiveRecords, this.changeDetectionUtilVarName);
-      this._logic = new codegen_logic_util_1.CodegenLogicUtil(this._names, this.changeDetectionUtilVarName, this.changeDetectorStateVarName, this.changeDetectionStrategy);
+      this._logic = new codegen_logic_util_1.CodegenLogicUtil(this._names, this.changeDetectionUtilVarName, this.changeDetectorStateVarName);
       this.typeName = codegen_name_util_1.sanitizeName("ChangeDetector_" + this.id);
     }
     ChangeDetectorJITGenerator.prototype.generate = function() {
@@ -27007,7 +27644,7 @@ System.register("angular2/src/core/change_detection/change_detection_jit_generat
         var evalRecord = this._logic.genEventBindingEvalValue(eb, r);
         var markPath = this._genMarkPathToRootAsCheckOnce(r);
         var prevDefault = this._genUpdatePreventDefault(eb, r);
-        return evalRecord + "\n" + markPath + "\n" + prevDefault;
+        return markPath + "\n" + evalRecord + "\n" + prevDefault;
       } else {
         return this._logic.genEventBindingEvalValue(eb, r);
       }
@@ -27491,6 +28128,25 @@ System.register("angular2/src/core/linker/view", ["angular2/src/facade/collectio
     }
     return renderNodes;
   }
+  function findLastRenderNode(node) {
+    var lastNode;
+    if (node instanceof element_1.AppElement) {
+      var appEl = node;
+      lastNode = appEl.nativeElement;
+      if (lang_1.isPresent(appEl.nestedViews)) {
+        for (var i = appEl.nestedViews.length - 1; i >= 0; i--) {
+          var nestedView = appEl.nestedViews[i];
+          if (nestedView.rootNodesOrAppElements.length > 0) {
+            lastNode = findLastRenderNode(nestedView.rootNodesOrAppElements[nestedView.rootNodesOrAppElements.length - 1]);
+          }
+        }
+      }
+    } else {
+      lastNode = node;
+    }
+    return lastNode;
+  }
+  exports.findLastRenderNode = findLastRenderNode;
   function checkSlotCount(componentName, expectedSlotCount, projectableNodes) {
     var givenSlotCount = lang_1.isPresent(projectableNodes) ? projectableNodes.length : 0;
     if (givenSlotCount < expectedSlotCount) {
@@ -29436,12 +30092,12 @@ System.register("angular2/src/compiler/html_parser", ["angular2/src/facade/lang"
   var html_tags_1 = require("angular2/src/compiler/html_tags");
   var HtmlTreeError = (function(_super) {
     __extends(HtmlTreeError, _super);
-    function HtmlTreeError(elementName, location, msg) {
-      _super.call(this, location, msg);
+    function HtmlTreeError(elementName, span, msg) {
+      _super.call(this, span, msg);
       this.elementName = elementName;
     }
-    HtmlTreeError.create = function(elementName, location, msg) {
-      return new HtmlTreeError(elementName, location, msg);
+    HtmlTreeError.create = function(elementName, span, msg) {
+      return new HtmlTreeError(elementName, span, msg);
     };
     return HtmlTreeError;
   })(parse_util_1.ParseError);
@@ -29550,7 +30206,7 @@ System.register("angular2/src/compiler/html_parser", ["angular2/src/facade/lang"
         this._advance();
         selfClosing = true;
         if (html_tags_1.getNsPrefix(fullName) == null && !html_tags_1.getHtmlTagDefinition(fullName).isVoid) {
-          this.errors.push(HtmlTreeError.create(fullName, startTagToken.sourceSpan.start, "Only void and foreign elements can be self closed \"" + startTagToken.parts[1] + "\""));
+          this.errors.push(HtmlTreeError.create(fullName, startTagToken.sourceSpan, "Only void and foreign elements can be self closed \"" + startTagToken.parts[1] + "\""));
         }
       } else if (this.peek.type === html_lexer_1.HtmlTokenType.TAG_OPEN_END) {
         this._advance();
@@ -29585,9 +30241,9 @@ System.register("angular2/src/compiler/html_parser", ["angular2/src/facade/lang"
     TreeBuilder.prototype._consumeEndTag = function(endTagToken) {
       var fullName = getElementFullName(endTagToken.parts[0], endTagToken.parts[1], this._getParentElement());
       if (html_tags_1.getHtmlTagDefinition(fullName).isVoid) {
-        this.errors.push(HtmlTreeError.create(fullName, endTagToken.sourceSpan.start, "Void elements do not have end tags \"" + endTagToken.parts[1] + "\""));
+        this.errors.push(HtmlTreeError.create(fullName, endTagToken.sourceSpan, "Void elements do not have end tags \"" + endTagToken.parts[1] + "\""));
       } else if (!this._popElement(fullName)) {
-        this.errors.push(HtmlTreeError.create(fullName, endTagToken.sourceSpan.start, "Unexpected closing tag \"" + endTagToken.parts[1] + "\""));
+        this.errors.push(HtmlTreeError.create(fullName, endTagToken.sourceSpan, "Unexpected closing tag \"" + endTagToken.parts[1] + "\""));
       }
     };
     TreeBuilder.prototype._popElement = function(fullName) {
@@ -29604,7 +30260,7 @@ System.register("angular2/src/compiler/html_parser", ["angular2/src/facade/lang"
       return false;
     };
     TreeBuilder.prototype._consumeAttr = function(attrName) {
-      var fullName = mergeNsAndName(attrName.parts[0], attrName.parts[1]);
+      var fullName = html_tags_1.mergeNsAndName(attrName.parts[0], attrName.parts[1]);
       var end = attrName.sourceSpan.end;
       var value = '';
       if (this.peek.type === html_lexer_1.HtmlTokenType.ATTR_VALUE) {
@@ -29627,9 +30283,6 @@ System.register("angular2/src/compiler/html_parser", ["angular2/src/facade/lang"
     };
     return TreeBuilder;
   })();
-  function mergeNsAndName(prefix, localName) {
-    return lang_1.isPresent(prefix) ? "@" + prefix + ":" + localName : localName;
-  }
   function getElementFullName(prefix, localName, parentElement) {
     if (lang_1.isBlank(prefix)) {
       prefix = html_tags_1.getHtmlTagDefinition(localName).implicitNamespacePrefix;
@@ -29637,123 +30290,147 @@ System.register("angular2/src/compiler/html_parser", ["angular2/src/facade/lang"
         prefix = html_tags_1.getNsPrefix(parentElement.name);
       }
     }
-    return mergeNsAndName(prefix, localName);
+    return html_tags_1.mergeNsAndName(prefix, localName);
   }
   global.define = __define;
   return module.exports;
 });
 
-System.register("angular2/src/router/route_recognizer", ["angular2/src/facade/lang", "angular2/src/facade/exceptions", "angular2/src/facade/promise", "angular2/src/facade/collection", "angular2/src/router/instruction", "angular2/src/router/path_recognizer"], true, function(require, exports, module) {
+System.register("angular2/src/router/rules/rule_set", ["angular2/src/facade/lang", "angular2/src/facade/exceptions", "angular2/src/facade/collection", "angular2/src/facade/async", "angular2/src/router/rules/rules", "angular2/src/router/route_config/route_config_impl", "angular2/src/router/rules/route_handlers/async_route_handler", "angular2/src/router/rules/route_handlers/sync_route_handler", "angular2/src/router/rules/route_paths/param_route_path", "angular2/src/router/rules/route_paths/regex_route_path"], true, function(require, exports, module) {
   var global = System.global,
       __define = global.define;
   global.define = undefined;
-  var __extends = (this && this.__extends) || function(d, b) {
-    for (var p in b)
-      if (b.hasOwnProperty(p))
-        d[p] = b[p];
-    function __() {
-      this.constructor = d;
-    }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-  };
   var lang_1 = require("angular2/src/facade/lang");
   var exceptions_1 = require("angular2/src/facade/exceptions");
-  var promise_1 = require("angular2/src/facade/promise");
   var collection_1 = require("angular2/src/facade/collection");
-  var instruction_1 = require("angular2/src/router/instruction");
-  var path_recognizer_1 = require("angular2/src/router/path_recognizer");
-  var RouteMatch = (function() {
-    function RouteMatch() {}
-    return RouteMatch;
-  })();
-  exports.RouteMatch = RouteMatch;
-  var PathMatch = (function(_super) {
-    __extends(PathMatch, _super);
-    function PathMatch(instruction, remaining, remainingAux) {
-      _super.call(this);
-      this.instruction = instruction;
-      this.remaining = remaining;
-      this.remainingAux = remainingAux;
+  var async_1 = require("angular2/src/facade/async");
+  var rules_1 = require("angular2/src/router/rules/rules");
+  var route_config_impl_1 = require("angular2/src/router/route_config/route_config_impl");
+  var async_route_handler_1 = require("angular2/src/router/rules/route_handlers/async_route_handler");
+  var sync_route_handler_1 = require("angular2/src/router/rules/route_handlers/sync_route_handler");
+  var param_route_path_1 = require("angular2/src/router/rules/route_paths/param_route_path");
+  var regex_route_path_1 = require("angular2/src/router/rules/route_paths/regex_route_path");
+  var RuleSet = (function() {
+    function RuleSet() {
+      this.rulesByName = new collection_1.Map();
+      this.auxRulesByName = new collection_1.Map();
+      this.auxRulesByPath = new collection_1.Map();
+      this.rules = [];
+      this.defaultRule = null;
     }
-    return PathMatch;
-  })(RouteMatch);
-  exports.PathMatch = PathMatch;
-  var RedirectMatch = (function(_super) {
-    __extends(RedirectMatch, _super);
-    function RedirectMatch(redirectTo, specificity) {
-      _super.call(this);
-      this.redirectTo = redirectTo;
-      this.specificity = specificity;
-    }
-    return RedirectMatch;
-  })(RouteMatch);
-  exports.RedirectMatch = RedirectMatch;
-  var RedirectRecognizer = (function() {
-    function RedirectRecognizer(path, redirectTo) {
-      this.path = path;
-      this.redirectTo = redirectTo;
-      this._pathRecognizer = new path_recognizer_1.PathRecognizer(path);
-      this.hash = this._pathRecognizer.hash;
-    }
-    RedirectRecognizer.prototype.recognize = function(beginningSegment) {
-      var match = null;
-      if (lang_1.isPresent(this._pathRecognizer.recognize(beginningSegment))) {
-        match = new RedirectMatch(this.redirectTo, this._pathRecognizer.specificity);
+    RuleSet.prototype.config = function(config) {
+      var handler;
+      if (lang_1.isPresent(config.name) && config.name[0].toUpperCase() != config.name[0]) {
+        var suggestedName = config.name[0].toUpperCase() + config.name.substring(1);
+        throw new exceptions_1.BaseException("Route \"" + config.path + "\" with name \"" + config.name + "\" does not begin with an uppercase letter. Route names should be CamelCase like \"" + suggestedName + "\".");
       }
-      return promise_1.PromiseWrapper.resolve(match);
+      if (config instanceof route_config_impl_1.AuxRoute) {
+        handler = new sync_route_handler_1.SyncRouteHandler(config.component, config.data);
+        var routePath_1 = this._getRoutePath(config);
+        var auxRule = new rules_1.RouteRule(routePath_1, handler);
+        this.auxRulesByPath.set(routePath_1.toString(), auxRule);
+        if (lang_1.isPresent(config.name)) {
+          this.auxRulesByName.set(config.name, auxRule);
+        }
+        return auxRule.terminal;
+      }
+      var useAsDefault = false;
+      if (config instanceof route_config_impl_1.Redirect) {
+        var routePath_2 = this._getRoutePath(config);
+        var redirector = new rules_1.RedirectRule(routePath_2, config.redirectTo);
+        this._assertNoHashCollision(redirector.hash, config.path);
+        this.rules.push(redirector);
+        return true;
+      }
+      if (config instanceof route_config_impl_1.Route) {
+        handler = new sync_route_handler_1.SyncRouteHandler(config.component, config.data);
+        useAsDefault = lang_1.isPresent(config.useAsDefault) && config.useAsDefault;
+      } else if (config instanceof route_config_impl_1.AsyncRoute) {
+        handler = new async_route_handler_1.AsyncRouteHandler(config.loader, config.data);
+        useAsDefault = lang_1.isPresent(config.useAsDefault) && config.useAsDefault;
+      }
+      var routePath = this._getRoutePath(config);
+      var newRule = new rules_1.RouteRule(routePath, handler);
+      this._assertNoHashCollision(newRule.hash, config.path);
+      if (useAsDefault) {
+        if (lang_1.isPresent(this.defaultRule)) {
+          throw new exceptions_1.BaseException("Only one route can be default");
+        }
+        this.defaultRule = newRule;
+      }
+      this.rules.push(newRule);
+      if (lang_1.isPresent(config.name)) {
+        this.rulesByName.set(config.name, newRule);
+      }
+      return newRule.terminal;
     };
-    RedirectRecognizer.prototype.generate = function(params) {
-      throw new exceptions_1.BaseException("Tried to generate a redirect.");
+    RuleSet.prototype.recognize = function(urlParse) {
+      var solutions = [];
+      this.rules.forEach(function(routeRecognizer) {
+        var pathMatch = routeRecognizer.recognize(urlParse);
+        if (lang_1.isPresent(pathMatch)) {
+          solutions.push(pathMatch);
+        }
+      });
+      if (solutions.length == 0 && lang_1.isPresent(urlParse) && urlParse.auxiliary.length > 0) {
+        return [async_1.PromiseWrapper.resolve(new rules_1.PathMatch(null, null, urlParse.auxiliary))];
+      }
+      return solutions;
     };
-    return RedirectRecognizer;
-  })();
-  exports.RedirectRecognizer = RedirectRecognizer;
-  var RouteRecognizer = (function() {
-    function RouteRecognizer(path, handler) {
-      this.path = path;
-      this.handler = handler;
-      this.terminal = true;
-      this._cache = new collection_1.Map();
-      this._pathRecognizer = new path_recognizer_1.PathRecognizer(path);
-      this.specificity = this._pathRecognizer.specificity;
-      this.hash = this._pathRecognizer.hash;
-      this.terminal = this._pathRecognizer.terminal;
-    }
-    RouteRecognizer.prototype.recognize = function(beginningSegment) {
-      var _this = this;
-      var res = this._pathRecognizer.recognize(beginningSegment);
-      if (lang_1.isBlank(res)) {
+    RuleSet.prototype.recognizeAuxiliary = function(urlParse) {
+      var routeRecognizer = this.auxRulesByPath.get(urlParse.path);
+      if (lang_1.isPresent(routeRecognizer)) {
+        return [routeRecognizer.recognize(urlParse)];
+      }
+      return [async_1.PromiseWrapper.resolve(null)];
+    };
+    RuleSet.prototype.hasRoute = function(name) {
+      return this.rulesByName.has(name);
+    };
+    RuleSet.prototype.componentLoaded = function(name) {
+      return this.hasRoute(name) && lang_1.isPresent(this.rulesByName.get(name).handler.componentType);
+    };
+    RuleSet.prototype.loadComponent = function(name) {
+      return this.rulesByName.get(name).handler.resolveComponentType();
+    };
+    RuleSet.prototype.generate = function(name, params) {
+      var rule = this.rulesByName.get(name);
+      if (lang_1.isBlank(rule)) {
         return null;
       }
-      return this.handler.resolveComponentType().then(function(_) {
-        var componentInstruction = _this._getInstruction(res['urlPath'], res['urlParams'], res['allParams']);
-        return new PathMatch(componentInstruction, res['nextSegment'], res['auxiliary']);
+      return rule.generate(params);
+    };
+    RuleSet.prototype.generateAuxiliary = function(name, params) {
+      var rule = this.auxRulesByName.get(name);
+      if (lang_1.isBlank(rule)) {
+        return null;
+      }
+      return rule.generate(params);
+    };
+    RuleSet.prototype._assertNoHashCollision = function(hash, path) {
+      this.rules.forEach(function(rule) {
+        if (hash == rule.hash) {
+          throw new exceptions_1.BaseException("Configuration '" + path + "' conflicts with existing route '" + rule.path + "'");
+        }
       });
     };
-    RouteRecognizer.prototype.generate = function(params) {
-      var generated = this._pathRecognizer.generate(params);
-      var urlPath = generated['urlPath'];
-      var urlParams = generated['urlParams'];
-      return this._getInstruction(urlPath, urlParams, params);
-    };
-    RouteRecognizer.prototype.generateComponentPathValues = function(params) {
-      return this._pathRecognizer.generate(params);
-    };
-    RouteRecognizer.prototype._getInstruction = function(urlPath, urlParams, params) {
-      if (lang_1.isBlank(this.handler.componentType)) {
-        throw new exceptions_1.BaseException("Tried to get instruction before the type was loaded.");
+    RuleSet.prototype._getRoutePath = function(config) {
+      if (lang_1.isPresent(config.regex)) {
+        if (lang_1.isFunction(config.serializer)) {
+          return new regex_route_path_1.RegexRoutePath(config.regex, config.serializer);
+        } else {
+          throw new exceptions_1.BaseException("Route provides a regex property, '" + config.regex + "', but no serializer property");
+        }
       }
-      var hashKey = urlPath + '?' + urlParams.join('?');
-      if (this._cache.has(hashKey)) {
-        return this._cache.get(hashKey);
+      if (lang_1.isPresent(config.path)) {
+        var path = (config instanceof route_config_impl_1.AuxRoute && config.path.startsWith('/')) ? config.path.substring(1) : config.path;
+        return new param_route_path_1.ParamRoutePath(path);
       }
-      var instruction = new instruction_1.ComponentInstruction(urlPath, urlParams, this.handler.data, this.handler.componentType, this.terminal, this.specificity, params);
-      this._cache.set(hashKey, instruction);
-      return instruction;
+      throw new exceptions_1.BaseException('Route must provide either a path or regex property');
     };
-    return RouteRecognizer;
+    return RuleSet;
   })();
-  exports.RouteRecognizer = RouteRecognizer;
+  exports.RuleSet = RuleSet;
   global.define = __define;
   return module.exports;
 });
@@ -30399,26 +31076,26 @@ System.register("angular2/src/core/di/injector", ["angular2/src/facade/collectio
       var factory = resolvedFactory.factory;
       var deps = resolvedFactory.dependencies;
       var length = deps.length;
-      var d0,
-          d1,
-          d2,
-          d3,
-          d4,
-          d5,
-          d6,
-          d7,
-          d8,
-          d9,
-          d10,
-          d11,
-          d12,
-          d13,
-          d14,
-          d15,
-          d16,
-          d17,
-          d18,
-          d19;
+      var d0;
+      var d1;
+      var d2;
+      var d3;
+      var d4;
+      var d5;
+      var d6;
+      var d7;
+      var d8;
+      var d9;
+      var d10;
+      var d11;
+      var d12;
+      var d13;
+      var d14;
+      var d15;
+      var d16;
+      var d17;
+      var d18;
+      var d19;
       try {
         d0 = length > 0 ? this._getByDependency(provider, deps[0], visibility) : null;
         d1 = length > 1 ? this._getByDependency(provider, deps[1], visibility) : null;
@@ -30674,9 +31351,11 @@ System.register("angular2/src/core/change_detection/dynamic_change_detector", ["
         if (proto.isSkipRecord()) {
           protoIdx += this._computeSkipLength(protoIdx, proto, values);
         } else {
-          var res = this._calculateCurrValue(proto, values, locals);
           if (proto.lastInBinding) {
             this._markPathAsCheckOnce(proto);
+          }
+          var res = this._calculateCurrValue(proto, values, locals);
+          if (proto.lastInBinding) {
             return res;
           } else {
             this._writeSelf(proto, res, values);
@@ -30714,12 +31393,6 @@ System.register("angular2/src/core/change_detection/dynamic_change_detector", ["
       var _this = this;
       this.values[0] = this.context;
       this.dispatcher = dispatcher;
-      if (this.strategy === constants_1.ChangeDetectionStrategy.OnPushObserve) {
-        for (var i = 0; i < this.directiveIndices.length; ++i) {
-          var index = this.directiveIndices[i];
-          _super.prototype.observeDirective.call(this, this._getDirectiveFor(index), i);
-        }
-      }
       this.outputSubscriptions = [];
       for (var i = 0; i < this._directiveRecords.length; ++i) {
         var r = this._directiveRecords[i];
@@ -30871,9 +31544,6 @@ System.register("angular2/src/core/change_detection/dynamic_change_detector", ["
         return null;
       }
       var currValue = this._calculateCurrValue(proto, values, locals);
-      if (this.strategy === constants_1.ChangeDetectionStrategy.OnPushObserve) {
-        _super.prototype.observeValue.call(this, currValue, proto.selfIndex);
-      }
       if (proto.shouldBeChecked()) {
         var prevValue = this._readSelf(proto, values);
         var detectedChange = throwOnChange ? !change_detection_util_1.ChangeDetectionUtil.devModeEqual(prevValue, currValue) : change_detection_util_1.ChangeDetectionUtil.looseNotIdentical(prevValue, currValue);
@@ -31187,6 +31857,7 @@ System.register("angular2/src/common/forms", ["angular2/src/common/forms/model",
   exports.RequiredValidator = validators_2.RequiredValidator;
   exports.MinLengthValidator = validators_2.MinLengthValidator;
   exports.MaxLengthValidator = validators_2.MaxLengthValidator;
+  exports.PatternValidator = validators_2.PatternValidator;
   var form_builder_1 = require("angular2/src/common/forms/form_builder");
   exports.FormBuilder = form_builder_1.FormBuilder;
   var form_builder_2 = require("angular2/src/common/forms/form_builder");
@@ -33288,8 +33959,8 @@ System.register("angular2/src/compiler/template_parser", ["angular2/src/facade/c
   exports.TEMPLATE_TRANSFORMS = lang_2.CONST_EXPR(new core_1.OpaqueToken('TemplateTransforms'));
   var TemplateParseError = (function(_super) {
     __extends(TemplateParseError, _super);
-    function TemplateParseError(message, location) {
-      _super.call(this, location, message);
+    function TemplateParseError(message, span) {
+      _super.call(this, span, message);
     }
     return TemplateParseError;
   })(parse_util_1.ParseError);
@@ -33341,7 +34012,7 @@ System.register("angular2/src/compiler/template_parser", ["angular2/src/facade/c
       });
     }
     TemplateParseVisitor.prototype._reportError = function(message, sourceSpan) {
-      this.errors.push(new TemplateParseError(message, sourceSpan.start));
+      this.errors.push(new TemplateParseError(message, sourceSpan));
     };
     TemplateParseVisitor.prototype._parseInterpolation = function(value, sourceSpan) {
       var sourceInfo = sourceSpan.start.toString();
@@ -33685,6 +34356,12 @@ System.register("angular2/src/compiler/template_parser", ["angular2/src/facade/c
       } else {
         if (parts[0] == ATTRIBUTE_PREFIX) {
           boundPropertyName = parts[1];
+          var nsSeparatorIdx = boundPropertyName.indexOf(':');
+          if (nsSeparatorIdx > -1) {
+            var ns = boundPropertyName.substring(0, nsSeparatorIdx);
+            var name_1 = boundPropertyName.substring(nsSeparatorIdx + 1);
+            boundPropertyName = html_tags_1.mergeNsAndName(ns, name_1);
+          }
           bindingType = template_ast_1.PropertyBindingType.Attribute;
         } else if (parts[0] == CLASS_PREFIX) {
           boundPropertyName = parts[1];
@@ -33853,7 +34530,7 @@ System.register("angular2/src/compiler/template_parser", ["angular2/src/facade/c
   return module.exports;
 });
 
-System.register("angular2/src/router/route_registry", ["angular2/src/facade/collection", "angular2/src/facade/async", "angular2/src/facade/lang", "angular2/src/facade/exceptions", "angular2/src/core/reflection/reflection", "angular2/core", "angular2/src/router/route_config_impl", "angular2/src/router/route_recognizer", "angular2/src/router/component_recognizer", "angular2/src/router/instruction", "angular2/src/router/route_config_nomalizer", "angular2/src/router/url_parser"], true, function(require, exports, module) {
+System.register("angular2/src/router/route_registry", ["angular2/src/facade/collection", "angular2/src/facade/async", "angular2/src/facade/lang", "angular2/src/facade/exceptions", "angular2/src/core/reflection/reflection", "angular2/core", "angular2/src/router/route_config/route_config_impl", "angular2/src/router/rules/rules", "angular2/src/router/rules/rule_set", "angular2/src/router/instruction", "angular2/src/router/route_config/route_config_normalizer", "angular2/src/router/url_parser"], true, function(require, exports, module) {
   var global = System.global,
       __define = global.define;
   global.define = undefined;
@@ -33884,11 +34561,11 @@ System.register("angular2/src/router/route_registry", ["angular2/src/facade/coll
   var exceptions_1 = require("angular2/src/facade/exceptions");
   var reflection_1 = require("angular2/src/core/reflection/reflection");
   var core_1 = require("angular2/core");
-  var route_config_impl_1 = require("angular2/src/router/route_config_impl");
-  var route_recognizer_1 = require("angular2/src/router/route_recognizer");
-  var component_recognizer_1 = require("angular2/src/router/component_recognizer");
+  var route_config_impl_1 = require("angular2/src/router/route_config/route_config_impl");
+  var rules_1 = require("angular2/src/router/rules/rules");
+  var rule_set_1 = require("angular2/src/router/rules/rule_set");
   var instruction_1 = require("angular2/src/router/instruction");
-  var route_config_nomalizer_1 = require("angular2/src/router/route_config_nomalizer");
+  var route_config_normalizer_1 = require("angular2/src/router/route_config/route_config_normalizer");
   var url_parser_1 = require("angular2/src/router/url_parser");
   var _resolveToNull = async_1.PromiseWrapper.resolve(null);
   exports.ROUTER_PRIMARY_COMPONENT = lang_1.CONST_EXPR(new core_1.OpaqueToken('RouterPrimaryComponent'));
@@ -33898,18 +34575,18 @@ System.register("angular2/src/router/route_registry", ["angular2/src/facade/coll
       this._rules = new collection_1.Map();
     }
     RouteRegistry.prototype.config = function(parentComponent, config) {
-      config = route_config_nomalizer_1.normalizeRouteConfig(config, this);
+      config = route_config_normalizer_1.normalizeRouteConfig(config, this);
       if (config instanceof route_config_impl_1.Route) {
-        route_config_nomalizer_1.assertComponentExists(config.component, config.path);
+        route_config_normalizer_1.assertComponentExists(config.component, config.path);
       } else if (config instanceof route_config_impl_1.AuxRoute) {
-        route_config_nomalizer_1.assertComponentExists(config.component, config.path);
+        route_config_normalizer_1.assertComponentExists(config.component, config.path);
       }
-      var recognizer = this._rules.get(parentComponent);
-      if (lang_1.isBlank(recognizer)) {
-        recognizer = new component_recognizer_1.ComponentRecognizer();
-        this._rules.set(parentComponent, recognizer);
+      var rules = this._rules.get(parentComponent);
+      if (lang_1.isBlank(rules)) {
+        rules = new rule_set_1.RuleSet();
+        this._rules.set(parentComponent, rules);
       }
-      var terminal = recognizer.config(config);
+      var terminal = rules.config(config);
       if (config instanceof route_config_impl_1.Route) {
         if (terminal) {
           assertTerminalComponent(config.component, config.path);
@@ -33950,22 +34627,22 @@ System.register("angular2/src/router/route_registry", ["angular2/src/facade/coll
       }
       var parentInstruction = collection_1.ListWrapper.last(ancestorInstructions);
       var parentComponent = lang_1.isPresent(parentInstruction) ? parentInstruction.component.componentType : this._rootComponent;
-      var componentRecognizer = this._rules.get(parentComponent);
-      if (lang_1.isBlank(componentRecognizer)) {
+      var rules = this._rules.get(parentComponent);
+      if (lang_1.isBlank(rules)) {
         return _resolveToNull;
       }
-      var possibleMatches = _aux ? componentRecognizer.recognizeAuxiliary(parsedUrl) : componentRecognizer.recognize(parsedUrl);
+      var possibleMatches = _aux ? rules.recognizeAuxiliary(parsedUrl) : rules.recognize(parsedUrl);
       var matchPromises = possibleMatches.map(function(candidate) {
         return candidate.then(function(candidate) {
-          if (candidate instanceof route_recognizer_1.PathMatch) {
+          if (candidate instanceof rules_1.PathMatch) {
             var auxParentInstructions = ancestorInstructions.length > 0 ? [collection_1.ListWrapper.last(ancestorInstructions)] : [];
             var auxInstructions = _this._auxRoutesToUnresolved(candidate.remainingAux, auxParentInstructions);
             var instruction = new instruction_1.ResolvedInstruction(candidate.instruction, null, auxInstructions);
             if (lang_1.isBlank(candidate.instruction) || candidate.instruction.terminal) {
               return instruction;
             }
-            var newAncestorComponents = ancestorInstructions.concat([instruction]);
-            return _this._recognize(candidate.remaining, newAncestorComponents).then(function(childInstruction) {
+            var newAncestorInstructions = ancestorInstructions.concat([instruction]);
+            return _this._recognize(candidate.remaining, newAncestorInstructions).then(function(childInstruction) {
               if (lang_1.isBlank(childInstruction)) {
                 return null;
               }
@@ -33976,7 +34653,7 @@ System.register("angular2/src/router/route_registry", ["angular2/src/facade/coll
               return instruction;
             });
           }
-          if (candidate instanceof route_recognizer_1.RedirectMatch) {
+          if (candidate instanceof rules_1.RedirectMatch) {
             var instruction = _this.generate(candidate.redirectTo, ancestorInstructions.concat([null]));
             return new instruction_1.RedirectInstruction(instruction.component, instruction.child, instruction.auxInstruction, candidate.specificity);
           }
@@ -34086,8 +34763,8 @@ System.register("angular2/src/router/route_registry", ["angular2/src/facade/coll
         auxInstructions = collection_1.StringMapWrapper.merge(prevInstruction.auxInstruction, auxInstructions);
         componentInstruction = prevInstruction.component;
       }
-      var componentRecognizer = this._rules.get(parentComponentType);
-      if (lang_1.isBlank(componentRecognizer)) {
+      var rules = this._rules.get(parentComponentType);
+      if (lang_1.isBlank(rules)) {
         throw new exceptions_1.BaseException("Component \"" + lang_1.getTypeNameForDebugging(parentComponentType) + "\" has no route config.");
       }
       var linkParamIndex = 0;
@@ -34105,19 +34782,19 @@ System.register("angular2/src/router/route_registry", ["angular2/src/facade/coll
             linkParamIndex += 1;
           }
         }
-        var routeRecognizer = (_aux ? componentRecognizer.auxNames : componentRecognizer.names).get(routeName);
+        var routeRecognizer = (_aux ? rules.auxRulesByName : rules.rulesByName).get(routeName);
         if (lang_1.isBlank(routeRecognizer)) {
           throw new exceptions_1.BaseException("Component \"" + lang_1.getTypeNameForDebugging(parentComponentType) + "\" has no route named \"" + routeName + "\".");
         }
         if (lang_1.isBlank(routeRecognizer.handler.componentType)) {
-          var compInstruction = routeRecognizer.generateComponentPathValues(routeParams);
+          var generatedUrl = routeRecognizer.generateComponentPathValues(routeParams);
           return new instruction_1.UnresolvedInstruction(function() {
             return routeRecognizer.handler.resolveComponentType().then(function(_) {
               return _this._generate(linkParams, ancestorInstructions, prevInstruction, _aux, _originalLink);
             });
-          }, compInstruction['urlPath'], compInstruction['urlParams']);
+          }, generatedUrl.urlPath, url_parser_1.convertUrlParamsToArray(generatedUrl.urlParams));
         }
-        componentInstruction = _aux ? componentRecognizer.generateAuxiliary(routeName, routeParams) : componentRecognizer.generate(routeName, routeParams);
+        componentInstruction = _aux ? rules.generateAuxiliary(routeName, routeParams) : rules.generate(routeName, routeParams);
       }
       while (linkParamIndex < linkParams.length && lang_1.isArray(linkParams[linkParamIndex])) {
         var auxParentInstruction = [parentInstruction];
@@ -34140,31 +34817,31 @@ System.register("angular2/src/router/route_registry", ["angular2/src/facade/coll
       return instruction;
     };
     RouteRegistry.prototype.hasRoute = function(name, parentComponent) {
-      var componentRecognizer = this._rules.get(parentComponent);
-      if (lang_1.isBlank(componentRecognizer)) {
+      var rules = this._rules.get(parentComponent);
+      if (lang_1.isBlank(rules)) {
         return false;
       }
-      return componentRecognizer.hasRoute(name);
+      return rules.hasRoute(name);
     };
     RouteRegistry.prototype.generateDefault = function(componentCursor) {
       var _this = this;
       if (lang_1.isBlank(componentCursor)) {
         return null;
       }
-      var componentRecognizer = this._rules.get(componentCursor);
-      if (lang_1.isBlank(componentRecognizer) || lang_1.isBlank(componentRecognizer.defaultRoute)) {
+      var rules = this._rules.get(componentCursor);
+      if (lang_1.isBlank(rules) || lang_1.isBlank(rules.defaultRule)) {
         return null;
       }
       var defaultChild = null;
-      if (lang_1.isPresent(componentRecognizer.defaultRoute.handler.componentType)) {
-        var componentInstruction = componentRecognizer.defaultRoute.generate({});
-        if (!componentRecognizer.defaultRoute.terminal) {
-          defaultChild = this.generateDefault(componentRecognizer.defaultRoute.handler.componentType);
+      if (lang_1.isPresent(rules.defaultRule.handler.componentType)) {
+        var componentInstruction = rules.defaultRule.generate({});
+        if (!rules.defaultRule.terminal) {
+          defaultChild = this.generateDefault(rules.defaultRule.handler.componentType);
         }
         return new instruction_1.DefaultInstruction(componentInstruction, defaultChild);
       }
       return new instruction_1.UnresolvedInstruction(function() {
-        return componentRecognizer.defaultRoute.handler.resolveComponentType().then(function(_) {
+        return rules.defaultRule.handler.resolveComponentType().then(function(_) {
           return _this.generateDefault(componentCursor);
         });
       });
@@ -34174,14 +34851,16 @@ System.register("angular2/src/router/route_registry", ["angular2/src/facade/coll
   })();
   exports.RouteRegistry = RouteRegistry;
   function splitAndFlattenLinkParams(linkParams) {
-    return linkParams.reduce(function(accumulation, item) {
+    var accumulation = [];
+    linkParams.forEach(function(item) {
       if (lang_1.isString(item)) {
         var strItem = item;
-        return accumulation.concat(strItem.split('/'));
+        accumulation = accumulation.concat(strItem.split('/'));
+      } else {
+        accumulation.push(item);
       }
-      accumulation.push(item);
-      return accumulation;
-    }, []);
+    });
+    return accumulation;
   }
   function mostSpecific(instructions) {
     instructions = instructions.filter(function(instruction) {
@@ -34287,7 +34966,6 @@ System.register("angular2/src/core/di", ["angular2/src/core/di/metadata", "angul
   exports.provide = provider_1.provide;
   var key_1 = require("angular2/src/core/di/key");
   exports.Key = key_1.Key;
-  exports.TypeLiteral = key_1.TypeLiteral;
   var exceptions_1 = require("angular2/src/core/di/exceptions");
   exports.NoProviderError = exceptions_1.NoProviderError;
   exports.AbstractProviderError = exceptions_1.AbstractProviderError;
@@ -35097,10 +35775,14 @@ System.register("angular2/src/platform/dom/dom_renderer", ["angular2/src/core/di
         if (lang_1.isPresent(attrNs)) {
           dom_adapter_1.DOM.setAttributeNS(renderElement, attrNs, attributeName, attributeValue);
         } else {
-          dom_adapter_1.DOM.setAttribute(renderElement, nsAndName[1], attributeValue);
+          dom_adapter_1.DOM.setAttribute(renderElement, attributeName, attributeValue);
         }
       } else {
-        dom_adapter_1.DOM.removeAttribute(renderElement, attributeName);
+        if (lang_1.isPresent(attrNs)) {
+          dom_adapter_1.DOM.removeAttributeNS(renderElement, attrNs, nsAndName[1]);
+        } else {
+          dom_adapter_1.DOM.removeAttribute(renderElement, attributeName);
+        }
       }
     };
     DomRenderer.prototype.setBindingDebugInfo = function(renderElement, propertyName, propertyValue) {
@@ -35292,6 +35974,7 @@ System.register("angular2/src/compiler/template_compiler", ["angular2/src/facade
           hostProperties: directive.hostProperties,
           hostAttributes: directive.hostAttributes,
           lifecycleHooks: directive.lifecycleHooks,
+          providers: directive.providers,
           template: normalizedTemplate
         });
       });
@@ -35607,7 +36290,7 @@ System.register("angular2/src/compiler/template_compiler", ["angular2/src/facade
   return module.exports;
 });
 
-System.register("angular2/src/router/router", ["angular2/src/facade/async", "angular2/src/facade/collection", "angular2/src/facade/lang", "angular2/src/facade/exceptions", "angular2/core", "angular2/src/router/route_registry", "angular2/src/router/location", "angular2/src/router/route_lifecycle_reflector"], true, function(require, exports, module) {
+System.register("angular2/src/router/router", ["angular2/src/facade/async", "angular2/src/facade/collection", "angular2/src/facade/lang", "angular2/src/facade/exceptions", "angular2/core", "angular2/src/router/route_registry", "angular2/src/router/location/location", "angular2/src/router/lifecycle/route_lifecycle_reflector"], true, function(require, exports, module) {
   var global = System.global,
       __define = global.define;
   global.define = undefined;
@@ -35647,17 +36330,18 @@ System.register("angular2/src/router/router", ["angular2/src/facade/async", "ang
   var exceptions_1 = require("angular2/src/facade/exceptions");
   var core_1 = require("angular2/core");
   var route_registry_1 = require("angular2/src/router/route_registry");
-  var location_1 = require("angular2/src/router/location");
-  var route_lifecycle_reflector_1 = require("angular2/src/router/route_lifecycle_reflector");
+  var location_1 = require("angular2/src/router/location/location");
+  var route_lifecycle_reflector_1 = require("angular2/src/router/lifecycle/route_lifecycle_reflector");
   var _resolveToTrue = async_1.PromiseWrapper.resolve(true);
   var _resolveToFalse = async_1.PromiseWrapper.resolve(false);
   var Router = (function() {
-    function Router(registry, parent, hostComponent) {
+    function Router(registry, parent, hostComponent, root) {
       this.registry = registry;
       this.parent = parent;
       this.hostComponent = hostComponent;
+      this.root = root;
       this.navigating = false;
-      this._currentInstruction = null;
+      this.currentInstruction = null;
       this._currentNavigation = _resolveToTrue;
       this._outlet = null;
       this._auxRouters = new collection_1.Map();
@@ -35673,11 +36357,20 @@ System.register("angular2/src/router/router", ["angular2/src/facade/async", "ang
       if (lang_1.isPresent(outlet.name)) {
         throw new exceptions_1.BaseException("registerPrimaryOutlet expects to be called with an unnamed outlet.");
       }
+      if (lang_1.isPresent(this._outlet)) {
+        throw new exceptions_1.BaseException("Primary outlet is already registered.");
+      }
       this._outlet = outlet;
-      if (lang_1.isPresent(this._currentInstruction)) {
-        return this.commit(this._currentInstruction, false);
+      if (lang_1.isPresent(this.currentInstruction)) {
+        return this.commit(this.currentInstruction, false);
       }
       return _resolveToTrue;
+    };
+    Router.prototype.unregisterPrimaryOutlet = function(outlet) {
+      if (lang_1.isPresent(outlet.name)) {
+        throw new exceptions_1.BaseException("registerPrimaryOutlet expects to be called with an unnamed outlet.");
+      }
+      this._outlet = null;
     };
     Router.prototype.registerAuxOutlet = function(outlet) {
       var outletName = outlet.name;
@@ -35688,7 +36381,7 @@ System.register("angular2/src/router/router", ["angular2/src/facade/async", "ang
       this._auxRouters.set(outletName, router);
       router._outlet = outlet;
       var auxInstruction;
-      if (lang_1.isPresent(this._currentInstruction) && lang_1.isPresent(auxInstruction = this._currentInstruction.auxInstruction[outletName])) {
+      if (lang_1.isPresent(this.currentInstruction) && lang_1.isPresent(auxInstruction = this.currentInstruction.auxInstruction[outletName])) {
         return router.commit(auxInstruction);
       }
       return _resolveToTrue;
@@ -35699,7 +36392,7 @@ System.register("angular2/src/router/router", ["angular2/src/facade/async", "ang
         router = router.parent;
         instruction = instruction.child;
       }
-      return lang_1.isPresent(this._currentInstruction) && this._currentInstruction.component == instruction.component;
+      return lang_1.isPresent(this.currentInstruction) && this.currentInstruction.component == instruction.component;
     };
     Router.prototype.config = function(definitions) {
       var _this = this;
@@ -35741,6 +36434,22 @@ System.register("angular2/src/router/router", ["angular2/src/facade/async", "ang
         return _this._afterPromiseFinishNavigating(_this._navigate(instruction, _skipLocationChange));
       });
     };
+    Router.prototype._settleInstruction = function(instruction) {
+      var _this = this;
+      return instruction.resolveComponent().then(function(_) {
+        var unsettledInstructions = [];
+        if (lang_1.isPresent(instruction.component)) {
+          instruction.component.reuse = false;
+        }
+        if (lang_1.isPresent(instruction.child)) {
+          unsettledInstructions.push(_this._settleInstruction(instruction.child));
+        }
+        collection_1.StringMapWrapper.forEach(instruction.auxInstruction, function(instruction, _) {
+          unsettledInstructions.push(_this._settleInstruction(instruction));
+        });
+        return async_1.PromiseWrapper.all(unsettledInstructions);
+      });
+    };
     Router.prototype._navigate = function(instruction, _skipLocationChange) {
       var _this = this;
       return this._settleInstruction(instruction).then(function(_) {
@@ -35759,22 +36468,6 @@ System.register("angular2/src/router/router", ["angular2/src/facade/async", "ang
             });
           }
         });
-      });
-    };
-    Router.prototype._settleInstruction = function(instruction) {
-      var _this = this;
-      return instruction.resolveComponent().then(function(_) {
-        var unsettledInstructions = [];
-        if (lang_1.isPresent(instruction.component)) {
-          instruction.component.reuse = false;
-        }
-        if (lang_1.isPresent(instruction.child)) {
-          unsettledInstructions.push(_this._settleInstruction(instruction.child));
-        }
-        collection_1.StringMapWrapper.forEach(instruction.auxInstruction, function(instruction, _) {
-          unsettledInstructions.push(_this._settleInstruction(instruction));
-        });
-        return async_1.PromiseWrapper.all(unsettledInstructions);
       });
     };
     Router.prototype._emitNavigationFinish = function(url) {
@@ -35805,7 +36498,7 @@ System.register("angular2/src/router/router", ["angular2/src/facade/async", "ang
       });
     };
     Router.prototype._canActivate = function(nextInstruction) {
-      return canActivateOne(nextInstruction, this._currentInstruction);
+      return canActivateOne(nextInstruction, this.currentInstruction);
     };
     Router.prototype._routerCanDeactivate = function(instruction) {
       var _this = this;
@@ -35841,7 +36534,7 @@ System.register("angular2/src/router/router", ["angular2/src/facade/async", "ang
       if (_skipLocationChange === void 0) {
         _skipLocationChange = false;
       }
-      this._currentInstruction = instruction;
+      this.currentInstruction = instruction;
       var next = _resolveToTrue;
       if (lang_1.isPresent(this._outlet) && lang_1.isPresent(instruction.component)) {
         var componentInstruction = instruction.component;
@@ -35903,10 +36596,10 @@ System.register("angular2/src/router/router", ["angular2/src/facade/async", "ang
       return this.registry.recognize(url, ancestorComponents);
     };
     Router.prototype._getAncestorInstructions = function() {
-      var ancestorInstructions = [this._currentInstruction];
+      var ancestorInstructions = [this.currentInstruction];
       var ancestorRouter = this;
       while (lang_1.isPresent(ancestorRouter = ancestorRouter.parent)) {
-        ancestorInstructions.unshift(ancestorRouter._currentInstruction);
+        ancestorInstructions.unshift(ancestorRouter.currentInstruction);
       }
       return ancestorInstructions;
     };
@@ -35920,6 +36613,7 @@ System.register("angular2/src/router/router", ["angular2/src/facade/async", "ang
       var ancestorInstructions = this._getAncestorInstructions();
       return this.registry.generate(linkParams, ancestorInstructions);
     };
+    Router = __decorate([core_1.Injectable(), __metadata('design:paramtypes', [route_registry_1.RouteRegistry, Router, Object, Router])], Router);
     return Router;
   })();
   exports.Router = Router;
@@ -35928,6 +36622,7 @@ System.register("angular2/src/router/router", ["angular2/src/facade/async", "ang
     function RootRouter(registry, location, primaryComponent) {
       var _this = this;
       _super.call(this, registry, null, primaryComponent);
+      this.root = this;
       this._location = location;
       this._locationSub = this._location.subscribe(function(change) {
         _this.recognize(change['url']).then(function(instruction) {
@@ -35984,7 +36679,7 @@ System.register("angular2/src/router/router", ["angular2/src/facade/async", "ang
   var ChildRouter = (function(_super) {
     __extends(ChildRouter, _super);
     function ChildRouter(parent, hostComponent) {
-      _super.call(this, parent.registry, parent, hostComponent);
+      _super.call(this, parent.registry, parent, hostComponent, parent.root);
       this.parent = parent;
     }
     ChildRouter.prototype.navigateByUrl = function(url, _skipLocationChange) {
@@ -36278,7 +36973,7 @@ System.register("angular2/src/core/metadata/di", ["angular2/src/facade/lang", "a
   return module.exports;
 });
 
-System.register("angular2/src/core/change_detection/change_detection", ["angular2/src/core/change_detection/differs/iterable_differs", "angular2/src/core/change_detection/differs/default_iterable_differ", "angular2/src/core/change_detection/differs/keyvalue_differs", "angular2/src/core/change_detection/differs/default_keyvalue_differ", "angular2/src/facade/lang", "angular2/src/core/change_detection/parser/ast", "angular2/src/core/change_detection/parser/lexer", "angular2/src/core/change_detection/parser/parser", "angular2/src/core/change_detection/parser/locals", "angular2/src/core/change_detection/exceptions", "angular2/src/core/change_detection/interfaces", "angular2/src/core/change_detection/constants", "angular2/src/core/change_detection/proto_change_detector", "angular2/src/core/change_detection/jit_proto_change_detector", "angular2/src/core/change_detection/binding_record", "angular2/src/core/change_detection/directive_record", "angular2/src/core/change_detection/dynamic_change_detector", "angular2/src/core/change_detection/change_detector_ref", "angular2/src/core/change_detection/differs/iterable_differs", "angular2/src/core/change_detection/differs/keyvalue_differs", "angular2/src/core/change_detection/change_detection_util"], true, function(require, exports, module) {
+System.register("angular2/src/core/change_detection/change_detection", ["angular2/src/core/change_detection/differs/iterable_differs", "angular2/src/core/change_detection/differs/default_iterable_differ", "angular2/src/core/change_detection/differs/keyvalue_differs", "angular2/src/core/change_detection/differs/default_keyvalue_differ", "angular2/src/facade/lang", "angular2/src/core/change_detection/differs/default_keyvalue_differ", "angular2/src/core/change_detection/differs/default_iterable_differ", "angular2/src/core/change_detection/parser/ast", "angular2/src/core/change_detection/parser/lexer", "angular2/src/core/change_detection/parser/parser", "angular2/src/core/change_detection/parser/locals", "angular2/src/core/change_detection/exceptions", "angular2/src/core/change_detection/interfaces", "angular2/src/core/change_detection/constants", "angular2/src/core/change_detection/proto_change_detector", "angular2/src/core/change_detection/jit_proto_change_detector", "angular2/src/core/change_detection/binding_record", "angular2/src/core/change_detection/directive_record", "angular2/src/core/change_detection/dynamic_change_detector", "angular2/src/core/change_detection/change_detector_ref", "angular2/src/core/change_detection/differs/iterable_differs", "angular2/src/core/change_detection/differs/keyvalue_differs", "angular2/src/core/change_detection/change_detection_util"], true, function(require, exports, module) {
   var global = System.global,
       __define = global.define;
   global.define = undefined;
@@ -36287,6 +36982,12 @@ System.register("angular2/src/core/change_detection/change_detection", ["angular
   var keyvalue_differs_1 = require("angular2/src/core/change_detection/differs/keyvalue_differs");
   var default_keyvalue_differ_1 = require("angular2/src/core/change_detection/differs/default_keyvalue_differ");
   var lang_1 = require("angular2/src/facade/lang");
+  var default_keyvalue_differ_2 = require("angular2/src/core/change_detection/differs/default_keyvalue_differ");
+  exports.DefaultKeyValueDifferFactory = default_keyvalue_differ_2.DefaultKeyValueDifferFactory;
+  exports.KeyValueChangeRecord = default_keyvalue_differ_2.KeyValueChangeRecord;
+  var default_iterable_differ_2 = require("angular2/src/core/change_detection/differs/default_iterable_differ");
+  exports.DefaultIterableDifferFactory = default_iterable_differ_2.DefaultIterableDifferFactory;
+  exports.CollectionChangeRecord = default_iterable_differ_2.CollectionChangeRecord;
   var ast_1 = require("angular2/src/core/change_detection/parser/ast");
   exports.ASTWithSource = ast_1.ASTWithSource;
   exports.AST = ast_1.AST;
@@ -36662,21 +37363,21 @@ System.register("angular2/src/core/application_ref", ["angular2/src/core/zone/ng
         return _;
       });
     };
-    ApplicationRef_.prototype._loadComponent = function(ref) {
-      var appChangeDetector = ref.location.internalElement.parentView.changeDetector;
+    ApplicationRef_.prototype._loadComponent = function(componentRef) {
+      var appChangeDetector = componentRef.location.internalElement.parentView.changeDetector;
       this._changeDetectorRefs.push(appChangeDetector.ref);
       this.tick();
-      this._rootComponents.push(ref);
+      this._rootComponents.push(componentRef);
       this._bootstrapListeners.forEach(function(listener) {
-        return listener(ref);
+        return listener(componentRef);
       });
     };
-    ApplicationRef_.prototype._unloadComponent = function(ref) {
-      if (!collection_1.ListWrapper.contains(this._rootComponents, ref)) {
+    ApplicationRef_.prototype._unloadComponent = function(componentRef) {
+      if (!collection_1.ListWrapper.contains(this._rootComponents, componentRef)) {
         return ;
       }
-      this.unregisterChangeDetector(ref.location.internalElement.parentView.changeDetector.ref);
-      collection_1.ListWrapper.remove(this._rootComponents, ref);
+      this.unregisterChangeDetector(componentRef.location.internalElement.parentView.changeDetector.ref);
+      collection_1.ListWrapper.remove(this._rootComponents, componentRef);
     };
     Object.defineProperty(ApplicationRef_.prototype, "injector", {
       get: function() {
@@ -36832,15 +37533,15 @@ System.register("angular2/src/compiler/runtime_compiler", ["angular2/src/core/li
   return module.exports;
 });
 
-System.register("angular2/src/router/router_providers_common", ["angular2/src/router/location_strategy", "angular2/src/router/path_location_strategy", "angular2/src/router/router", "angular2/src/router/route_registry", "angular2/src/router/location", "angular2/src/facade/lang", "angular2/core", "angular2/src/facade/exceptions"], true, function(require, exports, module) {
+System.register("angular2/src/router/router_providers_common", ["angular2/src/router/location/location_strategy", "angular2/src/router/location/path_location_strategy", "angular2/src/router/router", "angular2/src/router/route_registry", "angular2/src/router/location/location", "angular2/src/facade/lang", "angular2/core", "angular2/src/facade/exceptions"], true, function(require, exports, module) {
   var global = System.global,
       __define = global.define;
   global.define = undefined;
-  var location_strategy_1 = require("angular2/src/router/location_strategy");
-  var path_location_strategy_1 = require("angular2/src/router/path_location_strategy");
+  var location_strategy_1 = require("angular2/src/router/location/location_strategy");
+  var path_location_strategy_1 = require("angular2/src/router/location/path_location_strategy");
   var router_1 = require("angular2/src/router/router");
   var route_registry_1 = require("angular2/src/router/route_registry");
-  var location_1 = require("angular2/src/router/location");
+  var location_1 = require("angular2/src/router/location/location");
   var lang_1 = require("angular2/src/facade/lang");
   var core_1 = require("angular2/core");
   var exceptions_1 = require("angular2/src/facade/exceptions");
@@ -37078,6 +37779,8 @@ System.register("angular2/src/core/change_detection", ["angular2/src/core/change
   exports.SimpleChange = change_detection_1.SimpleChange;
   exports.IterableDiffers = change_detection_1.IterableDiffers;
   exports.KeyValueDiffers = change_detection_1.KeyValueDiffers;
+  exports.CollectionChangeRecord = change_detection_1.CollectionChangeRecord;
+  exports.KeyValueChangeRecord = change_detection_1.KeyValueChangeRecord;
   global.define = __define;
   return module.exports;
 });
@@ -37585,8 +38288,14 @@ System.register("angular2/src/platform/server/parse5_adapter", ["parse5/index", 
     Parse5DomAdapter.prototype.hasAttribute = function(element, attribute) {
       return element.attribs && element.attribs.hasOwnProperty(attribute);
     };
+    Parse5DomAdapter.prototype.hasAttributeNS = function(element, ns, attribute) {
+      throw 'not implemented';
+    };
     Parse5DomAdapter.prototype.getAttribute = function(element, attribute) {
       return element.attribs && element.attribs.hasOwnProperty(attribute) ? element.attribs[attribute] : null;
+    };
+    Parse5DomAdapter.prototype.getAttributeNS = function(element, ns, attribute) {
+      throw 'not implemented';
     };
     Parse5DomAdapter.prototype.setAttribute = function(element, attribute, value) {
       if (attribute) {
@@ -37603,6 +38312,9 @@ System.register("angular2/src/platform/server/parse5_adapter", ["parse5/index", 
       if (attribute) {
         collection_1.StringMapWrapper.delete(element.attribs, attribute);
       }
+    };
+    Parse5DomAdapter.prototype.removeAttributeNS = function(element, ns, name) {
+      throw 'not implemented';
     };
     Parse5DomAdapter.prototype.templateAwareRoot = function(el) {
       return this.isTemplateElement(el) ? this.content(el) : el;
@@ -37839,12 +38551,12 @@ System.register("angular2/src/compiler/compiler", ["angular2/src/compiler/runtim
   return module.exports;
 });
 
-System.register("angular2/src/web_workers/worker/router_providers", ["angular2/core", "angular2/src/router/platform_location", "angular2/src/web_workers/worker/platform_location", "angular2/src/router/router_providers_common"], true, function(require, exports, module) {
+System.register("angular2/src/web_workers/worker/router_providers", ["angular2/core", "angular2/src/router/location/platform_location", "angular2/src/web_workers/worker/platform_location", "angular2/src/router/router_providers_common"], true, function(require, exports, module) {
   var global = System.global,
       __define = global.define;
   global.define = undefined;
   var core_1 = require("angular2/core");
-  var platform_location_1 = require("angular2/src/router/platform_location");
+  var platform_location_1 = require("angular2/src/router/location/platform_location");
   var platform_location_2 = require("angular2/src/web_workers/worker/platform_location");
   var router_providers_common_1 = require("angular2/src/router/router_providers_common");
   exports.WORKER_APP_ROUTER = [router_providers_common_1.ROUTER_PROVIDERS_COMMON, new core_1.Provider(platform_location_1.PlatformLocation, {useClass: platform_location_2.WebWorkerPlatformLocation}), new core_1.Provider(core_1.APP_INITIALIZER, {
@@ -38552,36 +39264,35 @@ System.register("angular2/src/common/pipes/async_pipe", ["angular2/src/facade/la
   return module.exports;
 });
 
-System.register("angular2/src/common/pipes", ["angular2/src/common/pipes/async_pipe", "angular2/src/common/pipes/uppercase_pipe", "angular2/src/common/pipes/lowercase_pipe", "angular2/src/common/pipes/json_pipe", "angular2/src/common/pipes/slice_pipe", "angular2/src/common/pipes/date_pipe", "angular2/src/common/pipes/number_pipe", "angular2/src/facade/lang", "angular2/src/common/pipes/async_pipe", "angular2/src/common/pipes/date_pipe", "angular2/src/common/pipes/json_pipe", "angular2/src/common/pipes/slice_pipe", "angular2/src/common/pipes/lowercase_pipe", "angular2/src/common/pipes/number_pipe", "angular2/src/common/pipes/uppercase_pipe"], true, function(require, exports, module) {
+System.register("angular2/src/common/pipes", ["angular2/src/common/pipes/async_pipe", "angular2/src/common/pipes/date_pipe", "angular2/src/common/pipes/json_pipe", "angular2/src/common/pipes/slice_pipe", "angular2/src/common/pipes/lowercase_pipe", "angular2/src/common/pipes/number_pipe", "angular2/src/common/pipes/uppercase_pipe", "angular2/src/common/pipes/replace_pipe", "angular2/src/common/pipes/i18n_plural_pipe", "angular2/src/common/pipes/i18n_select_pipe", "angular2/src/common/pipes/common_pipes"], true, function(require, exports, module) {
   var global = System.global,
       __define = global.define;
   global.define = undefined;
   var async_pipe_1 = require("angular2/src/common/pipes/async_pipe");
-  var uppercase_pipe_1 = require("angular2/src/common/pipes/uppercase_pipe");
-  var lowercase_pipe_1 = require("angular2/src/common/pipes/lowercase_pipe");
-  var json_pipe_1 = require("angular2/src/common/pipes/json_pipe");
-  var slice_pipe_1 = require("angular2/src/common/pipes/slice_pipe");
+  exports.AsyncPipe = async_pipe_1.AsyncPipe;
   var date_pipe_1 = require("angular2/src/common/pipes/date_pipe");
+  exports.DatePipe = date_pipe_1.DatePipe;
+  var json_pipe_1 = require("angular2/src/common/pipes/json_pipe");
+  exports.JsonPipe = json_pipe_1.JsonPipe;
+  var slice_pipe_1 = require("angular2/src/common/pipes/slice_pipe");
+  exports.SlicePipe = slice_pipe_1.SlicePipe;
+  var lowercase_pipe_1 = require("angular2/src/common/pipes/lowercase_pipe");
+  exports.LowerCasePipe = lowercase_pipe_1.LowerCasePipe;
   var number_pipe_1 = require("angular2/src/common/pipes/number_pipe");
-  var lang_1 = require("angular2/src/facade/lang");
-  var async_pipe_2 = require("angular2/src/common/pipes/async_pipe");
-  exports.AsyncPipe = async_pipe_2.AsyncPipe;
-  var date_pipe_2 = require("angular2/src/common/pipes/date_pipe");
-  exports.DatePipe = date_pipe_2.DatePipe;
-  var json_pipe_2 = require("angular2/src/common/pipes/json_pipe");
-  exports.JsonPipe = json_pipe_2.JsonPipe;
-  var slice_pipe_2 = require("angular2/src/common/pipes/slice_pipe");
-  exports.SlicePipe = slice_pipe_2.SlicePipe;
-  var lowercase_pipe_2 = require("angular2/src/common/pipes/lowercase_pipe");
-  exports.LowerCasePipe = lowercase_pipe_2.LowerCasePipe;
-  var number_pipe_2 = require("angular2/src/common/pipes/number_pipe");
-  exports.NumberPipe = number_pipe_2.NumberPipe;
-  exports.DecimalPipe = number_pipe_2.DecimalPipe;
-  exports.PercentPipe = number_pipe_2.PercentPipe;
-  exports.CurrencyPipe = number_pipe_2.CurrencyPipe;
-  var uppercase_pipe_2 = require("angular2/src/common/pipes/uppercase_pipe");
-  exports.UpperCasePipe = uppercase_pipe_2.UpperCasePipe;
-  exports.COMMON_PIPES = lang_1.CONST_EXPR([async_pipe_1.AsyncPipe, uppercase_pipe_1.UpperCasePipe, lowercase_pipe_1.LowerCasePipe, json_pipe_1.JsonPipe, slice_pipe_1.SlicePipe, number_pipe_1.DecimalPipe, number_pipe_1.PercentPipe, number_pipe_1.CurrencyPipe, date_pipe_1.DatePipe]);
+  exports.NumberPipe = number_pipe_1.NumberPipe;
+  exports.DecimalPipe = number_pipe_1.DecimalPipe;
+  exports.PercentPipe = number_pipe_1.PercentPipe;
+  exports.CurrencyPipe = number_pipe_1.CurrencyPipe;
+  var uppercase_pipe_1 = require("angular2/src/common/pipes/uppercase_pipe");
+  exports.UpperCasePipe = uppercase_pipe_1.UpperCasePipe;
+  var replace_pipe_1 = require("angular2/src/common/pipes/replace_pipe");
+  exports.ReplacePipe = replace_pipe_1.ReplacePipe;
+  var i18n_plural_pipe_1 = require("angular2/src/common/pipes/i18n_plural_pipe");
+  exports.I18nPluralPipe = i18n_plural_pipe_1.I18nPluralPipe;
+  var i18n_select_pipe_1 = require("angular2/src/common/pipes/i18n_select_pipe");
+  exports.I18nSelectPipe = i18n_select_pipe_1.I18nSelectPipe;
+  var common_pipes_1 = require("angular2/src/common/pipes/common_pipes");
+  exports.COMMON_PIPES = common_pipes_1.COMMON_PIPES;
   global.define = __define;
   return module.exports;
 });

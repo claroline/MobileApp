@@ -2,7 +2,7 @@
   "_args": [
     [
       "es6-shim@^0.33.3",
-      "/home/dat/nativescript_angular2/claroline/node_modules/nativescript-angular"
+      "/home/dat/nativescript_angular2/mobile"
     ]
   ],
   "_from": "es6-shim@>=0.33.3 <0.34.0",
@@ -26,13 +26,13 @@
     "type": "range"
   },
   "_requiredBy": [
-    "/nativescript-angular"
+    "/"
   ],
   "_resolved": "https://registry.npmjs.org/es6-shim/-/es6-shim-0.33.13.tgz",
   "_shasum": "894fb83d2c2e9378c8ec23659f2b62b28f994225",
   "_shrinkwrap": null,
   "_spec": "es6-shim@^0.33.3",
-  "_where": "/home/dat/nativescript_angular2/claroline/node_modules/nativescript-angular",
+  "_where": "/home/dat/nativescript_angular2/mobile",
   "author": {
     "name": "Paul Miller",
     "url": "http://paulmillr.com"

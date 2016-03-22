@@ -310,20 +310,20 @@ export class ApplicationRef_ extends ApplicationRef {
         });
     }
     /** @internal */
-    _loadComponent(ref) {
-        var appChangeDetector = ref.location.internalElement.parentView.changeDetector;
+    _loadComponent(componentRef) {
+        var appChangeDetector = componentRef.location.internalElement.parentView.changeDetector;
         this._changeDetectorRefs.push(appChangeDetector.ref);
         this.tick();
-        this._rootComponents.push(ref);
-        this._bootstrapListeners.forEach((listener) => listener(ref));
+        this._rootComponents.push(componentRef);
+        this._bootstrapListeners.forEach((listener) => listener(componentRef));
     }
     /** @internal */
-    _unloadComponent(ref) {
-        if (!ListWrapper.contains(this._rootComponents, ref)) {
+    _unloadComponent(componentRef) {
+        if (!ListWrapper.contains(this._rootComponents, componentRef)) {
             return;
         }
-        this.unregisterChangeDetector(ref.location.internalElement.parentView.changeDetector.ref);
-        ListWrapper.remove(this._rootComponents, ref);
+        this.unregisterChangeDetector(componentRef.location.internalElement.parentView.changeDetector.ref);
+        ListWrapper.remove(this._rootComponents, componentRef);
     }
     get injector() { return this._injector; }
     get zone() { return this._zone; }

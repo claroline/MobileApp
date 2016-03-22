@@ -13,14 +13,14 @@ import { HtmlAttrAst, HtmlTextAst, HtmlElementAst } from './html_ast';
 import { Injectable } from 'angular2/src/core/di';
 import { HtmlTokenType, tokenizeHtml } from './html_lexer';
 import { ParseError, ParseSourceSpan } from './parse_util';
-import { getHtmlTagDefinition, getNsPrefix } from './html_tags';
+import { getHtmlTagDefinition, getNsPrefix, mergeNsAndName } from './html_tags';
 export class HtmlTreeError extends ParseError {
-    constructor(elementName, location, msg) {
-        super(location, msg);
+    constructor(elementName, span, msg) {
+        super(span, msg);
         this.elementName = elementName;
     }
-    static create(elementName, location, msg) {
-        return new HtmlTreeError(elementName, location, msg);
+    static create(elementName, span, msg) {
+        return new HtmlTreeError(elementName, span, msg);
     }
 }
 export class HtmlParseTreeResult {
@@ -138,7 +138,7 @@ class TreeBuilder {
             this._advance();
             selfClosing = true;
             if (getNsPrefix(fullName) == null && !getHtmlTagDefinition(fullName).isVoid) {
-                this.errors.push(HtmlTreeError.create(fullName, startTagToken.sourceSpan.start, `Only void and foreign elements can be self closed "${startTagToken.parts[1]}"`));
+                this.errors.push(HtmlTreeError.create(fullName, startTagToken.sourceSpan, `Only void and foreign elements can be self closed "${startTagToken.parts[1]}"`));
             }
         }
         else if (this.peek.type === HtmlTokenType.TAG_OPEN_END) {
@@ -175,10 +175,10 @@ class TreeBuilder {
     _consumeEndTag(endTagToken) {
         var fullName = getElementFullName(endTagToken.parts[0], endTagToken.parts[1], this._getParentElement());
         if (getHtmlTagDefinition(fullName).isVoid) {
-            this.errors.push(HtmlTreeError.create(fullName, endTagToken.sourceSpan.start, `Void elements do not have end tags "${endTagToken.parts[1]}"`));
+            this.errors.push(HtmlTreeError.create(fullName, endTagToken.sourceSpan, `Void elements do not have end tags "${endTagToken.parts[1]}"`));
         }
         else if (!this._popElement(fullName)) {
-            this.errors.push(HtmlTreeError.create(fullName, endTagToken.sourceSpan.start, `Unexpected closing tag "${endTagToken.parts[1]}"`));
+            this.errors.push(HtmlTreeError.create(fullName, endTagToken.sourceSpan, `Unexpected closing tag "${endTagToken.parts[1]}"`));
         }
     }
     _popElement(fullName) {
@@ -217,9 +217,6 @@ class TreeBuilder {
             this.rootNodes.push(node);
         }
     }
-}
-function mergeNsAndName(prefix, localName) {
-    return isPresent(prefix) ? `@${prefix}:${localName}` : localName;
 }
 function getElementFullName(prefix, localName, parentElement) {
     if (isBlank(prefix)) {

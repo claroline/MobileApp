@@ -1,9 +1,9 @@
 import { Type } from 'angular2/src/facade/lang';
 import { RouteRegistry } from './route_registry';
 import { Instruction } from './instruction';
-import { RouterOutlet } from './router_outlet';
-import { Location } from './location';
-import { RouteDefinition } from './route_config_impl';
+import { RouterOutlet } from './directives/router_outlet';
+import { Location } from './location/location';
+import { RouteDefinition } from './route_config/route_config_impl';
 /**
  * The `Router` is responsible for mapping URLs to components.
  *
@@ -25,15 +25,19 @@ export declare class Router {
     registry: RouteRegistry;
     parent: Router;
     hostComponent: any;
+    root: Router;
     navigating: boolean;
     lastNavigationAttempt: string;
-    private _currentInstruction;
+    /**
+     * The current `Instruction` for the router
+     */
+    currentInstruction: Instruction;
     private _currentNavigation;
     private _outlet;
     private _auxRouters;
     private _childRouter;
     private _subject;
-    constructor(registry: RouteRegistry, parent: Router, hostComponent: any);
+    constructor(registry: RouteRegistry, parent: Router, hostComponent: any, root?: Router);
     /**
      * Constructs a child router. You probably don't need to use this unless you're writing a reusable
      * component.
@@ -50,6 +54,12 @@ export declare class Router {
      * You probably don't need to use this unless you're writing a reusable component.
      */
     registerPrimaryOutlet(outlet: RouterOutlet): Promise<boolean>;
+    /**
+     * Unregister an outlet (because it was destroyed, etc).
+     *
+     * You probably don't need to use this unless you're writing a custom outlet implementation.
+     */
+    unregisterPrimaryOutlet(outlet: RouterOutlet): void;
     /**
      * Register an outlet to notified of auxiliary route changes.
      *

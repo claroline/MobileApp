@@ -266,13 +266,13 @@ var ActionBar = (function (_super) {
     };
     ActionBar.prototype._onTitlePropertyChanged = function () {
         var topFrame = frame.topmost();
-        if (topFrame && topFrame.currentPage === this.page) {
+        if (this._toolbar && topFrame && topFrame.currentPage === this.page) {
             this._updateTitleAndTitleView();
         }
     };
     ActionBar.prototype._onIconPropertyChanged = function () {
         var topFrame = frame.topmost();
-        if (topFrame && topFrame.currentPage === this.page) {
+        if (this._toolbar && topFrame && topFrame.currentPage === this.page) {
             this._updateIcon();
         }
     };

@@ -1,19 +1,19 @@
 {
   "_args": [
     [
-      "nativescript-angular@0.0.35",
+      "nativescript-angular@0.0.37",
       "/home/dat/nativescript_angular2/mobile"
     ]
   ],
-  "_from": "nativescript-angular@0.0.35",
-  "_id": "nativescript-angular@0.0.35",
+  "_from": "nativescript-angular@0.0.37",
+  "_id": "nativescript-angular@0.0.37",
   "_inCache": true,
   "_installable": true,
   "_location": "/nativescript-angular",
   "_nodeVersion": "5.5.0",
   "_npmOperationalInternal": {
-    "host": "packages-9-west.internal.npmjs.com",
-    "tmp": "tmp/nativescript-angular-0.0.35.tgz_1456414966743_0.8549408928956836"
+    "host": "packages-12-west.internal.npmjs.com",
+    "tmp": "tmp/nativescript-angular-0.0.37.tgz_1458575817106_0.1040165089070797"
   },
   "_npmUser": {
     "email": "hristo@deshev.com",
@@ -23,19 +23,19 @@
   "_phantomChildren": {},
   "_requested": {
     "name": "nativescript-angular",
-    "raw": "nativescript-angular@0.0.35",
-    "rawSpec": "0.0.35",
+    "raw": "nativescript-angular@0.0.37",
+    "rawSpec": "0.0.37",
     "scope": null,
-    "spec": "0.0.35",
+    "spec": "0.0.37",
     "type": "version"
   },
   "_requiredBy": [
     "/"
   ],
-  "_resolved": "https://registry.npmjs.org/nativescript-angular/-/nativescript-angular-0.0.35.tgz",
-  "_shasum": "e90f1996216b88ed03f0e366de92f6605e3a5ffe",
+  "_resolved": "https://registry.npmjs.org/nativescript-angular/-/nativescript-angular-0.0.37.tgz",
+  "_shasum": "530fc368aa53fc5e80ab4a2e1b04e3782c93365a",
   "_shrinkwrap": null,
-  "_spec": "nativescript-angular@0.0.35",
+  "_spec": "nativescript-angular@0.0.37",
   "_where": "/home/dat/nativescript_angular2/mobile",
   "bugs": {
     "url": "http://www.telerik.com"
@@ -47,14 +47,14 @@
     }
   ],
   "dependencies": {
-    "angular2": "2.0.0-beta.7",
+    "angular2": "2.0.0-beta.9",
     "es6-shim": "^0.33.3",
     "parse5": "1.4.2",
     "punycode": "1.3.2",
     "querystring": "0.2.0",
     "reflect-metadata": "0.1.2",
     "rxjs": "5.0.0-beta.2",
-    "tns-core-modules": "^1.7.0-angular-0",
+    "tns-core-modules": "^1.7.0",
     "url": "0.10.3",
     "zone.js": "0.5.15"
   },
@@ -72,8 +72,8 @@
   },
   "directories": {},
   "dist": {
-    "shasum": "e90f1996216b88ed03f0e366de92f6605e3a5ffe",
-    "tarball": "http://registry.npmjs.org/nativescript-angular/-/nativescript-angular-0.0.35.tgz"
+    "shasum": "530fc368aa53fc5e80ab4a2e1b04e3782c93365a",
+    "tarball": "http://registry.npmjs.org/nativescript-angular/-/nativescript-angular-0.0.37.tgz"
   },
   "homepage": "http://www.telerik.com",
   "license": "Apache-2.0",
@@ -107,5 +107,5 @@
     "url": "git+https://github.com/NativeScript/nativescript-angular.git"
   },
   "scripts": {},
-  "version": "0.0.35"
+  "version": "0.0.37"
 }

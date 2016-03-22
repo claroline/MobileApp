@@ -56,3 +56,10 @@ export declare class MaxLengthValidator implements Validator {
         [key: string]: any;
     };
 }
+export declare class PatternValidator implements Validator {
+    private _validator;
+    constructor(pattern: string);
+    validate(c: Control): {
+        [key: string]: any;
+    };
+}

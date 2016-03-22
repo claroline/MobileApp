@@ -78,30 +78,17 @@ var Button = (function (_super) {
         configurable: true
     });
     Button.prototype.onFormattedTextChanged = function (eventData) {
-        this.setFormattedTextPropertyToNative(eventData.value);
+        this._setFormattedTextPropertyToNative(eventData.value);
     };
     Button.prototype._onTextPropertyChanged = function (data) {
-        if (this.android) {
-            this.android.setText(data.newValue + "");
-        }
-        if (this.ios) {
-            this.ios.setTitleForState(data.newValue + "", UIControlState.UIControlStateNormal);
-        }
     };
-    Button.prototype.setFormattedTextPropertyToNative = function (value) {
-        if (this.android) {
-            this.android.setText(value._formattedText);
-        }
-        if (this.ios) {
-            this.ios.setAttributedTitleForState(value._formattedText, UIControlState.UIControlStateNormal);
-            this.style._updateTextDecoration();
-        }
+    Button.prototype._setFormattedTextPropertyToNative = function (value) {
     };
     Button.prototype._onFormattedTextPropertyChanged = function (data) {
         if (data.newValue) {
             data.newValue.parent = this;
         }
-        this.setFormattedTextPropertyToNative(data.newValue);
+        this._setFormattedTextPropertyToNative(data.newValue);
     };
     Button.prototype._addChildFromBuilder = function (name, value) {
         formattedString.FormattedString.addFormattedStringToView(this, name, value);

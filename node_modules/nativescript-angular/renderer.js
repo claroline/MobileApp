@@ -13,26 +13,39 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+var __param = (this && this.__param) || function (paramIndex, decorator) {
+    return function (target, key) { decorator(target, key, paramIndex); }
+};
 var di_1 = require('angular2/src/core/di');
 var api_1 = require('angular2/src/core/render/api');
+var platform_providers_1 = require("./platform-providers");
 var lang_1 = require('angular2/src/facade/lang');
 var dom_renderer_1 = require('angular2/src/platform/dom/dom_renderer');
+var view_1 = require("ui/core/view");
 var frame_1 = require('ui/frame');
 var util = require("./view-util");
+var utils_1 = require("utils/utils");
 var view_util_1 = require("./view-util");
 exports.rendererTraceCategory = view_util_1.rendererTraceCategory;
-var NativeScriptRootRenderer = (function (_super) {
-    __extends(NativeScriptRootRenderer, _super);
-    function NativeScriptRootRenderer() {
-        _super.apply(this, arguments);
+var NativeScriptRootRenderer = (function () {
+    function NativeScriptRootRenderer(rootView) {
+        this._rootView = null;
         this._registeredComponents = new Map();
+        this._rootView = rootView;
     }
+    Object.defineProperty(NativeScriptRootRenderer.prototype, "rootView", {
+        get: function () {
+            if (!this._rootView) {
+                this._rootView = frame_1.topmost().currentPage;
+            }
+            return this._rootView;
+        },
+        enumerable: true,
+        configurable: true
+    });
     Object.defineProperty(NativeScriptRootRenderer.prototype, "page", {
         get: function () {
-            if (!this._page) {
-                this._page = frame_1.topmost().currentPage;
-            }
-            return this._page;
+            return this.rootView.page;
         },
         enumerable: true,
         configurable: true
@@ -46,11 +59,13 @@ var NativeScriptRootRenderer = (function (_super) {
         return renderer;
     };
     NativeScriptRootRenderer = __decorate([
-        di_1.Injectable(), 
-        __metadata('design:paramtypes', [])
+        di_1.Injectable(),
+        __param(0, di_1.Optional()),
+        __param(0, di_1.Inject(platform_providers_1.APP_ROOT_VIEW)), 
+        __metadata('design:paramtypes', [view_1.View])
     ], NativeScriptRootRenderer);
     return NativeScriptRootRenderer;
-}(api_1.RootRenderer));
+}());
 exports.NativeScriptRootRenderer = NativeScriptRootRenderer;
 var NativeScriptRenderer = (function (_super) {
     __extends(NativeScriptRenderer, _super);
@@ -58,6 +73,8 @@ var NativeScriptRenderer = (function (_super) {
         _super.call(this);
         this._rootRenderer = _rootRenderer;
         this.componentProto = componentProto;
+        this.attrReplacer = new RegExp(utils_1.escapeRegexSymbols(dom_renderer_1.CONTENT_ATTR), "g");
+        this.attrSanitizer = /-/g;
         this.rootRenderer = _rootRenderer;
         var page = this.rootRenderer.page;
         var stylesLength = componentProto.styles.length;
@@ -65,18 +82,22 @@ var NativeScriptRenderer = (function (_super) {
         for (var i = 0; i < stylesLength; i++) {
             this.hasComponentStyles = true;
             var cssString = componentProto.styles[i] + "";
-            page.addCss(cssString.replace(dom_renderer_1.COMPONENT_VARIABLE, componentProto.id));
+            var realCSS = this.replaceNgAttribute(cssString, this.componentProtoId);
+            page.addCss(realCSS);
         }
         util.traceLog('NativeScriptRenderer created');
     }
+    NativeScriptRenderer.prototype.replaceNgAttribute = function (input, componentId) {
+        return input.replace(this.attrReplacer, "_ng_content_" + componentId.replace(this.attrSanitizer, "_"));
+    };
     NativeScriptRenderer.prototype.renderComponent = function (componentProto) {
         return this._rootRenderer.renderComponent(componentProto);
     };
     NativeScriptRenderer.prototype.selectRootElement = function (selector) {
-        util.traceLog('ROOT');
-        var page = this.rootRenderer.page;
-        page.nodeName = 'Page';
-        return page;
+        util.traceLog('selectRootElement: ' + selector);
+        var rootView = this.rootRenderer.rootView;
+        rootView.nodeName = 'ROOT';
+        return rootView;
     };
     NativeScriptRenderer.prototype.createViewRoot = function (hostElement) {
         util.traceLog('CREATE VIEW ROOT: ' + hostElement.nodeName);
@@ -160,14 +181,16 @@ var NativeScriptRenderer = (function (_super) {
         return util.createTemplateAnchor(parentElement);
     };
     NativeScriptRenderer.prototype.createElement = function (parentElement, name) {
+        var _this = this;
         util.traceLog('NativeScriptRenderer.createElement: ' + name + ' parent: ' + parentElement + ', ' + (parentElement ? parentElement.nodeName : 'null'));
-        var result = util.createView(name, parentElement);
-        // adding an attribute (property) to {N} view for applying component specific css. 
-        // The property value is generated by angular2 infrastructure on conponent creation. 
-        if (this.hasComponentStyles) {
-            result[dom_renderer_1.CONTENT_ATTR.replace(dom_renderer_1.COMPONENT_VARIABLE, this.componentProtoId)] = true;
-        }
-        return result;
+        return util.createView(name, parentElement, function (view) {
+            // Set an attribute to the view to scope component-specific css.
+            // The property name is pre-generated by Angular.
+            if (_this.hasComponentStyles) {
+                var cssAttribute = _this.replaceNgAttribute(dom_renderer_1.CONTENT_ATTR, _this.componentProtoId);
+                view[cssAttribute] = true;
+            }
+        });
     };
     NativeScriptRenderer.prototype.createText = function (value) {
         util.traceLog('NativeScriptRenderer.createText');

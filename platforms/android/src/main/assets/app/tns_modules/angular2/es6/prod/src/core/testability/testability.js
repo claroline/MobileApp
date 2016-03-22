@@ -113,6 +113,7 @@ export let TestabilityRegistry = class {
     }
     getTestability(elem) { return this._applications.get(elem); }
     getAllTestabilities() { return MapWrapper.values(this._applications); }
+    getAllRootElements() { return MapWrapper.keys(this._applications); }
     findTestabilityInTree(elem, findInAncestors = true) {
         return _testabilityGetter.findTestabilityInTree(this, elem, findInAncestors);
     }

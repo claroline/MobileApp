@@ -849,6 +849,7 @@ var Style = (function (_super) {
                 else {
                     handler.applyProperty(property, this._view, newValue);
                 }
+                this._view._onStylePropertyChanged(property);
             }
         }
         catch (ex) {
