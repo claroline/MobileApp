@@ -1,38 +1,37 @@
 {
   "_args": [
     [
-      "parse5@2.1.5",
-      "/home/dat/nativescript_angular2/mobile"
+      "parse5@1.4.2",
+      "/home/dat/nativescript_angular2/mobile/node_modules/nativescript-angular"
     ]
   ],
-  "_from": "parse5@2.1.5",
-  "_id": "parse5@2.1.5",
+  "_from": "parse5@1.4.2",
+  "_id": "parse5@1.4.2",
   "_inCache": true,
   "_installable": true,
-  "_location": "/parse5",
-  "_nodeVersion": "4.2.2",
+  "_location": "/nativescript-angular/parse5",
   "_npmUser": {
     "email": "ifaaan@gmail.com",
     "name": "inikulin"
   },
-  "_npmVersion": "2.14.7",
+  "_npmVersion": "1.4.28",
   "_phantomChildren": {},
   "_requested": {
     "name": "parse5",
-    "raw": "parse5@2.1.5",
-    "rawSpec": "2.1.5",
+    "raw": "parse5@1.4.2",
+    "rawSpec": "1.4.2",
     "scope": null,
-    "spec": "2.1.5",
+    "spec": "1.4.2",
     "type": "version"
   },
   "_requiredBy": [
-    "/"
+    "/nativescript-angular"
   ],
-  "_resolved": "https://registry.npmjs.org/parse5/-/parse5-2.1.5.tgz",
-  "_shasum": "7a8677ade25ddac04237905f7be54645572dcf05",
+  "_resolved": "https://registry.npmjs.org/parse5/-/parse5-1.4.2.tgz",
+  "_shasum": "43241c1609cc94bd007f5dcfa21218b37dbcfbe7",
   "_shrinkwrap": null,
-  "_spec": "parse5@2.1.5",
-  "_where": "/home/dat/nativescript_angular2/mobile",
+  "_spec": "parse5@1.4.2",
+  "_where": "/home/dat/nativescript_angular2/mobile/node_modules/nativescript-angular",
   "author": {
     "email": "ifaaan@gmail.com",
     "name": "Ivan Nikulin",
@@ -43,18 +42,6 @@
   },
   "contributors": [
     {
-      "name": "Alan Clarke",
-      "url": "https://github.com/alanclarke"
-    },
-    {
-      "name": "Evan You",
-      "url": "http://evanyou.me"
-    },
-    {
-      "email": "s.agg2021@gmail.com",
-      "name": "Saksham Aggarwal"
-    },
-    {
       "email": "sebmaster16@gmail.com",
       "name": "Sebastian Mayr",
       "url": "http://blog.smayr.name"
@@ -63,36 +50,24 @@
       "email": "slang800@gmail.com",
       "name": "Sean Lang",
       "url": "http://slang.cx"
+    },
+    {
+      "name": "Alan Clarke",
+      "url": "https://github.com/alanclarke"
     }
   ],
   "dependencies": {},
-  "description": "WHATWG HTML5 specification-compliant, fast and ready for production HTML parsing/serialization toolset for Node.js",
+  "description": "WHATWG HTML5 specification-compliant, fast and ready for production HTML parsing/serialization toolset for Node and io.js.",
   "devDependencies": {
-    "del": "^2.0.2",
-    "gulp": "^3.9.0",
-    "gulp-benchmark": "^1.1.1",
-    "gulp-concat": "^2.6.0",
-    "gulp-download": "0.0.1",
-    "gulp-eslint": "^1.0.0",
-    "gulp-insert": "^0.5.0",
-    "gulp-install": "^0.5.0",
-    "gulp-jsdoc-to-markdown": "^1.1.1",
-    "gulp-mocha": "^2.1.3",
-    "gulp-rename": "^1.2.2",
-    "promise": "^7.0.4",
-    "publish-please": "^1.1.0",
-    "through2": "^2.0.0"
+    "mocha": "1.21.4"
   },
   "directories": {},
   "dist": {
-    "shasum": "7a8677ade25ddac04237905f7be54645572dcf05",
-    "tarball": "http://registry.npmjs.org/parse5/-/parse5-2.1.5.tgz"
+    "shasum": "43241c1609cc94bd007f5dcfa21218b37dbcfbe7",
+    "tarball": "http://registry.npmjs.org/parse5/-/parse5-1.4.2.tgz"
   },
-  "files": [
-    "lib"
-  ],
-  "gitHead": "3c195ec374422497fdce1f98528dab9e7ebbeb9b",
-  "homepage": "https://github.com/inikulin/parse5",
+  "gitHead": "bc8862ca7c94ad7704fd134d7208223814825acc",
+  "homepage": "http://inikulin.github.io/parse5/",
   "keywords": [
     "html",
     "parser",
@@ -108,14 +83,15 @@
     "html serializer",
     "htmlserializer",
     "sax",
-    "simple api",
-    "parse",
-    "tokenize",
-    "serialize",
-    "tokenizer"
+    "simple api"
   ],
-  "license": "MIT",
-  "main": "./lib/index.js",
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "https://raw.github.com/inikulin/parse5/master/LICENSE"
+    }
+  ],
+  "main": "./index.js",
   "maintainers": [
     {
       "email": "ifaaan@gmail.com",
@@ -130,7 +106,7 @@
     "url": "git://github.com/inikulin/parse5.git"
   },
   "scripts": {
-    "test": "gulp test"
+    "test": "node test/run_tests.js"
   },
-  "version": "2.1.5"
+  "version": "1.4.2"
 }

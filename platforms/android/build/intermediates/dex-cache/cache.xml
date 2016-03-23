@@ -2,25 +2,60 @@
 <items version="2" >
 
     <item
-        jar="/home/dat/nativescript_angular2/mobile/platforms/android/libs/nativescript.jar"
-        jumboMode="false"
-        revision="23.0.2"
-        sha1="356c3a1d9ae55ed86c9bca797dfd570ef6930ea7">
-        <dex dex="/home/dat/nativescript_angular2/mobile/platforms/android/build/intermediates/pre-dexed/nativescript-push-notifications/debug/nativescript_d6e04831488b5eb46c139cd43f1261bc11ddabdf.jar" />
-    </item>
-    <item
         jar="/home/dat/android-sdk/extras/android/m2repository/com/android/support/support-annotations/23.2.1/support-annotations-23.2.1.jar"
         jumboMode="false"
-        revision="23.0.2"
+        revision="23.0.3"
         sha1="ccb693bc0774fcb637246f7360de25b4af7df318">
-        <dex dex="/home/dat/nativescript_angular2/mobile/platforms/android/build/intermediates/pre-dexed/nativescript-push-notifications/debug/support-annotations-23.2.1_18d898385ace973c6141c56cb5a253463a323881.jar" />
+        <dex dex="/home/dat/nativescript_angular2/mobile/platforms/android/build/intermediates/pre-dexed/debug/support-annotations-23.2.1_18d898385ace973c6141c56cb5a253463a323881.jar" />
     </item>
     <item
-        jar="/home/dat/nativescript_angular2/mobile/node_modules/nativescript-push-notifications/platforms/android/libs/pushplugin.jar"
+        jar="/home/dat/nativescript_angular2/mobile/platforms/android/build/intermediates/exploded-aar/com.android.support/animated-vector-drawable/23.2.1/jars/classes.jar"
         jumboMode="false"
-        revision="23.0.2"
-        sha1="675d57ba588768abdd43fa1f48246cc28a0e3342">
-        <dex dex="/home/dat/nativescript_angular2/mobile/platforms/android/build/intermediates/pre-dexed/nativescript-push-notifications/debug/pushplugin_e57d5eaa703f17a062bcdcfcbc484c845bb42160.jar" />
+        revision="23.0.3"
+        sha1="3469cb457f10f74c28cbc05f069b6c894f6cbdd0">
+        <dex dex="/home/dat/nativescript_angular2/mobile/platforms/android/build/intermediates/pre-dexed/debug/com.android.support-animated-vector-drawable-23.2.1_011a49921da6c6cab5cca78261e4d019bfb4c972.jar" />
+    </item>
+    <item
+        jar="/home/dat/nativescript_angular2/mobile/platforms/android/build/intermediates/exploded-aar/com.android.support/support-v4/23.2.1/jars/classes.jar"
+        jumboMode="false"
+        revision="23.0.3"
+        sha1="3be474b1b21b31cf2fa93fe6bd641ae108d96452">
+        <dex dex="/home/dat/nativescript_angular2/mobile/platforms/android/build/intermediates/pre-dexed/debug/com.android.support-support-v4-23.2.1_7b26df82aca58dcdc18c27e1f74f56dd34db246d.jar" />
+    </item>
+    <item
+        jar="/home/dat/nativescript_angular2/mobile/platforms/android/build/intermediates/exploded-aar/com.android.support/support-vector-drawable/23.2.1/jars/classes.jar"
+        jumboMode="false"
+        revision="23.0.3"
+        sha1="673d77a5bbddd766037f088e775df525c46407f0">
+        <dex dex="/home/dat/nativescript_angular2/mobile/platforms/android/build/intermediates/pre-dexed/debug/com.android.support-support-vector-drawable-23.2.1_8e69504e06a8b9044283610495d35df46c43dacd.jar" />
+    </item>
+    <item
+        jar="/home/dat/nativescript_angular2/mobile/platforms/android/libs/nativescript.jar"
+        jumboMode="false"
+        revision="23.0.3"
+        sha1="72b585c3baffa7cb9fbecc8dd37cd89a127f17f5">
+        <dex dex="/home/dat/nativescript_angular2/mobile/platforms/android/build/intermediates/pre-dexed/debug/nativescript_d6e04831488b5eb46c139cd43f1261bc11ddabdf.jar" />
+    </item>
+    <item
+        jar="/home/dat/nativescript_angular2/mobile/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.2.1/jars/classes.jar"
+        jumboMode="false"
+        revision="23.0.3"
+        sha1="e4d0cbb0b999604b349062f0214a0a228a7fd151">
+        <dex dex="/home/dat/nativescript_angular2/mobile/platforms/android/build/intermediates/pre-dexed/debug/com.android.support-appcompat-v7-23.2.1_75d6fadad7942eff03edb069c267378b6f94823a.jar" />
+    </item>
+    <item
+        jar="/home/dat/nativescript_angular2/mobile/platforms/android/build/intermediates/exploded-aar/com.android.support/support-v4/23.2.1/jars/libs/internal_impl-23.2.1.jar"
+        jumboMode="false"
+        revision="23.0.3"
+        sha1="607a3d0b8013b4ccbfeb0b7cb293351994e021fb">
+        <dex dex="/home/dat/nativescript_angular2/mobile/platforms/android/build/intermediates/pre-dexed/debug/internal_impl-23.2.1_ab85baae0bbea3f47017604614a71f7f47c052c1.jar" />
+    </item>
+    <item
+        jar="/home/dat/nativescript_angular2/mobile/platforms/android/build/intermediates/exploded-aar/widgets-release/jars/classes.jar"
+        jumboMode="false"
+        revision="23.0.3"
+        sha1="f6493d84c2ca3c885bdae2e6a541e630cd6b899a">
+        <dex dex="/home/dat/nativescript_angular2/mobile/platforms/android/build/intermediates/pre-dexed/debug/intermediates-exploded-aar-widgets-release_77936c12e50bf4af004cd2c7d65bdfd065cae00c.jar" />
     </item>
 
 </items>

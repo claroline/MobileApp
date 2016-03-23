@@ -1,41 +1,42 @@
 {
   "_args": [
     [
-      "tns-core-modules@1.7.0",
+      "tns-core-modules@1.7.1",
       "/home/dat/nativescript_angular2/mobile"
     ]
   ],
-  "_from": "tns-core-modules@1.7.0",
-  "_id": "tns-core-modules@1.7.0",
+  "_from": "tns-core-modules@1.7.1",
+  "_id": "tns-core-modules@1.7.1",
   "_inCache": true,
   "_installable": true,
   "_location": "/tns-core-modules",
-  "_nodeVersion": "5.4.1",
+  "_nodeVersion": "5.8.0",
   "_npmOperationalInternal": {
     "host": "packages-13-west.internal.npmjs.com",
-    "tmp": "tmp/tns-core-modules-1.7.0.tgz_1458130162666_0.3412402579560876"
+    "tmp": "tmp/tns-core-modules-1.7.1.tgz_1458652825558_0.7000746552366763"
   },
   "_npmUser": {
     "email": "erjan.gavalji@gmail.com",
     "name": "erjangavalji"
   },
-  "_npmVersion": "3.3.12",
+  "_npmVersion": "3.7.3",
   "_phantomChildren": {},
   "_requested": {
     "name": "tns-core-modules",
-    "raw": "tns-core-modules@1.7.0",
-    "rawSpec": "1.7.0",
+    "raw": "tns-core-modules@1.7.1",
+    "rawSpec": "1.7.1",
     "scope": null,
-    "spec": "1.7.0",
+    "spec": "1.7.1",
     "type": "version"
   },
   "_requiredBy": [
-    "/"
+    "/",
+    "/nativescript-angular"
   ],
-  "_resolved": "https://registry.npmjs.org/tns-core-modules/-/tns-core-modules-1.7.0.tgz",
-  "_shasum": "c59196f7ed081b136bf3edfaeb862b07cd050927",
+  "_resolved": "https://registry.npmjs.org/tns-core-modules/-/tns-core-modules-1.7.1.tgz",
+  "_shasum": "64b49c1ca1d926dcdd6a05dd25cb1e6c9140d9a2",
   "_shrinkwrap": null,
-  "_spec": "tns-core-modules@1.7.0",
+  "_spec": "tns-core-modules@1.7.1",
   "_where": "/home/dat/nativescript_angular2/mobile",
   "dependencies": {
     "tns-core-modules-widgets": "1.7.0"
@@ -64,8 +65,8 @@
   },
   "directories": {},
   "dist": {
-    "shasum": "c59196f7ed081b136bf3edfaeb862b07cd050927",
-    "tarball": "http://registry.npmjs.org/tns-core-modules/-/tns-core-modules-1.7.0.tgz"
+    "shasum": "64b49c1ca1d926dcdd6a05dd25cb1e6c9140d9a2",
+    "tarball": "http://registry.npmjs.org/tns-core-modules/-/tns-core-modules-1.7.1.tgz"
   },
   "files": [
     "**/*.d.ts",
@@ -132,9 +133,9 @@
   "readme": "ERROR: No README data found!",
   "repository": {
     "type": "git",
-    "url": "https://github.com/NativeScript/NativeScript/commit/391f014232b382c91760bc5091d14333dbde93e3"
+    "url": "https://github.com/NativeScript/NativeScript/commit/f0b1b53d0e762be7b5a769e37eff899068d22057"
   },
   "scripts": {},
   "typings": "tns-core-modules.d.ts",
-  "version": "1.7.0"
+  "version": "1.7.1"
 }

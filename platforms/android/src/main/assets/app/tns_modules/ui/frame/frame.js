@@ -594,7 +594,7 @@ var NativeScriptActivity = (function (_super) {
         if (frameId >= 0) {
             rootView = getFrameById(frameId);
         }
-        else if (!rootView) {
+        if (!rootView) {
             navParam = application.mainEntry;
             if (!navParam) {
                 navParam = application.mainModule;

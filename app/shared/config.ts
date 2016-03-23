@@ -1,3 +1,5 @@
+
+
 import {Page} from "ui/page";
 
 export class Config {
