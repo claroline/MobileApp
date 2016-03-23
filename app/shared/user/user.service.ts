@@ -11,60 +11,51 @@ import "rxjs/add/operator/map";
 export class UserService {
 
 
-  constructor(private _http: Http) {}
+    constructor(private _http: Http) { }
 
-  buildHeader(){
-    let headers = new Headers();
-    headers.append("Content-Type", "application/json");
-    return headers;
-  }
+    buildHeader() {
+        let headers = new Headers();
+        headers.append("Content-Type", "application/json");
+        return headers;
+    }
 
-  login(user: User) {
+    login(user: User) {
 
-    let headers = this.buildHeader();
-    let body = JSON.stringify({
-      client_id : Config.client_id,
-      client_secret : Config.client_secret,
-      grant_type : "password",
-      username : user.username,
-      password : user.password
-    });
-    return this._http.post(
-      Config.apiUrl + "oauth/v2/token",
-      body,
-      {headers : headers}
-    );
-  }
+        let headers = this.buildHeader();
+        let body = JSON.stringify({
+            client_id: Config.client_id,
+            client_secret: Config.client_secret,
+            grant_type: "password",
+            username: user.username,
+            password: user.password
+        });
+        return this._http.post(
+            Config.apiUrl + "oauth/v2/token",
+            body,
+            { headers: headers }
+        );
+    }
 
-  refreshToken(){
-    let headers = this.buildHeader();
-    let body = JSON.stringify({
-      client_id: Config.client_id,
-      client_secret: Config.client_secret,
-      grant_type: "refresh_token",
-      refresh_token: Config.refresh_token
-    });
-     this._http.post(
-      Config.apiUrl + "oauth/v2/token",
-      body,
-      { headers: headers }
-    )
-    .subscribe(
-       (data) => {
-         Config.access_token = data.json().access_token;
-         Config.refresh_token = data.json().refresh_token;
-       }
-    );
-  }
-
-  getNotifications(){
-    let http = require('http');
-    let url = Config.apiUrl + "icap_notification/api/notifications.json?access_token=" + Config.access_token;
-    return http.getJSON(url);
-     
-  }
+    refreshToken() {
+        let headers = this.buildHeader();
+        let body = JSON.stringify({
+            client_id: Config.client_id,
+            client_secret: Config.client_secret,
+            grant_type: "refresh_token",
+            refresh_token: Config.refresh_token
+        });
+        this._http.post(
+            Config.apiUrl + "oauth/v2/token",
+            body,
+            { headers: headers }
+        )
+            .subscribe(
+            (data) => {
+                Config.access_token = data.json().access_token;
+                Config.refresh_token = data.json().refresh_token;
+            }
+            );
+    }
 
 
-
-  
 }

@@ -11,24 +11,32 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var core_1 = require("angular2/core");
 var router_1 = require("angular2/router");
 var user_service_1 = require("../../shared/user/user.service");
+var notifications_service_1 = require("../../shared/notification/notifications.service");
 var HomePage = (function () {
-    function HomePage(_userService, _router) {
+    function HomePage(_userService, _router, _notificationService) {
         this._userService = _userService;
         this._router = _router;
+        this._notificationService = _notificationService;
+        this.notificationsList = [];
     }
     HomePage.prototype.ngOnInit = function () {
-        this._userService.getNotifications()
-            .then(function (data) { return console.log("Notifications : " + JSON.stringify(data)); }, function (error) { return console.error(JSON.stringify(error)); });
+        var _this = this;
+        this._notificationService.load()
+            .subscribe(function (res) {
+            res.forEach(function (resObject) {
+                _this.notificationsList.unshift(resObject);
+            });
+        });
     };
     HomePage = __decorate([
         core_1.Component({
             selector: 'home',
             templateUrl: 'pages/home/home.html',
-            providers: [user_service_1.UserService]
+            providers: [user_service_1.UserService, notifications_service_1.NotificationsService]
         }), 
-        __metadata('design:paramtypes', [user_service_1.UserService, router_1.Router])
+        __metadata('design:paramtypes', [user_service_1.UserService, router_1.Router, notifications_service_1.NotificationsService])
     ], HomePage);
     return HomePage;
 }());
 exports.HomePage = HomePage;
-//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiaG9tZS5jb21wb25lbnQuanMiLCJzb3VyY2VSb290IjoiIiwic291cmNlcyI6WyJob21lLmNvbXBvbmVudC50cyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFBQSxZQUFZLENBQUM7Ozs7Ozs7Ozs7QUFFYixxQkFBZ0MsZUFBZSxDQUFDLENBQUE7QUFDaEQsdUJBQXFCLGlCQUFpQixDQUFDLENBQUE7QUFDdkMsNkJBQTBCLGdDQUFnQyxDQUFDLENBQUE7QUFZM0Q7SUFXSSxrQkFDWSxZQUF5QixFQUN6QixPQUFlO1FBRGYsaUJBQVksR0FBWixZQUFZLENBQWE7UUFDekIsWUFBTyxHQUFQLE9BQU8sQ0FBUTtJQUUzQixDQUFDO0lBWkQsMkJBQVEsR0FBUjtRQUNJLElBQUksQ0FBQyxZQUFZLENBQUMsZ0JBQWdCLEVBQUU7YUFDL0IsSUFBSSxDQUNMLFVBQUEsSUFBSSxJQUFJLE9BQUEsT0FBTyxDQUFDLEdBQUcsQ0FBQyxrQkFBa0IsR0FBRyxJQUFJLENBQUMsU0FBUyxDQUFDLElBQUksQ0FBQyxDQUFDLEVBQXRELENBQXNELEVBQzlELFVBQUEsS0FBSyxJQUFJLE9BQUEsT0FBTyxDQUFDLEtBQUssQ0FBQyxJQUFJLENBQUMsU0FBUyxDQUFDLEtBQUssQ0FBQyxDQUFDLEVBQXBDLENBQW9DLENBQzVDLENBQUM7SUFDVixDQUFDO0lBaEJMO1FBQUMsZ0JBQVMsQ0FBQztZQUNQLFFBQVEsRUFBRSxNQUFNO1lBQ2hCLFdBQVcsRUFBRSxzQkFBc0I7WUFDbkMsU0FBUyxFQUFFLENBQUMsMEJBQVcsQ0FBQztTQUMzQixDQUFDOztnQkFBQTtJQXFCRixlQUFDO0FBQUQsQ0FBQyxBQWxCRCxJQWtCQztBQWxCWSxnQkFBUSxXQWtCcEIsQ0FBQSJ9
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiaG9tZS5jb21wb25lbnQuanMiLCJzb3VyY2VSb290IjoiIiwic291cmNlcyI6WyJob21lLmNvbXBvbmVudC50cyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFBQSxZQUFZLENBQUM7Ozs7Ozs7Ozs7QUFFYixxQkFBZ0MsZUFBZSxDQUFDLENBQUE7QUFDaEQsdUJBQXFCLGlCQUFpQixDQUFDLENBQUE7QUFDdkMsNkJBQTBCLGdDQUFnQyxDQUFDLENBQUE7QUFFM0Qsc0NBQW1DLGlEQUFpRCxDQUFDLENBQUE7QUFZckY7SUFjSSxrQkFDWSxZQUF5QixFQUN6QixPQUFlLEVBQ2Ysb0JBQTBDO1FBRjFDLGlCQUFZLEdBQVosWUFBWSxDQUFhO1FBQ3pCLFlBQU8sR0FBUCxPQUFPLENBQVE7UUFDZix5QkFBb0IsR0FBcEIsb0JBQW9CLENBQXNCO1FBZnRELHNCQUFpQixHQUF3QixFQUFFLENBQUM7SUFpQjVDLENBQUM7SUFkRCwyQkFBUSxHQUFSO1FBQUEsaUJBT0M7UUFORyxJQUFJLENBQUMsb0JBQW9CLENBQUMsSUFBSSxFQUFFO2FBQzNCLFNBQVMsQ0FBQyxVQUFBLEdBQUc7WUFDVixHQUFHLENBQUMsT0FBTyxDQUFDLFVBQUMsU0FBUztnQkFDbEIsS0FBSSxDQUFDLGlCQUFpQixDQUFDLE9BQU8sQ0FBQyxTQUFTLENBQUMsQ0FBQztZQUM5QyxDQUFDLENBQUMsQ0FBQTtRQUNOLENBQUMsQ0FBQyxDQUFDO0lBQ1gsQ0FBQztJQW5CTDtRQUFDLGdCQUFTLENBQUM7WUFDUCxRQUFRLEVBQUUsTUFBTTtZQUNoQixXQUFXLEVBQUUsc0JBQXNCO1lBQ25DLFNBQVMsRUFBRSxDQUFDLDBCQUFXLEVBQUUsNENBQW9CLENBQUM7U0FDakQsQ0FBQzs7Z0JBQUE7SUF5QkYsZUFBQztBQUFELENBQUMsQUF0QkQsSUFzQkM7QUF0QlksZ0JBQVEsV0FzQnBCLENBQUEifQ==

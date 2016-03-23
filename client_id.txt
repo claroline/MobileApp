@@ -1,8 +1,8 @@
 
 Localhost
 ---------------------------------------------------------------------
-1_1a6cezzsry5cook8wooowcwscg0skos44k8o4kgsg8scsgg0g4 (client_id)
-4v4d09ngiv4048ks4cg8okgg4skosokw0wk0k480go800844wo (client_secret)
+ (client_id)
+ (client_secret)
 
 
 
