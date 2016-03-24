@@ -27,11 +27,71 @@ var NotificationsService = (function () {
             .map(function (data) {
             var result = [];
             data.forEach(function (notif) {
-                var doer = notif.notification.details.doer.firstName + " " + notif.notification.details.doer.lastName;
+                var doer = undefined;
+                if (notif.notification.details.doer !== undefined) {
+                    doer = notif.notification.details.doer.firstName + " " + notif.notification.details.doer.lastName;
+                }
+                var role = undefined;
+                if (notif.notification.details.role !== undefined) {
+                    role = notif.notification.details.role.name;
+                }
                 var actionKey = notif.notification.action_key;
-                var role = notif.notification.details.role.name;
-                var workspace = notif.notification.details.workspace.name;
-                result.push(new notification_1.Notification(notif.id, doer, actionKey, role, workspace));
+                var workspace = undefined;
+                if (notif.notification.details.workspace !== undefined) {
+                    workspace = notif.notification.details.workspace.name;
+                }
+                var resource = undefined;
+                if (notif.notification.details.resource !== undefined) {
+                    resource = notif.notification.details.resource.name;
+                }
+                var status = notif.status;
+                var text = "";
+                switch (actionKey) {
+                    case "badge-award":
+                        text = "Badges";
+                        break;
+                    case "registration-decline":
+                        text = "Refus d'inscription";
+                        break;
+                    case "resource-create":
+                        text = "Création de ressource";
+                        break;
+                    case "role-change_right":
+                        text = "Accès ressource";
+                        break;
+                    case "role-subscribe":
+                        text = "Nouvelle inscription";
+                        break;
+                    case "role-subscribe_group":
+                    case "role-subscribe_user":
+                        text = doer + " vous a attribué le rôle " + role;
+                        break;
+                    case "workspace-registration-decline":
+                        text = doer + " a refusé votre demande d'inscription dans l'espace d'activités " + workspace;
+                        break;
+                    case "workspace-role-change_right":
+                        text = doer + " vous donne accès à la ressource " + resource + " dans l'espace d'activités " + workspace;
+                        break;
+                    case "workspace-role-subscribe_user":
+                    case "workspace-role-subscribe_group":
+                        text = doer + " vous a attribué le rôle " + role + " dans l'espace d'activités " + workspace;
+                        break;
+                    case "resource_creation_notification_message":
+                        text = doer + " a créé la ressource " + resource + " dans l'espace d'activités " + workspace;
+                        break;
+                    case "role-subscribe-queue":
+                        text = doer + " a fait une demande d'inscription dans l'espace d'activtés " + workspace;
+                        break;
+                    case "text_update_notification_message":
+                        text = doer + " a modifié le texte " + resource + " de l'espace d'activités " + workspace;
+                        break;
+                    case "resource-text":
+                        text = "Textes";
+                        break;
+                    default:
+                        break;
+                }
+                result.unshift(new notification_1.Notification(notif.id, actionKey, status, text, doer, role, workspace, resource));
             });
             return result;
         });
@@ -43,4 +103,4 @@ var NotificationsService = (function () {
     return NotificationsService;
 }());
 exports.NotificationsService = NotificationsService;
-//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoibm90aWZpY2F0aW9ucy5zZXJ2aWNlLmpzIiwic291cmNlUm9vdCI6IiIsInNvdXJjZXMiOlsibm90aWZpY2F0aW9ucy5zZXJ2aWNlLnRzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiI7Ozs7Ozs7Ozs7QUFBQSxxQkFBeUIsZUFBZSxDQUFDLENBQUE7QUFDekMsdUJBQXFCLFdBQVcsQ0FBQyxDQUFBO0FBQ2pDLDZCQUEyQixnQkFBZ0IsQ0FBQyxDQUFBO0FBRTVDLHFCQUFtQixlQUFlLENBQUMsQ0FBQTtBQUVuQyxZQUFZLENBQUM7QUFHYjtJQUNJLDhCQUFvQixLQUFXO1FBQVgsVUFBSyxHQUFMLEtBQUssQ0FBTTtJQUFJLENBQUM7SUFFcEMsK0NBQStDO0lBQy9DLG1DQUFJLEdBQUo7UUFFSSxJQUFJLEdBQUcsR0FBRyxlQUFNLENBQUMsTUFBTSxHQUFHLHdEQUF3RCxHQUFHLGVBQU0sQ0FBQyxZQUFZLENBQUM7UUFDekcsTUFBTSxDQUFDLElBQUksQ0FBQyxLQUFLLENBQUMsR0FBRyxDQUFDLEdBQUcsQ0FBQzthQUNyQixHQUFHLENBQUMsVUFBQSxHQUFHO1lBQ0osTUFBTSxDQUFDLEdBQUcsQ0FBQyxJQUFJLEVBQUUsQ0FBQztRQUN0QixDQUFDLENBQUM7YUFDRCxHQUFHLENBQUMsVUFBQSxJQUFJO1lBQ0wsSUFBSSxNQUFNLEdBQUcsRUFBRSxDQUFDO1lBR2hCLElBQUksQ0FBQyxPQUFPLENBQUMsVUFBQyxLQUFLO2dCQUdmLElBQUksSUFBSSxHQUFHLEtBQUssQ0FBQyxZQUFZLENBQUMsT0FBTyxDQUFDLElBQUksQ0FBQyxTQUFTLEdBQUcsR0FBRyxHQUFHLEtBQUssQ0FBQyxZQUFZLENBQUMsT0FBTyxDQUFDLElBQUksQ0FBQyxRQUFRLENBQUM7Z0JBQ3RHLElBQUksU0FBUyxHQUFHLEtBQUssQ0FBQyxZQUFZLENBQUMsVUFBVSxDQUFDO2dCQUM5QyxJQUFJLElBQUksR0FBRyxLQUFLLENBQUMsWUFBWSxDQUFDLE9BQU8sQ0FBQyxJQUFJLENBQUMsSUFBSSxDQUFDO2dCQUNoRCxJQUFJLFNBQVMsR0FBRyxLQUFLLENBQUMsWUFBWSxDQUFDLE9BQU8sQ0FBQyxTQUFTLENBQUMsSUFBSSxDQUFDO2dCQUMxRCxNQUFNLENBQUMsSUFBSSxDQUFDLElBQUksMkJBQVksQ0FBQyxLQUFLLENBQUMsRUFBRSxFQUFFLElBQUksRUFBRSxTQUFTLEVBQUUsSUFBSSxFQUFFLFNBQVMsQ0FBQyxDQUFDLENBQUM7WUFDOUUsQ0FBQyxDQUFDLENBQUM7WUFFSCxNQUFNLENBQUMsTUFBTSxDQUFDO1FBQ2xCLENBQUMsQ0FBQyxDQUFDO0lBRVgsQ0FBQztJQTdCTDtRQUFDLGlCQUFVLEVBQUU7OzRCQUFBO0lBaUNiLDJCQUFDO0FBQUQsQ0FBQyxBQWhDRCxJQWdDQztBQWhDWSw0QkFBb0IsdUJBZ0NoQyxDQUFBIn0=
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoibm90aWZpY2F0aW9ucy5zZXJ2aWNlLmpzIiwic291cmNlUm9vdCI6IiIsInNvdXJjZXMiOlsibm90aWZpY2F0aW9ucy5zZXJ2aWNlLnRzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiI7Ozs7Ozs7Ozs7QUFBQSxxQkFBeUIsZUFBZSxDQUFDLENBQUE7QUFDekMsdUJBQXFCLFdBQVcsQ0FBQyxDQUFBO0FBQ2pDLDZCQUEyQixnQkFBZ0IsQ0FBQyxDQUFBO0FBRTVDLHFCQUFtQixlQUFlLENBQUMsQ0FBQTtBQUVuQyxZQUFZLENBQUM7QUFHYjtJQUlJLDhCQUFvQixLQUFXO1FBQVgsVUFBSyxHQUFMLEtBQUssQ0FBTTtJQUFJLENBQUM7SUFFcEMsK0NBQStDO0lBQy9DLG1DQUFJLEdBQUo7UUFFSSxJQUFJLEdBQUcsR0FBRyxlQUFNLENBQUMsTUFBTSxHQUFHLHdEQUF3RCxHQUFHLGVBQU0sQ0FBQyxZQUFZLENBQUM7UUFDekcsTUFBTSxDQUFDLElBQUksQ0FBQyxLQUFLLENBQUMsR0FBRyxDQUFDLEdBQUcsQ0FBQzthQUNyQixHQUFHLENBQUMsVUFBQSxHQUFHO1lBQ0osTUFBTSxDQUFDLEdBQUcsQ0FBQyxJQUFJLEVBQUUsQ0FBQztRQUN0QixDQUFDLENBQUM7YUFDRCxHQUFHLENBQUMsVUFBQSxJQUFJO1lBQ0wsSUFBSSxNQUFNLEdBQUcsRUFBRSxDQUFDO1lBR2hCLElBQUksQ0FBQyxPQUFPLENBQUMsVUFBQyxLQUFLO2dCQUVmLElBQUksSUFBSSxHQUFHLFNBQVMsQ0FBQztnQkFDckIsRUFBRSxDQUFDLENBQUMsS0FBSyxDQUFDLFlBQVksQ0FBQyxPQUFPLENBQUMsSUFBSSxLQUFLLFNBQVMsQ0FBQyxDQUFDLENBQUM7b0JBQ2hELElBQUksR0FBRyxLQUFLLENBQUMsWUFBWSxDQUFDLE9BQU8sQ0FBQyxJQUFJLENBQUMsU0FBUyxHQUFHLEdBQUcsR0FBRyxLQUFLLENBQUMsWUFBWSxDQUFDLE9BQU8sQ0FBQyxJQUFJLENBQUMsUUFBUSxDQUFDO2dCQUN0RyxD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

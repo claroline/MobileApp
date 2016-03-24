@@ -4,8 +4,9 @@
     </StackLayout>
     <StackLayout *tabItem="{title: 'Notifications'}">
        <ListView [items]="notificationsList">
+
          <template #item="item">
-            <Label [text]="item.doer" textWrap="true" ></Label>
+               <Label text="{{item.text}}" textWrap="true"></Label>
           </template>
        </ListView>
     </StackLayout>
