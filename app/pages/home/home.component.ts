@@ -19,15 +19,17 @@ import {Notification} from "../../shared/notification/notification";
 export class HomePage implements OnInit {
 
     notificationsList: Array<Notification> = [];
-
+    public unread: number = 0;
 
     ngOnInit() {
+
         this._notificationService.load()
             .subscribe(res => {
                 res.forEach((resObject) => {
                     this.notificationsList.unshift(resObject);
-                })
+                });
             });
+
     }
 
     constructor(
@@ -36,6 +38,8 @@ export class HomePage implements OnInit {
         private _notificationService: NotificationsService) {
 
     }
+
+
 
 
 }
