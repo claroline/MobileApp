@@ -1,0 +1,10 @@
+[
+    {
+        "merged": "/home/dat/nativescript_angular2/mobile/platforms/android/build/intermediates/res/merged/nativescript-telerik-ui/debug/layout-v11/on_demand_manual.xml",
+        "source": "/home/dat/nativescript_angular2/mobile/platforms/android/build/intermediates/exploded-aar/List-2016.1.331-dev-release/res/layout-v11/on_demand_manual.xml"
+    },
+    {
+        "merged": "/home/dat/nativescript_angular2/mobile/platforms/android/build/intermediates/res/merged/nativescript-telerik-ui/debug/layout-v11/simple_list_item.xml",
+        "source": "/home/dat/nativescript_angular2/mobile/platforms/android/build/intermediates/exploded-aar/List-2016.1.331-dev-release/res/layout-v11/simple_list_item.xml"
+    }
+]

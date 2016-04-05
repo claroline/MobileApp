@@ -22,6 +22,7 @@ var platform_providers_1 = require("./platform-providers");
 var lang_1 = require('angular2/src/facade/lang');
 var dom_renderer_1 = require('angular2/src/platform/dom/dom_renderer');
 var view_1 = require("ui/core/view");
+var application = require("application");
 var frame_1 = require('ui/frame');
 var util = require("./view-util");
 var utils_1 = require("utils/utils");
@@ -83,7 +84,7 @@ var NativeScriptRenderer = (function (_super) {
             this.hasComponentStyles = true;
             var cssString = componentProto.styles[i] + "";
             var realCSS = this.replaceNgAttribute(cssString, this.componentProtoId);
-            page.addCss(realCSS);
+            application.addCss(realCSS);
         }
         util.traceLog('NativeScriptRenderer created');
     }

@@ -1,0 +1,90 @@
+Manifest-Version: 1.0
+Created-By: 1.7.0_45 (Oracle Corporation)
+
+Name: res/layout-v11/on_demand_manual.xml
+SHA1-Digest: SrJfFz+BdGmP7ZbyLVNSnSio//Q=
+
+Name: res/values/values.xml
+SHA1-Digest: dVO8PEsihRGd+A78TTr6n6jbdbM=
+
+Name: res/drawable/pressable_item_background.xml
+SHA1-Digest: vRAkh1Ylp6pO3RA7pW40CfMbdS4=
+
+Name: res/drawable/shade_bottom.xml
+SHA1-Digest: YsptBgwPxE9B/XsRAXdPfgAtYhQ=
+
+Name: res/layout/simple_empty_content.xml
+SHA1-Digest: /1gvXk9JC9uP2LMBOu00m04gsgs=
+
+Name: res/drawable/selectable_item_background.xml
+SHA1-Digest: /cRCVa3Tf0yqXMuu5y7dlbxmc5k=
+
+Name: res/layout/on_demand_automatic.xml
+SHA1-Digest: 6Z0acgVW3bINO7xUg4gSfk9RMA4=
+
+Name: AndroidManifest.xml
+SHA1-Digest: tK7/J69EjxjKKXAhcM52jsuUBHY=
+
+Name: res/drawable/shade_right.xml
+SHA1-Digest: 0GqbFHLBZVl1R59UaBE/8zw/s7Q=
+
+Name: res/drawable-xxxhdpi/ic_collapse.png
+SHA1-Digest: Ql2uZ2C6qbU4znh5Fhri+nK19IQ=
+
+Name: res/drawable-xxhdpi/ic_expand.png
+SHA1-Digest: QG09UpfwfqXzMjfmTy47EkO9qSU=
+
+Name: res/layout-v11/simple_list_item.xml
+SHA1-Digest: 3IxMCq9jAsdeXBk+fSDVLAUt3xs=
+
+Name: res/drawable-xxhdpi/ic_collapse.png
+SHA1-Digest: SERvHEhpybb2MHIeFepLC5N4Tng=
+
+Name: res/drawable-hdpi/ic_collapse.png
+SHA1-Digest: C3IKDbIIgUJjZ4u4D48fwjmHBUg=
+
+Name: res/drawable-hdpi/ic_expand.png
+SHA1-Digest: k6Gs7p3eMx2BYRyG0KfEzBpcuGI=
+
+Name: classes.jar
+SHA1-Digest: guMDaezWtdLxHwTlwY7r7m7f+SI=
+
+Name: res/layout/simple_list_item.xml
+SHA1-Digest: qbf+NZFIt9dxQyh9vEheXgxt5UM=
+
+Name: res/layout/on_demand_manual.xml
+SHA1-Digest: /fJGkD5QyQb9hlL11psbMkRZSjM=
+
+Name: res/drawable/gingerbread_background.xml
+SHA1-Digest: JMvUTs4pxim1WLRz89oqPxP549M=
+
+Name: res/drawable-xxxhdpi/ic_expand.png
+SHA1-Digest: Db/sxnQHnTXEm6MInaDtgiJZQ+I=
+
+Name: res/drawable/shade_corner.xml
+SHA1-Digest: 2hqK/uwAm7i28Nvf1FdlFDfdk8k=
+
+Name: res/drawable-mdpi/ic_expand.png
+SHA1-Digest: r42ls9wKEj2rF8vlPL9HelyHxj0=
+
+Name: aapt/AndroidManifest.xml
+SHA1-Digest: tK7/J69EjxjKKXAhcM52jsuUBHY=
+
+Name: res/drawable-xhdpi/ic_collapse.png
+SHA1-Digest: vKCmzm6Y4eYEL6MLKbjWpfCptgc=
+
+Name: res/drawable-mdpi/ic_collapse.png
+SHA1-Digest: dkRKXDtcsk11Jz9/fmGKBDkINH8=
+
+Name: res/drawable-v21/pressable_item_background.xml
+SHA1-Digest: 3TerymSdsDbwpQV/2jjk9WMMBO0=
+
+Name: res/drawable-xhdpi/ic_expand.png
+SHA1-Digest: Vz/CZ3Fhe2cd9fhj62lESbTflYc=
+
+Name: R.txt
+SHA1-Digest: /gwPVv2zHKs2RTeqK76b9p/4cE0=
+
+Name: res/layout/simple_group_header_item.xml
+SHA1-Digest: rVsVvcsAYfzEoyyU32kNTpn2J/c=
+

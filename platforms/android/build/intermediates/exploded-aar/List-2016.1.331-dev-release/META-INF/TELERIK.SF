@@ -1,0 +1,92 @@
+Signature-Version: 1.0
+SHA1-Digest-Manifest-Main-Attributes: sY6+RQ4DWdnxCfSpiwTT6GRIwA0=
+Created-By: 1.7.0_45 (Oracle Corporation)
+SHA1-Digest-Manifest: gwEfsYkGeGEdKQ4vQioL6PB1B3s=
+
+Name: res/layout-v11/on_demand_manual.xml
+SHA1-Digest: g1rWy3qUEbBG+tPj31bSHsulIUI=
+
+Name: res/values/values.xml
+SHA1-Digest: T8skSeXlmaZAXaYQ7YAelb3+hm4=
+
+Name: res/drawable/pressable_item_background.xml
+SHA1-Digest: CtVF6lHUEnronGMge7RLJy5FFx4=
+
+Name: res/drawable/shade_bottom.xml
+SHA1-Digest: YhLC5PCpn9PE9Zly2sMlPsHRJig=
+
+Name: res/layout/simple_empty_content.xml
+SHA1-Digest: aJVW8SxXZkJOYxEQVkOnBMbrNbU=
+
+Name: res/drawable/selectable_item_background.xml
+SHA1-Digest: KnM2vk/0c3GJjqSNXHzLd4oz1A0=
+
+Name: res/layout/on_demand_automatic.xml
+SHA1-Digest: RhxE0szrXzxysWyl7nYzDdkuDOo=
+
+Name: AndroidManifest.xml
+SHA1-Digest: 4KM0GvtuI3Cef9d6YNUYDmChhCM=
+
+Name: res/drawable/shade_right.xml
+SHA1-Digest: FxTUiPt5tRULLtD8C0CjWOyHLVk=
+
+Name: res/drawable-xxxhdpi/ic_collapse.png
+SHA1-Digest: NpJneXpCxt1SqBSaUQKFi+yHrBU=
+
+Name: res/drawable-xxhdpi/ic_expand.png
+SHA1-Digest: JtiX5PVY88w/a12pDjWIbqxzUOA=
+
+Name: res/layout-v11/simple_list_item.xml
+SHA1-Digest: aHj7usjW/4LqeD/IdQcGNoF8zqQ=
+
+Name: res/drawable-xxhdpi/ic_collapse.png
+SHA1-Digest: xyrWNTzl5YL9skubQ3Nib4hTuXM=
+
+Name: res/drawable-hdpi/ic_collapse.png
+SHA1-Digest: LWFYKp05zt9/I7PHQ+TyqbkPByA=
+
+Name: res/drawable-hdpi/ic_expand.png
+SHA1-Digest: WEwGd8fQtDZhl/04bGISkw4o/fU=
+
+Name: classes.jar
+SHA1-Digest: N6GlNP3hlO4neUMeZWKqpiR6s3Q=
+
+Name: res/layout/simple_list_item.xml
+SHA1-Digest: T4XEWjjSKdflmrLU4xV2YQhbrmQ=
+
+Name: res/layout/on_demand_manual.xml
+SHA1-Digest: PeaAn2enYMzw3P7IrsrKBeS5Htw=
+
+Name: res/drawable/gingerbread_background.xml
+SHA1-Digest: 5XAJl8VjBUkdMGawJrquZj1BL6Q=
+
+Name: res/drawable-xxxhdpi/ic_expand.png
+SHA1-Digest: Lwd9nUbIf9iQmrmeRn1hwXvzHLM=
+
+Name: res/drawable/shade_corner.xml
+SHA1-Digest: w+5em9JcqRlv8zeLFJjfLGzF4vk=
+
+Name: res/drawable-mdpi/ic_expand.png
+SHA1-Digest: nHQiddNY7m2C16gkO+MYIUwpw08=
+
+Name: aapt/AndroidManifest.xml
+SHA1-Digest: Fa8kKzxjDckeOZcaP/b2JD1IpiE=
+
+Name: res/drawable-xhdpi/ic_collapse.png
+SHA1-Digest: c5IXAFChTkfqFqtAnrwkJJxhmXk=
+
+Name: res/drawable-mdpi/ic_collapse.png
+SHA1-Digest: lZQkz4xsz00jJnqCAycFNezpkzY=
+
+Name: res/drawable-xhdpi/ic_expand.png
+SHA1-Digest: Nfd0+HbmpQeMhnLAkk7Fb872lY4=
+
+Name: res/drawable-v21/pressable_item_background.xml
+SHA1-Digest: eEJkUwMOUg+rOCZA6VuAq1nWO3A=
+
+Name: R.txt
+SHA1-Digest: 57eY6nBkAVBaPAYkhi59XVt0LVQ=
+
+Name: res/layout/simple_group_header_item.xml
+SHA1-Digest: Q8EiSh6Q6b8a9EwAd6zwBo7YIqE=
+

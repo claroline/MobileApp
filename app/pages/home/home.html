@@ -1,7 +1,7 @@
 <TabView>
     <StackLayout *tabItem="{title: 'Accueil'}">
     </StackLayout>
-    <StackLayout *tabItem="{title: 'Notifications () '}">
+    <StackLayout *tabItem="{title: 'Notifications'}">
       <ListView [items]="notificationsList">
         <template #item="item">
           <Label text="{{item.text}}" textWrap="true" id="notif" [class.boldFont]="!item.status"></Label>

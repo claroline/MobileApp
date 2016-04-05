@@ -1,0 +1,59 @@
+Signature-Version: 1.0
+SHA1-Digest-Manifest-Main-Attributes: sY6+RQ4DWdnxCfSpiwTT6GRIwA0=
+Created-By: 1.7.0_45 (Oracle Corporation)
+SHA1-Digest-Manifest: p3NEGVF6noogKIiyZ+A0TsHhyi4=
+
+Name: res/values/values.xml
+SHA1-Digest: pdW3KalJ+PYVZ3Ba5XG71RXIyjo=
+
+Name: res/layout/navigation_drawer_content.xml
+SHA1-Digest: 2QE0pONIOchxbuHacvIW6u1w/YU=
+
+Name: res/drawable-hdpi/hmb.png
+SHA1-Digest: btRC13zsg4XkSjXNRbSDVFjjDz0=
+
+Name: res/drawable-mdpi/hmb.png
+SHA1-Digest: cvmpkFF9a4Pq0Z94tFRz3yVUfc0=
+
+Name: classes.jar
+SHA1-Digest: MZgIMUml+QvbbngBVzBg+AEFlPE=
+
+Name: res/drawable-xxxhdpi/hmb.png
+SHA1-Digest: e343ldMotUSsTJVmpPfC6/Sy5rU=
+
+Name: res/drawable-xxhdpi/hmb.png
+SHA1-Digest: 6sCqYfgWEIsh9BsNRD7v5HYVs/M=
+
+Name: res/layout/tooltip_container.xml
+SHA1-Digest: qlio/+4Ljtid9MpUgz0K2C43Uq8=
+
+Name: res/drawable-xhdpi/hmb.png
+SHA1-Digest: O3ErDumYpc65hG457NdddoC9jjI=
+
+Name: res/anim/drawer_slide_in_top.xml
+SHA1-Digest: bp3652mj3mHW92nqlGSPOdwqhJY=
+
+Name: AndroidManifest.xml
+SHA1-Digest: n5nXlkrIzo0m/fnRr3FsmiOX5Bg=
+
+Name: aapt/AndroidManifest.xml
+SHA1-Digest: 1zgZuAwRY/VVRaCVwo1laRp++S0=
+
+Name: res/drawable/hamburger.xml
+SHA1-Digest: /KQqC7MbMjCCAZKk9wTA2T++vXE=
+
+Name: res/layout/default_tooltip_content.xml
+SHA1-Digest: TPEbYgJ2jzh6pVg89h56bcS/IEE=
+
+Name: res/anim/drawer_slide_out_top.xml
+SHA1-Digest: 7sBB1rVegGwp4TdmhNLq1pcqDGs=
+
+Name: R.txt
+SHA1-Digest: D4HSdfHsVF/vW9dPzrzreuA3ekU=
+
+Name: res/layout/drawer_blur_fade_layer.xml
+SHA1-Digest: AuB94QGE8A9tFb3eUWzQn+GfjfY=
+
+Name: res/layout/navigation_item_view.xml
+SHA1-Digest: almrPxBxyJoxeBYkHbio13xP7PE=
+

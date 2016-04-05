@@ -1,6 +1,6 @@
 "use strict";
 
-import {Component, OnInit} from "angular2/core";
+import {Component} from "angular2/core";
 import {Router} from "angular2/router";
 import {UserService} from "../../shared/user/user.service";
 import {Config} from "../../shared/config";
@@ -16,27 +16,23 @@ import {Notification} from "../../shared/notification/notification";
 })
 
 
-export class HomePage implements OnInit {
+export class HomePage {
 
     notificationsList: Array<Notification> = [];
-    public unread: number = 0;
 
-    ngOnInit() {
 
+
+
+    constructor(
+        private _userService: UserService,
+        private _router: Router,
+        private _notificationService: NotificationsService) {
         this._notificationService.load()
             .subscribe(res => {
                 res.forEach((resObject) => {
                     this.notificationsList.unshift(resObject);
                 });
             });
-
-    }
-
-    constructor(
-        private _userService: UserService,
-        private _router: Router,
-        private _notificationService: NotificationsService) {
-
     }
 
 

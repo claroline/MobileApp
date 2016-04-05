@@ -86,7 +86,7 @@ export class NotificationsService {
 
                     }
 
-                    result.unshift(new Notification(notif.id, actionKey, status, text, doer, role, workspace, resource));
+                    result.unshift(new Notification(status, text));
                 });
 
                 return result;
