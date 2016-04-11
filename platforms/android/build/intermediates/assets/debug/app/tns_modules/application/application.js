@@ -76,12 +76,11 @@ function initEvents() {
         },
         onActivityResumed: function (activity) {
             androidApp.paused = false;
-            if (activity === androidApp.foregroundActivity) {
-                if (typedExports.onResume) {
-                    typedExports.onResume();
-                }
-                typedExports.notify({ eventName: typedExports.resumeEvent, object: androidApp, android: activity });
+            androidApp.foregroundActivity = activity;
+            if (typedExports.onResume) {
+                typedExports.onResume();
             }
+            typedExports.notify({ eventName: typedExports.resumeEvent, object: androidApp, android: activity });
             androidApp.notify({ eventName: "activityResumed", object: androidApp, activity: activity });
             if (androidApp.onActivityResumed) {
                 androidApp.onActivityResumed(activity);
@@ -167,6 +166,7 @@ var AndroidApplication = (function (_super) {
     AndroidApplication.saveActivityStateEvent = "saveActivityState";
     AndroidApplication.activityResultEvent = "activityResult";
     AndroidApplication.activityBackPressedEvent = "activityBackPressed";
+    AndroidApplication.activityRequestPermissionsEvent = "activityRequestPermissions";
     return AndroidApplication;
 }(observable.Observable));
 exports.AndroidApplication = AndroidApplication;
@@ -236,8 +236,19 @@ function onConfigurationChanged(context, intent) {
     }
 }
 function loadCss() {
-    typedExports.cssSelectorsCache = typedExports.loadCss(typedExports.cssFile);
+    typedExports.appSelectors = typedExports.loadCss(typedExports.cssFile) || [];
+    if (typedExports.appSelectors.length > 0) {
+        typedExports.mergeCssSelectors(typedExports);
+    }
 }
+function addCss(cssText) {
+    var parsed = typedExports.parseCss(cssText);
+    if (parsed) {
+        typedExports.additionalSelectors.push.apply(typedExports.additionalSelectors, parsed);
+        typedExports.mergeCssSelectors(typedExports);
+    }
+}
+exports.addCss = addCss;
 global.__onLiveSync = function () {
     if (typedExports.android && typedExports.android.paused) {
         return;

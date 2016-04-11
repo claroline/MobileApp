@@ -3,6 +3,9 @@ var trace = require("trace");
 var styleProperty = require("ui/styling/style-property");
 var types = require("utils/types");
 var utils = require("utils/utils");
+var keyframeAnimation = require("ui/animation/keyframe-animation");
+var cssAnimationParser = require("./css-animation-parser");
+var special_properties_1 = require("ui/builder/special-properties");
 var ID_SPECIFICITY = 1000000;
 var ATTR_SPECIFITY = 10000;
 var CLASS_SPECIFICITY = 100;
@@ -24,6 +27,7 @@ var CssSelector = (function () {
             }
         }
         this._declarations = declarations;
+        this.animations = cssAnimationParser.CssAnimationParser.keyframeAnimationsFromCSSDeclarations(declarations);
     }
     Object.defineProperty(CssSelector.prototype, "expression", {
         get: function () {
@@ -53,18 +57,48 @@ var CssSelector = (function () {
         enumerable: true,
         configurable: true
     });
+    Object.defineProperty(CssSelector.prototype, "valueSourceModifier", {
+        get: function () {
+            return observable.ValueSource.Css;
+        },
+        enumerable: true,
+        configurable: true
+    });
     CssSelector.prototype.matches = function (view) {
         return false;
     };
-    CssSelector.prototype.apply = function (view) {
+    CssSelector.prototype.apply = function (view, valueSourceModifier) {
+        var modifier = valueSourceModifier || this.valueSourceModifier;
         this.eachSetter(function (property, value) {
-            try {
-                view.style._setValue(property, value, observable.ValueSource.Css);
+            if (types.isString(property)) {
+                var attrHandled = false;
+                var specialSetter = special_properties_1.getSpecialPropertySetter(property);
+                if (!attrHandled && specialSetter) {
+                    specialSetter(view, value);
+                    attrHandled = true;
+                }
+                if (!attrHandled && property in view) {
+                    view[property] = utils.convertString(value);
+                }
             }
-            catch (ex) {
-                trace.write("Error setting property: " + property.name + " view: " + view + " value: " + value + " " + ex, trace.categories.Style, trace.messageType.error);
+            else {
+                try {
+                    view.style._setValue(property, value, modifier);
+                }
+                catch (ex) {
+                    trace.write("Error setting property: " + property.name + " view: " + view + " value: " + value + " " + ex, trace.categories.Style, trace.messageType.error);
+                }
             }
         });
+        if (this.animations && view.isLoaded) {
+            for (var _i = 0, _a = this.animations; _i < _a.length; _i++) {
+                var animationInfo = _a[_i];
+                var realAnimation = keyframeAnimation.KeyframeAnimation.keyframeAnimationFromInfo(animationInfo, modifier);
+                if (realAnimation) {
+                    realAnimation.play(view);
+                }
+            }
+        }
     };
     CssSelector.prototype.eachSetter = function (callback) {
         for (var i = 0; i < this._declarations.length; i++) {
@@ -83,9 +117,31 @@ var CssSelector = (function () {
                         callback(pair.property, pair.value);
                     }
                 }
+                else {
+                    callback(declaration.property, declaration.value);
+                }
             }
         }
     };
+    Object.defineProperty(CssSelector.prototype, "declarationText", {
+        get: function () {
+            return this.declarations.map(function (declaration) { return (declaration.property + ": " + declaration.value); }).join("; ");
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(CssSelector.prototype, "attrExpressionText", {
+        get: function () {
+            if (this.attrExpression) {
+                return "[" + this.attrExpression + "]";
+            }
+            else {
+                return "";
+            }
+        },
+        enumerable: true,
+        configurable: true
+    });
     return CssSelector;
 }());
 exports.CssSelector = CssSelector;
@@ -107,6 +163,9 @@ var CssTypeSelector = (function (_super) {
             return matchesAttr(this.attrExpression, view);
         }
         return result;
+    };
+    CssTypeSelector.prototype.toString = function () {
+        return "CssTypeSelector " + this.expression + this.attrExpressionText + " { " + this.declarationText + " }";
     };
     return CssTypeSelector;
 }(CssSelector));
@@ -147,6 +206,9 @@ var CssIdSelector = (function (_super) {
         }
         return result;
     };
+    CssIdSelector.prototype.toString = function () {
+        return "CssIdSelector " + this.expression + this.attrExpressionText + " { " + this.declarationText + " }";
+    };
     return CssIdSelector;
 }(CssSelector));
 var CssClassSelector = (function (_super) {
@@ -168,6 +230,9 @@ var CssClassSelector = (function (_super) {
             return matchesAttr(this.attrExpression, view);
         }
         return result;
+    };
+    CssClassSelector.prototype.toString = function () {
+        return "CssClassSelector " + this.expression + this.attrExpressionText + " { " + this.declarationText + " }";
     };
     return CssClassSelector;
 }(CssSelector));
@@ -251,6 +316,9 @@ var CssCompositeSelector = (function (_super) {
         }
         return result;
     };
+    CssCompositeSelector.prototype.toString = function () {
+        return "CssCompositeSelector " + this.expression + this.attrExpressionText + " { " + this.declarationText + " }";
+    };
     return CssCompositeSelector;
 }(CssSelector));
 var CssAttrSelector = (function (_super) {
@@ -267,6 +335,9 @@ var CssAttrSelector = (function (_super) {
     });
     CssAttrSelector.prototype.matches = function (view) {
         return matchesAttr(this.attrExpression, view);
+    };
+    CssAttrSelector.prototype.toString = function () {
+        return "CssAttrSelector " + this.expression + this.attrExpressionText + " { " + this.declarationText + " }";
     };
     return CssAttrSelector;
 }(CssSelector));
@@ -357,14 +428,21 @@ var CssVisualStateSelector = (function (_super) {
         enumerable: true,
         configurable: true
     });
+    Object.defineProperty(CssVisualStateSelector.prototype, "valueSourceModifier", {
+        get: function () {
+            return observable.ValueSource.VisualState;
+        },
+        enumerable: true,
+        configurable: true
+    });
     CssVisualStateSelector.prototype.matches = function (view) {
         var matches = true;
         if (this._isById) {
             matches = this._match === view.id;
         }
         if (this._isByClass) {
-            var expectedClass = this._match;
-            matches = view._cssClasses.some(function (cssClass, i, arr) { return cssClass === expectedClass; });
+            var expectedClass_1 = this._match;
+            matches = view._cssClasses.some(function (cssClass, i, arr) { return cssClass === expectedClass_1; });
         }
         if (this._isByType) {
             matches = matchesType(this._match, view);
@@ -373,6 +451,9 @@ var CssVisualStateSelector = (function (_super) {
             matches = matchesAttr(this._key, view);
         }
         return matches;
+    };
+    CssVisualStateSelector.prototype.toString = function () {
+        return "CssVisualStateSelector " + this.expression + this.attrExpressionText + " { " + this.declarationText + " }";
     };
     return CssVisualStateSelector;
 }(CssSelector));
@@ -417,6 +498,9 @@ var InlineStyleSelector = (function (_super) {
         this.eachSetter(function (property, value) {
             view.style._setValue(property, value, observable.ValueSource.Local);
         });
+    };
+    InlineStyleSelector.prototype.toString = function () {
+        return "InlineStyleSelector " + this.expression + this.attrExpressionText + " { " + this.declarationText + " }";
     };
     return InlineStyleSelector;
 }(CssSelector));

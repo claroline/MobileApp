@@ -32,6 +32,8 @@ var TextBase = (function (_super) {
         if (this.formattedText) {
             this.formattedText.updateSpansBindingContext(newValue);
         }
+        this.style._updateTextTransform();
+        this.style._updateTextDecoration();
     };
     Object.defineProperty(TextBase.prototype, "text", {
         get: function () {
@@ -83,17 +85,22 @@ var TextBase = (function (_super) {
         configurable: true
     });
     TextBase.prototype.onFormattedTextChanged = function (eventData) {
-        this._setFormattedTextPropertyToNative(eventData.value);
+        var value = eventData.value;
+        this._setFormattedTextPropertyToNative(value);
+        this._onPropertyChangedFromNative(TextBase.textProperty, value.toString());
     };
     TextBase.prototype._onTextPropertyChanged = function (data) {
     };
     TextBase.prototype._setFormattedTextPropertyToNative = function (value) {
     };
     TextBase.prototype._onFormattedTextPropertyChanged = function (data) {
-        if (data.newValue) {
-            data.newValue.parent = this;
+        var newValue = data.newValue;
+        if (newValue) {
+            newValue.parent = this;
         }
-        this._setFormattedTextPropertyToNative(data.newValue);
+        this._setFormattedTextPropertyToNative(newValue);
+        var newText = newValue ? newValue.toString() : "";
+        this._onPropertyChangedFromNative(TextBase.textProperty, newText);
     };
     TextBase.prototype._addChildFromBuilder = function (name, value) {
         formattedString.FormattedString.addFormattedStringToView(this, name, value);

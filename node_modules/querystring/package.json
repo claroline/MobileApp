@@ -2,7 +2,7 @@
   "_args": [
     [
       "querystring@0.2.0",
-      "/home/dat/nativescript_angular2/claroline"
+      "/home/dat/nativescript_angular2/mobile"
     ]
   ],
   "_from": "querystring@0.2.0",
@@ -27,13 +27,14 @@
   "_requiredBy": [
     "/",
     "/nativescript-angular",
+    "/nativescript-angular/url",
     "/url"
   ],
   "_resolved": "https://registry.npmjs.org/querystring/-/querystring-0.2.0.tgz",
   "_shasum": "b209849203bb25df820da756e747005878521620",
   "_shrinkwrap": null,
   "_spec": "querystring@0.2.0",
-  "_where": "/home/dat/nativescript_angular2/claroline",
+  "_where": "/home/dat/nativescript_angular2/mobile",
   "author": {
     "email": "rfobic@gmail.com",
     "name": "Irakli Gozalishvili"

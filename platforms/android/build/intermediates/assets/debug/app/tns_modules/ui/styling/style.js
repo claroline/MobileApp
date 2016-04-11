@@ -333,6 +333,10 @@ function isOpacityValid(value) {
     var parsedValue = parseFloat(value);
     return !isNaN(parsedValue) && 0 <= parsedValue && parsedValue <= 1;
 }
+function isLetterSpacingValid(value) {
+    var parsedValue = parseFloat(value);
+    return !isNaN(parsedValue);
+}
 function isFontWeightValid(value) {
     return value === enums.FontWeight.normal || value === enums.FontWeight.bold;
 }
@@ -378,6 +382,56 @@ var Style = (function (_super) {
         this._nativeSetters = new Map();
         this._view = parentView;
     }
+    Object.defineProperty(Style.prototype, "rotate", {
+        get: function () {
+            return this._getValue(exports.rotateProperty);
+        },
+        set: function (value) {
+            this._setValue(exports.rotateProperty, value);
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Style.prototype, "scaleX", {
+        get: function () {
+            return this._getValue(exports.scaleXProperty);
+        },
+        set: function (value) {
+            this._setValue(exports.scaleXProperty, value);
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Style.prototype, "scaleY", {
+        get: function () {
+            return this._getValue(exports.scaleYProperty);
+        },
+        set: function (value) {
+            this._setValue(exports.scaleYProperty, value);
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Style.prototype, "translateX", {
+        get: function () {
+            return this._getValue(exports.translateXProperty);
+        },
+        set: function (value) {
+            this._setValue(exports.translateXProperty, value);
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Style.prototype, "translateY", {
+        get: function () {
+            return this._getValue(exports.translateYProperty);
+        },
+        set: function (value) {
+            this._setValue(exports.translateYProperty, value);
+        },
+        enumerable: true,
+        configurable: true
+    });
     Object.defineProperty(Style.prototype, "color", {
         get: function () {
             return this._getValue(exports.colorProperty);
@@ -748,6 +802,16 @@ var Style = (function (_super) {
         enumerable: true,
         configurable: true
     });
+    Object.defineProperty(Style.prototype, "letterSpacing", {
+        get: function () {
+            return this._getValue(exports.letterSpacingProperty);
+        },
+        set: function (value) {
+            this._setValue(exports.letterSpacingProperty, value);
+        },
+        enumerable: true,
+        configurable: true
+    });
     Style.prototype._updateTextDecoration = function () {
         if (this._getValue(exports.textDecorationProperty) !== enums.TextDecoration.none) {
             this._applyProperty(exports.textDecorationProperty, this._getValue(exports.textDecorationProperty));
@@ -916,6 +980,11 @@ function getHandler(property, view) {
     return getHandlerInternal(property.id, types.getClassInfo(view));
 }
 exports.getHandler = getHandler;
+exports.rotateProperty = new styleProperty.Property("rotate", "rotate", new dependency_observable_1.PropertyMetadata(undefined, dependency_observable_1.PropertyMetadataSettings.None, null));
+exports.scaleXProperty = new styleProperty.Property("scaleX", "scaleX", new dependency_observable_1.PropertyMetadata(undefined, dependency_observable_1.PropertyMetadataSettings.None, null));
+exports.scaleYProperty = new styleProperty.Property("scaleY", "scaleY", new dependency_observable_1.PropertyMetadata(undefined, dependency_observable_1.PropertyMetadataSettings.None, null));
+exports.translateXProperty = new styleProperty.Property("translateX", "translateX", new dependency_observable_1.PropertyMetadata(undefined, dependency_observable_1.PropertyMetadataSettings.None, null));
+exports.translateYProperty = new styleProperty.Property("translateY", "translateY", new dependency_observable_1.PropertyMetadata(undefined, dependency_observable_1.PropertyMetadataSettings.None, null));
 exports.colorProperty = new styleProperty.Property("color", "color", new dependency_observable_1.PropertyMetadata(undefined, dependency_observable_1.PropertyMetadataSettings.Inheritable, undefined, color_1.Color.isValid, color_1.Color.equals), converters.colorConverter);
 exports.backgroundImageProperty = new styleProperty.Property("backgroundImage", "background-image", new dependency_observable_1.PropertyMetadata(undefined, dependency_observable_1.PropertyMetadataSettings.None, onBackgroundImagePropertyChanged));
 exports.backgroundColorProperty = new styleProperty.Property("backgroundColor", "background-color", new dependency_observable_1.PropertyMetadata(undefined, dependency_observable_1.PropertyMetadataSettings.None, onBackgroundColorPropertyChanged, color_1.Color.isValid, color_1.Color.equals), converters.colorConverter);
@@ -939,6 +1008,7 @@ exports.opacityProperty = new styleProperty.Property("opacity", "opacity", new d
 exports.textDecorationProperty = new styleProperty.Property("textDecoration", "text-decoration", new dependency_observable_1.PropertyMetadata(enums.TextDecoration.none, dependency_observable_1.PropertyMetadataSettings.None, undefined, isTextDecorationValid), converters.textDecorationConverter);
 exports.textTransformProperty = new styleProperty.Property("textTransform", "text-transform", new dependency_observable_1.PropertyMetadata(enums.TextTransform.none, dependency_observable_1.PropertyMetadataSettings.None, undefined, isTextTransformValid), converters.textTransformConverter);
 exports.whiteSpaceProperty = new styleProperty.Property("whiteSpace", "white-space", new dependency_observable_1.PropertyMetadata(undefined, AffectsLayout, undefined, isWhiteSpaceValid), converters.whiteSpaceConverter);
+exports.letterSpacingProperty = new styleProperty.Property("letterSpacing", "letter-spacing", new dependency_observable_1.PropertyMetadata(Number.NaN, AffectsLayout, undefined, isLetterSpacingValid), converters.letterSpacingConverter);
 exports.nativeLayoutParamsProperty = new styleProperty.Property("nativeLayoutParams", "nativeLayoutParams", new dependency_observable_1.PropertyMetadata({
     width: -1,
     widthPercent: -1,
@@ -1024,9 +1094,63 @@ function onFontChanged(value) {
     array.push({ property: exports.fontSizeProperty, value: newFont.fontSize });
     return array;
 }
+function onTransformChanged(value) {
+    var newTransform = converters.transformConverter(value);
+    var array = new Array();
+    var values = undefined;
+    for (var transform in newTransform) {
+        switch (transform) {
+            case "scaleX":
+                array.push({ property: exports.scaleXProperty, value: parseFloat(newTransform[transform]) });
+                break;
+            case "scaleY":
+                array.push({ property: exports.scaleYProperty, value: parseFloat(newTransform[transform]) });
+                break;
+            case "scale":
+            case "scale3d":
+                values = newTransform[transform].split(",");
+                if (values.length === 2 || values.length === 3) {
+                    array.push({ property: exports.scaleXProperty, value: parseFloat(values[0]) });
+                    array.push({ property: exports.scaleYProperty, value: parseFloat(values[1]) });
+                }
+                break;
+            case "translateX":
+                array.push({ property: exports.translateXProperty, value: parseFloat(newTransform[transform]) });
+                break;
+            case "translateY":
+                array.push({ property: exports.translateYProperty, value: parseFloat(newTransform[transform]) });
+                break;
+            case "translate":
+            case "translate3d":
+                values = newTransform[transform].split(",");
+                if (values.length === 2 || values.length === 3) {
+                    array.push({ property: exports.translateXProperty, value: parseFloat(values[0]) });
+                    array.push({ property: exports.translateYProperty, value: parseFloat(values[1]) });
+                }
+                break;
+            case "rotate":
+                var text = newTransform[transform];
+                var val = parseFloat(text);
+                if (text.slice(-3) === "rad") {
+                    val = val * (180.0 / Math.PI);
+                }
+                array.push({ property: exports.rotateProperty, value: val });
+                break;
+            case "none":
+                array.push({ property: exports.scaleXProperty, value: 1 });
+                array.push({ property: exports.scaleYProperty, value: 1 });
+                array.push({ property: exports.translateXProperty, value: 0 });
+                array.push({ property: exports.translateYProperty, value: 0 });
+                array.push({ property: exports.rotateProperty, value: 0 });
+                break;
+        }
+    }
+    return array;
+}
 styleProperty.registerShorthandCallback("font", onFontChanged);
 styleProperty.registerShorthandCallback("margin", onMarginChanged);
 styleProperty.registerShorthandCallback("padding", onPaddingChanged);
+styleProperty.registerShorthandCallback("transform", onTransformChanged);
 var _defaultNativeValuesCache = {};
 var StylePropertyChangedHandler = (function () {
     function StylePropertyChangedHandler(applyCallback, resetCallback, getNativeValue) {

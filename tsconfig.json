@@ -1,21 +1,16 @@
 {
     "compilerOptions": {
-        "outDir": "app",
-        "rootDir": "app",
+        "rootDir": ".",
         "module": "commonjs",
         "target": "es5",
         "inlineSourceMap": true,
         "experimentalDecorators": true,
         "removeComments": false,
         "emitDecoratorMetadata": true,
-        "noEmitOnError": true
+        "noEmitOnError": false
     },
     "exclude": [
         "node_modules",
         "platforms"
-    ],
-    "atom": {
-      "rewriteTsconfig": true,
-      "formatOnSave" : true
-    }
+    ]
 }

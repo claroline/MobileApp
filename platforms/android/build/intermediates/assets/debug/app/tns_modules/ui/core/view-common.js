@@ -11,6 +11,7 @@ var dependency_observable_1 = require("ui/core/dependency-observable");
 var special_properties_1 = require("ui/builder/special-properties");
 var style_1 = require("ui/styling/style");
 var visualStateConstants = require("ui/styling/visual-state-constants");
+var debug_1 = require("utils/debug");
 var bindable;
 function ensureBindable() {
     if (!bindable) {
@@ -732,7 +733,8 @@ var View = (function (_super) {
             case enums.VerticalAlignment.top:
                 childTop = top + marginTop * density;
                 break;
-            case enums.VerticalAlignment.center || enums.VerticalAlignment.middle:
+            case enums.VerticalAlignment.center:
+            case enums.VerticalAlignment.middle:
                 childTop = top + (bottom - top - childHeight + (marginTop - marginBottom) * density) / 2;
                 break;
             case enums.VerticalAlignment.bottom:
@@ -1027,6 +1029,25 @@ var View = (function (_super) {
     View.prototype.focus = function () {
         return undefined;
     };
+    View.prototype.getLocationInWindow = function () {
+        return undefined;
+    };
+    View.prototype.getLocationOnScreen = function () {
+        return undefined;
+    };
+    View.prototype.getLocationRelativeTo = function (otherView) {
+        return undefined;
+    };
+    View.prototype.getActualSize = function () {
+        var currentBounds = this._getCurrentLayoutBounds();
+        if (!currentBounds) {
+            return undefined;
+        }
+        return {
+            width: utils.layout.toDeviceIndependentPixels(currentBounds.right - currentBounds.left),
+            height: utils.layout.toDeviceIndependentPixels(currentBounds.bottom - currentBounds.top),
+        };
+    };
     View.prototype.animate = function (animation) {
         return this.createAnimation(animation).play();
     };
@@ -1037,10 +1058,18 @@ var View = (function (_super) {
         return new animationModule.Animation([animation]);
     };
     View.prototype.toString = function () {
+        var str = this.typeName;
         if (this.id) {
-            return this.typeName + ("<" + this.id + ">");
+            str += "<" + this.id + ">";
         }
-        return this.typeName + ("(" + this._domId + ")");
+        else {
+            str += "(" + this._domId + ")";
+        }
+        var source = debug_1.Source.get(this);
+        if (source) {
+            str += "@" + source + ";";
+        }
+        return str;
     };
     View.prototype._setNativeViewFrame = function (nativeView, frame) {
     };

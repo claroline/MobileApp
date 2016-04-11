@@ -1,3 +1,4 @@
+/// <reference path="../../../node_modules/nativescript-pulltorefresh/pulltorefresh.d.ts" />
 "use strict";
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -12,20 +13,35 @@ var core_1 = require("angular2/core");
 var router_1 = require("angular2/router");
 var user_service_1 = require("../../shared/user/user.service");
 var notifications_service_1 = require("../../shared/notification/notifications.service");
+var element_registry_1 = require("nativescript-angular/element-registry");
+element_registry_1.registerElement("PullToRefresh", function () { return require("nativescript-pulltorefresh").PullToRefresh; });
 var HomePage = (function () {
     function HomePage(_userService, _router, _notificationService) {
-        var _this = this;
         this._userService = _userService;
         this._router = _router;
         this._notificationService = _notificationService;
         this.notificationsList = [];
+        this.RefreshedTimes = 0;
+        this.Message = "Pull to refresh";
+        this.loadNotifications();
+    }
+    HomePage.prototype.loadNotifications = function () {
+        var _this = this;
         this._notificationService.load()
             .subscribe(function (res) {
             res.forEach(function (resObject) {
                 _this.notificationsList.unshift(resObject);
             });
         });
-    }
+    };
+    HomePage.prototype.refreshPage = function (args) {
+        var _this = this;
+        console.log("page refresh -> go");
+        setTimeout(function () {
+            args.object.refreshing = false;
+            _this.loadNotifications();
+        }, 1000);
+    };
     HomePage = __decorate([
         core_1.Component({
             selector: 'home',
@@ -37,4 +53,4 @@ var HomePage = (function () {
     return HomePage;
 }());
 exports.HomePage = HomePage;
-//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiaG9tZS5jb21wb25lbnQuanMiLCJzb3VyY2VSb290IjoiIiwic291cmNlcyI6WyJob21lLmNvbXBvbmVudC50cyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFBQSxZQUFZLENBQUM7Ozs7Ozs7Ozs7QUFFYixxQkFBd0IsZUFBZSxDQUFDLENBQUE7QUFDeEMsdUJBQXFCLGlCQUFpQixDQUFDLENBQUE7QUFDdkMsNkJBQTBCLGdDQUFnQyxDQUFDLENBQUE7QUFFM0Qsc0NBQW1DLGlEQUFpRCxDQUFDLENBQUE7QUFZckY7SUFPSSxrQkFDWSxZQUF5QixFQUN6QixPQUFlLEVBQ2Ysb0JBQTBDO1FBVjFELGlCQXNCQztRQWRlLGlCQUFZLEdBQVosWUFBWSxDQUFhO1FBQ3pCLFlBQU8sR0FBUCxPQUFPLENBQVE7UUFDZix5QkFBb0IsR0FBcEIsb0JBQW9CLENBQXNCO1FBUnRELHNCQUFpQixHQUF3QixFQUFFLENBQUM7UUFTeEMsSUFBSSxDQUFDLG9CQUFvQixDQUFDLElBQUksRUFBRTthQUMzQixTQUFTLENBQUMsVUFBQSxHQUFHO1lBQ1YsR0FBRyxDQUFDLE9BQU8sQ0FBQyxVQUFDLFNBQVM7Z0JBQ2xCLEtBQUksQ0FBQyxpQkFBaUIsQ0FBQyxPQUFPLENBQUMsU0FBUyxDQUFDLENBQUM7WUFDOUMsQ0FBQyxDQUFDLENBQUM7UUFDUCxDQUFDLENBQUMsQ0FBQztJQUNYLENBQUM7SUF4Qkw7UUFBQyxnQkFBUyxDQUFDO1lBQ1AsUUFBUSxFQUFFLE1BQU07WUFDaEIsV0FBVyxFQUFFLHNCQUFzQjtZQUNuQyxTQUFTLEVBQUUsQ0FBQywwQkFBVyxFQUFFLDRDQUFvQixDQUFDO1NBQ2pELENBQUM7O2dCQUFBO0lBeUJGLGVBQUM7QUFBRCxDQUFDLEFBdEJELElBc0JDO0FBdEJZLGdCQUFRLFdBc0JwQixDQUFBIn0=
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiaG9tZS5jb21wb25lbnQuanMiLCJzb3VyY2VSb290IjoiIiwic291cmNlcyI6WyJob21lLmNvbXBvbmVudC50cyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFBQSw0RkFBNEY7QUFFNUYsWUFBWSxDQUFDOzs7Ozs7Ozs7O0FBRWIscUJBQXdCLGVBQWUsQ0FBQyxDQUFBO0FBQ3hDLHVCQUFxQixpQkFBaUIsQ0FBQyxDQUFBO0FBQ3ZDLDZCQUEwQixnQ0FBZ0MsQ0FBQyxDQUFBO0FBRTNELHNDQUFtQyxpREFBaUQsQ0FBQyxDQUFBO0FBRXJGLGlDQUEyQyx1Q0FBdUMsQ0FBQyxDQUFBO0FBR25GLGtDQUFlLENBQUMsZUFBZSxFQUFFLGNBQU0sT0FBQSxPQUFPLENBQUMsNEJBQTRCLENBQUMsQ0FBQyxhQUFhLEVBQW5ELENBQW1ELENBQUMsQ0FBQztBQVc1RjtJQU1JLGtCQUNZLFlBQXlCLEVBQ3pCLE9BQWUsRUFDZixvQkFBMEM7UUFGMUMsaUJBQVksR0FBWixZQUFZLENBQWE7UUFDekIsWUFBTyxHQUFQLE9BQU8sQ0FBUTtRQUNmLHlCQUFvQixHQUFwQixvQkFBb0IsQ0FBc0I7UUFQdEQsc0JBQWlCLEdBQXdCLEVBQUUsQ0FBQztRQUNyQyxtQkFBYyxHQUFHLENBQUMsQ0FBQztRQUNuQixZQUFPLEdBQUcsaUJBQWlCLENBQUM7UUFNL0IsSUFBSSxDQUFDLGlCQUFpQixFQUFFLENBQUM7SUFDN0IsQ0FBQztJQUVNLG9DQUFpQixHQUF4QjtRQUFBLGlCQU9DO1FBTkcsSUFBSSxDQUFDLG9CQUFvQixDQUFDLElBQUksRUFBRTthQUMzQixTQUFTLENBQUMsVUFBQSxHQUFHO1lBQ1YsR0FBRyxDQUFDLE9BQU8sQ0FBQyxVQUFDLFNBQVM7Z0JBQ2xCLEtBQUksQ0FBQyxpQkFBaUIsQ0FBQyxPQUFPLENBQUMsU0FBUyxDQUFDLENBQUM7WUFDOUMsQ0FBQyxDQUFDLENBQUM7UUFDUCxDQUFDLENBQUMsQ0FBQztJQUNYLENBQUM7SUFFTSw4QkFBVyxHQUFsQixVQUFtQixJQUFTO1FBQTVCLGlCQU1DO1FBTEcsT0FBTyxDQUFDLEdBQUcsQ0FBQyxvQkFBb0IsQ0FBQyxDQUFDO1FBQ2xDLFVBQVUsQ0FBQztZQUNQLElBQUksQ0FBQyxNQUFNLENBQUMsVUFBVSxHQUFHLEtBQUssQ0FBQztZQUM5QixLQUFJLENBQUMsaUJBQWlCLEVBQUUsQ0FBQztRQUM5QixDQUFDLEVBQUUsSUFBSSxDQUFDLENBQUM7SUFDYixDQUFDO0lBcENMO1FBQUMsZ0JBQVMsQ0FBQztZQUNQLFFBQVEsRUFBRSxNQUFNO1lBQ2hCLFdBQVcsRUFBRSxzQkFBc0I7WUFDbkMsU0FBUyxFQUFFLENBQUMsMEJBQVcsRUFBRSw0Q0FBb0IsQ0FBQztTQUVqRCxDQUFDOztnQkFBQTtJQTJDRixlQUFDO0FBQUQsQ0FBQyxBQXhDRCxJQXdDQztBQXhDWSxnQkFBUSxXQXdDcEIsQ0FBQSJ9

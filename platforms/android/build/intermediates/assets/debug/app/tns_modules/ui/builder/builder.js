@@ -35,9 +35,11 @@ function parseInternal(value, context, uri) {
     var start;
     var ui;
     var errorFormat = (debug_1.debug && uri) ? xml2ui.SourceErrorFormat(uri) : xml2ui.PositionErrorFormat;
+    var componentSourceTracker = (debug_1.debug && uri) ? xml2ui.ComponentSourceTracker(uri) : function () {
+    };
     (start = new xml2ui.XmlStringParser(errorFormat))
         .pipe(new xml2ui.PlatformFilter())
-        .pipe(new xml2ui.XmlStateParser(ui = new xml2ui.ComponentParser(context, errorFormat)));
+        .pipe(new xml2ui.XmlStateParser(ui = new xml2ui.ComponentParser(context, errorFormat, componentSourceTracker)));
     start.parse(value);
     return ui.rootComponentModule;
 }
@@ -175,6 +177,15 @@ var xml2ui;
         };
     }
     xml2ui.SourceErrorFormat = SourceErrorFormat;
+    function ComponentSourceTracker(uri) {
+        return function (component, p) {
+            if (!debug_1.Source.get(component)) {
+                var source = p ? new debug_1.Source(uri, p.line, p.column) : new debug_1.Source(uri, -1, -1);
+                debug_1.Source.set(component, source);
+            }
+        };
+    }
+    xml2ui.ComponentSourceTracker = ComponentSourceTracker;
     var PlatformFilter = (function (_super) {
         __extends(PlatformFilter, _super);
         function PlatformFilter() {
@@ -295,11 +306,12 @@ var xml2ui;
             if (this._templateProperty.name in this._templateProperty.parent.component) {
                 var context = this._context;
                 var errorFormat = this._templateProperty.errorFormat;
+                var sourceTracker = this._templateProperty.sourceTracker;
                 var template = function () {
                     var start;
                     var ui;
                     (start = new xml2ui.XmlArgsReplay(_this._recordedXmlStream, errorFormat))
-                        .pipe(new XmlStateParser(ui = new ComponentParser(context, errorFormat)));
+                        .pipe(new XmlStateParser(ui = new ComponentParser(context, errorFormat, sourceTracker)));
                     start.replay();
                     return ui.rootComponentModule.component;
                 };
@@ -310,11 +322,12 @@ var xml2ui;
     }());
     xml2ui.TemplateParser = TemplateParser;
     var ComponentParser = (function () {
-        function ComponentParser(context, errorFormat) {
+        function ComponentParser(context, errorFormat, sourceTracker) {
             this.parents = new Array();
             this.complexProperties = new Array();
             this.context = context;
             this.error = errorFormat;
+            this.sourceTracker = sourceTracker;
         }
         ComponentParser.prototype.parse = function (args) {
             var parent = this.parents[this.parents.length - 1];
@@ -334,7 +347,8 @@ var xml2ui;
                             name: name,
                             elementName: args.elementName,
                             templateItems: [],
-                            errorFormat: this.error
+                            errorFormat: this.error,
+                            sourceTracker: this.sourceTracker
                         });
                     }
                 }
@@ -351,6 +365,7 @@ var xml2ui;
                         componentModule = component_builder_1.getComponentModule(args.elementName, namespace, args.attributes, this.context);
                     }
                     if (componentModule) {
+                        this.sourceTracker(componentModule.component, args.position);
                         if (parent) {
                             if (complexProperty) {
                                 ComponentParser.addToComplexProperty(parent, complexProperty, componentModule);

@@ -664,6 +664,17 @@ var NativeScriptActivity = (function (_super) {
             _super.prototype.onBackPressed.call(this);
         }
     };
+    NativeScriptActivity.prototype.onRequestPermissionsResult = function (requestCode, permissions, grantResults) {
+        trace.write("NativeScriptActivity.onRequestPermissionsResult;", trace.categories.NativeLifecycle);
+        application.android.notify({
+            eventName: "activityRequestPermissions",
+            object: application.android,
+            activity: this,
+            requestCode: requestCode,
+            permissions: permissions,
+            grantResults: grantResults
+        });
+    };
     NativeScriptActivity.prototype.onActivityResult = function (requestCode, resultCode, data) {
         _super.prototype.onActivityResult.call(this, requestCode, resultCode, data);
         trace.write("NativeScriptActivity.onActivityResult(" + requestCode + ", " + resultCode + ", " + data + ")", trace.categories.NativeLifecycle);

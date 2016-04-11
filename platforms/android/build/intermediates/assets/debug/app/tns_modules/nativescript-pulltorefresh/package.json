@@ -1,72 +1,18 @@
 {
-  "_args": [
-    [
-      "nativescript-pulltorefresh@latest",
-      "/home/dat/nativescript_angular2/mobile"
-    ]
-  ],
-  "_from": "nativescript-pulltorefresh@latest",
-  "_id": "nativescript-pulltorefresh@1.1.0",
-  "_inCache": true,
-  "_installable": true,
-  "_location": "/nativescript-pulltorefresh",
-  "_nodeVersion": "5.7.1",
-  "_npmOperationalInternal": {
-    "host": "packages-16-east.internal.npmjs.com",
-    "tmp": "tmp/nativescript-pulltorefresh-1.1.0.tgz_1459050211923_0.32876759651117027"
-  },
-  "_npmUser": {
-    "email": "bradmartin0905@gmail.com",
-    "name": "bradmartin"
-  },
-  "_npmVersion": "3.6.0",
-  "_phantomChildren": {},
-  "_requested": {
-    "name": "nativescript-pulltorefresh",
-    "raw": "nativescript-pulltorefresh@latest",
-    "rawSpec": "latest",
-    "scope": null,
-    "spec": "latest",
-    "type": "tag"
-  },
-  "_requiredBy": [
-    "/"
-  ],
-  "_resolved": "https://registry.npmjs.org/nativescript-pulltorefresh/-/nativescript-pulltorefresh-1.1.0.tgz",
-  "_shasum": "8805f17ae313fc500bf6b17b660c526475cf9021",
-  "_shrinkwrap": null,
-  "_spec": "nativescript-pulltorefresh@latest",
-  "_where": "/home/dat/nativescript_angular2/mobile",
-  "author": {
-    "email": "bradwaynemartin@gmail.com",
-    "name": "Brad Martin",
-    "url": "https://github.com/bradmartin"
-  },
-  "bugs": {
-    "url": "https://github.com/bradmartin/nativescript-pulltorefresh/issues"
-  },
-  "contributors": [
-    {
-      "email": "nathan@master-technology",
-      "name": "Nathanael Anderson",
-      "url": "https://github.com/nathanaela"
-    },
-    {
-      "email": "peter@tangrasoft.com",
-      "name": "Peter Staev",
-      "url": "https://github.com/PeterStaev"
-    }
-  ],
-  "dependencies": {},
+  "name": "nativescript-pulltorefresh",
+  "version": "1.1.0",
   "description": "A NativeScript plugin to provide the Pull to Refresh control on any view.",
-  "devDependencies": {},
-  "directories": {},
-  "dist": {
-    "shasum": "8805f17ae313fc500bf6b17b660c526475cf9021",
-    "tarball": "https://registry.npmjs.org/nativescript-pulltorefresh/-/nativescript-pulltorefresh-1.1.0.tgz"
+  "main": "pulltorefresh.js",
+  "nativescript": {
+    "platforms": {
+      "android": "1.6.0",
+      "ios": "1.6.0"
+    }
   },
-  "gitHead": "3e86e965be95efee052b2b32c9a859b7c2cefb1b",
-  "homepage": "https://github.com/bradmartin/nativescript-pulltorefresh",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bradmartin/nativescript-pulltorefresh.git"
+  },
   "keywords": [
     "NativeScript",
     "native",
@@ -80,35 +26,62 @@
     "bradmartin",
     "Thorum"
   ],
-  "license": "Apache-2.0",
-  "main": "pulltorefresh.js",
-  "maintainers": [
+  "contributors": [
     {
-      "email": "bradmartin0905@gmail.com",
-      "name": "bradmartin"
+      "name": "Nathanael Anderson",
+      "email": "nathan@master-technology",
+      "url": "https://github.com/nathanaela"
     },
     {
-      "email": "nathan@master-technology.com",
-      "name": "nathanaela"
-    },
-    {
-      "email": "peter.staev@gmail.com",
-      "name": "pstaev"
+      "name": "Peter Staev",
+      "email": "peter@tangrasoft.com",
+      "url": "https://github.com/PeterStaev"
     }
   ],
-  "name": "nativescript-pulltorefresh",
-  "nativescript": {
-    "platforms": {
-      "android": "1.6.0",
-      "ios": "1.6.0"
-    }
+  "author": {
+    "name": "Brad Martin",
+    "email": "bradwaynemartin@gmail.com",
+    "url": "https://github.com/bradmartin"
   },
-  "optionalDependencies": {},
-  "readme": "ERROR: No README data found!",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/bradmartin/nativescript-pulltorefresh.git"
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/bradmartin/nativescript-pulltorefresh/issues"
   },
+  "homepage": "https://github.com/bradmartin/nativescript-pulltorefresh",
+  "gitHead": "3e86e965be95efee052b2b32c9a859b7c2cefb1b",
+  "_id": "nativescript-pulltorefresh@1.1.0",
   "scripts": {},
-  "version": "1.1.0"
+  "_shasum": "8805f17ae313fc500bf6b17b660c526475cf9021",
+  "_from": "nativescript-pulltorefresh@latest",
+  "_npmVersion": "3.6.0",
+  "_nodeVersion": "5.7.1",
+  "_npmUser": {
+    "name": "bradmartin",
+    "email": "bradmartin0905@gmail.com"
+  },
+  "dist": {
+    "shasum": "8805f17ae313fc500bf6b17b660c526475cf9021",
+    "tarball": "https://registry.npmjs.org/nativescript-pulltorefresh/-/nativescript-pulltorefresh-1.1.0.tgz"
+  },
+  "maintainers": [
+    {
+      "name": "bradmartin",
+      "email": "bradmartin0905@gmail.com"
+    },
+    {
+      "name": "nathanaela",
+      "email": "nathan@master-technology.com"
+    },
+    {
+      "name": "pstaev",
+      "email": "peter.staev@gmail.com"
+    }
+  ],
+  "_npmOperationalInternal": {
+    "host": "packages-16-east.internal.npmjs.com",
+    "tmp": "tmp/nativescript-pulltorefresh-1.1.0.tgz_1459050211923_0.32876759651117027"
+  },
+  "directories": {},
+  "_resolved": "https://registry.npmjs.org/nativescript-pulltorefresh/-/nativescript-pulltorefresh-1.1.0.tgz",
+  "readme": "ERROR: No README data found!"
 }

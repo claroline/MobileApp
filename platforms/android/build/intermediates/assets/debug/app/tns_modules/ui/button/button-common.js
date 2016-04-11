@@ -78,17 +78,22 @@ var Button = (function (_super) {
         configurable: true
     });
     Button.prototype.onFormattedTextChanged = function (eventData) {
-        this._setFormattedTextPropertyToNative(eventData.value);
+        var value = eventData.value;
+        this._setFormattedTextPropertyToNative(value);
+        this._onPropertyChangedFromNative(Button.textProperty, value.toString());
     };
     Button.prototype._onTextPropertyChanged = function (data) {
     };
     Button.prototype._setFormattedTextPropertyToNative = function (value) {
     };
     Button.prototype._onFormattedTextPropertyChanged = function (data) {
-        if (data.newValue) {
-            data.newValue.parent = this;
+        var newValue = data.newValue;
+        if (newValue) {
+            newValue.parent = this;
         }
-        this._setFormattedTextPropertyToNative(data.newValue);
+        this._setFormattedTextPropertyToNative(newValue);
+        var newText = newValue ? newValue.toString() : "";
+        this._onPropertyChangedFromNative(Button.textProperty, newText);
     };
     Button.prototype._addChildFromBuilder = function (name, value) {
         formattedString.FormattedString.addFormattedStringToView(this, name, value);

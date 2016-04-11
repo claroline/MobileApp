@@ -293,6 +293,43 @@ var View = (function (_super) {
         }
         return false;
     };
+    View.prototype.getLocationInWindow = function () {
+        if (!this._nativeView || !this._nativeView.getWindowToken()) {
+            return undefined;
+        }
+        var nativeArray = Array.create("int", 2);
+        this._nativeView.getLocationInWindow(nativeArray);
+        return {
+            x: utils.layout.toDeviceIndependentPixels(nativeArray[0]),
+            y: utils.layout.toDeviceIndependentPixels(nativeArray[1]),
+        };
+    };
+    View.prototype.getLocationOnScreen = function () {
+        if (!this._nativeView || !this._nativeView.getWindowToken()) {
+            return undefined;
+        }
+        var nativeArray = Array.create("int", 2);
+        this._nativeView.getLocationOnScreen(nativeArray);
+        return {
+            x: utils.layout.toDeviceIndependentPixels(nativeArray[0]),
+            y: utils.layout.toDeviceIndependentPixels(nativeArray[1]),
+        };
+    };
+    View.prototype.getLocationRelativeTo = function (otherView) {
+        if (!this._nativeView || !this._nativeView.getWindowToken() ||
+            !otherView._nativeView || !otherView._nativeView.getWindowToken() ||
+            this._nativeView.getWindowToken() !== otherView._nativeView.getWindowToken()) {
+            return undefined;
+        }
+        var myArray = Array.create("int", 2);
+        this._nativeView.getLocationOnScreen(myArray);
+        var otherArray = Array.create("int", 2);
+        otherView._nativeView.getLocationOnScreen(otherArray);
+        return {
+            x: utils.layout.toDeviceIndependentPixels(myArray[0] - otherArray[0]),
+            y: utils.layout.toDeviceIndependentPixels(myArray[1] - otherArray[1]),
+        };
+    };
     View.resolveSizeAndState = function (size, specSize, specMode, childMeasuredState) {
         var result = size;
         switch (specMode) {
@@ -444,7 +481,8 @@ var ViewStyler = (function () {
             case enums.VerticalAlignment.top:
                 gravity |= android.view.Gravity.TOP;
                 break;
-            case enums.VerticalAlignment.center || enums.VerticalAlignment.middle:
+            case enums.VerticalAlignment.center:
+            case enums.VerticalAlignment.middle:
                 gravity |= android.view.Gravity.CENTER_VERTICAL;
                 break;
             case enums.VerticalAlignment.bottom:
@@ -483,6 +521,51 @@ var ViewStyler = (function () {
         var bottom = Math.round((nativeValue.bottom + view.borderWidth) * density);
         view._nativeView.setPadding(left, top, right, bottom);
     };
+    ViewStyler.setRotateProperty = function (view, newValue) {
+        view.rotate = newValue;
+    };
+    ViewStyler.resetRotateProperty = function (view, nativeValue) {
+        view.rotate = nativeValue;
+    };
+    ViewStyler.getRotateProperty = function (view) {
+        return view.rotate;
+    };
+    ViewStyler.setScaleXProperty = function (view, newValue) {
+        view.scaleX = newValue;
+    };
+    ViewStyler.resetScaleXProperty = function (view, nativeValue) {
+        view.scaleX = nativeValue;
+    };
+    ViewStyler.getScaleXProperty = function (view) {
+        return view.scaleX;
+    };
+    ViewStyler.setScaleYProperty = function (view, newValue) {
+        view.scaleY = newValue;
+    };
+    ViewStyler.resetScaleYProperty = function (view, nativeValue) {
+        view.scaleY = nativeValue;
+    };
+    ViewStyler.getScaleYProperty = function (view) {
+        return view.scaleY;
+    };
+    ViewStyler.setTranslateXProperty = function (view, newValue) {
+        view.translateX = newValue;
+    };
+    ViewStyler.resetTranslateXProperty = function (view, nativeValue) {
+        view.translateX = nativeValue;
+    };
+    ViewStyler.getTranslateXProperty = function (view) {
+        return view.translateX;
+    };
+    ViewStyler.setTranslateYProperty = function (view, newValue) {
+        view.translateY = newValue;
+    };
+    ViewStyler.resetTranslateYProperty = function (view, nativeValue) {
+        view.translateY = nativeValue;
+    };
+    ViewStyler.getTranslateYProperty = function (view) {
+        return view.translateY;
+    };
     ViewStyler.registerHandlers = function () {
         style.registerHandler(style.visibilityProperty, new style.StylePropertyChangedHandler(ViewStyler.setVisibilityProperty, ViewStyler.resetVisibilityProperty));
         style.registerHandler(style.opacityProperty, new style.StylePropertyChangedHandler(ViewStyler.setOpacityProperty, ViewStyler.resetOpacityProperty));
@@ -497,6 +580,11 @@ var ViewStyler = (function () {
         style.registerHandler(style.nativePaddingsProperty, new style.StylePropertyChangedHandler(ViewStyler.setPaddingProperty, ViewStyler.resetPaddingProperty), "TextBase");
         style.registerHandler(style.nativePaddingsProperty, new style.StylePropertyChangedHandler(ViewStyler.setPaddingProperty, ViewStyler.resetPaddingProperty), "Button");
         style.registerHandler(style.nativePaddingsProperty, new style.StylePropertyChangedHandler(ViewStyler.setPaddingProperty, ViewStyler.resetPaddingProperty), "LayoutBase");
+        style.registerHandler(style.rotateProperty, new style.StylePropertyChangedHandler(ViewStyler.setRotateProperty, ViewStyler.resetRotateProperty, ViewStyler.getRotateProperty));
+        style.registerHandler(style.scaleXProperty, new style.StylePropertyChangedHandler(ViewStyler.setScaleXProperty, ViewStyler.resetScaleXProperty, ViewStyler.getScaleXProperty));
+        style.registerHandler(style.scaleYProperty, new style.StylePropertyChangedHandler(ViewStyler.setScaleYProperty, ViewStyler.resetScaleYProperty, ViewStyler.getScaleYProperty));
+        style.registerHandler(style.translateXProperty, new style.StylePropertyChangedHandler(ViewStyler.setTranslateXProperty, ViewStyler.resetTranslateXProperty, ViewStyler.getTranslateXProperty));
+        style.registerHandler(style.translateYProperty, new style.StylePropertyChangedHandler(ViewStyler.setTranslateYProperty, ViewStyler.resetTranslateYProperty, ViewStyler.getTranslateYProperty));
     };
     return ViewStyler;
 }());

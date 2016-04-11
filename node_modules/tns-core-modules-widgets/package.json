@@ -2,7 +2,7 @@
   "_args": [
     [
       "tns-core-modules-widgets@1.7.0",
-      "/home/dat/nativescript_angular2/mobile/node_modules/tns-core-modules"
+      "/home/dat/nativescript_angular2/mobile/node_modules/nativescript-angular/node_modules/tns-core-modules"
     ]
   ],
   "_from": "tns-core-modules-widgets@1.7.0",
@@ -30,13 +30,14 @@
     "type": "version"
   },
   "_requiredBy": [
+    "/nativescript-angular/tns-core-modules",
     "/tns-core-modules"
   ],
   "_resolved": "https://registry.npmjs.org/tns-core-modules-widgets/-/tns-core-modules-widgets-1.7.0.tgz",
   "_shasum": "7461530335baaa1a4ccd274350166342bbf1ddec",
   "_shrinkwrap": null,
   "_spec": "tns-core-modules-widgets@1.7.0",
-  "_where": "/home/dat/nativescript_angular2/mobile/node_modules/tns-core-modules",
+  "_where": "/home/dat/nativescript_angular2/mobile/node_modules/nativescript-angular/node_modules/tns-core-modules",
   "author": {
     "name": "NativeScript team"
   },
@@ -49,7 +50,7 @@
   "directories": {},
   "dist": {
     "shasum": "7461530335baaa1a4ccd274350166342bbf1ddec",
-    "tarball": "http://registry.npmjs.org/tns-core-modules-widgets/-/tns-core-modules-widgets-1.7.0.tgz"
+    "tarball": "https://registry.npmjs.org/tns-core-modules-widgets/-/tns-core-modules-widgets-1.7.0.tgz"
   },
   "homepage": "https://github.com/NativeScript/android-widgets#readme",
   "license": "Apache-2.0",

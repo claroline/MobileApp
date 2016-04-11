@@ -1,4 +1,3 @@
-var animationModule = require("ui/animation");
 var KeyboardType;
 (function (KeyboardType) {
     KeyboardType.datetime = "datetime";
@@ -158,14 +157,17 @@ var BackgroundRepeat;
     BackgroundRepeat.repeatY = "repeat-y";
     BackgroundRepeat.noRepeat = "no-repeat";
 })(BackgroundRepeat = exports.BackgroundRepeat || (exports.BackgroundRepeat = {}));
+var animationModule;
 var AnimationCurve;
 (function (AnimationCurve) {
+    AnimationCurve.ease = "ease";
     AnimationCurve.easeIn = "easeIn";
     AnimationCurve.easeOut = "easeOut";
     AnimationCurve.easeInOut = "easeInOut";
     AnimationCurve.linear = "linear";
     AnimationCurve.spring = "spring";
     function cubicBezier(x1, y1, x2, y2) {
+        animationModule = animationModule || require("ui/animation");
         return new animationModule.CubicBezierAnimationCurve(x1, y1, x2, y2);
     }
     AnimationCurve.cubicBezier = cubicBezier;

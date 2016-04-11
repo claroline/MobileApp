@@ -1,11 +1,11 @@
 {
   "_args": [
     [
-      "nativescript-angular@latest",
+      "nativescript-angular@0.0.38",
       "/home/dat/nativescript_angular2/mobile"
     ]
   ],
-  "_from": "nativescript-angular@latest",
+  "_from": "nativescript-angular@0.0.38",
   "_id": "nativescript-angular@0.0.38",
   "_inCache": true,
   "_installable": true,
@@ -26,11 +26,11 @@
   },
   "_requested": {
     "name": "nativescript-angular",
-    "raw": "nativescript-angular@latest",
-    "rawSpec": "latest",
+    "raw": "nativescript-angular@0.0.38",
+    "rawSpec": "0.0.38",
     "scope": null,
-    "spec": "latest",
-    "type": "tag"
+    "spec": "0.0.38",
+    "type": "version"
   },
   "_requiredBy": [
     "/"
@@ -38,7 +38,7 @@
   "_resolved": "https://registry.npmjs.org/nativescript-angular/-/nativescript-angular-0.0.38.tgz",
   "_shasum": "995e9add5c4f54211343daa9f2698689dc29b234",
   "_shrinkwrap": null,
-  "_spec": "nativescript-angular@latest",
+  "_spec": "nativescript-angular@0.0.38",
   "_where": "/home/dat/nativescript_angular2/mobile",
   "bugs": {
     "url": "http://www.telerik.com"

@@ -26,7 +26,8 @@
     "type": "range"
   },
   "_requiredBy": [
-    "/"
+    "/",
+    "/nativescript-angular"
   ],
   "_resolved": "https://registry.npmjs.org/es6-shim/-/es6-shim-0.33.13.tgz",
   "_shasum": "894fb83d2c2e9378c8ec23659f2b62b28f994225",

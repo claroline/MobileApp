@@ -110,6 +110,23 @@ var ListView = (function (_super) {
             delete this._realizedItems[key];
         }
     };
+    Object.defineProperty(ListView.prototype, "_childrenCount", {
+        get: function () {
+            var keys = Object.keys(this._realizedItems);
+            return keys.length;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    ListView.prototype._eachChildView = function (callback) {
+        var keys = Object.keys(this._realizedItems);
+        var length = keys.length;
+        for (var i = 0; i < length; i++) {
+            var key = keys[i];
+            var view = this._realizedItems[key];
+            callback(view);
+        }
+    };
     ListView.prototype._getRealizedView = function (convertView, index) {
         if (!convertView) {
             return this._getItemTemplateContent(index);

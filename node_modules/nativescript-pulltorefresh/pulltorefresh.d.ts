@@ -38,6 +38,8 @@ declare module "nativescript-pulltorefresh" {
         */
         refreshing: boolean;
 
+        on(event: string, callback: (args: observable.EventData) => void, thisArg?: any);
+
         /**
          * Raised when a refresh event occurs.
          */

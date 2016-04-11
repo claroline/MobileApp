@@ -1,11 +1,11 @@
 {
   "_args": [
     [
-      "es6-shim@0.33.13",
+      "es6-shim@^0.33.13",
       "/home/dat/nativescript_angular2/mobile"
     ]
   ],
-  "_from": "es6-shim@0.33.13",
+  "_from": "es6-shim@>=0.33.13 <0.34.0",
   "_id": "es6-shim@0.33.13",
   "_inCache": true,
   "_installable": true,
@@ -19,19 +19,20 @@
   "_phantomChildren": {},
   "_requested": {
     "name": "es6-shim",
-    "raw": "es6-shim@0.33.13",
-    "rawSpec": "0.33.13",
+    "raw": "es6-shim@^0.33.13",
+    "rawSpec": "^0.33.13",
     "scope": null,
-    "spec": "0.33.13",
-    "type": "version"
+    "spec": ">=0.33.13 <0.34.0",
+    "type": "range"
   },
   "_requiredBy": [
-    "/"
+    "/",
+    "/nativescript-angular"
   ],
   "_resolved": "https://registry.npmjs.org/es6-shim/-/es6-shim-0.33.13.tgz",
   "_shasum": "894fb83d2c2e9378c8ec23659f2b62b28f994225",
   "_shrinkwrap": null,
-  "_spec": "es6-shim@0.33.13",
+  "_spec": "es6-shim@^0.33.13",
   "_where": "/home/dat/nativescript_angular2/mobile",
   "author": {
     "name": "Paul Miller",

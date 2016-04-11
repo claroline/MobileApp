@@ -2,10 +2,14 @@
     <StackLayout *tabItem="{title: 'Accueil'}">
     </StackLayout>
     <StackLayout *tabItem="{title: 'Notifications'}">
+     <PullToRefresh (refresh)="refreshPage($event)">
+     <StackLayout>
       <ListView [items]="notificationsList">
         <template #item="item">
           <Label text="{{item.text}}" textWrap="true" id="notif" [class.boldFont]="!item.status"></Label>
         </template>
       </ListView>
+      </StackLayout>
+     </PullToRefresh>
     </StackLayout>
 </TabView>

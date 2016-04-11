@@ -2,7 +2,7 @@
   "_args": [
     [
       "reflect-metadata@0.1.2",
-      "/home/dat/nativescript_angular2/claroline"
+      "/home/dat/nativescript_angular2/mobile"
     ]
   ],
   "_from": "reflect-metadata@0.1.2",
@@ -33,7 +33,7 @@
   "_shasum": "ea23e5823dc830f292822bd3da9b89fd57bffb03",
   "_shrinkwrap": null,
   "_spec": "reflect-metadata@0.1.2",
-  "_where": "/home/dat/nativescript_angular2/claroline",
+  "_where": "/home/dat/nativescript_angular2/mobile",
   "author": {
     "email": "ron.buckton@microsoft.com",
     "name": "Ron Buckton",

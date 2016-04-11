@@ -26,6 +26,20 @@ var Button = (function (_super) {
                 }
             }
         }));
+        this._android.setOnTouchListener(new android.view.View.OnTouchListener({
+            get owner() {
+                return that.get();
+            },
+            onTouch: function (v, ev) {
+                if (ev.getAction() === 0) {
+                    this.owner._goToVisualState("highlighted");
+                }
+                else if (ev.getAction() === 1) {
+                    this.owner._goToVisualState("normal");
+                }
+                return false;
+            }
+        }));
     };
     Button.prototype._onTextPropertyChanged = function (data) {
         if (this.android) {
@@ -33,8 +47,20 @@ var Button = (function (_super) {
         }
     };
     Button.prototype._setFormattedTextPropertyToNative = function (value) {
+        var newText = value ? value._formattedText : null;
         if (this.android) {
-            this.android.setText(value._formattedText);
+            if (newText) {
+                if (!this._transformationMethod) {
+                    this._transformationMethod = this.android.getTransformationMethod();
+                }
+                this.android.setTransformationMethod(null);
+            }
+            else {
+                if (this._transformationMethod && !this.android.getTransformationMethod()) {
+                    this.android.setTransformationMethod(this._transformationMethod);
+                }
+            }
+            this.android.setText(newText);
         }
     };
     return Button;

@@ -1,15 +1,15 @@
 {
   "_args": [
     [
-      "zone.js@^0.5.10",
-      "/home/dat/nativescript_angular2/mobile/node_modules/angular2-jwt"
+      "zone.js@^0.5.15",
+      "/home/dat/nativescript_angular2/mobile"
     ]
   ],
-  "_from": "zone.js@>=0.5.10 <0.6.0",
+  "_from": "zone.js@>=0.5.15 <0.6.0",
   "_id": "zone.js@0.5.15",
   "_inCache": true,
   "_installable": true,
-  "_location": "/angular2-jwt/zone.js",
+  "_location": "/zone.js",
   "_nodeVersion": "5.5.0",
   "_npmOperationalInternal": {
     "host": "packages-5-east.internal.npmjs.com",
@@ -23,20 +23,21 @@
   "_phantomChildren": {},
   "_requested": {
     "name": "zone.js",
-    "raw": "zone.js@^0.5.10",
-    "rawSpec": "^0.5.10",
+    "raw": "zone.js@^0.5.15",
+    "rawSpec": "^0.5.15",
     "scope": null,
-    "spec": ">=0.5.10 <0.6.0",
+    "spec": ">=0.5.15 <0.6.0",
     "type": "range"
   },
   "_requiredBy": [
-    "/angular2-jwt"
+    "/",
+    "/nativescript-angular"
   ],
   "_resolved": "https://registry.npmjs.org/zone.js/-/zone.js-0.5.15.tgz",
   "_shasum": "f195b56ad0b7874c3060c3a5e61b4e234ea1b059",
   "_shrinkwrap": null,
-  "_spec": "zone.js@^0.5.10",
-  "_where": "/home/dat/nativescript_angular2/mobile/node_modules/angular2-jwt",
+  "_spec": "zone.js@^0.5.15",
+  "_where": "/home/dat/nativescript_angular2/mobile",
   "author": {
     "name": "Brian Ford"
   },
@@ -75,7 +76,7 @@
   },
   "dist": {
     "shasum": "f195b56ad0b7874c3060c3a5e61b4e234ea1b059",
-    "tarball": "http://registry.npmjs.org/zone.js/-/zone.js-0.5.15.tgz"
+    "tarball": "https://registry.npmjs.org/zone.js/-/zone.js-0.5.15.tgz"
   },
   "files": [
     "lib",

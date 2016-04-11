@@ -3,6 +3,7 @@ var page_1 = require("ui/page");
 var view_1 = require("ui/core/view");
 var file_system_1 = require("file-system");
 var binding_builder_1 = require("./binding-builder");
+var utils_1 = require("utils/utils");
 require("ui/layouts/dock-layout");
 require("ui/layouts/grid-layout");
 require("ui/layouts/absolute-layout");
@@ -152,21 +153,7 @@ function setPropertyValue(instance, instanceModule, exports, propertyName, prope
             attrHandled = instance._applyXmlAttribute(propertyName, propertyValue);
         }
         if (!attrHandled) {
-            if (propertyValue.trim() === "") {
-                instance[propertyName] = propertyValue;
-            }
-            else {
-                var valueAsNumber = +propertyValue;
-                if (!isNaN(valueAsNumber)) {
-                    instance[propertyName] = valueAsNumber;
-                }
-                else if (propertyValue && (propertyValue.toLowerCase() === "true" || propertyValue.toLowerCase() === "false")) {
-                    instance[propertyName] = propertyValue.toLowerCase() === "true" ? true : false;
-                }
-                else {
-                    instance[propertyName] = propertyValue;
-                }
-            }
+            instance[propertyName] = utils_1.convertString(propertyValue);
         }
     }
 }

@@ -11,6 +11,10 @@ function disable() {
     _enabled = false;
 }
 exports.disable = disable;
+function isCategorySet(category) {
+    return category in _categories;
+}
+exports.isCategorySet = isCategorySet;
 function addWriter(writer) {
     _writers.push(writer);
 }

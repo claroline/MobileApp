@@ -140,16 +140,16 @@ function _setAndroidFragmentTransitions(navigationTransition, currentFragment, n
     var transition;
     if (name) {
         if (name.indexOf("slide") === 0) {
-            var slideTransitionModule = require("./slide-transition");
+            var slideTransitionModule = require("ui/transition/slide-transition");
             var direction = name.substr("slide".length) || "left";
             transition = new slideTransitionModule.SlideTransition(direction, navigationTransition.duration, navigationTransition.curve);
         }
         else if (name === "fade") {
-            var fadeTransitionModule = require("./fade-transition");
+            var fadeTransitionModule = require("ui/transition/fade-transition");
             transition = new fadeTransitionModule.FadeTransition(navigationTransition.duration, navigationTransition.curve);
         }
         else if (name.indexOf("flip") === 0) {
-            var flipTransitionModule = require("./flip-transition");
+            var flipTransitionModule = require("ui/transition/flip-transition");
             var direction = name.substr("flip".length) || "right";
             transition = new flipTransitionModule.FlipTransition(direction, navigationTransition.duration, navigationTransition.curve);
         }
@@ -213,7 +213,7 @@ function _onFragmentHidden(fragment, isBack) {
         }
     }
     if (fragment[COMPLETE_PAGE_REMOVAL_WHEN_TRANSITION_ENDS] === undefined) {
-        _completePageRemoval(fragment, true);
+        _completePageRemoval(fragment, true, isBack);
     }
 }
 exports._onFragmentHidden = _onFragmentHidden;
@@ -229,7 +229,9 @@ function _completePageAddition(fragment, isBack, force) {
         trace.write("ADDITION of " + page + " completed", trace.categories.Transition);
     }
 }
-function _completePageRemoval(fragment, force) {
+function _completePageRemoval(fragment, force, isBack) {
+    if (force === void 0) { force = false; }
+    if (isBack === void 0) { isBack = false; }
     if (fragment[COMPLETE_PAGE_REMOVAL_WHEN_TRANSITION_ENDS] || force) {
         fragment[COMPLETE_PAGE_REMOVAL_WHEN_TRANSITION_ENDS] = undefined;
         var frame = fragment.frame;
@@ -237,6 +239,7 @@ function _completePageRemoval(fragment, force) {
         var page = entry.resolvedPage;
         if (page.frame) {
             frame._removeView(page);
+            page.onNavigatedFrom(isBack);
         }
         trace.write("REMOVAL of " + page + " completed", trace.categories.Transition);
     }
