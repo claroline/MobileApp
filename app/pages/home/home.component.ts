@@ -25,14 +25,20 @@ registerElement("PullToRefresh", () => require("nativescript-pulltorefresh").Pul
 export class HomePage {
 
     notificationsList: Array<Notification> = [];
-    public RefreshedTimes = 0;
-    public Message = "Pull to refresh";
+    
 
     constructor(
         private _userService: UserService,
         private _router: Router,
         private _notificationService: NotificationsService) {
-        this._notificationService.load()
+           this.loadNotifications();
+    }
+
+   
+
+
+    public loadNotifications(){
+       this._notificationService.load()
             .subscribe(res => {
                 res.forEach((resObject) => {
                     this.notificationsList.unshift(resObject);
@@ -40,24 +46,16 @@ export class HomePage {
             });
     }
 
-    
+
+
 
     public refreshPage(args: any) {
         console.log("page refresh -> go");
         setTimeout(() => {
             args.object.refreshing = false;
-             
+            this.notificationsList = [];
+            this.loadNotifications();
         }, 1000);
     }
-
-    
-    
-
-
-
-
-
-
-
 
 }

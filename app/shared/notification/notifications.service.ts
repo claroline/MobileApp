@@ -9,8 +9,6 @@ import {Http} from "angular2/http";
 @Injectable()
 export class NotificationsService {
 
-
-
     constructor(private _http: Http) { }
 
     //Load all the notifications of a specific user
@@ -23,8 +21,6 @@ export class NotificationsService {
             })
             .map(data => {
                 let result = [];
-
-
                 data.forEach((notif) => {
 
                     let doer = undefined;
@@ -82,18 +78,11 @@ export class NotificationsService {
                             break;
                         default:
                             break;
-
-
                     }
 
                     result.unshift(new Notification(status, text));
                 });
-
                 return result;
             });
-
     }
-
-
-
 }

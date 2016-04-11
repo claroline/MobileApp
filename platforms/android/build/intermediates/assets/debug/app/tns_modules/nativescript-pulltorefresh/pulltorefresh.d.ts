@@ -31,7 +31,7 @@ declare module "nativescript-pulltorefresh" {
         /**
          * Returns the native iOS UIRefreshControl
          */
-        //refreshControl: UIRefreshControl
+        refreshControl: UIRefreshControl
         
         /*
         * Gets or sets if the view is refreshing

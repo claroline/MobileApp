@@ -3,13 +3,15 @@
     </StackLayout>
     <StackLayout *tabItem="{title: 'Notifications'}">
       <PullToRefresh (refresh)="refreshPage($event)">
-        <label [text]="Message"></label>
-                    <label [text]="Message"></label>
-                    <label [text]="Message"></label>
-                    <label [text]="Message"></label>
-                    <label [text]="Message"></label>
-                    <label [text]="Message"></label>
-                    <label [text]="Message"></label>
+       <StackLayout>
+        <Label [text]="Message"></Label>
+        <Label [text]="Message"></Label>
+        <Label [text]="Message"></Label>
+        <Label [text]="Message"></Label>
+        <Label [text]="Message"></Label>
+        <Label [text]="Message"></Label>
+        <Label [text]="Message"></Label>
+      </StackLayout>
       </PullToRefresh>
     </StackLayout>
 </TabView>
