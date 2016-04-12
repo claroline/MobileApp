@@ -11,6 +11,7 @@ import {Notification} from "../../shared/notification/notification";
 import { registerElement, ViewClass } from "nativescript-angular/element-registry";
 import {PullToRefresh} from "nativescript-pulltorefresh";
 
+
 registerElement("PullToRefresh", () => require("nativescript-pulltorefresh").PullToRefresh);
 
 
@@ -32,9 +33,14 @@ export class HomePage {
         private _router: Router,
         private _notificationService: NotificationsService) {
            this.loadNotifications();
+           setInterval(()=>{
+               this._userService.refreshToken();
+               console.log("New access token : "+Config.access_token);
+           },3600000);
+
     }
 
-   
+
 
 
     public loadNotifications(){
@@ -46,11 +52,7 @@ export class HomePage {
             });
     }
 
-
-
-
     public refreshPage(args: any) {
-        console.log("page refresh -> go");
         setTimeout(() => {
             args.object.refreshing = false;
             this.notificationsList = [];

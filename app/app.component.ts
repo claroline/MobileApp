@@ -20,8 +20,8 @@ import {HomePage} from './pages/home/home.component';
     `
 })
 @RouteConfig([
-    { path: "/", component: LoginPage, as: "Login" },
-    { path: "/Home", component: HomePage, as: "Home" }
+    { path: "/login", component: LoginPage, as: "Login", useAsDefault: true},
+    { path: "/home", component: HomePage, as: "Home" }
 ])
 export class AppComponent {
 	
