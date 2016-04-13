@@ -14,7 +14,7 @@ var CssSelector = (function () {
     function CssSelector(expression, declarations) {
         if (expression) {
             var leftSquareBracketIndex = expression.indexOf(LSBRACKET);
-            if (leftSquareBracketIndex > 0) {
+            if (leftSquareBracketIndex >= 0) {
                 var paramsRegex = /\[\s*(.*)\s*\]/;
                 var attrParams = paramsRegex.exec(expression);
                 if (attrParams && attrParams.length > 1) {
@@ -91,12 +91,18 @@ var CssSelector = (function () {
             }
         });
         if (this.animations && view.isLoaded) {
+            var _loop_1 = function(animationInfo) {
+                var animation = keyframeAnimation.KeyframeAnimation.keyframeAnimationFromInfo(animationInfo, modifier);
+                if (animation) {
+                    view._registerAnimation(animation);
+                    animation.play(view)
+                        .then(function () { view._unregisterAnimation(animation); })
+                        .catch(function (e) { view._unregisterAnimation(animation); });
+                }
+            };
             for (var _i = 0, _a = this.animations; _i < _a.length; _i++) {
                 var animationInfo = _a[_i];
-                var realAnimation = keyframeAnimation.KeyframeAnimation.keyframeAnimationFromInfo(animationInfo, modifier);
-                if (realAnimation) {
-                    realAnimation.play(view);
-                }
+                _loop_1(animationInfo);
             }
         }
     };

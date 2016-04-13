@@ -10,6 +10,8 @@ import {NotificationsService} from "../../shared/notification/notifications.serv
 import {Notification} from "../../shared/notification/notification";
 import { registerElement, ViewClass } from "nativescript-angular/element-registry";
 import {PullToRefresh} from "nativescript-pulltorefresh";
+import {MessageService} from "../../shared/message/messages.service";
+import {Message} from "../../shared/message/message";
 
 
 registerElement("PullToRefresh", () => require("nativescript-pulltorefresh").PullToRefresh);
@@ -18,7 +20,7 @@ registerElement("PullToRefresh", () => require("nativescript-pulltorefresh").Pul
 @Component({
     selector: 'home',
     templateUrl: 'pages/home/home.html',
-    providers: [UserService, NotificationsService]
+    providers: [UserService, NotificationsService, MessageService]
 
 })
 
@@ -26,13 +28,16 @@ registerElement("PullToRefresh", () => require("nativescript-pulltorefresh").Pul
 export class HomePage {
 
     notificationsList: Array<Notification> = [];
+    receivedMessagesList: Array<Message> = [];
     
 
     constructor(
         private _userService: UserService,
         private _router: Router,
-        private _notificationService: NotificationsService) {
+        private _notificationService: NotificationsService,
+        private _messageService: MessageService) {
            this.loadNotifications();
+           this.receivedMessages();
            setInterval(()=>{
                this._userService.refreshToken();
                console.log("New access token : "+Config.access_token);
@@ -40,8 +45,14 @@ export class HomePage {
 
     }
 
-
-
+    public receivedMessages(){
+      this._messageService.loadReceivedMessages()
+        .subscribe(res=> {
+          res.forEach((resObject)=>{
+            this.receivedMessagesList.unshift(resObject);
+          });
+        });
+    }
 
     public loadNotifications(){
        this._notificationService.load()
@@ -52,7 +63,7 @@ export class HomePage {
             });
     }
 
-    public refreshPage(args: any) {
+    public refreshNotificationPage(args: any) {
         setTimeout(() => {
             args.object.refreshing = false;
             this.notificationsList = [];

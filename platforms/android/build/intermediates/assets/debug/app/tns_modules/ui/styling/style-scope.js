@@ -141,6 +141,9 @@ var StyleScope = (function () {
             this._applicationCssSelectorsAppliedVersion = application.cssSelectorVersion;
             toMerge.push(this._localCssSelectors);
             this._localCssSelectorsAppliedVersion = this._localCssSelectorVersion;
+            for (var keyframe in application.keyframes) {
+                this._keyframes[keyframe] = application.keyframes[keyframe];
+            }
         }
         if (toMerge.length > 0) {
             this._mergedCssSelectors = StyleScope._joinCssSelectorsArrays(toMerge);

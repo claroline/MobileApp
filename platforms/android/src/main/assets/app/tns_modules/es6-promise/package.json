@@ -2,7 +2,7 @@
   "_args": [
     [
       "es6-promise@^3.0.2",
-      "/home/dat/nativescript_angular2/mobile/node_modules/zone.js"
+      "/home/dat/nativescript_angular2/mobile/node_modules/nativescript-angular/node_modules/zone.js"
     ]
   ],
   "_from": "es6-promise@>=3.0.2 <4.0.0",
@@ -30,13 +30,13 @@
     "type": "range"
   },
   "_requiredBy": [
-    "/zone.js"
+    "/nativescript-angular/zone.js"
   ],
   "_resolved": "https://registry.npmjs.org/es6-promise/-/es6-promise-3.1.2.tgz",
   "_shasum": "795e25ceb47f7babb263d151afbedd92d18e6a07",
   "_shrinkwrap": null,
   "_spec": "es6-promise@^3.0.2",
-  "_where": "/home/dat/nativescript_angular2/mobile/node_modules/zone.js",
+  "_where": "/home/dat/nativescript_angular2/mobile/node_modules/nativescript-angular/node_modules/zone.js",
   "author": {
     "name": "Yehuda Katz, Tom Dale, Stefan Penner and contributors",
     "url": "Conversion to ES6 API by Jake Archibald"
@@ -71,7 +71,7 @@
   },
   "dist": {
     "shasum": "795e25ceb47f7babb263d151afbedd92d18e6a07",
-    "tarball": "http://registry.npmjs.org/es6-promise/-/es6-promise-3.1.2.tgz"
+    "tarball": "https://registry.npmjs.org/es6-promise/-/es6-promise-3.1.2.tgz"
   },
   "files": [
     "dist",

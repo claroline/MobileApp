@@ -5,7 +5,6 @@ var trace = require("trace");
 var observable_1 = require("data/observable");
 var application = require("application");
 var types = require("utils/types");
-var utils = require("utils/utils");
 global.moduleMerge(frameCommon, exports);
 var TAG = "_fragmentTag";
 var HIDDEN = "_hidden";
@@ -15,6 +14,7 @@ var IS_BACK = "_isBack";
 var NAV_DEPTH = "_navDepth";
 var CLEARING_HISTORY = "_clearingHistory";
 var FRAMEID = "_frameId";
+var FRAGMENT = "_FRAGMENT";
 var navDepth = -1;
 var activityInitialized = false;
 function onFragmentShown(fragment) {
@@ -164,6 +164,7 @@ var Frame = (function (_super) {
         }
         newFragment.frame = this;
         newFragment.entry = backstackEntry;
+        backstackEntry[FRAGMENT] = newFragment;
         backstackEntry[BACKSTACK_TAG] = newFragmentTag;
         backstackEntry[NAV_DEPTH] = navDepth;
         backstackEntry.resolvedPage[TAG] = newFragmentTag;
@@ -558,7 +559,7 @@ var FragmentClass = (function (_super) {
     FragmentClass.prototype.onDestroy = function () {
         trace.write(this.getTag() + ".onDestroy()", trace.categories.NativeLifecycle);
         _super.prototype.onDestroy.call(this);
-        utils.GC();
+        this.entry[FRAGMENT] = undefined;
     };
     FragmentClass = __decorate([
         JavaProxy("com.tns.FragmentClass")

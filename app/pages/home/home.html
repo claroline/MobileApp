@@ -1,8 +1,8 @@
 <TabView>
     <StackLayout *tabItem="{title: 'Accueil'}">
     </StackLayout>
-    <StackLayout *tabItem="{title: 'Notifications'}">
-     <PullToRefresh (refresh)="refreshPage($event)">
+    <StackLayout *tabItem="{title: 'Notifications'}" >
+     <PullToRefresh (refresh)="refreshNotificationPage($event)">
      <StackLayout>
       <ListView [items]="notificationsList">
         <template #item="item">
@@ -11,5 +11,16 @@
       </ListView>
       </StackLayout>
      </PullToRefresh>
+    </StackLayout>
+    <StackLayout *tabItem="{title: 'Messages'}" >
+      <ListView [items]="receivedMessagesList">
+        <template #item="item">
+          <StackLayout>
+            <Label text="{{item.sender}}" textWrap="true"></Label>
+            <Label text="{{item.objet}}"></Label>
+            <Label text="{{item.contenu}}"></Label>
+          </StackLayout>
+        </template>
+      </ListView>
     </StackLayout>
 </TabView>

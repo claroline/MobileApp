@@ -23,6 +23,9 @@ global.zonedCallback = function (callback) {
     if (global.zone) {
         return global.zone.bind(callback);
     }
+    if (global.Zone) {
+        return global.Zone.current.wrap(callback);
+    }
     else {
         return callback;
     }

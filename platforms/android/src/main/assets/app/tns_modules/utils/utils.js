@@ -240,7 +240,8 @@ function openUrl(location) {
         context.startActivity(intent);
     }
     catch (e) {
-        console.error("Error in OpenURL", e);
+        ensureTrace();
+        trace.write("Error in OpenURL", trace.categories.Error, trace.messageType.error);
         return false;
     }
     return true;

@@ -1,7 +1,7 @@
-<TabView id="bottom">
-    <StackLayout *tabItem="{title: 'Accueil'}">
+<TabView>
+    <StackLayout *tabItem="{title: 'Accueil'}" >
     </StackLayout>
-    <StackLayout *tabItem="{title: 'Notifications'}">
+    <StackLayout *tabItem="{title: 'Notifications'}" >
      <PullToRefresh (refresh)="refreshPage($event)">
      <StackLayout>
       <ListView [items]="notificationsList">
@@ -11,5 +11,7 @@
       </ListView>
       </StackLayout>
      </PullToRefresh>
+    </StackLayout>
+    <StackLayout *tabItem="{title: 'Messages'}" >
     </StackLayout>
 </TabView>

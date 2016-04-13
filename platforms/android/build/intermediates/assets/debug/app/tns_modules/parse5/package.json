@@ -25,7 +25,8 @@
     "type": "version"
   },
   "_requiredBy": [
-    "/"
+    "/",
+    "/nativescript-angular"
   ],
   "_resolved": "https://registry.npmjs.org/parse5/-/parse5-1.4.2.tgz",
   "_shasum": "43241c1609cc94bd007f5dcfa21218b37dbcfbe7",

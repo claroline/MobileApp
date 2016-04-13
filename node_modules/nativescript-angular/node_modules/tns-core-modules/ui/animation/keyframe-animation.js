@@ -1,3 +1,4 @@
+var animationModule = require("ui/animation");
 var enums = require("ui/enums");
 var style = require("ui/styling/style");
 var KeyframeDeclaration = (function () {
@@ -95,6 +96,15 @@ var KeyframeAnimation = (function () {
         enumerable: true,
         configurable: true
     });
+    KeyframeAnimation.prototype.cancel = function () {
+        if (this._isPlaying) {
+            if (this._currentAnimation && this._currentAnimation.isPlaying) {
+                this._currentAnimation.cancel();
+            }
+            this._isPlaying = false;
+            this._rejectAnimationFinishedPromise();
+        }
+    };
     KeyframeAnimation.prototype.play = function (view) {
         var _this = this;
         if (this._isPlaying) {
@@ -170,17 +180,23 @@ var KeyframeAnimation = (function () {
             }
         }
         else {
-            view.animate(this.animations[index]).then(function () {
+            var animationDef = this.animations[index];
+            animationDef.target = view;
+            var animation = new animationModule.Animation([animationDef]);
+            animation.play().then(function () {
                 _this.animate(view, index + 1, iterations);
             });
+            this._currentAnimation = animation;
         }
     };
     KeyframeAnimation.prototype._resolveAnimationFinishedPromise = function () {
         this._isPlaying = false;
+        this._currentAnimation = undefined;
         this._resolve();
     };
     KeyframeAnimation.prototype._rejectAnimationFinishedPromise = function () {
         this._isPlaying = false;
+        this._currentAnimation = undefined;
         this._reject(new Error("Animation cancelled."));
     };
     return KeyframeAnimation;

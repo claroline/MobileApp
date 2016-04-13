@@ -45,13 +45,18 @@ function addCategories(categories) {
 }
 exports.addCategories = addCategories;
 function write(message, category, type) {
+    var i;
+    if (type === messageType.error) {
+        for (i = 0; i < _writers.length; i++) {
+            _writers[i].write(message, category, type);
+        }
+    }
     if (!_enabled) {
         return;
     }
     if (!(category in _categories)) {
         return;
     }
-    var i;
     for (i = 0; i < _writers.length; i++) {
         _writers[i].write(message, category, type);
     }
@@ -107,6 +112,7 @@ var categories;
     categories.Navigation = "Navigation";
     categories.Test = "Test";
     categories.Binding = "Binding";
+    categories.BindingError = "BindingError";
     categories.Error = "Error";
     categories.Animation = "Animation";
     categories.Transition = "Transition";

@@ -1057,6 +1057,28 @@ var View = (function (_super) {
         animation.target = that;
         return new animationModule.Animation([animation]);
     };
+    View.prototype._registerAnimation = function (animation) {
+        if (this._registeredAnimations === undefined) {
+            this._registeredAnimations = new Array();
+        }
+        this._registeredAnimations.push(animation);
+    };
+    View.prototype._unregisterAnimation = function (animation) {
+        if (this._registeredAnimations) {
+            var index_1 = this._registeredAnimations.indexOf(animation);
+            if (index_1 >= 0) {
+                this._registeredAnimations.splice(index_1, 1);
+            }
+        }
+    };
+    View.prototype._unregisterAllAnimations = function () {
+        if (this._registeredAnimations) {
+            for (var _i = 0, _a = this._registeredAnimations; _i < _a.length; _i++) {
+                var animation = _a[_i];
+                animation.cancel();
+            }
+        }
+    };
     View.prototype.toString = function () {
         var str = this.typeName;
         if (this.id) {

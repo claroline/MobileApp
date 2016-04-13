@@ -1,6 +1,6 @@
 import "reflect-metadata";
 import {Component} from "angular2/core";
-import {RouteConfig} from "angular2/router";
+import {RouteConfig, CanActivate} from "angular2/router";
 import {NS_ROUTER_DIRECTIVES} from "nativescript-angular/router";
 
 import {LoginPage} from "./pages/login/login.component";
@@ -18,6 +18,9 @@ import {HomePage} from './pages/home/home.component';
     </StackLayout>
 	
     `
+})
+@CanActivate(()=>{
+    
 })
 @RouteConfig([
     { path: "/login", component: LoginPage, as: "Login", useAsDefault: true},

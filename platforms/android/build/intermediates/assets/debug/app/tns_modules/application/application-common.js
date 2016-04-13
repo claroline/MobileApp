@@ -15,6 +15,7 @@ exports.appSelectors = [];
 exports.additionalSelectors = [];
 exports.cssSelectors = [];
 exports.cssSelectorVersion = 0;
+exports.keyframes = {};
 exports.resources = {};
 exports.onUncaughtError = undefined;
 exports.onLaunch = undefined;
@@ -54,6 +55,6 @@ function parseCss(cssText, cssFileName) {
     if (!styleScope) {
         styleScope = require("ui/styling/style-scope");
     }
-    return styleScope.StyleScope.createSelectorsFromCss(cssText, cssFileName);
+    return styleScope.StyleScope.createSelectorsFromCss(cssText, cssFileName, exports.keyframes);
 }
 exports.parseCss = parseCss;

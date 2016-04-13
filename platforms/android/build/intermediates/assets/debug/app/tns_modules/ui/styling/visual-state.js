@@ -58,6 +58,7 @@ function resetProperties(view, oldState, newState) {
             view.style._resetValue(property, observable.ValueSource.VisualState);
         }
     }
+    view._unregisterAllAnimations();
     for (var _i = 0, _a = oldState.animatedSelectors; _i < _a.length; _i++) {
         var selector = _a[_i];
         for (var _b = 0, _c = selector.animations; _b < _c.length; _b++) {

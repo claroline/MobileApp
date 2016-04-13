@@ -52,7 +52,7 @@ export class NotificationsService {
                             break;
                         case "registration-decline": text = "Refus d'inscription";
                             break;
-                        case "resource-create": text = "Création de ressource";
+                        case "resource-create": text = doer+" a créé la ressource "+resource+" dans l'espace d'activité "+workspace;
                             break;
                         case "role-change_right": text = "Accès ressource";
                             break;

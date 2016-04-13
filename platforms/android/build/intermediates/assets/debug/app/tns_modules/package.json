@@ -6,20 +6,20 @@
     ]
   ],
   "_from": "tns-core-modules@>=2.0.0-angular-0 <3.0.0",
-  "_id": "tns-core-modules@2.0.0-angular-3",
+  "_id": "tns-core-modules@2.0.0-angular-4",
   "_inCache": true,
   "_installable": true,
   "_location": "/nativescript-angular/tns-core-modules",
-  "_nodeVersion": "5.9.1",
+  "_nodeVersion": "0.12.2",
   "_npmOperationalInternal": {
     "host": "packages-12-west.internal.npmjs.com",
-    "tmp": "tmp/tns-core-modules-2.0.0-angular-3.tgz_1459511784564_0.20319535466842353"
+    "tmp": "tmp/tns-core-modules-2.0.0-angular-4.tgz_1460123890763_0.9728276077657938"
   },
   "_npmUser": {
-    "email": "hristo@deshev.com",
-    "name": "hdeshev"
+    "email": "alexander.vakrilov@gmail.com",
+    "name": "vakrilov"
   },
-  "_npmVersion": "3.7.3",
+  "_npmVersion": "2.7.4",
   "_phantomChildren": {},
   "_requested": {
     "name": "tns-core-modules",
@@ -32,8 +32,8 @@
   "_requiredBy": [
     "/nativescript-angular"
   ],
-  "_resolved": "https://registry.npmjs.org/tns-core-modules/-/tns-core-modules-2.0.0-angular-3.tgz",
-  "_shasum": "977967418cef87cc117bf11ecedc99837b1c7909",
+  "_resolved": "https://registry.npmjs.org/tns-core-modules/-/tns-core-modules-2.0.0-angular-4.tgz",
+  "_shasum": "f61edeed643082e42acce1235aee9ae18fa5ef62",
   "_shrinkwrap": null,
   "_spec": "tns-core-modules@^2.0.0-angular-0",
   "_where": "/home/dat/nativescript_angular2/mobile/node_modules/nativescript-angular",
@@ -64,8 +64,8 @@
   },
   "directories": {},
   "dist": {
-    "shasum": "977967418cef87cc117bf11ecedc99837b1c7909",
-    "tarball": "https://registry.npmjs.org/tns-core-modules/-/tns-core-modules-2.0.0-angular-3.tgz"
+    "shasum": "f61edeed643082e42acce1235aee9ae18fa5ef62",
+    "tarball": "https://registry.npmjs.org/tns-core-modules/-/tns-core-modules-2.0.0-angular-4.tgz"
   },
   "files": [
     "**/*.d.ts",
@@ -136,9 +136,9 @@
   "readme": "ERROR: No README data found!",
   "repository": {
     "type": "git",
-    "url": "https://github.com/NativeScript/NativeScript/commit/791c0fb9f8a94462f0152a919c6f1fc6eeaecf1a"
+    "url": "https://github.com/NativeScript/NativeScript/commit/074fc48246fac6168bcdfa4b2ee9811f51ac9f0d"
   },
   "scripts": {},
   "typings": "tns-core-modules.d.ts",
-  "version": "2.0.0-angular-3"
+  "version": "2.0.0-angular-4"
 }
