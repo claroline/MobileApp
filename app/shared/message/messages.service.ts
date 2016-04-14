@@ -2,7 +2,7 @@ import {Injectable} from "angular2/core";
 import {Config} from "../config";
 import {Observable} from "rxjs/Rx";
 import {Http} from "angular2/http";
-import{Message} from "./message";
+import {Message} from "./message";
 
 "use strict";
 
@@ -20,11 +20,13 @@ export class MessageService{
 		.map(data=>{
 			let receivedMessages = [];
 			data.forEach(msg=>{
+
 				let sender = msg.message.user.firstName+ " "+msg.message.user.lastName+" ("+msg.message.sender_username+")";
 				let objet = msg.message.object;
 				let contenu = msg.message.content;
+				contenu = contenu.replace(/<\/?[^>]+(>|$)/g, "");
 				let date = msg.message.date;
-				receivedMessages.unshift(new Message(objet,contenu, sender, date));
+				receivedMessages.push(new Message(objet,contenu, sender, date));
 
 			});
 			return receivedMessages;

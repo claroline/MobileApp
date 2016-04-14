@@ -1,26 +1,31 @@
 <TabView>
-    <StackLayout *tabItem="{title: 'Accueil'}">
-    </StackLayout>
-    <StackLayout *tabItem="{title: 'Notifications'}" >
-     <PullToRefresh (refresh)="refreshNotificationPage($event)">
+  <StackLayout *tabItem="{title: 'Accueil'}">
+  </StackLayout>
+  <StackLayout *tabItem="{title: 'Notifications'}" >
+   <PullToRefresh (refresh)="refreshNotificationPage($event)">
      <StackLayout>
-      <ListView [items]="notificationsList">
+      <ListView [items]="notificationsList | async">
         <template #item="item">
-          <Label text="{{item.text}}" textWrap="true" id="notif" [class.boldFont]="!item.status"></Label>
-        </template>
-      </ListView>
-      </StackLayout>
-     </PullToRefresh>
-    </StackLayout>
-    <StackLayout *tabItem="{title: 'Messages'}" >
-      <ListView [items]="receivedMessagesList">
-        <template #item="item">
-          <StackLayout>
-            <Label text="{{item.sender}}" textWrap="true"></Label>
-            <Label text="{{item.objet}}"></Label>
-            <Label text="{{item.contenu}}"></Label>
-          </StackLayout>
+          <Label text="{{item.text}}" textWrap="true" [class.renderText]= "true" [class.boldFont]="!item.status"></Label>
         </template>
       </ListView>
     </StackLayout>
+  </PullToRefresh>
+</StackLayout>
+<StackLayout *tabItem="{title: 'Messages'}" >
+  <PullToRefresh (refresh)="refreshMessagePage($event)">
+   <StackLayout>
+     <ListView [items]="receivedMessagesList | async">
+      <template #item="item">
+        <StackLayout>
+          <Label text="De : {{item.sender}}" textWrap="true" [class.boldFont]="true" [class.renderText]= "true"></Label>
+          <Label text="Objet : {{item.objet}}" [class.renderText]= "true"></Label>
+          <Label text="{{item.contenu}}" [class.renderText]= "true"></Label>
+        </StackLayout>
+      </template>
+    </ListView>
+  </StackLayout>
+</PullToRefresh>
+</StackLayout>
 </TabView>
+
