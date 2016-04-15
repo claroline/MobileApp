@@ -10,14 +10,11 @@ import {NotificationsService} from "../../shared/notification/notifications.serv
 import {Notification} from "../../shared/notification/notification";
 import {MessageService} from "../../shared/message/messages.service";
 import {Message} from "../../shared/message/message";
-
 import { registerElement, ViewClass } from "nativescript-angular/element-registry";
-//import {PullToRefresh} from "nativescript-pulltorefresh";
-
 
 
 registerElement("PullToRefresh", () => require("nativescript-pulltorefresh").PullToRefresh);
-
+registerElement("CardView", () => require("nativescript-cardview").CardView);
 
 
 @Component({
@@ -30,15 +27,15 @@ registerElement("PullToRefresh", () => require("nativescript-pulltorefresh").Pul
 export class HomePage {
 
   notificationsList: Observable<Array<Notification>>;
-  receivedMessagesList: Observable<Array<Message>>;
+  messagesList: Observable<Array<Message>>;
 
   constructor(
     private _userService: UserService,
     private _router: Router,
     private _notificationService: NotificationsService,
     private _messageService: MessageService) {
-    this.loadNotifications();
-    this.receivedMessages();
+    this.notificationsList = this._notificationService.load();
+    this.messagesList = this._messageService.loadReceivedMessages();
     setInterval(()=>{
       this._userService.refreshToken();
       console.log("New access token : "+Config.access_token);
@@ -46,25 +43,17 @@ export class HomePage {
 
   }
 
-  public receivedMessages(){
-    this.receivedMessagesList = this._messageService.loadReceivedMessages();
-  }
-
-  public loadNotifications(){
-    this.notificationsList = this._notificationService.load();
-  }
-
   public refreshNotificationPage(args: any) {
     setTimeout(() => {
       args.object.refreshing = false;
-      this.loadNotifications();
+      this.notificationsList = this._notificationService.load();
     }, 1000);
   }
 
   public refreshMessagePage(args: any){
     setTimeout(() => {
       args.object.refreshing = false;
-      this.receivedMessages();
+      this.messagesList = this._messageService.loadReceivedMessages();
     }, 1000);
   }
 

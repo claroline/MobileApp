@@ -2,7 +2,7 @@
 
 Page {
   background-color: white;
-  font-size: 14px;
+  font-size: 12px;
 
 }
 TextField, TextView {
@@ -28,6 +28,7 @@ ActionBar {
 .mdl-typography--button {
   font-size: 14px;
   text-transform: uppercase;
+
   line-height: 1;
   letter-spacing: 0;
   background-color: #2E6DAD;
@@ -49,6 +50,7 @@ ActionBar {
   margin-bottom: 0px;
   font-size:14px;
   padding: 2px;
+
 
 }
 

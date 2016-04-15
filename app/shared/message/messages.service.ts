@@ -33,7 +33,7 @@ export class MessageService{
 		});
 	}
 
-	/*loadSentMessages(){
+	loadSentMessages(){
 		let url = Config.apiUrl+"message/api/sent/messages.json?access_token="+Config.access_token;
 		return this._http.get(url)
 		.map(res=>{
@@ -41,10 +41,10 @@ export class MessageService{
 		})
 		.map(data=>{
 			let sentMessages = [];
-			data.forEmsg=>{
-
+			data.forEach(msg=>{
+				
 			});
 			return sentMessages;
 		});
-	}*/
+	}
 }

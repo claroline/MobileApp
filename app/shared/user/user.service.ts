@@ -10,6 +10,7 @@ import "rxjs/add/operator/map";
 @Injectable()
 export class UserService {
 
+    isConnected:Boolean = false;
 
     constructor(private _http: Http) { }
 
@@ -33,7 +34,7 @@ export class UserService {
             Config.apiUrl + "oauth/v2/token",
             body,
             { headers: headers }
-        );
+            );
     }
 
     refreshToken() {
@@ -48,13 +49,17 @@ export class UserService {
             Config.apiUrl + "oauth/v2/token",
             body,
             { headers: headers }
-        )
-            .subscribe(
+            )
+        .subscribe(
             (data) => {
                 Config.access_token = data.json().access_token;
                 Config.refresh_token = data.json().refresh_token;
             }
             );
+    }
+
+    isLoggedIn(){
+        return this.isConnected;
     }
 
 

@@ -21,7 +21,6 @@
   },
   "_npmVersion": "3.7.1",
   "_phantomChildren": {
-    "es6-promise": "3.1.2",
     "querystring": "0.2.0",
     "tns-core-modules-widgets": "1.7.0"
   },

@@ -50,7 +50,7 @@ export class NotificationsService {
                 switch (actionKey) {
                     case "badge-award": text = "Badges";
                     break;
-                    case "registration-decline": text = "Refus d'inscription";
+                    case "registration-decline": text = doer + " vous a refusé l'inscription à l'espace d'activité "+workspace;
                     break;
                     case "resource-create": text = doer+" a créé la ressource "+resource+" dans l'espace d'activité "+workspace;
                     break;

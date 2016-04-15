@@ -26,10 +26,11 @@ export class LoginPage {
 
     signIn() {
         this._userService.login(this.user)
-            .subscribe(
+        .subscribe(
             (data) => {
                 Config.access_token = data.json().access_token;
                 Config.refresh_token = data.json().refresh_token;
+                this._userService.isConnected = true;
                 this._router.navigate(['Home']);
                 console.log(Config.access_token);
             },
