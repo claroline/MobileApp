@@ -25,6 +25,7 @@ export class LoginPage {
     }
 
     signIn() {
+       
         this._userService.login(this.user)
         .subscribe(
             (data) => {

@@ -15,6 +15,7 @@
   </PullToRefresh>
 </StackLayout>
 <StackLayout *tabItem="{title: 'Messages'}" >
+
   <PullToRefresh (refresh)="refreshMessagePage($event)">
    <StackLayout>
      <ListView [items]="messagesList | async" separatorColor="white">
@@ -23,13 +24,14 @@
           <StackLayout>
             <Label text="De : {{item.sender}}" textWrap="true" [class.boldFont]="true" [class.renderText]= "true"></Label>
             <Label text="Objet : {{item.objet}}" [class.renderText]= "true"></Label>
-            <Label text="{{item.contenu}}" [class.renderText]= "true"></Label>
+            <HtmlView html="{{item.contenu}}" [class.renderText]= "true"></HtmlView>
           </StackLayout>
         </CardView>
       </template>
     </ListView>
   </StackLayout>
 </PullToRefresh>
+
 </StackLayout>
 </TabView>
 
