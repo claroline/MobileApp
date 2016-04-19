@@ -1,6 +1,6 @@
 export class Notification {
 
-    constructor(public status: boolean, public text: string) { }
+    constructor(public id:string,public status: boolean, public text: string) { }
 
 
 

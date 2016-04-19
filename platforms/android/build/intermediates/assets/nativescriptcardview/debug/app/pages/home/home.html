@@ -4,10 +4,10 @@
   <StackLayout *tabItem="{title: 'Notifications'}" >
    <PullToRefresh (refresh)="refreshNotificationPage($event)">
      <StackLayout>
-       <ListView [items]="notificationsList | async" separatorColor="white">
+       <ListView [items]="notificationsList | async" separatorColor="transparent">
         <template #item="item">
           <CardView margin="7">
-            <Label text="{{item.text}}" textWrap="true" [class.renderText]= "true" [class.boldFont]="!item.status"></Label>
+            <Label text="{{item.text}}" textWrap="true" [class.renderTextNotif]= "true" [class.boldFont]="!item.status"></Label>
           </CardView>
         </template>
       </ListView>
@@ -15,15 +15,18 @@
   </PullToRefresh>
 </StackLayout>
 <StackLayout *tabItem="{title: 'Messages'}" >
+  <PlaceHolder creatingView="createSideDrawer">
+    
+  </PlaceHolder>
   <PullToRefresh (refresh)="refreshMessagePage($event)">
    <StackLayout>
-     <ListView [items]="messagesList | async" separatorColor="white">
+     <ListView [items]="messagesList | async" separatorColor="transparent">
       <template #item="item">
-        <CardView  margin="7">
+        <CardView  margin="10">
           <StackLayout>
-            <Label text="De : {{item.sender}}" textWrap="true" [class.boldFont]="true" [class.renderText]= "true"></Label>
-            <Label text="Objet : {{item.objet}}" [class.renderText]= "true"></Label>
-            <Label text="{{item.contenu}}" [class.renderText]= "true"></Label>
+            <Label text="De : {{item.sender}}" textWrap="true" [class.boldFont]="true" [class.renderTextMsg]= "true"></Label>
+            <Label text="Objet : {{item.objet}}" [class.renderTextMsg]= "true" textWrap="true"></Label>
+            <HtmlView html="{{item.contenu}}" [class.renderTextMsg]= "true"></HtmlView>
           </StackLayout>
         </CardView>
       </template>

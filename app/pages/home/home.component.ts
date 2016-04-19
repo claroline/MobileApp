@@ -11,8 +11,6 @@ import {Notification} from "../../shared/notification/notification";
 import {MessageService} from "../../shared/message/messages.service";
 import {Message} from "../../shared/message/message";
 import { registerElement, ViewClass } from "nativescript-angular/element-registry";
-
-
 registerElement("PullToRefresh", () => require("nativescript-pulltorefresh").PullToRefresh);
 registerElement("CardView", () => require("nativescript-cardview").CardView);
 
@@ -57,8 +55,7 @@ export class HomePage {
     }, 1000);
   }
 
-  
-
-
-
+  markAsRead(){
+     this.notificationsList = this._notificationService.load('vu');
+  }
 }

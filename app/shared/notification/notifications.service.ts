@@ -12,9 +12,14 @@ export class NotificationsService {
     constructor(private _http: Http) { }
 
     //Load all the notifications of a specific user
-    load() {
+    load(type:string = null) {
+        let notifications = 'notifications';
 
-        let url = Config.apiUrl + "icap_notification/api/notifications.json?access_token=" + Config.access_token;
+        if (type ==='vu'){
+            notifications += '/read';
+        }
+
+        let url = Config.apiUrl + "icap_notification/api/"+notifications+".json?access_token=" + Config.access_token;
         return this._http.get(url)
         .map(res => {
             return res.json();
@@ -22,6 +27,8 @@ export class NotificationsService {
         .map(data => {
             let result = [];
             data.forEach((notif) => {
+
+                let id = notif.notification.id;
 
                 let doer = undefined;
                 if (notif.notification.details.doer !== undefined) {
@@ -80,9 +87,11 @@ export class NotificationsService {
                     break;
                 }
 
-                result.push(new Notification(status, text));
+                result.push(new Notification(id,status, text));
             });
             return result;
         });
     }
+
+    
 }

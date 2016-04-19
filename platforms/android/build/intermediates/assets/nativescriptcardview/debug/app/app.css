@@ -43,13 +43,25 @@ ActionBar {
   width: 95%;
 }
 
-.renderText{
+.renderTextNotif{
   width : 95%;
   border-radius: 0;
   border-bottom: 1px solid;
   margin-bottom: 0px;
   font-size:14px;
-  padding: 2px;
+  padding: 10px;
+
+
+}
+
+.renderTextMsg{
+  width : 95%;
+  border-radius: 0;
+  border-bottom: 1px solid;
+  margin-bottom: 0px;
+  font-size:14px;
+  padding: 6px;
+  vertical-align: center;
 
 
 }

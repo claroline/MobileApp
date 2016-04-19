@@ -25,14 +25,15 @@ export class MessageService{
 				let objet = msg.message.object;
 				let contenu = msg.message.content;
 				let date = msg.message.date;
-				receivedMessages.push(new Message(objet,contenu, sender, date));
+				let to = msg.message.to;
+				receivedMessages.push(new Message(objet,contenu, date, sender,to));
 
 			});
 			return receivedMessages;
 		});
 	}
 
-	/*loadSentMessages(){
+	loadSentMessages(){
 		let url = Config.apiUrl+"message/api/sent/messages.json?access_token="+Config.access_token;
 		return this._http.get(url)
 		.map(res=>{
@@ -41,9 +42,14 @@ export class MessageService{
 		.map(data=>{
 			let sentMessages = [];
 			data.forEach(msg=>{
-				
+				let sender = msg.message.user.firstName+ " "+msg.message.user.lastName+" ("+msg.message.sender_username+")";
+				let objet = msg.message.object;
+				let contenu = msg.message.content;
+				let date = msg.message.date;
+				let to = msg.message.to;
+				sentMessages.push(new Message(objet,contenu, date, sender,to));
 			});
 			return sentMessages;
 		});
-	}*/
+	}
 }

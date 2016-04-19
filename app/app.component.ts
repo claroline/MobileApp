@@ -10,12 +10,9 @@ import {HomePage} from './pages/home/home.component';
     selector: "main",
     directives: [NS_ROUTER_DIRECTIVES],
     template: `
-	
-    <StackLayout>
     	<page-router-outlet>
     		
     	</page-router-outlet>
-    </StackLayout>
 	
     `
 })
