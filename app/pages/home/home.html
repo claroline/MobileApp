@@ -1,5 +1,7 @@
 <TabView>
   <StackLayout *tabItem="{title: 'Accueil'}">
+
+  <Placeholder creatingView="creatingView"></Placeholder>
   </StackLayout>
   <StackLayout *tabItem="{title: 'Notifications'}" >
    <PullToRefresh (refresh)="refreshNotificationPage($event)">
@@ -30,5 +32,6 @@
     </ListView>
   </StackLayout>
 </PullToRefresh>
+
 </StackLayout>
 </TabView>

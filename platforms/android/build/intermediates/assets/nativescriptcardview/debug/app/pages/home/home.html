@@ -1,5 +1,7 @@
 <TabView>
   <StackLayout *tabItem="{title: 'Accueil'}">
+
+  <Placeholder creatingView="creatingView"></Placeholder>
   </StackLayout>
   <StackLayout *tabItem="{title: 'Notifications'}" >
    <PullToRefresh (refresh)="refreshNotificationPage($event)">
@@ -7,7 +9,7 @@
        <ListView [items]="notificationsList | async" separatorColor="transparent">
         <template #item="item">
           <CardView margin="7">
-            <Label text="{{item.text}}" textWrap="true" [class.renderTextNotif]= "true" [class.boldFont]="!item.status"></Label>
+            <Label text="{{item.text}}" textWrap="true" [class.renderTextNotif]= "true" [class.boldFont]="!item.status" (tap)="markAsRead()"></Label>
           </CardView>
         </template>
       </ListView>
@@ -15,9 +17,6 @@
   </PullToRefresh>
 </StackLayout>
 <StackLayout *tabItem="{title: 'Messages'}" >
-  <PlaceHolder creatingView="createSideDrawer">
-    
-  </PlaceHolder>
   <PullToRefresh (refresh)="refreshMessagePage($event)">
    <StackLayout>
      <ListView [items]="messagesList | async" separatorColor="transparent">
@@ -33,6 +32,6 @@
     </ListView>
   </StackLayout>
 </PullToRefresh>
+
 </StackLayout>
 </TabView>
-

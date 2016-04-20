@@ -14,8 +14,7 @@ export class NotificationsService {
     //Load all the notifications of a specific user
     load(type:string = null) {
         let notifications = 'notifications';
-
-        if (type ==='vu'){
+        if (type !=null){
             notifications += '/read';
         }
 
