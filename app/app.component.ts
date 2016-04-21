@@ -17,9 +17,7 @@ import {ListPage} from './pages/platformsList/list.component';
 	
     `
 })
-@CanActivate(()=>{
-    
-})
+
 @RouteConfig([
     { path: "/login", component: LoginPage, as: "Login"},
     { path: "/home", component: HomePage, as: "Home" },

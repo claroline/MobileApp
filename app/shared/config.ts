@@ -3,7 +3,7 @@
 import {Page} from "ui/page";
 
 export class Config {
-    static apiUrl = "http://192.168.0.183/pam/Claroline/web/app_dev.php/";
+    static apiUrl = "";
     static access_token = "";
     static refresh_token = "";
     static client_id = "1_3l414hnln328wgs0s4sks0gw48g4800sskcogk0kkw8sg44o8w";
