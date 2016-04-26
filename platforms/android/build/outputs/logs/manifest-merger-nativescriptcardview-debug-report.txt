@@ -107,7 +107,7 @@ MERGED from [:widgets-release:] /home/dat/nativescript_angular2/mobile/platforms
 	android:allowBackup
 		ADDED from /home/dat/nativescript_angular2/mobile/platforms/android/src/main/AndroidManifest.xml:26:3-29
 	android:icon
-		ADDED from /home/dat/nativescript_angular2/mobile/platforms/android/src/main/AndroidManifest.xml:27:3-32
+		ADDED from /home/dat/nativescript_angular2/mobile/platforms/android/src/main/AndroidManifest.xml:27:3-38
 	android:theme
 		ADDED from /home/dat/nativescript_angular2/mobile/platforms/android/src/main/AndroidManifest.xml:29:3-34
 	android:name

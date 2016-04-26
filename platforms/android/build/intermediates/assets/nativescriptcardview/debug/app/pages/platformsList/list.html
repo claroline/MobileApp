@@ -1,0 +1,5 @@
+<StackLayout>
+	<Label text="Veuillez d'abord entrer l'url de la plate-forme" [class.renderTextLabel]="true" ></Label>
+	<TextField [(ngModel)]="host" keyboardType="url" autocorrect="false" autocapitalizationType="none" returnKeyType="done"></TextField>
+	<Button text="Login" (tap)="goToLogin()" class="mdl-typography--button"></Button>
+</StackLayout>

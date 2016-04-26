@@ -28,6 +28,10 @@
         "source": "/home/dat/nativescript_angular2/mobile/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/drawable-mdpi-v4/abc_ic_search_api_mtrl_alpha.png"
     },
     {
+        "merged": "/home/dat/nativescript_angular2/mobile/platforms/android/build/intermediates/res/merged/nativescriptcardview/debug/drawable-mdpi-v4/logout.png",
+        "source": "/home/dat/nativescript_angular2/mobile/platforms/android/src/main/res/drawable-mdpi/logout.png"
+    },
+    {
         "merged": "/home/dat/nativescript_angular2/mobile/platforms/android/build/intermediates/res/merged/nativescriptcardview/debug/drawable-mdpi-v4/abc_ic_voice_search_api_mtrl_alpha.png",
         "source": "/home/dat/nativescript_angular2/mobile/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/drawable-mdpi-v4/abc_ic_voice_search_api_mtrl_alpha.png"
     },
@@ -50,6 +54,10 @@
     {
         "merged": "/home/dat/nativescript_angular2/mobile/platforms/android/build/intermediates/res/merged/nativescriptcardview/debug/drawable-mdpi-v4/icon.png",
         "source": "/home/dat/nativescript_angular2/mobile/platforms/android/src/main/res/drawable-mdpi/icon.png"
+    },
+    {
+        "merged": "/home/dat/nativescript_angular2/mobile/platforms/android/build/intermediates/res/merged/nativescriptcardview/debug/drawable-mdpi-v4/claroline3.png",
+        "source": "/home/dat/nativescript_angular2/mobile/platforms/android/src/main/res/drawable-mdpi/claroline3.png"
     },
     {
         "merged": "/home/dat/nativescript_angular2/mobile/platforms/android/build/intermediates/res/merged/nativescriptcardview/debug/drawable-mdpi-v4/abc_popup_background_mtrl_mult.9.png",

@@ -10,5 +10,13 @@
     {
         "merged": "/home/dat/nativescript_angular2/mobile/platforms/android/build/intermediates/res/merged/nativescriptcardview/debug/drawable-ldpi-v4/ic_menu_delete.png",
         "source": "/home/dat/nativescript_angular2/mobile/platforms/android/src/main/res/drawable-ldpi/ic_menu_delete.png"
+    },
+    {
+        "merged": "/home/dat/nativescript_angular2/mobile/platforms/android/build/intermediates/res/merged/nativescriptcardview/debug/drawable-ldpi-v4/claroline3.png",
+        "source": "/home/dat/nativescript_angular2/mobile/platforms/android/src/main/res/drawable-ldpi/claroline3.png"
+    },
+    {
+        "merged": "/home/dat/nativescript_angular2/mobile/platforms/android/build/intermediates/res/merged/nativescriptcardview/debug/drawable-ldpi-v4/logout.png",
+        "source": "/home/dat/nativescript_angular2/mobile/platforms/android/src/main/res/drawable-ldpi/logout.png"
     }
 ]

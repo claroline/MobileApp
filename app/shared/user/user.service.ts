@@ -3,6 +3,7 @@ import {Http, Headers} from "angular2/http";
 import {User} from "./user";
 import {Config} from "../config";
 import "rxjs/add/operator/map";
+import {ConfigService} from "../config.service";
 
 "use strict";
 
@@ -10,9 +11,10 @@ import "rxjs/add/operator/map";
 @Injectable()
 export class UserService {
 
-    isConnected:Boolean = false;
 
-    constructor(private _http: Http) { }
+
+    constructor(private _http: Http,
+        private _configService:ConfigService) { }
 
     buildHeader() {
         let headers = new Headers();
@@ -30,8 +32,9 @@ export class UserService {
             username: user.username,
             password: user.password
         });
+        let host = this._configService.getHost();
         return this._http.post(
-            Config.apiUrl + "oauth/v2/token",
+            host + "oauth/v2/token",
             body,
             { headers: headers }
             );
@@ -39,28 +42,30 @@ export class UserService {
 
     refreshToken() {
         let headers = this.buildHeader();
+        let refresh = this._configService.getRefreshToken();
         let body = JSON.stringify({
             client_id: Config.client_id,
             client_secret: Config.client_secret,
             grant_type: "refresh_token",
-            refresh_token: Config.refresh_token
+            refresh_token: refresh
         });
+        let host = this._configService.getHost();
         this._http.post(
-            Config.apiUrl + "oauth/v2/token",
+            host + "oauth/v2/token",
             body,
             { headers: headers }
             )
         .subscribe(
             (data) => {
-                Config.access_token = data.json().access_token;
-                Config.refresh_token = data.json().refresh_token;
+                //Config.access_token = data.json().access_token;
+                //Config.refresh_token = data.json().refresh_token;
+                this._configService.setAccessToken(data.json().access_token);
+                this._configService.setRefreshToken(data.json().refresh_token);
             }
             );
     }
 
-    isLoggedIn(){
-        return this.isConnected;
-    }
+    
 
 
 }

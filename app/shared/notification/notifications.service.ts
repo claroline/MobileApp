@@ -3,13 +3,15 @@ import {Config} from "../config";
 import {Notification} from "./notification";
 import {Observable} from "rxjs/Rx";
 import {Http} from "angular2/http";
+import {ConfigService} from "../config.service";
 
 "use strict";
 
 @Injectable()
 export class NotificationsService {
 
-    constructor(private _http: Http) { }
+    constructor(private _http: Http,
+        private _configService:ConfigService) { }
 
     //Load all the notifications of a specific user
     load(type:string = null) {
@@ -17,8 +19,9 @@ export class NotificationsService {
         if (type !=null){
             notifications += '/read';
         }
-
-        let url = Config.apiUrl + "icap_notification/api/"+notifications+".json?access_token=" + Config.access_token;
+        let host = this._configService.getHost();
+        let access = this._configService.getAccessToken();
+        let url = host + "icap_notification/api/"+notifications+".json?access_token=" + access;
         return this._http.get(url)
         .map(res => {
             return res.json();

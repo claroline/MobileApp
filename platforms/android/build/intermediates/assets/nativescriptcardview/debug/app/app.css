@@ -66,6 +66,11 @@ ActionBar {
 
 }
 
+.renderTextLabel{
+  display:block;
+  text-align: center;
+}
+
 .boldFont{
   font-weight:bold;
 }

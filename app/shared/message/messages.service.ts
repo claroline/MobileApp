@@ -3,16 +3,21 @@ import {Config} from "../config";
 import {Observable} from "rxjs/Rx";
 import {Http} from "angular2/http";
 import {Message} from "./message";
+import {ConfigService} from "../config.service";
 
 "use strict";
 
 @Injectable()
 export class MessageService{
 
-	constructor(private _http:Http){}
+	constructor(private _http:Http,
+		private _configService:ConfigService){}
 
 	loadReceivedMessages(){
-		let url = Config.apiUrl+"message/api/received/messages.json?access_token="+Config.access_token;
+
+		let host = this._configService.getHost();
+		let access = this._configService.getAccessToken();
+		let url = host+"message/api/received/messages.json?access_token="+access;
 		return this._http.get(url)
 		.map(res=>{
 			return res.json();
@@ -34,7 +39,10 @@ export class MessageService{
 	}
 
 	loadSentMessages(){
-		let url = Config.apiUrl+"message/api/sent/messages.json?access_token="+Config.access_token;
+
+		let host = this._configService.getHost();
+		let access = this._configService.getAccessToken();
+		let url = host+"message/api/sent/messages.json?access_token="+access;
 		return this._http.get(url)
 		.map(res=>{
 			return res.json();
