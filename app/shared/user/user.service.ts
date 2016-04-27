@@ -34,7 +34,7 @@ export class UserService {
         });
         let host = this._configService.getHost();
         return this._http.post(
-            host + "oauth/v2/token",
+            host + "/oauth/v2/token",
             body,
             { headers: headers }
             );
@@ -51,7 +51,7 @@ export class UserService {
         });
         let host = this._configService.getHost();
         this._http.post(
-            host + "oauth/v2/token",
+            host + "/oauth/v2/token",
             body,
             { headers: headers }
             )

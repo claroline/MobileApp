@@ -156,7 +156,6 @@ dependencies {
 	
     compile "com.android.support:support-v4:$suppotVer"
     compile "com.android.support:appcompat-v7:$suppotVer"
-    compile "com.android.support:design:23.2.1"
 
     // take all jars within the libs dir
 	compile fileTree(dir: "libs", include: ["**/*.jar"])

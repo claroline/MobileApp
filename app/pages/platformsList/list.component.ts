@@ -24,11 +24,9 @@ export class ListPage {
 
 	goToLogin(){
 
-		//On s'assure que le dernier caractère de l'url est un slash
-		if (this.host.slice(-1) !== "/"){
-			this.host = this.host+"/";
-		}
 		this._configService.setHost(this.host);
+		
+		
 		this._router.navigate(['Login']);
 	}
 }

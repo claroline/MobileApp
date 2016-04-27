@@ -34,9 +34,37 @@ export class ConfigService {
 		return appSettings.getString("refresh_token")
 	}
 
+	setClientId(clientId:string){
+		appSettings.setString("client_id", clientId);
+	}
+
+	getClientId(){
+		return appSettings.getString("client_id");
+	}
+
+	setClientSecret(clientSecret:string){
+		appSettings.setString("client_secret", clientSecret);
+	}
+
+	getClientSecret(){
+		return appSettings.getString("client_secret");
+	}
+
+
+	getClientIdAndSecretFromHost(){
+		let host = this.getHost();
+		let url = host + "/client/idsecret.json";
+		return this._http.get(url)
+			.map(res => {
+				return res.json();
+			});
+	}
+
 	clear(){
 		appSettings.clear();
 	}
+
+
 
 
 }

@@ -21,7 +21,7 @@ export class NotificationsService {
         }
         let host = this._configService.getHost();
         let access = this._configService.getAccessToken();
-        let url = host + "icap_notification/api/"+notifications+".json?access_token=" + access;
+        let url = host + "/icap_notification/api/"+notifications+".json?access_token=" + access;
         return this._http.get(url)
         .map(res => {
             return res.json();
