@@ -90,7 +90,8 @@ var CssSelector = (function () {
                 }
             }
         });
-        if (this.animations && view.isLoaded) {
+        view._unregisterAllAnimations();
+        if (this.animations && view.isLoaded && view._nativeView !== undefined) {
             var _loop_1 = function(animationInfo) {
                 var animation = keyframeAnimation.KeyframeAnimation.keyframeAnimationFromInfo(animationInfo, modifier);
                 if (animation) {

@@ -44,8 +44,12 @@ var NSRouterLink = (function () {
         this._router = _router;
         this._location = _location;
     }
+    Object.defineProperty(NSRouterLink.prototype, "isRouteActive", {
+        get: function () { return this._router.isRouteActive(this._navigationInstruction); },
+        enumerable: true,
+        configurable: true
+    });
     Object.defineProperty(NSRouterLink.prototype, "params", {
-        // get isRouteActive(): boolean { return this._router.isRouteActive(this._navigationInstruction); }
         set: function (changes) {
             this._routeParams = changes;
             this._navigationInstruction = this._router.generate(this._routeParams);
@@ -62,7 +66,8 @@ var NSRouterLink = (function () {
             selector: '[nsRouterLink]',
             inputs: ['params: nsRouterLink'],
             host: {
-                '(tap)': 'onTap()'
+                '(tap)': 'onTap()',
+                '[class.router-link-active]': 'isRouteActive'
             }
         }), 
         __metadata('design:paramtypes', [router_1.Router, router_1.Location])

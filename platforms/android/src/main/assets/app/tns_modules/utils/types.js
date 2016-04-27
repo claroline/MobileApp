@@ -96,3 +96,7 @@ var ClassInfo = (function () {
     return ClassInfo;
 }());
 exports.ClassInfo = ClassInfo;
+function toUIString(obj) {
+    return isNullOrUndefined(obj) ? "" : obj + "";
+}
+exports.toUIString = toUIString;

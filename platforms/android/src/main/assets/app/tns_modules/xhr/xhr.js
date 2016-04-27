@@ -75,14 +75,24 @@ var XMLHttpRequest = (function () {
         this._setReadyState(this.LOADING);
         this._setResponseType();
         if (this.responseType === XMLHttpRequestResponseType.json) {
-            this._responseTextReader = function () { return r.content.toString(); };
-            this._response = JSON.parse(this.responseText);
+            this._prepareJsonResponse(r);
         }
         else if (this.responseType === XMLHttpRequestResponseType.empty ||
             this.responseType === XMLHttpRequestResponseType.text) {
             this._responseTextReader = function () { return r.content.toString(); };
         }
         this._setReadyState(this.DONE);
+    };
+    XMLHttpRequest.prototype._prepareJsonResponse = function (r) {
+        var _this = this;
+        this._responseTextReader = function () { return r.content.toString(); };
+        this._response = JSON.parse(this.responseText);
+        Object.defineProperty(this._response, "toString", {
+            configurable: true,
+            enumerable: false,
+            writable: true,
+            value: function () { return _this.responseText; }
+        });
     };
     XMLHttpRequest.prototype._setResponseType = function () {
         var header = this.getResponseHeader('Content-Type');

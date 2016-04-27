@@ -13,6 +13,7 @@ var knownCollections;
 (function (knownCollections) {
     knownCollections.items = "items";
 })(knownCollections = exports.knownCollections || (exports.knownCollections = {}));
+var CHILD_SEGMENTED_BAR_ITEM = "SegmentedBarItem";
 var SegmentedBarItem = (function (_super) {
     __extends(SegmentedBarItem, _super);
     function SegmentedBarItem() {
@@ -102,6 +103,34 @@ var SegmentedBar = (function (_super) {
                 this.items[i].bindingContext = newValue;
             }
         }
+    };
+    SegmentedBar.prototype._addChildFromBuilder = function (name, value) {
+        if (name === CHILD_SEGMENTED_BAR_ITEM) {
+            if (!this.items) {
+                this.items = new Array();
+            }
+            this.items.push(value);
+            this.insertTab(value);
+        }
+    };
+    SegmentedBar.prototype.insertTab = function (tabItem, index) {
+    };
+    SegmentedBar.prototype.getValidIndex = function (index) {
+        ensureTypes();
+        var idx;
+        var itemsLength = this.items ? this.items.length : 0;
+        if (types.isNullOrUndefined(index)) {
+            idx = itemsLength;
+        }
+        else {
+            if (index < 0 || index > itemsLength) {
+                idx = itemsLength;
+            }
+            else {
+                idx = index;
+            }
+        }
+        return idx;
     };
     SegmentedBar.selectedBackgroundColorProperty = new dependencyObservable.Property("selectedBackgroundColor", "SegmentedBar", new proxy.PropertyMetadata(undefined));
     SegmentedBar.selectedIndexProperty = new dependencyObservable.Property("selectedIndex", "SegmentedBar", new proxy.PropertyMetadata(undefined));

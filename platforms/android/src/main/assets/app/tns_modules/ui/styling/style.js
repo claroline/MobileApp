@@ -333,12 +333,23 @@ function isOpacityValid(value) {
     var parsedValue = parseFloat(value);
     return !isNaN(parsedValue) && 0 <= parsedValue && parsedValue <= 1;
 }
-function isLetterSpacingValid(value) {
+function isFloatValueValid(value) {
     var parsedValue = parseFloat(value);
     return !isNaN(parsedValue);
 }
 function isFontWeightValid(value) {
-    return value === enums.FontWeight.normal || value === enums.FontWeight.bold;
+    if (!value) {
+        console.trace();
+    }
+    return value === enums.FontWeight.thin
+        || value === enums.FontWeight.extraLight
+        || value === enums.FontWeight.light
+        || value === enums.FontWeight.normal || value === "400"
+        || value === enums.FontWeight.medium
+        || value === enums.FontWeight.semiBold
+        || value === enums.FontWeight.bold || value === "700"
+        || value === enums.FontWeight.extraBold
+        || value === enums.FontWeight.black;
 }
 function isFontStyleValid(value) {
     return value === enums.FontStyle.normal || value === enums.FontStyle.italic;
@@ -812,6 +823,16 @@ var Style = (function (_super) {
         enumerable: true,
         configurable: true
     });
+    Object.defineProperty(Style.prototype, "zIndex", {
+        get: function () {
+            return this._getValue(exports.zIndexProperty);
+        },
+        set: function (value) {
+            this._setValue(exports.zIndexProperty, value);
+        },
+        enumerable: true,
+        configurable: true
+    });
     Style.prototype._updateTextDecoration = function () {
         if (this._getValue(exports.textDecorationProperty) !== enums.TextDecoration.none) {
             this._applyProperty(exports.textDecorationProperty, this._getValue(exports.textDecorationProperty));
@@ -1008,7 +1029,8 @@ exports.opacityProperty = new styleProperty.Property("opacity", "opacity", new d
 exports.textDecorationProperty = new styleProperty.Property("textDecoration", "text-decoration", new dependency_observable_1.PropertyMetadata(enums.TextDecoration.none, dependency_observable_1.PropertyMetadataSettings.None, undefined, isTextDecorationValid), converters.textDecorationConverter);
 exports.textTransformProperty = new styleProperty.Property("textTransform", "text-transform", new dependency_observable_1.PropertyMetadata(enums.TextTransform.none, dependency_observable_1.PropertyMetadataSettings.None, undefined, isTextTransformValid), converters.textTransformConverter);
 exports.whiteSpaceProperty = new styleProperty.Property("whiteSpace", "white-space", new dependency_observable_1.PropertyMetadata(undefined, AffectsLayout, undefined, isWhiteSpaceValid), converters.whiteSpaceConverter);
-exports.letterSpacingProperty = new styleProperty.Property("letterSpacing", "letter-spacing", new dependency_observable_1.PropertyMetadata(Number.NaN, AffectsLayout, undefined, isLetterSpacingValid), converters.letterSpacingConverter);
+exports.letterSpacingProperty = new styleProperty.Property("letterSpacing", "letter-spacing", new dependency_observable_1.PropertyMetadata(Number.NaN, AffectsLayout, undefined, isFloatValueValid), converters.floatConverter);
+exports.zIndexProperty = new styleProperty.Property("zIndex", "z-index", new dependency_observable_1.PropertyMetadata(Number.NaN, AffectsLayout, undefined, isFloatValueValid), converters.floatConverter);
 exports.nativeLayoutParamsProperty = new styleProperty.Property("nativeLayoutParams", "nativeLayoutParams", new dependency_observable_1.PropertyMetadata({
     width: -1,
     widthPercent: -1,

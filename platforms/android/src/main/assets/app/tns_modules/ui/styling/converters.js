@@ -5,16 +5,15 @@ function colorConverter(value) {
     return new color.Color(value);
 }
 exports.colorConverter = colorConverter;
-function fontSizeConverter(value) {
+function floatConverter(value) {
     var result = parseFloat(value);
     return result;
+}
+exports.floatConverter = floatConverter;
+function fontSizeConverter(value) {
+    return floatConverter(value);
 }
 exports.fontSizeConverter = fontSizeConverter;
-function letterSpacingConverter(value) {
-    var result = parseFloat(value);
-    return result;
-}
-exports.letterSpacingConverter = letterSpacingConverter;
 function textAlignConverter(value) {
     switch (value) {
         case enums.TextAlignment.left:

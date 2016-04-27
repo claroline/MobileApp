@@ -56,12 +56,12 @@ var StyleScope = (function () {
     };
     StyleScope.prototype.setCss = function (cssString, cssFileName, append) {
         if (append === void 0) { append = false; }
-        this._css = this._css ? this._css + cssString : cssString;
+        this._css = this._css && append ? this._css + cssString : cssString;
         if (cssFileName) {
             this._cssFileName = cssFileName;
         }
         this._reset();
-        var parsedSelectors = StyleScope.createSelectorsFromCss(cssString, cssFileName, this._keyframes);
+        var parsedSelectors = StyleScope.createSelectorsFromCss(this._css, cssFileName, this._keyframes);
         if (append) {
             this._localCssSelectors.push.apply(this._localCssSelectors, parsedSelectors);
         }

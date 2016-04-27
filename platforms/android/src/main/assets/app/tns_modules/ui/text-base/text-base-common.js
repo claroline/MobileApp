@@ -15,6 +15,8 @@ var formattedTextProperty = new dependencyObservable.Property("formattedText", "
 function onTextPropertyChanged(data) {
     var textBase = data.object;
     textBase._onTextPropertyChanged(data);
+    textBase.style._updateTextTransform();
+    textBase.style._updateTextDecoration();
 }
 textProperty.metadata.onSetNativeValue = onTextPropertyChanged;
 function onFormattedTextPropertyChanged(data) {

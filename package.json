@@ -1,47 +1,52 @@
 {
-	"name": "Claroline",
-	"version": "1.0.0",
-	"description": "A NativeScript-Angular2 built iOS and Android app for managing Claroline Connect",
-	"repository": {
-		"type": "git",
-		"url": "https://github.com/ngydat/connect.git"
-	},
-	"keywords": [
-		"NativeScript"
-	],
-	"author": "TJ VanToll <tj.vantoll@gmail.com> (http://tjvantoll.com/)",
-	"license": "MIT",
-	"bugs": {
-		"url": "https://github.com/ngydat/connect/issues"
-	},
-	"homepage": "https://github.com/ngydat/connect",
-	"nativescript": {
-		"id": "org.nativescript.groceries",
-		"tns-ios": {
-			"version": "1.6.0"
-		},
-		"tns-android": {
-			"version": "1.7.1"
-		}
-	},
-	"dependencies": {
-		"angular2": "^2.0.0-beta.9",
-		"es6-shim": "^0.33.13",
-		"nativescript-angular": "0.0.38",
-		"nativescript-pulltorefresh": "^1.1.0",
-		"parse5": "^1.4.2",
-		"punycode": "1.4.1",
-		"querystring": "0.2.0",
-		"reflect-metadata": "0.1.2",
-		"rxjs": "^5.0.0-beta.2",
-		"tns-core-modules": "^1.7.1",
-		"url": "0.11.0",
-		"zone.js": "^0.5.15"
-	},
-	"devDependencies": {
-		"nativescript-dev-typescript": "^0.3.1",
-		"shelljs": "^0.6.0",
-		"typescript": "^1.8.10",
-		"typings": "^0.8.1"
-	}
+  "name": "Claroline",
+  "version": "1.0.0",
+  "description": "A NativeScript-Angular2 built iOS and Android app for managing Claroline Connect",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ngydat/connect.git"
+  },
+  "keywords": [
+    "NativeScript"
+  ],
+  "author": "TJ VanToll <tj.vantoll@gmail.com> (http://tjvantoll.com/)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ngydat/connect/issues"
+  },
+  "homepage": "https://github.com/ngydat/connect",
+  "nativescript": {
+    "id": "org.nativescript.groceries",
+    "tns-ios": {
+      "version": "1.6.0"
+    },
+    "tns-android": {
+      "version": "2.0.0"
+    }
+  },
+  "dependencies": {
+    "angular2": "^2.0.0-beta.9",
+    "es6-shim": "^0.33.13",
+    "nativescript-angular": "0.0.45",
+    "nativescript-pulltorefresh": "^1.1.0",
+    "parse5": "^1.4.2",
+    "punycode": "1.4.1",
+    "querystring": "0.2.0",
+    "reflect-metadata": "0.1.2",
+    "rxjs": "^5.0.0-beta.2",
+    "tns-core-modules": "^2.0.0",
+    "url": "0.11.0",
+    "zone.js": "^0.5.15"
+  },
+  "devDependencies": {
+    "babel-traverse": "6.7.6",
+    "babel-types": "6.7.7",
+    "babylon": "6.7.0",
+    "filewalker": "0.1.2",
+    "lazy": "1.0.11",
+    "nativescript-dev-typescript": "^0.3.2",
+    "shelljs": "^0.7.0",
+    "typescript": "^1.8.10",
+    "typings": "^0.8.1"
+  }
 }

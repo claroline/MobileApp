@@ -485,14 +485,49 @@ declare module "ui/enums" {
      */
     export module FontWeight {
         /**
-         * Normal font weight.
+         * Thin font weight. CSS font-weight 100.
+         */
+        export var thin: string;
+        
+        /**
+         * Extra-light / Ultra-light font weight. CSS font-weight 200.
+         */
+        export var extraLight: string;
+        
+        /**
+         * Light font weight. CSS font-weight 300.
+         */
+        export var light: string;
+
+        /**
+         * Normal font weight. CSS font-weight 400.
          */
         export var normal: string;
 
         /**
-         * Bold font weight.
+         * Medium font weight. CSS font-weight 500.
+         */
+        export var medium: string;
+
+        /**
+         * Semi-bold / Demi-bold font weight. CSS font-weight 600.
+         */
+        export var semiBold: string;
+        
+        /**
+         * Bold font weight. CSS font-weight 700.
          */
         export var bold: string;
+
+        /**
+         * Extra-bold / Ultra-bold font weight. CSS font-weight 800.
+         */
+        export var extraBold: string;
+
+        /**
+         * Black font weight. CSS font-weight 900.
+         */
+        export var black: string;
     }
 
     /**
@@ -523,8 +558,13 @@ declare module "ui/enums" {
     /**
      * Represents an animation curve type.
      */
-    module AnimationCurve {
+    export module AnimationCurve {
 
+        /**
+         * Default value. Specifies a transition effect with a slow start, then fast, then end slowly (equivalent to cubic-bezier(0.25,0.1,0.25,1))
+         */
+        export var ease: string;
+        
         /**
          * An ease-in curve causes the animation to begin slowly, and then speed up as it progresses.
          */

@@ -268,6 +268,7 @@ var FileSystemAccess = (function () {
                     created = javaFile.mkdirs();
                 }
                 else {
+                    javaFile.getParentFile().mkdirs();
                     created = javaFile.createNewFile();
                 }
                 if (!created) {

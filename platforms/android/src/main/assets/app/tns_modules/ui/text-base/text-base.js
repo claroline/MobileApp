@@ -7,7 +7,7 @@ var TextBase = (function (_super) {
     }
     TextBase.prototype._onTextPropertyChanged = function (data) {
         if (this.android) {
-            var newValue = types.isNullOrUndefined(data.newValue) ? "" : data.newValue + "";
+            var newValue = types.toUIString(data.newValue);
             this.android.setText(newValue);
         }
     };

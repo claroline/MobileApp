@@ -239,11 +239,7 @@ var ActionBar = (function (_super) {
             if (item.actionView && item.actionView.android) {
                 item.android.position = enums.AndroidActionItemPosition.actionBar;
                 menuItem.setActionView(item.actionView.android);
-                menuItem.getActionView().setOnClickListener(new android.view.View.OnClickListener({
-                    onClick: function () {
-                        item._raiseTap();
-                    }
-                }));
+                ActionBar._setOnClickListener(item);
             }
             else if (item.android.systemIcon) {
                 var systemResourceId = getSystemResourceId(item.android.systemIcon);
@@ -263,6 +259,13 @@ var ActionBar = (function (_super) {
             var showAsAction = getShowAsAction(item);
             menuItem.setShowAsAction(showAsAction);
         }
+    };
+    ActionBar._setOnClickListener = function (item) {
+        item.actionView.android.setOnClickListener(new android.view.View.OnClickListener({
+            onClick: function (v) {
+                item._raiseTap();
+            }
+        }));
     };
     ActionBar.prototype._onTitlePropertyChanged = function () {
         var topFrame = frame.topmost();

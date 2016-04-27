@@ -1,45 +1,44 @@
 {
   "_args": [
     [
-      "nativescript-angular@0.0.38",
-      "/home/dat/nativescript_angular2/mobile"
+      "nativescript-angular@latest",
+      "/home/dat/nativescript_angular2/Claroline Connect"
     ]
   ],
-  "_from": "nativescript-angular@0.0.38",
-  "_id": "nativescript-angular@0.0.38",
+  "_from": "nativescript-angular@latest",
+  "_id": "nativescript-angular@0.0.45",
   "_inCache": true,
   "_installable": true,
   "_location": "/nativescript-angular",
-  "_nodeVersion": "5.5.0",
+  "_nodeVersion": "5.9.1",
   "_npmOperationalInternal": {
     "host": "packages-12-west.internal.npmjs.com",
-    "tmp": "tmp/nativescript-angular-0.0.38.tgz_1458826893930_0.9402230037376285"
+    "tmp": "tmp/nativescript-angular-0.0.45.tgz_1461561533148_0.6454528607428074"
   },
   "_npmUser": {
     "email": "hristo@deshev.com",
     "name": "hdeshev"
   },
-  "_npmVersion": "3.7.1",
+  "_npmVersion": "3.7.3",
   "_phantomChildren": {
-    "querystring": "0.2.0",
-    "tns-core-modules-widgets": "1.7.0"
+    "querystring": "0.2.0"
   },
   "_requested": {
     "name": "nativescript-angular",
-    "raw": "nativescript-angular@0.0.38",
-    "rawSpec": "0.0.38",
+    "raw": "nativescript-angular@latest",
+    "rawSpec": "latest",
     "scope": null,
-    "spec": "0.0.38",
-    "type": "version"
+    "spec": "latest",
+    "type": "tag"
   },
   "_requiredBy": [
     "/"
   ],
-  "_resolved": "https://registry.npmjs.org/nativescript-angular/-/nativescript-angular-0.0.38.tgz",
-  "_shasum": "995e9add5c4f54211343daa9f2698689dc29b234",
+  "_resolved": "https://registry.npmjs.org/nativescript-angular/-/nativescript-angular-0.0.45.tgz",
+  "_shasum": "91a02f49804cb551e06de60eb3678f9ac73f1973",
   "_shrinkwrap": null,
-  "_spec": "nativescript-angular@0.0.38",
-  "_where": "/home/dat/nativescript_angular2/mobile",
+  "_spec": "nativescript-angular@latest",
+  "_where": "/home/dat/nativescript_angular2/Claroline Connect",
   "bugs": {
     "url": "http://www.telerik.com"
   },
@@ -50,16 +49,16 @@
     }
   ],
   "dependencies": {
-    "angular2": "2.0.0-beta.9",
-    "es6-shim": "^0.33.3",
+    "angular2": "2.0.0-beta.14",
+    "es6-shim": "^0.35.0",
+    "nativescript-intl": "^0.0.2",
     "parse5": "1.4.2",
     "punycode": "1.3.2",
     "querystring": "0.2.0",
     "reflect-metadata": "0.1.2",
     "rxjs": "5.0.0-beta.2",
-    "tns-core-modules": "^2.0.0-angular-0",
     "url": "0.10.3",
-    "zone.js": "0.5.15"
+    "zone.js": "^0.6.6"
   },
   "description": "Bringing NativeScript and Angular 2 together. This project implements a renderer that lets you build native mobile apps with Angular using the NativeScript widgets.",
   "devDependencies": {
@@ -75,8 +74,8 @@
   },
   "directories": {},
   "dist": {
-    "shasum": "995e9add5c4f54211343daa9f2698689dc29b234",
-    "tarball": "https://registry.npmjs.org/nativescript-angular/-/nativescript-angular-0.0.38.tgz"
+    "shasum": "91a02f49804cb551e06de60eb3678f9ac73f1973",
+    "tarball": "https://registry.npmjs.org/nativescript-angular/-/nativescript-angular-0.0.45.tgz"
   },
   "homepage": "http://www.telerik.com",
   "license": "Apache-2.0",
@@ -107,12 +106,18 @@
     }
   ],
   "name": "nativescript-angular",
+  "nativescript": {},
   "optionalDependencies": {},
+  "peerDependencies": {
+    "tns-core-modules": ">=2.0.0 || >=2.0.0-2016 || >=2.0.0-angular-4"
+  },
   "readme": "ERROR: No README data found!",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/NativeScript/nativescript-angular.git"
   },
-  "scripts": {},
-  "version": "0.0.38"
+  "scripts": {
+    "postinstall": "node postinstall.js"
+  },
+  "version": "0.0.45"
 }

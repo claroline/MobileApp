@@ -20,6 +20,8 @@ var formattedTextProperty = new dependencyObservable.Property("formattedText", "
 function onTextPropertyChanged(data) {
     var button = data.object;
     button._onTextPropertyChanged(data);
+    button.style._updateTextDecoration();
+    button.style._updateTextTransform();
 }
 function onFormattedTextPropertyChanged(data) {
     var button = data.object;
@@ -37,6 +39,8 @@ var Button = (function (_super) {
         if (this.formattedText) {
             this.formattedText.updateSpansBindingContext(newValue);
         }
+        this.style._updateTextDecoration();
+        this.style._updateTextTransform();
     };
     Object.defineProperty(Button.prototype, "text", {
         get: function () {

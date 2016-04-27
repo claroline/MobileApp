@@ -146,6 +146,8 @@ declare function setInterval(callback: Function, milliseconds?: number): number;
  */
 declare function clearInterval(id: number): void;
 
+
+
 declare class WeakRef<T> {
     constructor(obj: T);
     get(): T;

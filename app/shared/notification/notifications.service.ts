@@ -26,6 +26,9 @@ export class NotificationsService {
             return res.json();
         })
         .map(data => {
+            if (data.length == 0){
+                return;
+            }
             let result = [];
             data.forEach((notif) => {
 

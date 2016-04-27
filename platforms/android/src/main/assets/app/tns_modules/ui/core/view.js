@@ -566,6 +566,19 @@ var ViewStyler = (function () {
     ViewStyler.getTranslateYProperty = function (view) {
         return view.translateY;
     };
+    ViewStyler.getZIndexProperty = function (view) {
+        return view.android.getZ ? view.android.getZ() : 0;
+    };
+    ViewStyler.setZIndexProperty = function (view, newValue) {
+        if (view.android.setZ) {
+            view.android.setZ(newValue);
+        }
+    };
+    ViewStyler.resetZIndexProperty = function (view, nativeValue) {
+        if (view.android.setZ) {
+            view.android.setZ(nativeValue);
+        }
+    };
     ViewStyler.registerHandlers = function () {
         style.registerHandler(style.visibilityProperty, new style.StylePropertyChangedHandler(ViewStyler.setVisibilityProperty, ViewStyler.resetVisibilityProperty));
         style.registerHandler(style.opacityProperty, new style.StylePropertyChangedHandler(ViewStyler.setOpacityProperty, ViewStyler.resetOpacityProperty));
@@ -585,6 +598,7 @@ var ViewStyler = (function () {
         style.registerHandler(style.scaleYProperty, new style.StylePropertyChangedHandler(ViewStyler.setScaleYProperty, ViewStyler.resetScaleYProperty, ViewStyler.getScaleYProperty));
         style.registerHandler(style.translateXProperty, new style.StylePropertyChangedHandler(ViewStyler.setTranslateXProperty, ViewStyler.resetTranslateXProperty, ViewStyler.getTranslateXProperty));
         style.registerHandler(style.translateYProperty, new style.StylePropertyChangedHandler(ViewStyler.setTranslateYProperty, ViewStyler.resetTranslateYProperty, ViewStyler.getTranslateYProperty));
+        style.registerHandler(style.zIndexProperty, new style.StylePropertyChangedHandler(ViewStyler.setZIndexProperty, ViewStyler.resetZIndexProperty, ViewStyler.getZIndexProperty));
     };
     return ViewStyler;
 }());

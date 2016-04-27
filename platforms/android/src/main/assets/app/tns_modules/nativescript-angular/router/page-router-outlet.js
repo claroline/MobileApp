@@ -27,6 +27,7 @@ var frame_1 = require("ui/frame");
 var page_1 = require("ui/page");
 var common_1 = require("./common");
 var ns_location_strategy_1 = require("./ns-location-strategy");
+var detached_loader_1 = require("../common/detached-loader");
 var _resolveToTrue = async_1.PromiseWrapper.resolve(true);
 /**
  * Reference Cache
@@ -35,8 +36,8 @@ var RefCache = (function () {
     function RefCache() {
         this.cache = new Array();
     }
-    RefCache.prototype.push = function (comp, router, pageShimRef) {
-        this.cache.push({ componentRef: comp, router: router, pageShimRef: pageShimRef });
+    RefCache.prototype.push = function (comp, router, loaderRef) {
+        this.cache.push({ componentRef: comp, router: router, loaderRef: loaderRef });
     };
     RefCache.prototype.pop = function () {
         return this.cache.pop();
@@ -45,26 +46,6 @@ var RefCache = (function () {
         return this.cache[this.cache.length - 1];
     };
     return RefCache;
-}());
-/**
- * Page shim used for loadin compnenets when navigating
- */
-var PageShim = (function () {
-    function PageShim(element, loader) {
-        this.element = element;
-        this.loader = loader;
-    }
-    PageShim.prototype.loadComponent = function (componentType) {
-        return this.loader.loadIntoLocation(componentType, this.element, 'loader');
-    };
-    PageShim = __decorate([
-        core_1.Component({
-            selector: 'nativescript-page-shim',
-            template: "\n        <DetachedContainer>\n            <Placeholder #loader></Placeholder>\n        </DetachedContainer>\n        "
-        }), 
-        __metadata('design:paramtypes', [core_1.ElementRef, core_1.DynamicComponentLoader])
-    ], PageShim);
-    return PageShim;
 }());
 /**
  * A router outlet that does page navigation in NativeScript
@@ -119,7 +100,7 @@ var PageRouterOutlet = (function (_super) {
         var _this = this;
         var componentType = nextInstruction.componentType;
         var resultPromise;
-        var pageShimRef = undefined;
+        var loaderRef = undefined;
         var childRouter = this.parentRouter.childRouter(componentType);
         var providersArray = [
             core_1.provide(router_1.RouteData, { useValue: nextInstruction.routeData }),
@@ -132,13 +113,13 @@ var PageRouterOutlet = (function (_super) {
             resultPromise = this.loader.loadNextToLocation(componentType, this.elementRef, core_1.Injector.resolve(providersArray));
         }
         else {
-            common_1.log("PageRouterOutlet.activate() forward navigation - create page shim in the loader container: " + componentType.name);
+            common_1.log("PageRouterOutlet.activate() forward navigation - create detached loader in the loader container: " + componentType.name);
             var page_2 = new page_1.Page();
             providersArray.push(core_1.provide(page_1.Page, { useValue: page_2 }));
-            resultPromise = this.loader.loadIntoLocation(PageShim, this.elementRef, "loader", core_1.Injector.resolve(providersArray))
+            resultPromise = this.loader.loadIntoLocation(detached_loader_1.DetachedLoader, this.elementRef, "loader", core_1.Injector.resolve(providersArray))
                 .then(function (pageComponentRef) {
-                pageShimRef = pageComponentRef;
-                return pageShimRef.instance.loadComponent(componentType);
+                loaderRef = pageComponentRef;
+                return loaderRef.instance.loadComponent(componentType);
             })
                 .then(function (actualCoponenetRef) {
                 return _this.loadComponentInPage(page_2, actualCoponenetRef);
@@ -146,7 +127,7 @@ var PageRouterOutlet = (function (_super) {
         }
         return resultPromise.then(function (componentRef) {
             _this.componentRef = componentRef;
-            _this.refCache.push(componentRef, childRouter, pageShimRef);
+            _this.refCache.push(componentRef, childRouter, loaderRef);
             if (route_lifecycle_reflector_1.hasLifecycleHook(routerHooks.routerOnActivate, componentType)) {
                 return _this.componentRef.instance
                     .routerOnActivate(nextInstruction, previousInstruction);
@@ -156,20 +137,20 @@ var PageRouterOutlet = (function (_super) {
     PageRouterOutlet.prototype.loadComponentInPage = function (page, componentRef) {
         var _this = this;
         //Component loaded. Find its root native view.
-        var componenetView = componentRef.location.nativeElement;
+        var componentView = componentRef.location.nativeElement;
         //Remove it from original native parent.
-        if (componenetView.parent) {
-            componenetView.parent.removeChild(componenetView);
+        if (componentView.parent) {
+            componentView.parent.removeChild(componentView);
         }
         //Add it to the new page
-        page.content = componenetView;
+        page.content = componentView;
         this.location.navigateToNewPage();
         return new Promise(function (resolve, reject) {
             page.on('navigatedTo', function () {
                 // Finish activation when page is fully navigated to.
                 resolve(componentRef);
             });
-            page.on('navigatingFrom', global.zone.bind(function (args) {
+            page.on('navigatingFrom', global.Zone.current.wrap(function (args) {
                 if (args.isBackNavigation) {
                     _this.location.beginBackPageNavigation();
                     _this.location.back();
@@ -207,8 +188,8 @@ var PageRouterOutlet = (function (_super) {
                     _this.componentRef.dispose();
                     _this.componentRef = null;
                 }
-                if (lang_1.isPresent(popedItem.pageShimRef)) {
-                    popedItem.pageShimRef.dispose();
+                if (lang_1.isPresent(popedItem.loaderRef)) {
+                    popedItem.loaderRef.dispose();
                 }
             });
         }

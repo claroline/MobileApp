@@ -147,8 +147,15 @@ var FontStyle;
 })(FontStyle = exports.FontStyle || (exports.FontStyle = {}));
 var FontWeight;
 (function (FontWeight) {
+    FontWeight.thin = "100";
+    FontWeight.extraLight = "200";
+    FontWeight.light = "300";
     FontWeight.normal = "normal";
+    FontWeight.medium = "500";
+    FontWeight.semiBold = "600";
     FontWeight.bold = "bold";
+    FontWeight.extraBold = "800";
+    FontWeight.black = "900";
 })(FontWeight = exports.FontWeight || (exports.FontWeight = {}));
 var BackgroundRepeat;
 (function (BackgroundRepeat) {

@@ -1,15 +1,6 @@
 "use strict";
-//Import globals before the zone, so the latter can patch the global functions
 require('globals');
-//prevent a crash in zone patches. pretend we're node.js
-global.process = {};
-var oldToString = Object.prototype.toString;
-Object.prototype.toString = function () {
-    return "[object process]";
-};
-require("zone.js/dist/zone.js");
-Object.prototype.toString = oldToString;
-delete global.process;
+require("zone.js/dist/zone-node");
 require('reflect-metadata');
 require('./polyfills/array');
 var lang_1 = require('angular2/src/facade/lang');
@@ -26,11 +17,13 @@ var application_common_providers_1 = require('angular2/src/core/application_comm
 var compiler_1 = require('angular2/src/compiler/compiler');
 var platform_common_providers_1 = require('angular2/src/core/platform_common_providers');
 var common_1 = require("angular2/common");
-var ns_directives_1 = require('./directives/ns-directives');
+var directives_1 = require('./directives');
 var page_1 = require('ui/page');
 var text_view_1 = require('ui/text-view');
 var application = require('application');
 var platform_providers_1 = require("./platform-providers");
+var nativescriptIntl = require("nativescript-intl");
+global.Intl = nativescriptIntl;
 var _platform = null;
 function bootstrap(appComponentType, customProviders) {
     if (customProviders === void 0) { customProviders = null; }
@@ -43,9 +36,10 @@ function bootstrap(appComponentType, customProviders) {
         common_1.FORM_PROVIDERS,
         di_1.provide(core_1.PLATFORM_PIPES, { useValue: common_1.COMMON_PIPES, multi: true }),
         di_1.provide(core_1.PLATFORM_DIRECTIVES, { useValue: common_1.COMMON_DIRECTIVES, multi: true }),
-        di_1.provide(core_1.PLATFORM_DIRECTIVES, { useValue: ns_directives_1.NS_DIRECTIVES, multi: true }),
+        di_1.provide(core_1.PLATFORM_DIRECTIVES, { useValue: directives_1.NS_DIRECTIVES, multi: true }),
         di_1.provide(exception_handler_1.ExceptionHandler, { useFactory: function () { return new exception_handler_1.ExceptionHandler(dom_adapter_1.DOM, true); }, deps: [] }),
         platform_providers_1.defaultPageProvider,
+        platform_providers_1.defaultDeviceProvider,
         renderer_1.NativeScriptRootRenderer,
         di_1.provide(api_1.RootRenderer, { useClass: renderer_1.NativeScriptRootRenderer }),
         renderer_1.NativeScriptRenderer,
@@ -67,33 +61,37 @@ function nativeScriptBootstrap(appComponentType, customProviders, appOptions) {
     if (appOptions && appOptions.cssFile) {
         application.cssFile = appOptions.cssFile;
     }
-    application.start({
-        create: function () {
-            var page = new page_1.Page();
-            if (appOptions) {
-                page.actionBarHidden = appOptions.startPageActionBarHidden;
+    return new Promise(function (resolve, reject) {
+        application.start({
+            create: function () {
+                var page = new page_1.Page();
+                if (appOptions) {
+                    page.actionBarHidden = appOptions.startPageActionBarHidden;
+                }
+                var onLoadedHandler = function (args) {
+                    page.off('loaded', onLoadedHandler);
+                    //profiling.stop('application-start');
+                    console.log('Page loaded');
+                    //profiling.start('ng-bootstrap');
+                    console.log('BOOTSTRAPPING...');
+                    bootstrap(appComponentType, customProviders).then(function (appRef) {
+                        //profiling.stop('ng-bootstrap');
+                        console.log('ANGULAR BOOTSTRAP DONE.');
+                        resolve(appRef);
+                    }, function (err) {
+                        console.log('ERROR BOOTSTRAPPING ANGULAR');
+                        var errorMessage = err.message + "\n\n" + err.stack;
+                        console.log(errorMessage);
+                        var view = new text_view_1.TextView();
+                        view.text = errorMessage;
+                        page.content = view;
+                        reject(err);
+                    });
+                };
+                page.on('loaded', onLoadedHandler);
+                return page;
             }
-            var onLoadedHandler = function (args) {
-                page.off('loaded', onLoadedHandler);
-                //profiling.stop('application-start');
-                console.log('Page loaded');
-                //profiling.start('ng-bootstrap');
-                console.log('BOOTSTRAPPING...');
-                bootstrap(appComponentType, customProviders).then(function (appRef) {
-                    //profiling.stop('ng-bootstrap');
-                    console.log('ANGULAR BOOTSTRAP DONE.');
-                }, function (err) {
-                    console.log('ERROR BOOTSTRAPPING ANGULAR');
-                    var errorMessage = err.message + "\n\n" + err.stack;
-                    console.log(errorMessage);
-                    var view = new text_view_1.TextView();
-                    view.text = errorMessage;
-                    page.content = view;
-                });
-            };
-            page.on('loaded', onLoadedHandler);
-            return page;
-        }
+        });
     });
 }
 exports.nativeScriptBootstrap = nativeScriptBootstrap;

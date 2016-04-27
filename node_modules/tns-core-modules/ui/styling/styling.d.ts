@@ -201,6 +201,7 @@ declare module "ui/styling" {
         textDecoration: string;
         textTransform: string;
         whiteSpace: string;
+        letterSpacing: number;
 
         
     }

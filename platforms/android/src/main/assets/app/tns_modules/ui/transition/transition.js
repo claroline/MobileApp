@@ -1,8 +1,9 @@
 var platform = require("platform");
 var types = require("utils/types");
 var trace = require("trace");
-var _sdkVersion = parseInt(platform.device.sdkVersion);
-var _defaultInterpolator = new android.view.animation.AccelerateDecelerateInterpolator();
+var lazy_1 = require("utils/lazy");
+var _sdkVersion = lazy_1.default(function () { return parseInt(platform.device.sdkVersion); });
+var _defaultInterpolator = lazy_1.default(function () { return new android.view.animation.AccelerateDecelerateInterpolator(); });
 var ENTER_POPEXIT_TRANSITION = "ENTER_POPEXIT_TRANSITION";
 var EXIT_POPENTER_TRANSITION = "EXIT_POPENTER_TRANSITION";
 var COMPLETE_PAGE_ADDITION_WHEN_TRANSITION_ENDS = "COMPLETE_PAGE_ADDITION_WHEN_TRANSITION_ENDS";
@@ -23,7 +24,7 @@ function _clearForwardTransitions(fragment) {
         trace.write("Cleared EXIT_POPENTER_TRANSITION " + fragment[EXIT_POPENTER_TRANSITION] + " for " + fragment.getTag(), trace.categories.Transition);
         fragment[EXIT_POPENTER_TRANSITION] = undefined;
     }
-    if (_sdkVersion >= 21) {
+    if (_sdkVersion() >= 21) {
         var exitTransition = fragment.getExitTransition();
         if (exitTransition) {
             trace.write("Cleared Exit " + exitTransition.getClass().getSimpleName() + " transition for " + fragment.getTag(), trace.categories.Transition);
@@ -42,7 +43,7 @@ function _setAndroidFragmentTransitions(navigationTransition, currentFragment, n
     if (navigationTransition.name) {
         name = navigationTransition.name.toLowerCase();
     }
-    var useLollipopTransition = name && (name.indexOf("slide") === 0 || name === "fade" || name === "explode") && _sdkVersion >= 21;
+    var useLollipopTransition = name && (name.indexOf("slide") === 0 || name === "fade" || name === "explode") && _sdkVersion() >= 21;
     if (useLollipopTransition) {
         newFragment.setAllowEnterTransitionOverlap(true);
         newFragment.setAllowReturnTransitionOverlap(true);
@@ -176,7 +177,7 @@ function _setUpNativeTransition(navigationTransition, nativeTransition) {
         nativeTransition.setInterpolator(interpolator);
     }
     else {
-        nativeTransition.setInterpolator(_defaultInterpolator);
+        nativeTransition.setInterpolator(_defaultInterpolator());
     }
 }
 function _onFragmentShown(fragment, isBack) {
@@ -186,7 +187,7 @@ function _onFragmentShown(fragment, isBack) {
         trace.write(fragment.getTag() + " has been shown when going " + (isBack ? "back" : "forward") + ", but there is " + transitionType + " " + fragment[relevantTransition] + ". Will complete page addition when transition ends.", trace.categories.Transition);
         fragment[COMPLETE_PAGE_ADDITION_WHEN_TRANSITION_ENDS] = { isBack: isBack };
     }
-    else if (_sdkVersion >= 21) {
+    else if (_sdkVersion() >= 21) {
         var nativeTransition = isBack ? fragment.getReenterTransition() : fragment.getEnterTransition();
         if (nativeTransition) {
             trace.write(fragment.getTag() + " has been shown when going " + (isBack ? "back" : "forward") + ", but there is " + transitionType + " " + nativeTransition.getClass().getSimpleName() + " transition. Will complete page addition when transition ends.", trace.categories.Transition);
@@ -205,7 +206,7 @@ function _onFragmentHidden(fragment, isBack) {
         trace.write(fragment.getTag() + " has been hidden when going " + (isBack ? "back" : "forward") + ", but there is " + transitionType + " " + fragment[relevantTransition] + ". Will complete page removal when transition ends.", trace.categories.Transition);
         fragment[COMPLETE_PAGE_REMOVAL_WHEN_TRANSITION_ENDS] = true;
     }
-    else if (_sdkVersion >= 21) {
+    else if (_sdkVersion() >= 21) {
         var nativeTransition = isBack ? fragment.getReturnTransition() : fragment.getExitTransition();
         if (nativeTransition) {
             trace.write(fragment.getTag() + " has been hidden when going " + (isBack ? "back" : "forward") + ", but there is " + transitionType + " " + nativeTransition.getClass().getSimpleName() + " transition. Will complete page removal when transition ends.", trace.categories.Transition);
@@ -346,7 +347,7 @@ var Transition = (function () {
             this._interpolator = animation._resolveAnimationCurve(curve);
         }
         else {
-            this._interpolator = _defaultInterpolator;
+            this._interpolator = _defaultInterpolator();
         }
         this._id = transitionId++;
     }

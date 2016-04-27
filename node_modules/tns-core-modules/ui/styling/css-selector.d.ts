@@ -2,6 +2,7 @@ declare module "ui/styling/css-selector" {
     import view = require("ui/core/view");
     import cssParser = require("css");
     import styleProperty = require("ui/styling/style-property");
+    import keyframeAnimation = require("ui/animation/keyframe-animation");
 
     export class CssSelector {
         constructor(expression: string, declarations: cssParser.Declaration[]);
@@ -13,9 +14,11 @@ declare module "ui/styling/css-selector" {
 
         specificity: number;
 
+        animations: Array<keyframeAnimation.KeyframeAnimationInfo>;
+
         matches(view: view.View): boolean;
 
-        apply(view: view.View);
+        apply(view: view.View, valueSourceModifier: number);
 
         eachSetter(callback: (property: styleProperty.Property, resolvedValue: any) => void);
     }

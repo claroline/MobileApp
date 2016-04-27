@@ -62,14 +62,12 @@ var ActionBarComponent = (function () {
     function ActionBarComponent(element, page) {
         this.element = element;
         this.page = page;
-    }
-    ActionBarComponent.prototype.ngOnInit = function () {
         if (lang_1.isBlank(this.page.actionBarHidden)) {
             this.page.actionBarHidden = false;
         }
         this.page.actionBar = this.element.nativeElement;
         this.page.actionBar.update();
-    };
+    }
     ActionBarComponent = __decorate([
         core_1.Component({
             selector: "ActionBar",
@@ -113,12 +111,10 @@ var ActionItemDirective = (function () {
     function ActionItemDirective(element, ownerScope) {
         this.element = element;
         this.ownerScope = ownerScope;
-    }
-    ActionItemDirective.prototype.ngOnInit = function () {
         if (this.ownerScope) {
             this.ownerScope.onActionInit(this);
         }
-    };
+    }
     ActionItemDirective.prototype.ngOnDestroy = function () {
         if (this.ownerScope) {
             this.ownerScope.onActionDestroy(this);
@@ -138,12 +134,10 @@ var NavigationButtonDirective = (function () {
     function NavigationButtonDirective(element, ownerScope) {
         this.element = element;
         this.ownerScope = ownerScope;
-    }
-    NavigationButtonDirective.prototype.ngOnInit = function () {
         if (this.ownerScope) {
             this.ownerScope.onNavButtonInit(this);
         }
-    };
+    }
     NavigationButtonDirective.prototype.ngOnDestroy = function () {
         if (this.ownerScope) {
             this.ownerScope.onNavButtonDestroy(this);

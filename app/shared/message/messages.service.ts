@@ -22,6 +22,9 @@ export class MessageService{
 			return res.json();
 		})
 		.map(data=>{
+			if (data.length == 0){
+				return;
+			}
 			let receivedMessages = [];
 			data.forEach((msg)=>{
 
@@ -47,6 +50,9 @@ export class MessageService{
 			return res.json();
 		})
 		.map(data=>{
+			if (data.length == 0) {
+				return;
+			}
 			let sentMessages = [];
 			data.forEach(msg=>{
 				let sender = msg.message.user.firstName+ " "+msg.message.user.lastName+" ("+msg.message.sender_username+")";

@@ -6,6 +6,7 @@ declare module "ui/core/view" {
     import color = require("color");
     import observable = require("data/observable");
     import animation = require("ui/animation");
+    import keyframeAnimationModule = require("ui/animation/keyframe-animation");
 
     /**
      * Gets a child view by id.
@@ -32,6 +33,38 @@ declare module "ui/core/view" {
 
     export function isEventOrGesture(name: string, view: View): boolean;
 
+    /**
+     * The Point interface describes a two dimensional location. 
+     * It has two properties x and y, representing the x and y coordinate of the location. 
+     */
+    export interface Point {
+        /**
+         * Represents the x coordinate of the location.
+         */
+        x: number;
+        
+        /**
+         * Represents the y coordinate of the location.
+         */
+        y: number;
+    }
+
+    /**
+     * The Size interface describes abstract dimensions in two dimensional space. 
+     * It has two properties width and height, representing the width and height values of the size. 
+     */
+    export interface Size {
+        /**
+         * Represents the width of the size.
+         */
+        width: number;
+        
+        /**
+         * Represents the height of the size.
+         */
+        height: number;
+    }
+    
     /**
      * Defines interface for an optional parameter used to create a view.
      */
@@ -63,22 +96,19 @@ declare module "ui/core/view" {
         /**
          * Specifies extra space on the left side of this view.
          */
-        marginLeft: number;
-
+        marginLeft?: number;
         /**
          * Specifies extra space on the top side of this view.
          */
-        marginTop: number;
-
+        marginTop?: number;
         /**
          * Specifies extra space on the right side of this view.
          */
-        marginRight: number;
-
+        marginRight?: number;
         /**
          * Specifies extra space on the bottom side of this view.
          */
-        marginBottom: number;
+        marginBottom?: number;
         /**
          * Gets or sets the visibility of this view.
          */
@@ -87,7 +117,6 @@ declare module "ui/core/view" {
          * [Deprecated. Please use className instead] Gets or sets the CSS class of this view.
          */
         cssClass?: string;
-
         /**
          * Gets or sets the CSS class name of this view.
          */
@@ -433,7 +462,7 @@ declare module "ui/core/view" {
         /**
          * Returns the child view with the specified id.
          */
-        getViewById<T extends View>(id: string): T;
+        public getViewById<T extends View>(id: string): T;
 
         /**
          * Tries to focus the view.
@@ -471,7 +500,7 @@ declare module "ui/core/view" {
          * @param callback An optional parameter pointing to a specific listener. If not defined, all listeners for the event names will be removed.
          * @param thisArg An optional parameter which when set will be used to refine search of the correct callback which will be removed as event listener.
          */
-        off(eventNames: string | gestures.GestureTypes, callback?: any, thisArg?: any);
+        off(eventNames: string | gestures.GestureTypes, callback?: (data: observable.EventData) => void, thisArg?: any);
 
         /**
          * Raised when a loaded event occurs.
@@ -483,9 +512,36 @@ declare module "ui/core/view" {
          */
         on(event: "unloaded", callback: (args: observable.EventData) => void, thisArg?: any);
 
-        public animate(options: animation.AnimationDefinition): Promise<void>;
+        /**
+         * Animates one or more properties of the view based on the supplied options. 
+         */
+        public animate(options: animation.AnimationDefinition): animation.AnimationPromise;
+        
+        /**
+         * Creates an Animation object based on the supplied options. 
+         */
         public createAnimation(options: animation.AnimationDefinition): animation.Animation;
 
+        /**
+         * Returns the location of this view in the window coordinate system.
+         */
+        public getLocationInWindow(): Point;
+
+        /**
+         * Returns the location of this view in the screen coordinate system.
+         */
+        public getLocationOnScreen(): Point;
+
+        /**
+         * Returns the location of this view in the otherView's coordinate system.
+         */
+        public getLocationRelativeTo(otherView: View): Point;
+
+        /**
+         * Returns the actual size of the view in device-independent pixels.
+         */
+        public getActualSize(): Size;
+        
         // Lifecycle events
         onLoaded(): void;
         onUnloaded(): void;

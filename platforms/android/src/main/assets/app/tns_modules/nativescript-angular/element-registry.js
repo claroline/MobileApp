@@ -3,6 +3,7 @@ var defaultViewMeta = {
     skipAddToDom: false,
 };
 var elementMap = new Map();
+var camelCaseSplit = /([a-z0-9])([A-Z])/g;
 function registerElement(elementName, resolver, meta) {
     if (elementMap.has(elementName)) {
         throw new Error("Element for " + elementName + " already registered.");
@@ -11,6 +12,7 @@ function registerElement(elementName, resolver, meta) {
         var entry = { resolver: resolver, meta: meta };
         elementMap.set(elementName, entry);
         elementMap.set(elementName.toLowerCase(), entry);
+        elementMap.set(elementName.replace(camelCaseSplit, "$1-$2").toLowerCase(), entry);
     }
 }
 exports.registerElement = registerElement;
@@ -67,6 +69,7 @@ registerElement("Repeater", function () { return require("ui/repeater").Repeater
 registerElement("ScrollView", function () { return require("ui/scroll-view").ScrollView; });
 registerElement("SearchBar", function () { return require("ui/search-bar").SearchBar; });
 registerElement("SegmentedBar", function () { return require("ui/segmented-bar").SegmentedBar; });
+registerElement("SegmentedBarItem", function () { return require("ui/segmented-bar").SegmentedBarItem; });
 registerElement("Slider", function () { return require("ui/slider").Slider; });
 registerElement("StackLayout", function () { return require("ui/layouts/stack-layout").StackLayout; });
 registerElement("Switch", function () { return require("ui/switch").Switch; });
@@ -76,5 +79,7 @@ registerElement("TextView", function () { return require("ui/text-view").TextVie
 registerElement("TimePicker", function () { return require("ui/time-picker").TimePicker; });
 registerElement("WebView", function () { return require("ui/web-view").WebView; });
 registerElement("WrapLayout", function () { return require("ui/layouts/wrap-layout").WrapLayout; });
+registerElement("FormattedString", function () { return require("text/formatted-string").FormattedString; });
+registerElement("Span", function () { return require("text/span").Span; });
 registerElement("DetachedContainer", function () { return require("ui/proxy-view-container").ProxyViewContainer; }, { skipAddToDom: true });
 //# sourceMappingURL=element-registry.js.map

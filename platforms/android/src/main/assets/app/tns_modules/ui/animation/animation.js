@@ -5,6 +5,7 @@ var trace = require("trace");
 var types = require("utils/types");
 var enums = require("ui/enums");
 var styleModule = require("ui/styling/style");
+var lazy_1 = require("utils/lazy");
 global.moduleMerge(common, exports);
 var argbEvaluator;
 function ensureArgbEvaluator() {
@@ -64,11 +65,13 @@ var Animation = (function (_super) {
         }
         this._animatorSet = new android.animation.AnimatorSet();
         this._animatorSet.addListener(this._animatorListener);
-        if (this._playSequentially) {
-            this._animatorSet.playSequentially(this._nativeAnimatorsArray);
-        }
-        else {
-            this._animatorSet.playTogether(this._nativeAnimatorsArray);
+        if (length > 0) {
+            if (this._playSequentially) {
+                this._animatorSet.playSequentially(this._nativeAnimatorsArray);
+            }
+            else {
+                this._animatorSet.playTogether(this._nativeAnimatorsArray);
+            }
         }
         trace.write("Starting " + this._nativeAnimatorsArray.length + " animations " + (this._playSequentially ? "sequentially." : "together."), trace.categories.Animation);
         this._animatorSet.setupStartValues();
@@ -100,6 +103,9 @@ var Animation = (function (_super) {
         this._rejectAnimationFinishedPromise();
     };
     Animation.prototype._createAnimators = function (propertyAnimation) {
+        if (!propertyAnimation.target._nativeView) {
+            return;
+        }
         trace.write("Creating ObjectAnimator(s) for animation: " + common.Animation._getAnimationInfo(propertyAnimation) + "...", trace.categories.Animation);
         if (types.isNullOrUndefined(propertyAnimation.target)) {
             throw new Error("Animation target cannot be null or undefined!");
@@ -285,28 +291,28 @@ var Animation = (function (_super) {
     return Animation;
 }(common.Animation));
 exports.Animation = Animation;
-var easeIn = new android.view.animation.AccelerateInterpolator(1);
-var easeOut = new android.view.animation.DecelerateInterpolator(1);
-var easeInOut = new android.view.animation.AccelerateDecelerateInterpolator();
-var linear = new android.view.animation.LinearInterpolator();
-var bounce = new android.view.animation.BounceInterpolator();
+var easeIn = lazy_1.default(function () { return new android.view.animation.AccelerateInterpolator(1); });
+var easeOut = lazy_1.default(function () { return new android.view.animation.DecelerateInterpolator(1); });
+var easeInOut = lazy_1.default(function () { return new android.view.animation.AccelerateDecelerateInterpolator(); });
+var linear = lazy_1.default(function () { return new android.view.animation.LinearInterpolator(); });
+var bounce = lazy_1.default(function () { return new android.view.animation.BounceInterpolator(); });
 function _resolveAnimationCurve(curve) {
     switch (curve) {
         case enums.AnimationCurve.easeIn:
             trace.write("Animation curve resolved to android.view.animation.AccelerateInterpolator(1).", trace.categories.Animation);
-            return easeIn;
+            return easeIn();
         case enums.AnimationCurve.easeOut:
             trace.write("Animation curve resolved to android.view.animation.DecelerateInterpolator(1).", trace.categories.Animation);
-            return easeOut;
+            return easeOut();
         case enums.AnimationCurve.easeInOut:
             trace.write("Animation curve resolved to android.view.animation.AccelerateDecelerateInterpolator().", trace.categories.Animation);
-            return easeInOut;
+            return easeInOut();
         case enums.AnimationCurve.linear:
             trace.write("Animation curve resolved to android.view.animation.LinearInterpolator().", trace.categories.Animation);
-            return linear;
+            return linear();
         case enums.AnimationCurve.spring:
             trace.write("Animation curve resolved to android.view.animation.BounceInterpolator().", trace.categories.Animation);
-            return bounce;
+            return bounce();
         case enums.AnimationCurve.ease:
             return android.support.v4.view.animation.PathInterpolatorCompat.create(0.25, 0.1, 0.25, 1.0);
         default:

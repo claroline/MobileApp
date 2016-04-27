@@ -7,6 +7,10 @@ var layout_base_1 = require('ui/layouts/layout-base');
 var element_registry_1 = require('./element-registry');
 var special_properties_1 = require("ui/builder/special-properties");
 var trace = require("trace");
+var platform_1 = require("platform");
+var IOS_PREFX = "@ios:";
+var ANDROID_PREFX = "@android:";
+var whiteSpaceSplitter = /\s+/;
 exports.rendererTraceCategory = "ns-renderer";
 function traceLog(msg) {
     trace.write(msg, exports.rendererTraceCategory);
@@ -24,223 +28,243 @@ function isContentView(view) {
     return view instanceof content_view_1.ContentView;
 }
 exports.isContentView = isContentView;
-function insertChild(parent, child, atIndex) {
-    if (atIndex === void 0) { atIndex = -1; }
-    if (!parent || child.meta.skipAddToDom) {
-        return;
+var propertyMaps = new Map();
+var ViewUtil = (function () {
+    function ViewUtil(device) {
+        this.isIos = device.os === platform_1.platformNames.ios;
+        this.isAndroid = device.os === platform_1.platformNames.android;
     }
-    if (parent.meta && parent.meta.insertChild) {
-        parent.meta.insertChild(parent, child, atIndex);
-    }
-    else if (isLayout(parent)) {
-        if (atIndex !== -1) {
-            parent.insertChild(child, atIndex);
+    ViewUtil.prototype.insertChild = function (parent, child, atIndex) {
+        if (atIndex === void 0) { atIndex = -1; }
+        if (!parent || child.meta.skipAddToDom) {
+            return;
+        }
+        if (parent.meta && parent.meta.insertChild) {
+            parent.meta.insertChild(parent, child, atIndex);
+        }
+        else if (isLayout(parent)) {
+            if (atIndex !== -1) {
+                parent.insertChild(child, atIndex);
+            }
+            else {
+                parent.addChild(child);
+            }
+        }
+        else if (isContentView(parent)) {
+            parent.content = child;
+        }
+        else if (parent && parent._addChildFromBuilder) {
+            parent._addChildFromBuilder(child.nodeName, child);
         }
         else {
-            parent.addChild(child);
         }
-    }
-    else if (isContentView(parent)) {
-        parent.content = child;
-    }
-    else if (parent && parent._addChildFromBuilder) {
-        parent._addChildFromBuilder(child.nodeName, child);
-    }
-    else {
-    }
-}
-exports.insertChild = insertChild;
-function removeChild(parent, child) {
-    if (!parent || child.meta.skipAddToDom) {
-        return;
-    }
-    if (parent.meta && parent.meta.removeChild) {
-        parent.meta.removeChild(parent, child);
-    }
-    else if (isLayout(parent)) {
-        parent.removeChild(child);
-    }
-    else if (isContentView(parent)) {
-        if (parent.content === child) {
-            parent.content = null;
+    };
+    ViewUtil.prototype.removeChild = function (parent, child) {
+        if (!parent || child.meta.skipAddToDom) {
+            return;
         }
-    }
-    else if (isView(parent)) {
-        parent._removeView(child);
-    }
-    else {
-    }
-}
-exports.removeChild = removeChild;
-function getChildIndex(parent, child) {
-    if (isLayout(parent)) {
-        return parent.getChildIndex(child);
-    }
-    else if (isContentView(parent)) {
-        return child === parent.content ? 0 : -1;
-    }
-    else {
-    }
-}
-exports.getChildIndex = getChildIndex;
-function createAndAttach(name, viewClass, parent, beforeAttach) {
-    var view = new viewClass();
-    view.nodeName = name;
-    view.meta = element_registry_1.getViewMeta(name);
-    if (beforeAttach) {
-        beforeAttach(view);
-    }
-    if (parent) {
-        insertChild(parent, view);
-    }
-    return view;
-}
-function createView(name, parent, beforeAttach) {
-    if (element_registry_1.isKnownView(name)) {
-        var viewClass = element_registry_1.getViewClass(name);
-        return createAndAttach(name, viewClass, parent, beforeAttach);
-    }
-    else {
-        return createViewContainer(name, parent, beforeAttach);
-    }
-}
-exports.createView = createView;
-function createText(value) {
-    var text = new placeholder_1.Placeholder();
-    text.nodeName = "#text";
-    text.visibility = "collapse";
-    text.meta = element_registry_1.getViewMeta("Placeholder");
-    return text;
-}
-exports.createText = createText;
-function createViewContainer(name, parentElement, beforeAttach) {
-    //HACK: Using a ContentView here, so that it creates a native View object
-    traceLog('Creating view container in:' + parentElement);
-    var layout = createView('ProxyViewContainer', parentElement, beforeAttach);
-    layout.nodeName = 'ProxyViewContainer';
-    return layout;
-}
-exports.createViewContainer = createViewContainer;
-function createTemplateAnchor(parentElement) {
-    //HACK: Using a ContentView here, so that it creates a native View object
-    var anchor = createAndAttach('template', content_view_1.ContentView, parentElement);
-    anchor.visibility = "collapse";
-    anchor.templateParent = parentElement;
-    return anchor;
-}
-exports.createTemplateAnchor = createTemplateAnchor;
-function isXMLAttribute(name) {
-    switch (name) {
-        case "style": return true;
-        case "rows": return true;
-        case "columns": return true;
-        case "fontAttributes": return true;
-        default: return false;
-    }
-}
-function setProperty(view, attributeName, value) {
-    if (attributeName.indexOf(".") !== -1) {
-        // Handle nested properties
-        var properties = attributeName.split(".");
-        attributeName = properties[properties.length - 1];
-        var propMap = getProperties(view);
-        var i = 0;
-        while (i < properties.length - 1 && types_1.isDefined(view)) {
-            var prop = properties[i];
-            if (propMap.has(prop)) {
-                prop = propMap.get(prop);
+        if (parent.meta && parent.meta.removeChild) {
+            parent.meta.removeChild(parent, child);
+        }
+        else if (isLayout(parent)) {
+            parent.removeChild(child);
+        }
+        else if (isContentView(parent)) {
+            if (parent.content === child) {
+                parent.content = null;
             }
-            view = view[prop];
-            propMap = getProperties(view);
-            i++;
         }
-    }
-    if (types_1.isDefined(view)) {
-        setPropertyInternal(view, attributeName, value);
-    }
-}
-exports.setProperty = setProperty;
-function setPropertyInternal(view, attributeName, value) {
-    traceLog('Setting attribute: ' + attributeName);
-    var specialSetter = special_properties_1.getSpecialPropertySetter(attributeName);
-    var propMap = getProperties(view);
-    if (attributeName === "class") {
-        setClasses(view, value);
-    }
-    else if (isXMLAttribute(attributeName)) {
-        view._applyXmlAttribute(attributeName, value);
-    }
-    else if (specialSetter) {
-        specialSetter(view, value);
-    }
-    else if (propMap.has(attributeName)) {
-        // We have a lower-upper case mapped property.
-        var propertyName = propMap.get(attributeName);
-        view[propertyName] = convertValue(value);
-    }
-    else {
-        // Unknown attribute value -- just set it to our object as is.
-        view[attributeName] = convertValue(value);
-    }
-}
-function convertValue(value) {
-    if (typeof (value) !== "string" || value === "") {
-        return value;
-    }
-    var valueAsNumber = +value;
-    if (!isNaN(valueAsNumber)) {
-        return valueAsNumber;
-    }
-    else if (value && (value.toLowerCase() === "true" || value.toLowerCase() === "false")) {
-        return value.toLowerCase() === "true" ? true : false;
-    }
-    else {
-        return value;
-    }
-}
-var propertyMaps = new Map();
-function getProperties(instance) {
-    var type = instance && instance.constructor;
-    if (!type) {
-        return new Map();
-    }
-    if (!propertyMaps.has(type)) {
-        var propMap = new Map();
-        for (var propName in instance) {
-            propMap.set(propName.toLowerCase(), propName);
+        else if (isView(parent)) {
+            parent._removeView(child);
         }
-        propertyMaps.set(type, propMap);
-    }
-    return propertyMaps.get(type);
-}
-function cssClasses(view) {
-    if (!view.cssClasses) {
-        view.cssClasses = new Map();
-    }
-    return view.cssClasses;
-}
-function addClass(view, className) {
-    cssClasses(view).set(className, true);
-    syncClasses(view);
-}
-exports.addClass = addClass;
-function removeClass(view, className) {
-    cssClasses(view).delete(className);
-    syncClasses(view);
-}
-exports.removeClass = removeClass;
-var whiteSpaceSplitter = /\s+/;
-function setClasses(view, classesValue) {
-    var classes = classesValue.split(whiteSpaceSplitter);
-    classes.forEach(function (className) { return cssClasses(view).set(className, true); });
-    syncClasses(view);
-}
-function syncClasses(view) {
-    var classValue = Array.from(cssClasses(view).keys()).join(' ');
-    view.cssClass = classValue;
-}
-function setStyleProperty(view, styleName, styleValue) {
-    throw new Error("Not implemented: setStyleProperty");
-}
-exports.setStyleProperty = setStyleProperty;
+        else {
+        }
+    };
+    ViewUtil.prototype.getChildIndex = function (parent, child) {
+        if (isLayout(parent)) {
+            return parent.getChildIndex(child);
+        }
+        else if (isContentView(parent)) {
+            return child === parent.content ? 0 : -1;
+        }
+        else {
+        }
+    };
+    ViewUtil.prototype.createAndAttach = function (name, viewClass, parent, beforeAttach) {
+        var view = new viewClass();
+        view.nodeName = name;
+        view.meta = element_registry_1.getViewMeta(name);
+        if (beforeAttach) {
+            beforeAttach(view);
+        }
+        if (parent) {
+            this.insertChild(parent, view);
+        }
+        return view;
+    };
+    ViewUtil.prototype.createView = function (name, parent, beforeAttach) {
+        if (element_registry_1.isKnownView(name)) {
+            var viewClass = element_registry_1.getViewClass(name);
+            return this.createAndAttach(name, viewClass, parent, beforeAttach);
+        }
+        else {
+            return this.createViewContainer(name, parent, beforeAttach);
+        }
+    };
+    ViewUtil.prototype.createText = function (value) {
+        var text = new placeholder_1.Placeholder();
+        text.nodeName = "#text";
+        text.visibility = "collapse";
+        text.meta = element_registry_1.getViewMeta("Placeholder");
+        return text;
+    };
+    ViewUtil.prototype.createViewContainer = function (name, parentElement, beforeAttach) {
+        traceLog('Creating view container in:' + parentElement);
+        var layout = this.createView('ProxyViewContainer', parentElement, beforeAttach);
+        layout.nodeName = 'ProxyViewContainer';
+        return layout;
+    };
+    ViewUtil.prototype.createTemplateAnchor = function (parentElement) {
+        //HACK: Using a ContentView here, so that it creates a native View object
+        var anchor = this.createAndAttach('template', content_view_1.ContentView, parentElement);
+        anchor.visibility = "collapse";
+        anchor.templateParent = parentElement;
+        return anchor;
+    };
+    ViewUtil.prototype.isXMLAttribute = function (name) {
+        switch (name) {
+            case "style": return true;
+            case "rows": return true;
+            case "columns": return true;
+            case "fontAttributes": return true;
+            default: return false;
+        }
+    };
+    ViewUtil.prototype.platformFilter = function (attribute) {
+        var lowered = attribute.toLowerCase();
+        if (lowered.indexOf(IOS_PREFX) === 0) {
+            if (this.isIos) {
+                return attribute.substr(IOS_PREFX.length);
+            }
+            else {
+                return null;
+            }
+        }
+        if (lowered.indexOf(ANDROID_PREFX) === 0) {
+            if (this.isAndroid) {
+                return attribute.substr(ANDROID_PREFX.length);
+            }
+            else {
+                return null;
+            }
+        }
+        return attribute;
+    };
+    ViewUtil.prototype.setProperty = function (view, attributeName, value) {
+        attributeName = this.platformFilter(attributeName);
+        if (!attributeName) {
+            return;
+        }
+        if (attributeName.indexOf(".") !== -1) {
+            // Handle nested properties
+            var properties = attributeName.split(".");
+            attributeName = properties[properties.length - 1];
+            var propMap = this.getProperties(view);
+            var i = 0;
+            while (i < properties.length - 1 && types_1.isDefined(view)) {
+                var prop = properties[i];
+                if (propMap.has(prop)) {
+                    prop = propMap.get(prop);
+                }
+                view = view[prop];
+                propMap = this.getProperties(view);
+                i++;
+            }
+        }
+        if (types_1.isDefined(view)) {
+            this.setPropertyInternal(view, attributeName, value);
+        }
+    };
+    ViewUtil.prototype.setPropertyInternal = function (view, attributeName, value) {
+        traceLog('Setting attribute: ' + attributeName);
+        var specialSetter = special_properties_1.getSpecialPropertySetter(attributeName);
+        var propMap = this.getProperties(view);
+        if (attributeName === "class") {
+            this.setClasses(view, value);
+        }
+        else if (this.isXMLAttribute(attributeName)) {
+            view._applyXmlAttribute(attributeName, value);
+        }
+        else if (specialSetter) {
+            specialSetter(view, value);
+        }
+        else if (propMap.has(attributeName)) {
+            // We have a lower-upper case mapped property.
+            var propertyName = propMap.get(attributeName);
+            view[propertyName] = this.convertValue(value);
+        }
+        else {
+            // Unknown attribute value -- just set it to our object as is.
+            view[attributeName] = this.convertValue(value);
+        }
+    };
+    ViewUtil.prototype.convertValue = function (value) {
+        if (typeof (value) !== "string" || value === "") {
+            return value;
+        }
+        var valueAsNumber = +value;
+        if (!isNaN(valueAsNumber)) {
+            return valueAsNumber;
+        }
+        else if (value && (value.toLowerCase() === "true" || value.toLowerCase() === "false")) {
+            return value.toLowerCase() === "true" ? true : false;
+        }
+        else {
+            return value;
+        }
+    };
+    ViewUtil.prototype.getProperties = function (instance) {
+        var type = instance && instance.constructor;
+        if (!type) {
+            return new Map();
+        }
+        if (!propertyMaps.has(type)) {
+            var propMap = new Map();
+            for (var propName in instance) {
+                propMap.set(propName.toLowerCase(), propName);
+            }
+            propertyMaps.set(type, propMap);
+        }
+        return propertyMaps.get(type);
+    };
+    ViewUtil.prototype.cssClasses = function (view) {
+        if (!view.cssClasses) {
+            view.cssClasses = new Map();
+        }
+        return view.cssClasses;
+    };
+    ViewUtil.prototype.addClass = function (view, className) {
+        this.cssClasses(view).set(className, true);
+        this.syncClasses(view);
+    };
+    ViewUtil.prototype.removeClass = function (view, className) {
+        this.cssClasses(view).delete(className);
+        this.syncClasses(view);
+    };
+    ViewUtil.prototype.setClasses = function (view, classesValue) {
+        var _this = this;
+        var classes = classesValue.split(whiteSpaceSplitter);
+        classes.forEach(function (className) { return _this.cssClasses(view).set(className, true); });
+        this.syncClasses(view);
+    };
+    ViewUtil.prototype.syncClasses = function (view) {
+        var classValue = Array.from(this.cssClasses(view).keys()).join(' ');
+        view.cssClass = classValue;
+    };
+    ViewUtil.prototype.setStyleProperty = function (view, styleName, styleValue) {
+        throw new Error("Not implemented: setStyleProperty");
+    };
+    return ViewUtil;
+}());
+exports.ViewUtil = ViewUtil;
 //# sourceMappingURL=view-util.js.map

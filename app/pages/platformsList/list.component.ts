@@ -24,8 +24,11 @@ export class ListPage {
 			.subscribe(data=>{
 				this._configService.setClientId(data.client_id);
 				this._configService.setClientSecret(data.client_secret);
+				this._router.navigate(['Login']);
+			}, err=>{
+				alert("L'url que vous avez entrée n'est pas valide !");
 			});
 
-		this._router.navigate(['Login']);
+		
 	}
 }
