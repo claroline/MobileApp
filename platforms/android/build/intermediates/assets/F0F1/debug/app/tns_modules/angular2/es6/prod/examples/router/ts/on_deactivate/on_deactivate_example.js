@@ -9,9 +9,8 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 import { Component, Injectable, provide } from 'angular2/core';
 import { bootstrap } from 'angular2/platform/browser';
-import { RouteConfig, ROUTER_DIRECTIVES } from 'angular2/router';
-import { APP_BASE_HREF } from 'angular2/platform/common';
-let LogService = class LogService {
+import { RouteConfig, ROUTER_DIRECTIVES, APP_BASE_HREF } from 'angular2/router';
+let LogService = class {
     constructor() {
         this.logs = [];
     }
@@ -22,7 +21,7 @@ LogService = __decorate([
     __metadata('design:paramtypes', [])
 ], LogService);
 // #docregion routerOnDeactivate
-let MyCmp = class MyCmp {
+let MyCmp = class {
     constructor(logService) {
         this.logService = logService;
     }
@@ -35,7 +34,7 @@ MyCmp = __decorate([
     __metadata('design:paramtypes', [LogService])
 ], MyCmp);
 // #enddocregion
-let AppCmp = class AppCmp {
+let AppCmp = class {
     constructor(logService) {
         this.logService = logService;
     }

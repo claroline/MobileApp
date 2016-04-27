@@ -1,15 +1,15 @@
 {
   "_args": [
     [
-      "es6-shim@^0.35.0",
-      "/home/dat/nativescript_angular2/Claroline Connect/node_modules/nativescript-angular"
+      "es6-shim@latest",
+      "/home/dat/nativescript_angular2/Claroline Connect"
     ]
   ],
-  "_from": "es6-shim@>=0.35.0 <0.36.0",
+  "_from": "es6-shim@latest",
   "_id": "es6-shim@0.35.0",
   "_inCache": true,
   "_installable": true,
-  "_location": "/nativescript-angular/es6-shim",
+  "_location": "/es6-shim",
   "_nodeVersion": "5.6.0",
   "_npmOperationalInternal": {
     "host": "packages-9-west.internal.npmjs.com",
@@ -23,20 +23,20 @@
   "_phantomChildren": {},
   "_requested": {
     "name": "es6-shim",
-    "raw": "es6-shim@^0.35.0",
-    "rawSpec": "^0.35.0",
+    "raw": "es6-shim@latest",
+    "rawSpec": "latest",
     "scope": null,
-    "spec": ">=0.35.0 <0.36.0",
-    "type": "range"
+    "spec": "latest",
+    "type": "tag"
   },
   "_requiredBy": [
-    "/nativescript-angular"
+    "/"
   ],
   "_resolved": "https://registry.npmjs.org/es6-shim/-/es6-shim-0.35.0.tgz",
   "_shasum": "272d927950889eabe299927cdc9c0010b7bfc00a",
   "_shrinkwrap": null,
-  "_spec": "es6-shim@^0.35.0",
-  "_where": "/home/dat/nativescript_angular2/Claroline Connect/node_modules/nativescript-angular",
+  "_spec": "es6-shim@latest",
+  "_where": "/home/dat/nativescript_angular2/Claroline Connect",
   "author": {
     "name": "Paul Miller",
     "url": "http://paulmillr.com"

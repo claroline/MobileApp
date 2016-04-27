@@ -8,6 +8,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 import { isBlank, isString, isNumber, isFunction, RegExpWrapper, StringWrapper } from 'angular2/src/facade/lang';
+import { BaseException } from 'angular2/src/facade/exceptions';
 import { Injectable, Pipe } from 'angular2/core';
 import { InvalidPipeArgumentException } from './invalid_pipe_argument_exception';
 /**
@@ -35,21 +36,25 @@ import { InvalidPipeArgumentException } from './invalid_pipe_argument_exception'
  * string properly if you are matching for regular expression special characters like parenthesis,
  * brackets etc.
  */
-let ReplacePipe_1;
-export let ReplacePipe = ReplacePipe_1 = class ReplacePipe {
-    transform(value, pattern, replacement) {
+export let ReplacePipe = class {
+    transform(value, args) {
+        if (isBlank(args) || args.length !== 2) {
+            throw new BaseException('ReplacePipe requires two arguments');
+        }
         if (isBlank(value)) {
             return value;
         }
         if (!this._supportedInput(value)) {
-            throw new InvalidPipeArgumentException(ReplacePipe_1, value);
+            throw new InvalidPipeArgumentException(ReplacePipe, value);
         }
         var input = value.toString();
+        var pattern = args[0];
+        var replacement = args[1];
         if (!this._supportedPattern(pattern)) {
-            throw new InvalidPipeArgumentException(ReplacePipe_1, pattern);
+            throw new InvalidPipeArgumentException(ReplacePipe, pattern);
         }
         if (!this._supportedReplacement(replacement)) {
-            throw new InvalidPipeArgumentException(ReplacePipe_1, replacement);
+            throw new InvalidPipeArgumentException(ReplacePipe, replacement);
         }
         // template fails with literal RegExp e.g /pattern/igm
         // var rgx = pattern instanceof RegExp ? pattern : RegExpWrapper.create(pattern);
@@ -71,7 +76,7 @@ export let ReplacePipe = ReplacePipe_1 = class ReplacePipe {
         return isString(replacement) || isFunction(replacement);
     }
 };
-ReplacePipe = ReplacePipe_1 = __decorate([
+ReplacePipe = __decorate([
     Pipe({ name: 'replace' }),
     Injectable(), 
     __metadata('design:paramtypes', [])

@@ -26,7 +26,7 @@ const REQUIRED_VALIDATOR = CONST_EXPR(new Provider(NG_VALIDATORS, { useValue: RE
  * <input ngControl="fullName" required>
  * ```
  */
-export let RequiredValidator = class RequiredValidator {
+export let RequiredValidator = class {
 };
 RequiredValidator = __decorate([
     Directive({
@@ -47,7 +47,7 @@ const MIN_LENGTH_VALIDATOR = CONST_EXPR(new Provider(NG_VALIDATORS, { useExistin
  * A directive which installs the {@link MinLengthValidator} for any `ngControl`,
  * `ngFormControl`, or control with `ngModel` that also has a `minlength` attribute.
  */
-export let MinLengthValidator = class MinLengthValidator {
+export let MinLengthValidator = class {
     constructor(minLength) {
         this._validator = Validators.minLength(NumberWrapper.parseInt(minLength, 10));
     }
@@ -73,7 +73,7 @@ const MAX_LENGTH_VALIDATOR = CONST_EXPR(new Provider(NG_VALIDATORS, { useExistin
  * A directive which installs the {@link MaxLengthValidator} for any `ngControl, `ngFormControl`,
  * or control with `ngModel` that also has a `maxlength` attribute.
  */
-export let MaxLengthValidator = class MaxLengthValidator {
+export let MaxLengthValidator = class {
     constructor(maxLength) {
         this._validator = Validators.maxLength(NumberWrapper.parseInt(maxLength, 10));
     }
@@ -100,7 +100,7 @@ MaxLengthValidator = __decorate([
  * ```
  */
 const PATTERN_VALIDATOR = CONST_EXPR(new Provider(NG_VALIDATORS, { useExisting: forwardRef(() => PatternValidator), multi: true }));
-export let PatternValidator = class PatternValidator {
+export let PatternValidator = class {
     constructor(pattern) {
         this._validator = Validators.pattern(pattern);
     }

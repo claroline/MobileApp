@@ -14,8 +14,7 @@ import { Provider, SkipSelfMetadata, OptionalMetadata } from 'angular2/src/core/
 /**
  * A repository of different iterable diffing strategies used by NgFor, NgClass, and others.
  */
-let IterableDiffers_1;
-export let IterableDiffers = IterableDiffers_1 = class IterableDiffers {
+export let IterableDiffers = class {
     constructor(factories) {
         this.factories = factories;
     }
@@ -23,10 +22,10 @@ export let IterableDiffers = IterableDiffers_1 = class IterableDiffers {
         if (isPresent(parent)) {
             var copied = ListWrapper.clone(parent.factories);
             factories = factories.concat(copied);
-            return new IterableDiffers_1(factories);
+            return new IterableDiffers(factories);
         }
         else {
-            return new IterableDiffers_1(factories);
+            return new IterableDiffers(factories);
         }
     }
     /**
@@ -49,7 +48,7 @@ export let IterableDiffers = IterableDiffers_1 = class IterableDiffers {
      * ```
      */
     static extend(factories) {
-        return new Provider(IterableDiffers_1, {
+        return new Provider(IterableDiffers, {
             useFactory: (parent) => {
                 if (isBlank(parent)) {
                     // Typically would occur when calling IterableDiffers.extend inside of dependencies passed
@@ -57,10 +56,10 @@ export let IterableDiffers = IterableDiffers_1 = class IterableDiffers {
                     // bootstrap(), which would override default pipes instead of extending them.
                     throw new BaseException('Cannot extend IterableDiffers without a parent injector');
                 }
-                return IterableDiffers_1.create(factories, parent);
+                return IterableDiffers.create(factories, parent);
             },
             // Dependency technically isn't optional, but we can provide a better error message this way.
-            deps: [[IterableDiffers_1, new SkipSelfMetadata(), new OptionalMetadata()]]
+            deps: [[IterableDiffers, new SkipSelfMetadata(), new OptionalMetadata()]]
         });
     }
     find(iterable) {
@@ -73,7 +72,7 @@ export let IterableDiffers = IterableDiffers_1 = class IterableDiffers {
         }
     }
 };
-IterableDiffers = IterableDiffers_1 = __decorate([
+IterableDiffers = __decorate([
     CONST(), 
     __metadata('design:paramtypes', [Array])
 ], IterableDiffers);

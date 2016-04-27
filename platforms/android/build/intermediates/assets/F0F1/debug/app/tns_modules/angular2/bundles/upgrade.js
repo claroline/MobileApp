@@ -1,13 +1,12 @@
 "format register";
-System.register("angular2/src/upgrade/metadata", ["angular2/compiler"], true, function(require, exports, module) {
+System.register("angular2/src/upgrade/metadata", ["angular2/core"], true, function(require, exports, module) {
   var global = System.global,
       __define = global.define;
   global.define = undefined;
-  "use strict";
-  var compiler_1 = require("angular2/compiler");
+  var core_1 = require("angular2/core");
   var COMPONENT_SELECTOR = /^[\w|-]*$/;
   var SKEWER_CASE = /-(\w)/g;
-  var directiveResolver = new compiler_1.DirectiveResolver();
+  var directiveResolver = new core_1.DirectiveResolver();
   function getComponentInfo(type) {
     var resolvedMetadata = directiveResolver.resolve(type);
     var selector = resolvedMetadata.selector;
@@ -56,7 +55,6 @@ System.register("angular2/src/upgrade/util", [], true, function(require, exports
   var global = System.global,
       __define = global.define;
   global.define = undefined;
-  "use strict";
   function stringify(obj) {
     if (typeof obj == 'function')
       return obj.name || obj.toString();
@@ -80,10 +78,10 @@ System.register("angular2/src/upgrade/constants", [], true, function(require, ex
   var global = System.global,
       __define = global.define;
   global.define = undefined;
-  "use strict";
+  exports.NG2_APP_VIEW_MANAGER = 'ng2.AppViewManager';
   exports.NG2_COMPILER = 'ng2.Compiler';
   exports.NG2_INJECTOR = 'ng2.Injector';
-  exports.NG2_COMPONENT_FACTORY_REF_MAP = 'ng2.ComponentFactoryRefMap';
+  exports.NG2_HOST_VIEW_FACTORY_REF_MAP = 'ng2.HostViewFactoryRefMap';
   exports.NG2_ZONE = 'ng2.NgZone';
   exports.NG1_CONTROLLER = '$controller';
   exports.NG1_SCOPE = '$scope';
@@ -103,12 +101,11 @@ System.register("angular2/src/upgrade/downgrade_ng2_adapter", ["angular2/core", 
   var global = System.global,
       __define = global.define;
   global.define = undefined;
-  "use strict";
   var core_1 = require("angular2/core");
   var constants_1 = require("angular2/src/upgrade/constants");
   var INITIAL_VALUE = {__UNINITIALIZED__: true};
   var DowngradeNg2ComponentAdapter = (function() {
-    function DowngradeNg2ComponentAdapter(id, info, element, attrs, scope, parentInjector, parse, componentFactory) {
+    function DowngradeNg2ComponentAdapter(id, info, element, attrs, scope, parentInjector, parse, viewManager, hostViewFactory) {
       this.id = id;
       this.info = info;
       this.element = element;
@@ -116,11 +113,12 @@ System.register("angular2/src/upgrade/downgrade_ng2_adapter", ["angular2/core", 
       this.scope = scope;
       this.parentInjector = parentInjector;
       this.parse = parse;
-      this.componentFactory = componentFactory;
+      this.viewManager = viewManager;
+      this.hostViewFactory = hostViewFactory;
       this.component = null;
       this.inputChangeCount = 0;
       this.inputChanges = null;
-      this.componentRef = null;
+      this.hostViewRef = null;
       this.changeDetector = null;
       this.contentInsertionPoint = null;
       this.element[0].id = id;
@@ -128,11 +126,12 @@ System.register("angular2/src/upgrade/downgrade_ng2_adapter", ["angular2/core", 
       this.childNodes = element.contents();
     }
     DowngradeNg2ComponentAdapter.prototype.bootstrapNg2 = function() {
-      var childInjector = core_1.ReflectiveInjector.resolveAndCreate([core_1.provide(constants_1.NG1_SCOPE, {useValue: this.componentScope})], this.parentInjector);
+      var childInjector = this.parentInjector.resolveAndCreateChild([core_1.provide(constants_1.NG1_SCOPE, {useValue: this.componentScope})]);
       this.contentInsertionPoint = document.createComment('ng1 insertion point');
-      this.componentRef = this.componentFactory.create(childInjector, [[this.contentInsertionPoint]], '#' + this.id);
-      this.changeDetector = this.componentRef.changeDetectorRef;
-      this.component = this.componentRef.instance;
+      this.hostViewRef = this.viewManager.createRootHostView(this.hostViewFactory, '#' + this.id, childInjector, [[this.contentInsertionPoint]]);
+      var hostElement = this.viewManager.getHostElement(this.hostViewRef);
+      this.changeDetector = this.hostViewRef.changeDetectorRef;
+      this.component = this.viewManager.getComponent(hostElement);
     };
     DowngradeNg2ComponentAdapter.prototype.setupInputs = function() {
       var _this = this;
@@ -248,12 +247,11 @@ System.register("angular2/src/upgrade/downgrade_ng2_adapter", ["angular2/core", 
     DowngradeNg2ComponentAdapter.prototype.registerCleanup = function() {
       var _this = this;
       this.element.bind('$destroy', function() {
-        _this.componentScope.$destroy();
-        _this.componentRef.destroy();
+        return _this.viewManager.destroyRootHostView(_this.hostViewRef);
       });
     };
     return DowngradeNg2ComponentAdapter;
-  }());
+  })();
   exports.DowngradeNg2ComponentAdapter = DowngradeNg2ComponentAdapter;
   var Ng1Change = (function() {
     function Ng1Change(previousValue, currentValue) {
@@ -264,7 +262,7 @@ System.register("angular2/src/upgrade/downgrade_ng2_adapter", ["angular2/core", 
       return this.previousValue === this.currentValue;
     };
     return Ng1Change;
-  }());
+  })();
   global.define = __define;
   return module.exports;
 });
@@ -273,7 +271,6 @@ System.register("angular2/src/upgrade/angular_js", [], true, function(require, e
   var global = System.global,
       __define = global.define;
   global.define = undefined;
-  "use strict";
   function noNg() {
     throw new Error('AngularJS v1.x is not loaded!');
   }
@@ -304,7 +301,6 @@ System.register("angular2/src/upgrade/upgrade_ng1_adapter", ["angular2/core", "a
   var global = System.global,
       __define = global.define;
   global.define = undefined;
-  "use strict";
   var core_1 = require("angular2/core");
   var constants_1 = require("angular2/src/upgrade/constants");
   var util_1 = require("angular2/src/upgrade/util");
@@ -337,7 +333,6 @@ System.register("angular2/src/upgrade/upgrade_ng1_adapter", ["angular2/core", "a
         constructor: [new core_1.Inject(constants_1.NG1_SCOPE), core_1.ElementRef, function(scope, elementRef) {
           return new UpgradeNg1ComponentAdapter(self.linkFn, scope, self.directive, elementRef, self.$controller, self.inputs, self.outputs, self.propertyOutputs, self.checkProperties, self.propertyMap);
         }],
-        ngOnInit: function() {},
         ngOnChanges: function() {},
         ngDoCheck: function() {}
       });
@@ -387,7 +382,6 @@ System.register("angular2/src/upgrade/upgrade_ng1_adapter", ["angular2/core", "a
                 this.outputsRename.push(outputNameRenameChange);
                 this.propertyMap[outputName] = localName;
               case '@':
-              case '<':
                 this.inputs.push(inputName);
                 this.inputsRename.push(inputNameRename);
                 this.propertyMap[inputName] = localName;
@@ -455,11 +449,10 @@ System.register("angular2/src/upgrade/upgrade_ng1_adapter", ["angular2/core", "a
       return Promise.all(promises);
     };
     return UpgradeNg1ComponentAdapterBuilder;
-  }());
+  })();
   exports.UpgradeNg1ComponentAdapterBuilder = UpgradeNg1ComponentAdapterBuilder;
   var UpgradeNg1ComponentAdapter = (function() {
     function UpgradeNg1ComponentAdapter(linkFn, scope, directive, elementRef, $controller, inputs, outputs, propOuts, checkProperties, propertyMap) {
-      this.linkFn = linkFn;
       this.directive = directive;
       this.inputs = inputs;
       this.outputs = outputs;
@@ -468,14 +461,20 @@ System.register("angular2/src/upgrade/upgrade_ng1_adapter", ["angular2/core", "a
       this.propertyMap = propertyMap;
       this.destinationObj = null;
       this.checkLastValues = [];
-      this.element = elementRef.nativeElement;
-      this.componentScope = scope.$new(!!directive.scope);
-      var $element = angular.element(this.element);
+      var element = elementRef.nativeElement;
+      var childNodes = [];
+      var childNode;
+      while (childNode = element.firstChild) {
+        element.removeChild(childNode);
+        childNodes.push(childNode);
+      }
+      var componentScope = scope.$new(!!directive.scope);
+      var $element = angular.element(element);
       var controllerType = directive.controller;
       var controller = null;
       if (controllerType) {
         var locals = {
-          $scope: this.componentScope,
+          $scope: componentScope,
           $element: $element
         };
         controller = $controller(controllerType, locals, null, directive.controllerAs);
@@ -488,9 +487,17 @@ System.register("angular2/src/upgrade/upgrade_ng1_adapter", ["angular2/core", "a
         var attrs = NOT_SUPPORTED;
         var transcludeFn = NOT_SUPPORTED;
         var linkController = this.resolveRequired($element, directive.require);
-        directive.link(this.componentScope, $element, attrs, linkController, transcludeFn);
+        directive.link(componentScope, $element, attrs, linkController, transcludeFn);
       }
-      this.destinationObj = directive.bindToController && controller ? controller : this.componentScope;
+      this.destinationObj = directive.bindToController && controller ? controller : componentScope;
+      linkFn(componentScope, function(clonedElement, scope) {
+        for (var i = 0,
+            ii = clonedElement.length; i < ii; i++) {
+          element.appendChild(clonedElement[i]);
+        }
+      }, {parentBoundTranscludeFn: function(scope, cloneAttach) {
+          cloneAttach(childNodes);
+        }});
       for (var i = 0; i < inputs.length; i++) {
         this[inputs[i]] = null;
       }
@@ -507,26 +514,6 @@ System.register("angular2/src/upgrade/upgrade_ng1_adapter", ["angular2/core", "a
         this.checkLastValues.push(INITIAL_VALUE);
       }
     }
-    UpgradeNg1ComponentAdapter.prototype.ngOnInit = function() {
-      var _this = this;
-      var childNodes = [];
-      var childNode;
-      while (childNode = this.element.firstChild) {
-        this.element.removeChild(childNode);
-        childNodes.push(childNode);
-      }
-      this.linkFn(this.componentScope, function(clonedElement, scope) {
-        for (var i = 0,
-            ii = clonedElement.length; i < ii; i++) {
-          _this.element.appendChild(clonedElement[i]);
-        }
-      }, {parentBoundTranscludeFn: function(scope, cloneAttach) {
-          cloneAttach(childNodes);
-        }});
-      if (this.destinationObj.$onInit) {
-        this.destinationObj.$onInit();
-      }
-    };
     UpgradeNg1ComponentAdapter.prototype.ngOnChanges = function(changes) {
       for (var name in changes) {
         if (changes.hasOwnProperty(name)) {
@@ -594,7 +581,7 @@ System.register("angular2/src/upgrade/upgrade_ng1_adapter", ["angular2/core", "a
       throw new Error("Directive '" + this.directive.name + "' require syntax unrecognized: " + this.directive.require);
     };
     return UpgradeNg1ComponentAdapter;
-  }());
+  })();
   global.define = __define;
   return module.exports;
 });
@@ -603,7 +590,6 @@ System.register("angular2/src/upgrade/upgrade_adapter", ["angular2/core", "angul
   var global = System.global,
       __define = global.define;
   global.define = undefined;
-  "use strict";
   var core_1 = require("angular2/core");
   var lang_1 = require("angular2/src/facade/lang");
   var async_1 = require("angular2/src/facade/async");
@@ -638,24 +624,24 @@ System.register("angular2/src/upgrade/upgrade_adapter", ["angular2/core", "angul
       var _this = this;
       var upgrade = new UpgradeAdapterRef();
       var ng1Injector = null;
-      var platformRef = browser_1.browserPlatform();
-      var applicationRef = core_1.ReflectiveInjector.resolveAndCreate([browser_1.BROWSER_APP_PROVIDERS, core_1.provide(constants_1.NG1_INJECTOR, {useFactory: function() {
+      var platformRef = core_1.platform(browser_1.BROWSER_PROVIDERS);
+      var applicationRef = platformRef.application([browser_1.BROWSER_APP_PROVIDERS, core_1.provide(constants_1.NG1_INJECTOR, {useFactory: function() {
           return ng1Injector;
         }}), core_1.provide(constants_1.NG1_COMPILE, {useFactory: function() {
           return ng1Injector.get(constants_1.NG1_COMPILE);
-        }}), this.providers], platformRef.injector).get(core_1.ApplicationRef);
+        }}), this.providers]);
       var injector = applicationRef.injector;
       var ngZone = injector.get(core_1.NgZone);
-      var compiler = injector.get(core_1.ComponentResolver);
+      var compiler = injector.get(core_1.Compiler);
       var delayApplyExps = [];
       var original$applyFn;
       var rootScopePrototype;
       var rootScope;
-      var componentFactoryRefMap = {};
+      var hostViewFactoryRefMap = {};
       var ng1Module = angular.module(this.idPrefix, modules);
       var ng1BootstrapPromise = null;
       var ng1compilePromise = null;
-      ng1Module.value(constants_1.NG2_INJECTOR, injector).value(constants_1.NG2_ZONE, ngZone).value(constants_1.NG2_COMPILER, compiler).value(constants_1.NG2_COMPONENT_FACTORY_REF_MAP, componentFactoryRefMap).config(['$provide', function(provide) {
+      ng1Module.value(constants_1.NG2_INJECTOR, injector).value(constants_1.NG2_ZONE, ngZone).value(constants_1.NG2_COMPILER, compiler).value(constants_1.NG2_HOST_VIEW_FACTORY_REF_MAP, hostViewFactoryRefMap).value(constants_1.NG2_APP_VIEW_MANAGER, injector.get(core_1.AppViewManager)).config(['$provide', function(provide) {
         provide.decorator(constants_1.NG1_ROOT_SCOPE, ['$delegate', function(rootScopeDelegate) {
           rootScopePrototype = rootScopeDelegate.constructor.prototype;
           if (rootScopePrototype.hasOwnProperty('$apply')) {
@@ -715,7 +701,7 @@ System.register("angular2/src/upgrade/upgrade_adapter", ["angular2/core", "angul
           resolve();
         }
       });
-      Promise.all([this.compileNg2Components(compiler, componentFactoryRefMap), ng1BootstrapPromise, ng1compilePromise]).then(function() {
+      Promise.all([this.compileNg2Components(compiler, hostViewFactoryRefMap), ng1BootstrapPromise, ng1compilePromise]).then(function() {
         ngZone.run(function() {
           if (rootScopePrototype) {
             rootScopePrototype.$apply = original$applyFn;
@@ -748,37 +734,37 @@ System.register("angular2/src/upgrade/upgrade_adapter", ["angular2/core", "angul
       factory.$inject = [constants_1.NG2_INJECTOR];
       return factory;
     };
-    UpgradeAdapter.prototype.compileNg2Components = function(compiler, componentFactoryRefMap) {
+    UpgradeAdapter.prototype.compileNg2Components = function(compiler, hostViewFactoryRefMap) {
       var _this = this;
       var promises = [];
       var types = this.upgradedComponents;
       for (var i = 0; i < types.length; i++) {
-        promises.push(compiler.resolveComponent(types[i]));
+        promises.push(compiler.compileInHost(types[i]));
       }
-      return Promise.all(promises).then(function(componentFactories) {
+      return Promise.all(promises).then(function(hostViewFactories) {
         var types = _this.upgradedComponents;
-        for (var i = 0; i < componentFactories.length; i++) {
-          componentFactoryRefMap[metadata_1.getComponentInfo(types[i]).selector] = componentFactories[i];
+        for (var i = 0; i < hostViewFactories.length; i++) {
+          hostViewFactoryRefMap[metadata_1.getComponentInfo(types[i]).selector] = hostViewFactories[i];
         }
-        return componentFactoryRefMap;
+        return hostViewFactoryRefMap;
       }, util_1.onError);
     };
     return UpgradeAdapter;
-  }());
+  })();
   exports.UpgradeAdapter = UpgradeAdapter;
   function ng1ComponentDirective(info, idPrefix) {
-    directiveFactory.$inject = [constants_1.NG2_COMPONENT_FACTORY_REF_MAP, constants_1.NG1_PARSE];
-    function directiveFactory(componentFactoryRefMap, parse) {
-      var componentFactory = componentFactoryRefMap[info.selector];
-      if (!componentFactory)
-        throw new Error('Expecting ComponentFactory for: ' + info.selector);
+    directiveFactory.$inject = [constants_1.NG2_HOST_VIEW_FACTORY_REF_MAP, constants_1.NG2_APP_VIEW_MANAGER, constants_1.NG1_PARSE];
+    function directiveFactory(hostViewFactoryRefMap, viewManager, parse) {
+      var hostViewFactory = hostViewFactoryRefMap[info.selector];
+      if (!hostViewFactory)
+        throw new Error('Expecting HostViewFactoryRef for: ' + info.selector);
       var idCount = 0;
       return {
         restrict: 'E',
         require: constants_1.REQUIRE_INJECTOR,
         link: {post: function(scope, element, attrs, parentInjector, transclude) {
             var domElement = element[0];
-            var facade = new downgrade_ng2_adapter_1.DowngradeNg2ComponentAdapter(idPrefix + (idCount++), info, element, attrs, scope, parentInjector, parse, componentFactory);
+            var facade = new downgrade_ng2_adapter_1.DowngradeNg2ComponentAdapter(idPrefix + (idCount++), info, element, attrs, scope, parentInjector, parse, viewManager, hostViewFactory);
             facade.setupInputs();
             facade.bootstrapNg2();
             facade.projectContent();
@@ -812,7 +798,7 @@ System.register("angular2/src/upgrade/upgrade_adapter", ["angular2/core", "angul
       this.ng2ApplicationRef.dispose();
     };
     return UpgradeAdapterRef;
-  }());
+  })();
   exports.UpgradeAdapterRef = UpgradeAdapterRef;
   global.define = __define;
   return module.exports;
@@ -822,7 +808,6 @@ System.register("angular2/upgrade", ["angular2/src/upgrade/upgrade_adapter"], tr
   var global = System.global,
       __define = global.define;
   global.define = undefined;
-  "use strict";
   var upgrade_adapter_1 = require("angular2/src/upgrade/upgrade_adapter");
   exports.UpgradeAdapter = upgrade_adapter_1.UpgradeAdapter;
   exports.UpgradeAdapterRef = upgrade_adapter_1.UpgradeAdapterRef;

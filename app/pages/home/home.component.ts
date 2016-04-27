@@ -64,6 +64,12 @@ export class HomePage {
      this.notificationsList = this._notificationService.load('vu');
   }
 
+  logOut(){
+    this._configService.remove("access_token");
+    this._configService.remove("refresh_token");
+    this._router.navigate(['Login']);
+  }
+
 
 
  

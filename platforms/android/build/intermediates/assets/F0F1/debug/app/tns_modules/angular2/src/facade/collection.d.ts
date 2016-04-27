@@ -69,6 +69,7 @@ export declare class ListWrapper {
     static createFixedSize(size: number): any[];
     static createGrowableSize(size: number): any[];
     static clone<T>(array: T[]): T[];
+    static createImmutable<T>(array: T[]): T[];
     static forEachWithIndex<T>(array: T[], fn: (t: T, n: number) => void): void;
     static first<T>(array: T[]): T;
     static last<T>(array: T[]): T;
@@ -90,8 +91,8 @@ export declare class ListWrapper {
     static toString<T>(l: T[]): string;
     static toJSON<T>(l: T[]): string;
     static maximum<T>(list: T[], predicate: (t: T) => number): T;
-    static flatten<T>(list: Array<T | T[]>): T[];
-    static addAll<T>(list: Array<T>, source: Array<T>): void;
+    static isImmutable(list: any[]): boolean;
+    static flatten<T>(array: T[][]): T[];
 }
 export declare function isListLikeIterable(obj: any): boolean;
 export declare function areIterablesEqual(a: any, b: any, comparator: Function): boolean;

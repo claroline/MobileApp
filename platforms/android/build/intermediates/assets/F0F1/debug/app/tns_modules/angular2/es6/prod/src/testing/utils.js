@@ -11,7 +11,7 @@ import { Injectable } from 'angular2/core';
 import { ListWrapper } from 'angular2/src/facade/collection';
 import { DOM } from 'angular2/src/platform/dom/dom_adapter';
 import { isPresent, isString, RegExpWrapper, StringWrapper } from 'angular2/src/facade/lang';
-export let Log = class Log {
+export let Log = class {
     constructor() {
         this.logItems = [];
     }

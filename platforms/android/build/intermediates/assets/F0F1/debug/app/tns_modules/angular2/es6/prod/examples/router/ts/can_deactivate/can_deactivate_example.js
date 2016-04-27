@@ -9,10 +9,9 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 import { provide, Component } from 'angular2/core';
 import { bootstrap } from 'angular2/platform/browser';
-import { RouteConfig, RouteParams, ROUTER_DIRECTIVES } from 'angular2/router';
-import { APP_BASE_HREF } from 'angular2/platform/common';
+import { RouteConfig, RouteParams, ROUTER_DIRECTIVES, APP_BASE_HREF } from 'angular2/router';
 // #docregion routerCanDeactivate
-let NoteCmp = class NoteCmp {
+let NoteCmp = class {
     constructor(params) {
         this.id = params.get('id');
     }
@@ -32,7 +31,7 @@ NoteCmp = __decorate([
     __metadata('design:paramtypes', [RouteParams])
 ], NoteCmp);
 // #enddocregion
-let NoteIndexCmp = class NoteIndexCmp {
+let NoteIndexCmp = class {
 };
 NoteIndexCmp = __decorate([
     Component({
@@ -48,7 +47,7 @@ NoteIndexCmp = __decorate([
     }), 
     __metadata('design:paramtypes', [])
 ], NoteIndexCmp);
-let AppCmp = class AppCmp {
+let AppCmp = class {
 };
 AppCmp = __decorate([
     Component({

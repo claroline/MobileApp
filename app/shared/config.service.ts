@@ -50,6 +50,10 @@ export class ConfigService {
 		return appSettings.getString("client_secret");
 	}
 
+	remove(key:string){
+		appSettings.remove(key);
+	}
+
 
 	getClientIdAndSecretFromHost(){
 		let host = this.getHost();

@@ -1,3 +1,4 @@
+import { ChangeDetector } from './interfaces';
 export declare abstract class ChangeDetectorRef {
     /**
      * Marks all {@link ChangeDetectionStrategy#OnPush} ancestors as to be checked.
@@ -185,4 +186,13 @@ export declare abstract class ChangeDetectorRef {
      * ```
      */
     abstract reattach(): void;
+}
+export declare class ChangeDetectorRef_ extends ChangeDetectorRef {
+    private _cd;
+    constructor(_cd: ChangeDetector);
+    markForCheck(): void;
+    detach(): void;
+    detectChanges(): void;
+    checkNoChanges(): void;
+    reattach(): void;
 }

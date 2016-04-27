@@ -1,6 +1,6 @@
 library facade.collection;
 
-import 'dart:collection' show IterableBase;
+import 'dart:collection' show IterableBase, UnmodifiableListView;
 import 'dart:convert' show JsonEncoder;
 export 'dart:core' show Iterator, Map, List, Set;
 import 'dart:math' show max, min;
@@ -110,6 +110,9 @@ class ListWrapper {
   static List/*<T>*/ createFixedSize/*<T>*/(int size) => new List(size);
   static List/*<T>*/ createGrowableSize/*<T>*/(int size) =>
       new List.generate(size, (_) => null, growable: true);
+  static UnmodifiableListView createImmutable(List input) {
+    return new UnmodifiableListView(input);
+  }
 
   static bool contains(List m, k) => m.contains(k);
   static int indexOf(List list, value, [int startIndex = 0]) =>
@@ -226,31 +229,18 @@ class ListWrapper {
     return solution;
   }
 
+  static bool isImmutable(List l) {
+    return l is UnmodifiableListView;
+  }
+
   static List flatten(List l) {
-    var target = [];
-    _flattenArray(l, target);
-    return target;
-  }
-
-  static addAll(List l, List source) {
-    l.addAll(source);
+    final res = [];
+    l.forEach((item) {
+      res.addAll(item);
+    });
+    return res;
   }
 }
-
-List _flattenArray(List source, List target) {
-  if (source != null) {
-    for (var i = 0; i < source.length; i++) {
-      var item = source[i];
-      if (item is List) {
-        _flattenArray(item, target);
-      } else {
-        target.add(item);
-      }
-    }
-  }
-  return target;
-}
-
 
 bool isListLikeIterable(obj) => obj is Iterable;
 

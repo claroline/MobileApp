@@ -31,7 +31,7 @@ export class SwitchView {
  * `NgSwitch` simply inserts nested elements based on which match expression matches the value
  * obtained from the evaluated switch expression. In other words, you define a container element
  * (where you place the directive with a switch expression on the
- * `[ngSwitch]="..."` attribute), define any inner elements inside of the directive and
+ * **`[ngSwitch]="..."` attribute**), define any inner elements inside of the directive and
  * place a `[ngSwitchWhen]` attribute per element.
  *
  * The `ngSwitchWhen` property is used to inform `NgSwitch` which element to display when the
@@ -78,7 +78,7 @@ export class SwitchView {
  * bootstrap(App).catch(err => console.error(err));
  * ```
  */
-export let NgSwitch = class NgSwitch {
+export let NgSwitch = class {
     constructor() {
         this._useDefault = false;
         this._valueViews = new Map();
@@ -172,7 +172,7 @@ NgSwitch = __decorate([
  *
  * See {@link NgSwitch} for more details and example.
  */
-export let NgSwitchWhen = class NgSwitchWhen {
+export let NgSwitchWhen = class {
     constructor(viewContainer, templateRef, ngSwitch) {
         // `_WHEN_DEFAULT` is used as a marker for a not yet initialized value
         /** @internal */
@@ -196,7 +196,7 @@ NgSwitchWhen = __decorate([
  *
  * See {@link NgSwitch} for more details and example.
  */
-export let NgSwitchDefault = class NgSwitchDefault {
+export let NgSwitchDefault = class {
     constructor(viewContainer, templateRef, sswitch) {
         sswitch._registerView(_WHEN_DEFAULT, new SwitchView(viewContainer, templateRef));
     }

@@ -1,12 +1,9 @@
-import { FunctionWithParamTokens } from './test_injector';
 /**
  * Wraps a function to be executed in the fakeAsync zone:
  * - microtasks are manually executed by calling `flushMicrotasks()`,
  * - timers are synchronous, `tick()` simulates the asynchronous passage of time.
  *
  * If there are any pending timers at the end of the function, an exception will be thrown.
- *
- * Can be used to wrap inject() calls.
  *
  * ## Example
  *
@@ -15,12 +12,15 @@ import { FunctionWithParamTokens } from './test_injector';
  * @param fn
  * @returns {Function} The function wrapped to be executed in the fakeAsync zone
  */
-export declare function fakeAsync(fn: Function | FunctionWithParamTokens): Function;
+export declare function fakeAsync(fn: Function): Function;
 /**
  * Clear the queue of pending timers and microtasks.
- * Tests no longer need to call this explicitly.
  *
- * @deprecated
+ * Useful for cleaning up after an asynchronous test passes.
+ *
+ * ## Example
+ *
+ * {@example testing/ts/fake_async.ts region='pending'}
  */
 export declare function clearPendingTimers(): void;
 /**

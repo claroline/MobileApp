@@ -9,13 +9,12 @@ import {bind} from 'angular2/core';
 import {
   FunctionWithParamTokens,
   inject,
-  async,
   injectAsync,
   TestInjector,
   getTestInjector
 } from './test_injector';
 
-export {inject, async, injectAsync} from './test_injector';
+export {inject, injectAsync} from './test_injector';
 
 export {expect, NgMatchers} from './matchers';
 
@@ -87,7 +86,7 @@ export type AsyncTestFn = (done: () => void) => void;
 /**
  * Signature for any simple testing function.
  */
-export type AnyTestFn = SyncTestFn | AsyncTestFn | Function;
+export type AnyTestFn = SyncTestFn | AsyncTestFn;
 
 var jsmBeforeEach = _global.beforeEach;
 var jsmIt = _global.it;
@@ -123,14 +122,6 @@ export function beforeEachProviders(fn): void {
   });
 }
 
-function runInAsyncTestZone(fnToExecute, finishCallback: Function, failCallback: Function,
-                            testName = ''): any {
-  var AsyncTestZoneSpec = Zone['AsyncTestZoneSpec'];
-  var testZoneSpec = new AsyncTestZoneSpec(finishCallback, failCallback, testName);
-  var testZone = Zone.current.fork(testZoneSpec);
-  return testZone.run(fnToExecute);
-}
-
 function _isPromiseLike(input): boolean {
   return input && !!(input.then);
 }
@@ -138,13 +129,29 @@ function _isPromiseLike(input): boolean {
 function _it(jsmFn: Function, name: string, testFn: FunctionWithParamTokens | AnyTestFn,
              testTimeOut: number): void {
   var timeOut = testTimeOut;
+
   if (testFn instanceof FunctionWithParamTokens) {
-    let testFnT = testFn;
     jsmFn(name, (done) => {
-      if (testFnT.isAsync) {
-        runInAsyncTestZone(() => testInjector.execute(testFnT), done, done.fail, name);
+      var returnedTestValue;
+      try {
+        returnedTestValue = testInjector.execute(testFn);
+      } catch (err) {
+        done.fail(err);
+        return;
+      }
+
+      if (testFn.isAsync) {
+        if (_isPromiseLike(returnedTestValue)) {
+          (<Promise<any>>returnedTestValue).then(() => { done(); }, (err) => { done.fail(err); });
+        } else {
+          done.fail('Error: injectAsync was expected to return a promise, but the ' +
+                    ' returned value was: ' + returnedTestValue);
+        }
       } else {
-        testInjector.execute(testFnT);
+        if (!(returnedTestValue === undefined)) {
+          done.fail('Error: inject returned a value. Did you mean to use injectAsync? Returned ' +
+                    'value was: ' + returnedTestValue);
+        }
         done();
       }
     }, timeOut);
@@ -158,6 +165,8 @@ function _it(jsmFn: Function, name: string, testFn: FunctionWithParamTokens | An
  * Wrapper around Jasmine beforeEach function.
  *
  * beforeEach may be used with the `inject` function to fetch dependencies.
+ * The test will automatically wait for any asynchronous calls inside the
+ * injected test function to complete.
  *
  * See http://jasmine.github.io/ for more details.
  *
@@ -169,12 +178,27 @@ export function beforeEach(fn: FunctionWithParamTokens | AnyTestFn): void {
   if (fn instanceof FunctionWithParamTokens) {
     // The test case uses inject(). ie `beforeEach(inject([ClassA], (a) => { ...
     // }));`
-    let fnT = fn;
     jsmBeforeEach((done) => {
-      if (fnT.isAsync) {
-        runInAsyncTestZone(() => testInjector.execute(fnT), done, done.fail, 'beforeEach');
+
+      var returnedTestValue;
+      try {
+        returnedTestValue = testInjector.execute(fn);
+      } catch (err) {
+        done.fail(err);
+        return;
+      }
+      if (fn.isAsync) {
+        if (_isPromiseLike(returnedTestValue)) {
+          (<Promise<any>>returnedTestValue).then(() => { done(); }, (err) => { done.fail(err); });
+        } else {
+          done.fail('Error: injectAsync was expected to return a promise, but the ' +
+                    ' returned value was: ' + returnedTestValue);
+        }
       } else {
-        testInjector.execute(fnT);
+        if (!(returnedTestValue === undefined)) {
+          done.fail('Error: inject returned a value. Did you mean to use injectAsync? Returned ' +
+                    'value was: ' + returnedTestValue);
+        }
         done();
       }
     });
@@ -191,8 +215,10 @@ export function beforeEach(fn: FunctionWithParamTokens | AnyTestFn): void {
 /**
  * Define a single test case with the given test name and execution function.
  *
- * The test function can be either a synchronous function, the result of {@link async},
- * or an injected function created via {@link inject}.
+ * The test function can be either a synchronous function, an asynchronous function
+ * that takes a completion callback, or an injected function created via {@link inject}
+ * or {@link injectAsync}. The test will automatically wait for any asynchronous calls
+ * inside the injected test function to complete.
  *
  * Wrapper around Jasmine it function. See http://jasmine.github.io/ for more details.
  *

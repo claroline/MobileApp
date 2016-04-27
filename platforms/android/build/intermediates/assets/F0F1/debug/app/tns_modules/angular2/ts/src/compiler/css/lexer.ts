@@ -94,14 +94,12 @@ export class LexedCssResult {
   constructor(public error: CssScannerError, public token: CssToken) {}
 }
 
-export function generateErrorMessage(input: string, message: string, errorValue: string,
-                                     index: number, row: number, column: number): string {
+export function generateErrorMessage(input, message, errorValue, index, row, column) {
   return `${message} at column ${row}:${column} in expression [` +
          findProblemCode(input, errorValue, index, column) + ']';
 }
 
-export function findProblemCode(input: string, errorValue: string, index: number,
-                                column: number): string {
+export function findProblemCode(input, errorValue, index, column) {
   var endOfProblemLine = index;
   var current = charCode(input, index);
   while (current > 0 && !isNewline(current)) {
@@ -165,9 +163,7 @@ export class CssScanner {
   column: number = -1;
   line: number = 0;
 
-  /** @internal */
   _currentMode: CssLexerMode = CssLexerMode.BLOCK;
-  /** @internal */
   _currentError: CssScannerError = null;
 
   constructor(public input: string, private _trackComments: boolean = false) {
@@ -200,7 +196,7 @@ export class CssScanner {
     this.peekPeek = this.peekAt(this.index + 1);
   }
 
-  peekAt(index: number): number {
+  peekAt(index): number {
     return index >= this.length ? $EOF : StringWrapper.charCodeAt(this.input, index);
   }
 
@@ -299,7 +295,6 @@ export class CssScanner {
     return new LexedCssResult(error, token);
   }
 
-  /** @internal */
   _scan(): CssToken {
     var peek = this.peek;
     var peekPeek = this.peekPeek;
@@ -353,7 +348,7 @@ export class CssScanner {
     return this.error(`Unexpected character [${StringWrapper.fromCharCode(peek)}]`);
   }
 
-  scanComment(): CssToken {
+  scanComment() {
     if (this.assertCondition(isCommentStart(this.peek, this.peekPeek),
                              "Expected comment start value")) {
       return null;
@@ -380,7 +375,7 @@ export class CssScanner {
     return new CssToken(start, startingColumn, startingLine, CssTokenType.Comment, str);
   }
 
-  scanWhitespace(): CssToken {
+  scanWhitespace() {
     var start = this.index;
     var startingColumn = this.column;
     var startingLine = this.line;
@@ -391,7 +386,7 @@ export class CssScanner {
     return new CssToken(start, startingColumn, startingLine, CssTokenType.Whitespace, str);
   }
 
-  scanString(): CssToken {
+  scanString() {
     if (this.assertCondition(isStringStart(this.peek, this.peekPeek),
                              "Unexpected non-string starting value")) {
       return null;
@@ -421,7 +416,7 @@ export class CssScanner {
     return new CssToken(start, startingColumn, startingLine, CssTokenType.String, str);
   }
 
-  scanNumber(): CssToken {
+  scanNumber() {
     var start = this.index;
     var startingColumn = this.column;
     if (this.peek == $PLUS || this.peek == $MINUS) {
@@ -441,7 +436,7 @@ export class CssScanner {
     return new CssToken(start, startingColumn, this.line, CssTokenType.Number, strValue);
   }
 
-  scanIdentifier(): CssToken {
+  scanIdentifier() {
     if (this.assertCondition(isIdentifierStart(this.peek, this.peekPeek),
                              'Expected identifier starting value')) {
       return null;
@@ -456,7 +451,7 @@ export class CssScanner {
     return new CssToken(start, startingColumn, this.line, CssTokenType.Identifier, strValue);
   }
 
-  scanCssValueFunction(): CssToken {
+  scanCssValueFunction() {
     var start = this.index;
     var startingColumn = this.column;
     while (this.peek != $EOF && this.peek != $RPAREN) {
@@ -466,7 +461,7 @@ export class CssScanner {
     return new CssToken(start, startingColumn, this.line, CssTokenType.Identifier, strValue);
   }
 
-  scanCharacter(): CssToken {
+  scanCharacter() {
     var start = this.index;
     var startingColumn = this.column;
     if (this.assertCondition(isValidCssCharacter(this.peek, this._currentMode),
@@ -480,7 +475,7 @@ export class CssScanner {
     return new CssToken(start, startingColumn, this.line, CssTokenType.Character, c);
   }
 
-  scanAtExpression(): CssToken {
+  scanAtExpression() {
     if (this.assertCondition(this.peek == $AT, 'Expected @ value')) {
       return null;
     }
@@ -526,7 +521,7 @@ function isAtKeyword(current: CssToken, next: CssToken): boolean {
   return current.numValue == $AT && next.type == CssTokenType.Identifier;
 }
 
-function isCharMatch(target: number, previous: number, code: number): boolean {
+function isCharMatch(target: number, previous: number, code: number) {
   return code == target && previous != $BACKSLASH;
 }
 
@@ -534,11 +529,11 @@ function isDigit(code: number): boolean {
   return $0 <= code && code <= $9;
 }
 
-function isCommentStart(code: number, next: number): boolean {
+function isCommentStart(code: number, next: number) {
   return code == $SLASH && next == $STAR;
 }
 
-function isCommentEnd(code: number, next: number): boolean {
+function isCommentEnd(code: number, next: number) {
   return code == $STAR && next == $SLASH;
 }
 
@@ -560,12 +555,12 @@ function isIdentifierStart(code: number, next: number): boolean {
          target == $MINUS || target == $_;
 }
 
-function isIdentifierPart(target: number): boolean {
+function isIdentifierPart(target: number) {
   return ($a <= target && target <= $z) || ($A <= target && target <= $Z) || target == $BACKSLASH ||
          target == $MINUS || target == $_ || isDigit(target);
 }
 
-function isValidPseudoSelectorCharacter(code: number): boolean {
+function isValidPseudoSelectorCharacter(code: number) {
   switch (code) {
     case $LPAREN:
     case $RPAREN:
@@ -575,11 +570,11 @@ function isValidPseudoSelectorCharacter(code: number): boolean {
   }
 }
 
-function isValidKeyframeBlockCharacter(code: number): boolean {
+function isValidKeyframeBlockCharacter(code: number) {
   return code == $PERCENT;
 }
 
-function isValidAttributeSelectorCharacter(code: number): boolean {
+function isValidAttributeSelectorCharacter(code: number) {
   // value^*|$~=something
   switch (code) {
     case $$:
@@ -594,7 +589,7 @@ function isValidAttributeSelectorCharacter(code: number): boolean {
   }
 }
 
-function isValidSelectorCharacter(code: number): boolean {
+function isValidSelectorCharacter(code: number) {
   // selector [ key   = value ]
   // IDENT    C IDENT C IDENT C
   // #id, .class, *+~>
@@ -615,7 +610,7 @@ function isValidSelectorCharacter(code: number): boolean {
   }
 }
 
-function isValidStyleBlockCharacter(code: number): boolean {
+function isValidStyleBlockCharacter(code: number) {
   // key:value;
   // key:calc(something ... )
   switch (code) {
@@ -635,7 +630,7 @@ function isValidStyleBlockCharacter(code: number): boolean {
   }
 }
 
-function isValidMediaQueryRuleCharacter(code: number): boolean {
+function isValidMediaQueryRuleCharacter(code: number) {
   // (min-width: 7.5em) and (orientation: landscape)
   switch (code) {
     case $LPAREN:
@@ -649,7 +644,7 @@ function isValidMediaQueryRuleCharacter(code: number): boolean {
   }
 }
 
-function isValidAtRuleCharacter(code: number): boolean {
+function isValidAtRuleCharacter(code: number) {
   // @document url(http://www.w3.org/page?something=on#hash),
   switch (code) {
     case $LPAREN:
@@ -673,7 +668,7 @@ function isValidAtRuleCharacter(code: number): boolean {
   }
 }
 
-function isValidStyleFunctionCharacter(code: number): boolean {
+function isValidStyleFunctionCharacter(code: number) {
   switch (code) {
     case $PERIOD:
     case $MINUS:
@@ -689,7 +684,7 @@ function isValidStyleFunctionCharacter(code: number): boolean {
   }
 }
 
-function isValidBlockCharacter(code: number): boolean {
+function isValidBlockCharacter(code: number) {
   // @something { }
   // IDENT
   return code == $AT;

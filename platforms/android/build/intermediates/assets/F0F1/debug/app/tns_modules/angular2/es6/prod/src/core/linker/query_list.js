@@ -27,7 +27,6 @@ import { EventEmitter } from 'angular2/src/facade/async';
  */
 export class QueryList {
     constructor() {
-        this._dirty = true;
         this._results = [];
         this._emitter = new EventEmitter();
     }
@@ -60,14 +59,7 @@ export class QueryList {
     /**
      * @internal
      */
-    reset(res) {
-        this._results = ListWrapper.flatten(res);
-        this._dirty = false;
-    }
+    reset(res) { this._results = res; }
     /** @internal */
     notifyOnChanges() { this._emitter.emit(this); }
-    /** internal */
-    setDirty() { this._dirty = true; }
-    /** internal */
-    get dirty() { return this._dirty; }
 }

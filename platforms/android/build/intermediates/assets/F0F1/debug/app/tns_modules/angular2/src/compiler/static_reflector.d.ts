@@ -1,4 +1,3 @@
-import { ReflectorReader } from 'angular2/src/core/reflection/reflector_reader';
 /**
  * The host of the static resolver is expected to be able to provide module metadata in the form of
  * ModuleMetadata. Angular 2 CLI will produce this metadata for a module whenever a .d.ts files is
@@ -31,7 +30,7 @@ export declare class StaticType {
  * A static reflector implements enough of the Reflector API that is necessary to compile
  * templates statically.
  */
-export declare class StaticReflector implements ReflectorReader {
+export declare class StaticReflector {
     private host;
     private typeCache;
     private annotationCache;
@@ -39,7 +38,6 @@ export declare class StaticReflector implements ReflectorReader {
     private parameterCache;
     private metadataCache;
     constructor(host: StaticReflectorHost);
-    importUri(typeOrFunc: any): string;
     /**
      * getStatictype produces a Type whose metadata is known but whose implementation is not loaded.
      * All types passed to the StaticResolver should be pseudo-types returned by this method.
@@ -60,9 +58,7 @@ export declare class StaticReflector implements ReflectorReader {
     private getDecoratorParameter(moduleContext, expression, index);
     private getPropertyMetadata(moduleContext, value);
     private getMemberData(moduleContext, member);
-    getModuleMetadata(module: string): {
-        [key: string]: any;
-    };
+    private getModuleMetadata(module);
     private getTypeMetadata(type);
     private normalizeModuleName(from, to);
 }

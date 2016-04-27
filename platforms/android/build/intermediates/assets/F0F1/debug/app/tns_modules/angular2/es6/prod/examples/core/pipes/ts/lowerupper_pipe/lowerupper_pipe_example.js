@@ -10,7 +10,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 import { Component } from 'angular2/core';
 import { bootstrap } from 'angular2/platform/browser';
 // #docregion LowerUpperPipe
-export let LowerUpperPipeExample = class LowerUpperPipeExample {
+export let LowerUpperPipeExample = class {
     change(value) { this.value = value; }
 };
 LowerUpperPipeExample = __decorate([
@@ -25,7 +25,7 @@ LowerUpperPipeExample = __decorate([
     __metadata('design:paramtypes', [])
 ], LowerUpperPipeExample);
 // #enddocregion
-export let AppCmp = class AppCmp {
+export let AppCmp = class {
 };
 AppCmp = __decorate([
     Component({

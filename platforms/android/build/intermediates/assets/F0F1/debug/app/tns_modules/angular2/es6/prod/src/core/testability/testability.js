@@ -18,12 +18,11 @@ import { ObservableWrapper } from 'angular2/src/facade/async';
  * the browser and by services such as Protractor. Each bootstrapped Angular
  * application on the page will have an instance of Testability.
  */
-export let Testability = class Testability {
+export let Testability = class {
     constructor(_ngZone) {
         this._ngZone = _ngZone;
         /** @internal */
         this._pendingCount = 0;
-        /** @internal */
         this._isZoneStable = true;
         /**
          * Whether any work was done since the last 'whenStable' callback. This is
@@ -105,7 +104,7 @@ Testability = __decorate([
 /**
  * A global registry of {@link Testability} instances for specific elements.
  */
-export let TestabilityRegistry = class TestabilityRegistry {
+export let TestabilityRegistry = class {
     constructor() {
         /** @internal */
         this._applications = new Map();
@@ -125,7 +124,7 @@ TestabilityRegistry = __decorate([
     Injectable(), 
     __metadata('design:paramtypes', [])
 ], TestabilityRegistry);
-let _NoopGetTestability = class _NoopGetTestability {
+let _NoopGetTestability = class {
     addToWindow(registry) { }
     findTestabilityInTree(registry, elem, findInAncestors) {
         return null;

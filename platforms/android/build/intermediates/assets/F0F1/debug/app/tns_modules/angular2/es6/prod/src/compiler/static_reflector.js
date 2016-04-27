@@ -27,7 +27,6 @@ export class StaticReflector {
         this.conversionMap = new Map();
         this.initializeConversionMap();
     }
-    importUri(typeOrFunc) { return typeOrFunc.moduleId; }
     /**
      * getStatictype produces a Type whose metadata is known but whose implementation is not loaded.
      * All types passed to the StaticResolver should be pseudo-types returned by this method.
@@ -53,9 +52,6 @@ export class StaticReflector {
                     .map(decorator => this.convertKnownDecorator(type.moduleId, decorator))
                     .filter(decorator => isPresent(decorator));
             }
-            else {
-                annotations = [];
-            }
             this.annotationCache.set(type, annotations);
         }
         return annotations;
@@ -65,9 +61,6 @@ export class StaticReflector {
         if (!isPresent(propMetadata)) {
             let classMetadata = this.getTypeMetadata(type);
             propMetadata = this.getPropertyMetadata(type.moduleId, classMetadata['members']);
-            if (!isPresent(propMetadata)) {
-                propMetadata = {};
-            }
             this.propertyCache.set(type, propMetadata);
         }
         return propMetadata;
@@ -76,20 +69,12 @@ export class StaticReflector {
         let parameters = this.parameterCache.get(type);
         if (!isPresent(parameters)) {
             let classMetadata = this.getTypeMetadata(type);
-            if (isPresent(classMetadata)) {
-                let members = classMetadata['members'];
-                if (isPresent(members)) {
-                    let ctorData = members['__ctor__'];
-                    if (isPresent(ctorData)) {
-                        let ctor = ctorData.find(a => a['__symbolic'] === 'constructor');
-                        parameters = this.simplify(type.moduleId, ctor['parameters']);
-                    }
-                }
+            let ctorData = classMetadata['members']['__ctor__'];
+            if (isPresent(ctorData)) {
+                let ctor = ctorData.find(a => a['__symbolic'] === 'constructor');
+                parameters = this.simplify(type.moduleId, ctor['parameters']);
+                this.parameterCache.set(type, parameters);
             }
-            if (!isPresent(parameters)) {
-                parameters = [];
-            }
-            this.parameterCache.set(type, parameters);
         }
         return parameters;
     }
@@ -194,7 +179,6 @@ export class StaticReflector {
         });
         conversionMap.set(this.getStaticType(core_metadata, 'HostBinding'), (moduleContext, expression) => new HostBindingMetadata(this.getDecoratorParameter(moduleContext, expression, 0)));
         conversionMap.set(this.getStaticType(core_metadata, 'HostListener'), (moduleContext, expression) => new HostListenerMetadata(this.getDecoratorParameter(moduleContext, expression, 0), this.getDecoratorParameter(moduleContext, expression, 1)));
-        return null;
     }
     convertKnownDecorator(moduleContext, expression) {
         let converter = this.conversionMap.get(this.getDecoratorType(moduleContext, expression));
@@ -235,7 +219,7 @@ export class StaticReflector {
             });
             return result;
         }
-        return {};
+        return null;
     }
     // clang-format off
     getMemberData(moduleContext, member) {

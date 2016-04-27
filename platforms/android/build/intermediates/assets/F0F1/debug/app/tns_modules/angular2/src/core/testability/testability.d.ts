@@ -6,6 +6,7 @@ import { NgZone } from '../zone/ng_zone';
  */
 export declare class Testability {
     private _ngZone;
+    _isZoneStable: boolean;
     constructor(_ngZone: NgZone);
     increasePendingRequestCount(): number;
     decreasePendingRequestCount(): number;

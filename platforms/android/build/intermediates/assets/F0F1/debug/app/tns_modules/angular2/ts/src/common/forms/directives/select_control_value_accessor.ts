@@ -36,23 +36,15 @@ function _extractId(valueString: string): string {
 
 /**
  * The accessor for writing a value and listening to changes on a select element.
- *
- * Note: We have to listen to the 'change' event because 'input' events aren't fired
- * for selects in Firefox and IE:
- * https://bugzilla.mozilla.org/show_bug.cgi?id=1024350
- * https://developer.microsoft.com/en-us/microsoft-edge/platform/issues/4660045/
- *
  */
 @Directive({
   selector: 'select[ngControl],select[ngFormControl],select[ngModel]',
-  host: {'(change)': 'onChange($event.target.value)', '(blur)': 'onTouched()'},
+  host: {'(input)': 'onChange($event.target.value)', '(blur)': 'onTouched()'},
   providers: [SELECT_VALUE_ACCESSOR]
 })
 export class SelectControlValueAccessor implements ControlValueAccessor {
   value: any;
-  /** @internal */
   _optionMap: Map<string, any> = new Map<string, any>();
-  /** @internal */
   _idCounter: number = 0;
 
   onChange = (_: any) => {};
@@ -71,10 +63,8 @@ export class SelectControlValueAccessor implements ControlValueAccessor {
   }
   registerOnTouched(fn: () => any): void { this.onTouched = fn; }
 
-  /** @internal */
   _registerOption(): string { return (this._idCounter++).toString(); }
 
-  /** @internal */
   _getOptionId(value: any): string {
     for (let id of MapWrapper.keys(this._optionMap)) {
       if (looseIdentical(this._optionMap.get(id), value)) return id;
@@ -82,7 +72,6 @@ export class SelectControlValueAccessor implements ControlValueAccessor {
     return null;
   }
 
-  /** @internal */
   _getOptionValue(valueString: string): any {
     let value = this._optionMap.get(_extractId(valueString));
     return isPresent(value) ? value : valueString;
@@ -119,11 +108,11 @@ export class NgSelectOption implements OnDestroy {
 
   @Input('value')
   set value(value: any) {
+    if (this._select == null) return;
     this._setElementValue(value);
-    if (isPresent(this._select)) this._select.writeValue(this._select.value);
+    this._select.writeValue(this._select.value);
   }
 
-  /** @internal */
   _setElementValue(value: string): void {
     this._renderer.setElementProperty(this._element.nativeElement, 'value', value);
   }

@@ -135,7 +135,6 @@ function _it(jsmFn: Function, name: string, testFn: FunctionWithParamTokens | An
   if (testFn instanceof FunctionWithParamTokens) {
     // The test case uses inject(). ie `it('test', inject([AsyncTestCompleter], (async) => { ...
     // }));`
-    let testFnT = testFn;
 
     if (testFn.hasToken(AsyncTestCompleter)) {
       jsmFn(name, (done) => {
@@ -151,13 +150,13 @@ function _it(jsmFn: Function, name: string, testFn: FunctionWithParamTokens | An
         runner.run();
 
         inIt = true;
-        testInjector.execute(testFnT);
+        testInjector.execute(testFn);
         inIt = false;
       }, timeOut);
     } else {
       jsmFn(name, () => {
         runner.run();
-        testInjector.execute(testFnT);
+        testInjector.execute(testFn);
       }, timeOut);
     }
 

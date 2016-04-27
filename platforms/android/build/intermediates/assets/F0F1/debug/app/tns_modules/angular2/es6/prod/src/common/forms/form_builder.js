@@ -52,7 +52,7 @@ import * as modelModule from './model';
  * }
  * ```
  */
-export let FormBuilder = class FormBuilder {
+export let FormBuilder = class {
     /**
      * Construct a new {@link ControlGroup} with the given map of configuration.
      * Valid keys for the `extra` parameter map are `optionals` and `validator`.

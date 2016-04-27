@@ -5,6 +5,7 @@ import {
   PLATFORM_DIRECTIVES,
   PLATFORM_PIPES,
   ComponentRef,
+  platform,
   ExceptionHandler,
   Reflector,
   reflector,
@@ -35,6 +36,7 @@ import {BrowserDomAdapter} from './browser/browser_adapter';
 import {wtfInit} from 'angular2/src/core/profile/wtf_init';
 import {MessageBasedRenderer} from 'angular2/src/web_workers/ui/renderer';
 import {MessageBasedXHRImpl} from 'angular2/src/web_workers/ui/xhr_impl';
+import {BrowserPlatformLocation} from 'angular2/src/router/location/browser_platform_location';
 import {
   ServiceMessageBrokerFactory,
   ServiceMessageBrokerFactory_
@@ -43,13 +45,9 @@ import {
   ClientMessageBrokerFactory,
   ClientMessageBrokerFactory_
 } from 'angular2/src/web_workers/shared/client_message_broker';
-import {
-  BrowserPlatformLocation
-} from 'angular2/src/platform/browser/location/browser_platform_location';
 import {Serializer} from 'angular2/src/web_workers/shared/serializer';
 import {ON_WEB_WORKER} from 'angular2/src/web_workers/shared/api';
 import {RenderStore} from 'angular2/src/web_workers/shared/render_store';
-import {HAMMER_GESTURE_CONFIG, HammerGestureConfig} from './dom/events/hammer_gestures';
 
 export const WORKER_SCRIPT: OpaqueToken = CONST_EXPR(new OpaqueToken("WebWorkerScript"));
 
@@ -57,12 +55,8 @@ export const WORKER_SCRIPT: OpaqueToken = CONST_EXPR(new OpaqueToken("WebWorkerS
 export const WORKER_RENDER_MESSAGING_PROVIDERS: Array<any /*Type | Provider | any[]*/> =
     CONST_EXPR([MessageBasedRenderer, MessageBasedXHRImpl]);
 
-export const WORKER_RENDER_PLATFORM_MARKER =
-    CONST_EXPR(new OpaqueToken('WorkerRenderPlatformMarker'));
-
 export const WORKER_RENDER_PLATFORM: Array<any /*Type | Provider | any[]*/> = CONST_EXPR([
   PLATFORM_COMMON_PROVIDERS,
-  CONST_EXPR(new Provider(WORKER_RENDER_PLATFORM_MARKER, {useValue: true})),
   new Provider(PLATFORM_INITIALIZER, {useValue: initWebWorkerRenderPlatform, multi: true})
 ]);
 
@@ -83,7 +77,6 @@ export const WORKER_RENDER_APPLICATION_COMMON: Array<any /*Type | Provider | any
   new Provider(EVENT_MANAGER_PLUGINS, {useClass: DomEventsPlugin, multi: true}),
   new Provider(EVENT_MANAGER_PLUGINS, {useClass: KeyEventsPlugin, multi: true}),
   new Provider(EVENT_MANAGER_PLUGINS, {useClass: HammerGesturesPlugin, multi: true}),
-  new Provider(HAMMER_GESTURE_CONFIG, {useClass: HammerGestureConfig}),
   new Provider(DomRootRenderer, {useClass: DomRootRenderer_}),
   new Provider(RootRenderer, {useExisting: DomRootRenderer}),
   new Provider(SharedStylesHost, {useExisting: DomSharedStylesHost}),
@@ -106,7 +99,7 @@ export function initializeGenericWorkerRenderer(injector: Injector) {
   let zone = injector.get(NgZone);
   bus.attachToZone(zone);
 
-  zone.runGuarded(() => {
+  zone.run(() => {
     WORKER_RENDER_MESSAGING_PROVIDERS.forEach((token) => { injector.get(token).start(); });
   });
 }

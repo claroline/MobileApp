@@ -12,16 +12,16 @@ import { Injectable } from 'angular2/src/core/di';
 /**
  * A no-op implementation of {@link ApplicationRef}, useful for testing.
  */
-export let MockApplicationRef = class MockApplicationRef extends ApplicationRef {
+export let MockApplicationRef = class extends ApplicationRef {
     registerBootstrapListener(listener) { }
     registerDisposeListener(dispose) { }
-    bootstrap(componentFactory) { return null; }
+    bootstrap(componentType, bindings) {
+        return null;
+    }
     get injector() { return null; }
     ;
     get zone() { return null; }
     ;
-    run(callback) { return null; }
-    waitForAsyncInitializers() { return null; }
     dispose() { }
     tick() { }
     get componentTypes() { return null; }

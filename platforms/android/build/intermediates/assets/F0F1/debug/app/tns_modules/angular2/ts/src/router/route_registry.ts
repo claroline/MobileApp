@@ -486,7 +486,7 @@ export class RouteRegistry {
  * Given: ['/a/b', {c: 2}]
  * Returns: ['', 'a', 'b', {c: 2}]
  */
-function splitAndFlattenLinkParams(linkParams: any[]): any[] {
+function splitAndFlattenLinkParams(linkParams: any[]) {
   var accumulation = [];
   linkParams.forEach(function(item: any) {
     if (isString(item)) {

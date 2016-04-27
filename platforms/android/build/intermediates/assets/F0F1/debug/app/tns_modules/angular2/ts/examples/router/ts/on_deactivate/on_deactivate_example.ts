@@ -1,7 +1,12 @@
 import {Component, Injectable, provide} from 'angular2/core';
 import {bootstrap} from 'angular2/platform/browser';
-import {OnDeactivate, ComponentInstruction, RouteConfig, ROUTER_DIRECTIVES} from 'angular2/router';
-import {APP_BASE_HREF} from 'angular2/platform/common';
+import {
+  OnDeactivate,
+  ComponentInstruction,
+  RouteConfig,
+  ROUTER_DIRECTIVES,
+  APP_BASE_HREF
+} from 'angular2/router';
 
 
 @Injectable()

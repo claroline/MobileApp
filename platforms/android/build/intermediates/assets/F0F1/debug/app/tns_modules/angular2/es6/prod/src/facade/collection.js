@@ -165,6 +165,11 @@ export class ListWrapper {
     static createFixedSize(size) { return new Array(size); }
     static createGrowableSize(size) { return new Array(size); }
     static clone(array) { return array.slice(0); }
+    static createImmutable(array) {
+        var result = ListWrapper.clone(array);
+        Object.seal(result);
+        return result;
+    }
     static forEachWithIndex(array, fn) {
         for (var i = 0; i < array.length; i++) {
             fn(array[i], i);
@@ -256,30 +261,12 @@ export class ListWrapper {
         }
         return solution;
     }
-    static flatten(list) {
-        var target = [];
-        _flattenArray(list, target);
-        return target;
+    static isImmutable(list) { return Object.isSealed(list); }
+    static flatten(array) {
+        let res = [];
+        array.forEach((a) => res = res.concat(a));
+        return res;
     }
-    static addAll(list, source) {
-        for (var i = 0; i < source.length; i++) {
-            list.push(source[i]);
-        }
-    }
-}
-function _flattenArray(source, target) {
-    if (isPresent(source)) {
-        for (var i = 0; i < source.length; i++) {
-            var item = source[i];
-            if (isArray(item)) {
-                _flattenArray(item, target);
-            }
-            else {
-                target.push(item);
-            }
-        }
-    }
-    return target;
 }
 export function isListLikeIterable(obj) {
     if (!isJsObject(obj))

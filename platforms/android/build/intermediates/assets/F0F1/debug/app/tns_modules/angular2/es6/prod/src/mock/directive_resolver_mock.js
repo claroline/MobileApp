@@ -11,12 +11,12 @@ import { Injectable } from 'angular2/src/core/di';
 import { Map } from 'angular2/src/facade/collection';
 import { isPresent } from 'angular2/src/facade/lang';
 import { DirectiveMetadata, ComponentMetadata } from '../core/metadata';
-import { DirectiveResolver } from 'angular2/src/compiler/directive_resolver';
+import { DirectiveResolver } from 'angular2/src/core/linker/directive_resolver';
 /**
  * An implementation of {@link DirectiveResolver} that allows overriding
  * various properties of directives.
  */
-export let MockDirectiveResolver = class MockDirectiveResolver extends DirectiveResolver {
+export let MockDirectiveResolver = class extends DirectiveResolver {
     constructor(...args) {
         super(...args);
         this._providerOverrides = new Map();
@@ -28,14 +28,12 @@ export let MockDirectiveResolver = class MockDirectiveResolver extends Directive
         var viewProviderOverrides = this.viewProviderOverrides.get(type);
         var providers = dm.providers;
         if (isPresent(providerOverrides)) {
-            var originalViewProviders = isPresent(dm.providers) ? dm.providers : [];
-            providers = originalViewProviders.concat(providerOverrides);
+            providers = dm.providers.concat(providerOverrides);
         }
         if (dm instanceof ComponentMetadata) {
             var viewProviders = dm.viewProviders;
             if (isPresent(viewProviderOverrides)) {
-                var originalViewProviders = isPresent(dm.viewProviders) ? dm.viewProviders : [];
-                viewProviders = originalViewProviders.concat(viewProviderOverrides);
+                viewProviders = dm.viewProviders.concat(viewProviderOverrides);
             }
             return new ComponentMetadata({
                 selector: dm.selector,

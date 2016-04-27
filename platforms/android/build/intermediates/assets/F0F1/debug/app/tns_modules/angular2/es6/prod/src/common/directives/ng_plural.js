@@ -72,7 +72,7 @@ export class NgLocalization {
  *
  * ```
  */
-export let NgPluralCase = class NgPluralCase {
+export let NgPluralCase = class {
     constructor(value, template, viewContainer) {
         this.value = value;
         this._view = new SwitchView(viewContainer, template);
@@ -83,7 +83,7 @@ NgPluralCase = __decorate([
     __param(0, Attribute('ngPluralCase')), 
     __metadata('design:paramtypes', [String, TemplateRef, ViewContainerRef])
 ], NgPluralCase);
-export let NgPlural = class NgPlural {
+export let NgPlural = class {
     constructor(_localization) {
         this._localization = _localization;
         this._caseViews = new Map();

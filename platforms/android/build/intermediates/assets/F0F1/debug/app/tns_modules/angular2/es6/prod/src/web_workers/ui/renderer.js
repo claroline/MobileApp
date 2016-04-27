@@ -16,7 +16,7 @@ import { bind } from './bind';
 import { EventDispatcher } from 'angular2/src/web_workers/ui/event_dispatcher';
 import { RenderStore } from 'angular2/src/web_workers/shared/render_store';
 import { ServiceMessageBrokerFactory } from 'angular2/src/web_workers/shared/service_message_broker';
-export let MessageBasedRenderer = class MessageBasedRenderer {
+export let MessageBasedRenderer = class {
     constructor(_brokerFactory, _bus, _serializer, _renderStore, _rootRenderer) {
         this._brokerFactory = _brokerFactory;
         this._bus = _bus;
@@ -54,10 +54,10 @@ export let MessageBasedRenderer = class MessageBasedRenderer {
         this._renderStore.store(renderer, rendererId);
     }
     _selectRootElement(renderer, selector, elId) {
-        this._renderStore.store(renderer.selectRootElement(selector, null), elId);
+        this._renderStore.store(renderer.selectRootElement(selector), elId);
     }
     _createElement(renderer, parentElement, name, elId) {
-        this._renderStore.store(renderer.createElement(parentElement, name, null), elId);
+        this._renderStore.store(renderer.createElement(parentElement, name), elId);
     }
     _createViewRoot(renderer, hostElement, elId) {
         var viewRoot = renderer.createViewRoot(hostElement);
@@ -66,10 +66,10 @@ export let MessageBasedRenderer = class MessageBasedRenderer {
         }
     }
     _createTemplateAnchor(renderer, parentElement, elId) {
-        this._renderStore.store(renderer.createTemplateAnchor(parentElement, null), elId);
+        this._renderStore.store(renderer.createTemplateAnchor(parentElement), elId);
     }
     _createText(renderer, parentElement, value, elId) {
-        this._renderStore.store(renderer.createText(parentElement, value, null), elId);
+        this._renderStore.store(renderer.createText(parentElement, value), elId);
     }
     _projectNodes(renderer, parentElement, nodes) {
         renderer.projectNodes(parentElement, nodes);

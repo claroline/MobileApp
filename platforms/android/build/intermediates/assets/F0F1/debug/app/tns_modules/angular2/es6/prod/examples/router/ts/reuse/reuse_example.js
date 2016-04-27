@@ -9,10 +9,9 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 import { Component, provide } from 'angular2/core';
 import { bootstrap } from 'angular2/platform/browser';
-import { RouteConfig, ROUTER_DIRECTIVES, RouteParams } from 'angular2/router';
-import { APP_BASE_HREF } from 'angular2/platform/common';
+import { RouteConfig, ROUTER_DIRECTIVES, APP_BASE_HREF, RouteParams } from 'angular2/router';
 // #docregion reuseCmp
-let MyCmp = class MyCmp {
+let MyCmp = class {
     constructor(params) {
         this.name = params.get('name') || 'NOBODY';
     }
@@ -32,7 +31,7 @@ MyCmp = __decorate([
     __metadata('design:paramtypes', [RouteParams])
 ], MyCmp);
 // #enddocregion
-let AppCmp = class AppCmp {
+let AppCmp = class {
 };
 AppCmp = __decorate([
     Component({

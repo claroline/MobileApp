@@ -27,20 +27,12 @@ function _extractId(valueString) {
 }
 /**
  * The accessor for writing a value and listening to changes on a select element.
- *
- * Note: We have to listen to the 'change' event because 'input' events aren't fired
- * for selects in Firefox and IE:
- * https://bugzilla.mozilla.org/show_bug.cgi?id=1024350
- * https://developer.microsoft.com/en-us/microsoft-edge/platform/issues/4660045/
- *
  */
-export let SelectControlValueAccessor = class SelectControlValueAccessor {
+export let SelectControlValueAccessor = class {
     constructor(_renderer, _elementRef) {
         this._renderer = _renderer;
         this._elementRef = _elementRef;
-        /** @internal */
         this._optionMap = new Map();
-        /** @internal */
         this._idCounter = 0;
         this.onChange = (_) => { };
         this.onTouched = () => { };
@@ -54,9 +46,7 @@ export let SelectControlValueAccessor = class SelectControlValueAccessor {
         this.onChange = (valueString) => { fn(this._getOptionValue(valueString)); };
     }
     registerOnTouched(fn) { this.onTouched = fn; }
-    /** @internal */
     _registerOption() { return (this._idCounter++).toString(); }
-    /** @internal */
     _getOptionId(value) {
         for (let id of MapWrapper.keys(this._optionMap)) {
             if (looseIdentical(this._optionMap.get(id), value))
@@ -64,7 +54,6 @@ export let SelectControlValueAccessor = class SelectControlValueAccessor {
         }
         return null;
     }
-    /** @internal */
     _getOptionValue(valueString) {
         let value = this._optionMap.get(_extractId(valueString));
         return isPresent(value) ? value : valueString;
@@ -73,7 +62,7 @@ export let SelectControlValueAccessor = class SelectControlValueAccessor {
 SelectControlValueAccessor = __decorate([
     Directive({
         selector: 'select[ngControl],select[ngFormControl],select[ngModel]',
-        host: { '(change)': 'onChange($event.target.value)', '(blur)': 'onTouched()' },
+        host: { '(input)': 'onChange($event.target.value)', '(blur)': 'onTouched()' },
         providers: [SELECT_VALUE_ACCESSOR]
     }), 
     __metadata('design:paramtypes', [Renderer, ElementRef])
@@ -89,7 +78,7 @@ SelectControlValueAccessor = __decorate([
  * </select>
  * ```
  */
-export let NgSelectOption = class NgSelectOption {
+export let NgSelectOption = class {
     constructor(_element, _renderer, _select) {
         this._element = _element;
         this._renderer = _renderer;
@@ -105,11 +94,11 @@ export let NgSelectOption = class NgSelectOption {
         this._select.writeValue(this._select.value);
     }
     set value(value) {
+        if (this._select == null)
+            return;
         this._setElementValue(value);
-        if (isPresent(this._select))
-            this._select.writeValue(this._select.value);
+        this._select.writeValue(this._select.value);
     }
-    /** @internal */
     _setElementValue(value) {
         this._renderer.setElementProperty(this._element.nativeElement, 'value', value);
     }

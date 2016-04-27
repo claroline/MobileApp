@@ -2,23 +2,22 @@ import { Renderer, ElementRef, OnDestroy } from 'angular2/core';
 import { ControlValueAccessor } from './control_value_accessor';
 /**
  * The accessor for writing a value and listening to changes on a select element.
- *
- * Note: We have to listen to the 'change' event because 'input' events aren't fired
- * for selects in Firefox and IE:
- * https://bugzilla.mozilla.org/show_bug.cgi?id=1024350
- * https://developer.microsoft.com/en-us/microsoft-edge/platform/issues/4660045/
- *
  */
 export declare class SelectControlValueAccessor implements ControlValueAccessor {
     private _renderer;
     private _elementRef;
     value: any;
+    _optionMap: Map<string, any>;
+    _idCounter: number;
     onChange: (_: any) => void;
     onTouched: () => void;
     constructor(_renderer: Renderer, _elementRef: ElementRef);
     writeValue(value: any): void;
     registerOnChange(fn: (value: any) => any): void;
     registerOnTouched(fn: () => any): void;
+    _registerOption(): string;
+    _getOptionId(value: any): string;
+    _getOptionValue(valueString: string): any;
 }
 /**
  * Marks `<option>` as dynamic, so Angular can be notified when options change.
@@ -39,5 +38,6 @@ export declare class NgSelectOption implements OnDestroy {
     constructor(_element: ElementRef, _renderer: Renderer, _select: SelectControlValueAccessor);
     ngValue: any;
     value: any;
+    _setElementValue(value: string): void;
     ngOnDestroy(): void;
 }
