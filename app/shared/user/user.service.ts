@@ -1,7 +1,6 @@
 import {Injectable} from "angular2/core";
 import {Http, Headers} from "angular2/http";
 import {User} from "./user";
-import {Config} from "../config";
 import "rxjs/add/operator/map";
 import {ConfigService} from "../config.service";
 
@@ -23,11 +22,12 @@ export class UserService {
     }
 
     login(user: User) {
-
+        let clientId = this._configService.getClientId();
+        let clientSecret = this._configService.getClientSecret();
         let headers = this.buildHeader();
         let body = JSON.stringify({
-            client_id: Config.client_id,
-            client_secret: Config.client_secret,
+            client_id: clientId,
+            client_secret: clientSecret,
             grant_type: "password",
             username: user.username,
             password: user.password
@@ -41,11 +41,13 @@ export class UserService {
     }
 
     refreshToken() {
+        let clientId = this._configService.getClientId();
+        let clientSecret = this._configService.getClientSecret();
         let headers = this.buildHeader();
         let refresh = this._configService.getRefreshToken();
         let body = JSON.stringify({
-            client_id: Config.client_id,
-            client_secret: Config.client_secret,
+            client_id: clientId,
+            client_secret: clientId,
             grant_type: "refresh_token",
             refresh_token: refresh
         });
@@ -57,12 +59,9 @@ export class UserService {
             )
         .subscribe(
             (data) => {
-                //Config.access_token = data.json().access_token;
-                //Config.refresh_token = data.json().refresh_token;
                 this._configService.setAccessToken(data.json().access_token);
                 this._configService.setRefreshToken(data.json().refresh_token);
-            }
-            );
+            });
     }
 
     

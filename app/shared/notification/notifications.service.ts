@@ -1,5 +1,4 @@
 import {Injectable} from "angular2/core";
-import {Config} from "../config";
 import {Notification} from "./notification";
 import {Observable} from "rxjs/Rx";
 import {Http} from "angular2/http";

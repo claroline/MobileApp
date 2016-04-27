@@ -1,6 +1,5 @@
 import {Component} from "angular2/core";
 import {Router} from "angular2/router";
-import {Config} from "../../shared/config";
 import {ConfigService} from "../../shared/config.service";
 
 @Component({
@@ -15,18 +14,18 @@ export class ListPage {
 
 
 	constructor(private _router:Router, private _configService: ConfigService){
-		/*if (this._configService.getHost() !== undefined){
-			this._router.navigate(['Login']);
-		}*/
-
 
 	}
 
 	goToLogin(){
 
 		this._configService.setHost(this.host);
-		
-		
+		this._configService.getClientIdAndSecretFromHost()
+			.subscribe(data=>{
+				this._configService.setClientId(data.client_id);
+				this._configService.setClientSecret(data.client_secret);
+			});
+
 		this._router.navigate(['Login']);
 	}
 }

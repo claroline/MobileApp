@@ -4,7 +4,6 @@
 import {Component} from "angular2/core";
 import {Router} from "angular2/router";
 import {UserService} from "../../shared/user/user.service";
-import {Config} from "../../shared/config";
 import {Observable} from "rxjs/Rx";
 import {NotificationsService} from "../../shared/notification/notifications.service";
 import {Notification} from "../../shared/notification/notification";
