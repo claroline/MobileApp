@@ -53,7 +53,7 @@ export declare class Router {
      *
      * You probably don't need to use this unless you're writing a reusable component.
      */
-    registerPrimaryOutlet(outlet: RouterOutlet): Promise<boolean>;
+    registerPrimaryOutlet(outlet: RouterOutlet): Promise<any>;
     /**
      * Unregister an outlet (because it was destroyed, etc).
      *
@@ -65,7 +65,7 @@ export declare class Router {
      *
      * You probably don't need to use this unless you're writing a reusable component.
      */
-    registerAuxOutlet(outlet: RouterOutlet): Promise<boolean>;
+    registerAuxOutlet(outlet: RouterOutlet): Promise<any>;
     /**
      * Given an instruction, returns `true` if the instruction is currently active,
      * otherwise `false`.
@@ -111,6 +111,7 @@ export declare class Router {
      */
     navigateByInstruction(instruction: Instruction, _skipLocationChange?: boolean): Promise<any>;
     private _emitNavigationFinish(url);
+    _emitNavigationFail(url: any): void;
     private _afterPromiseFinishNavigating(promise);
     private _canActivate(nextInstruction);
     private _routerCanDeactivate(instruction);
@@ -121,7 +122,7 @@ export declare class Router {
     /**
      * Subscribe to URL updates from the router
      */
-    subscribe(onNext: (value: any) => void): Object;
+    subscribe(onNext: (value: any) => void, onError?: (value: any) => void): Object;
     /**
      * Removes the contents of this router's outlet and all descendant outlets
      */

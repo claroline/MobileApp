@@ -12,9 +12,10 @@ import {Message} from "../../shared/message/message";
 import { registerElement, ViewClass } from "nativescript-angular/element-registry";
 import {ConfigService} from "../../shared/config.service";
 
-
 registerElement("PullToRefresh", () => require("nativescript-pulltorefresh").PullToRefresh);
 registerElement("CardView", () => require("nativescript-cardview").CardView);
+
+
 
 
 
@@ -38,7 +39,6 @@ export class HomePage {
     private _configService: ConfigService) {
     this.notificationsList = this._notificationService.load();
     this.messagesList = this._messageService.loadReceivedMessages();
-    console.log(this._configService.getHost());
     setInterval(()=>{
       this._userService.refreshToken();
       console.log("New access token : "+this._configService.getAccessToken());
@@ -69,6 +69,9 @@ export class HomePage {
     this._configService.remove("refresh_token");
     this._router.navigate(['Login']);
   }
+
+
+
 
 
 

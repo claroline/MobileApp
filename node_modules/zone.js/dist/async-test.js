@@ -59,13 +59,29 @@
 	            var _this = this;
 	            if (!(this._pendingMicroTasks || this._pendingMacroTasks)) {
 	                // We do this because we would like to catch unhandled rejected promises.
-	                this.runZone.run(function () {
-	                    setTimeout(function () {
-	                        if (!_this._alreadyErrored && !(_this._pendingMicroTasks || _this._pendingMacroTasks)) {
-	                            _this._finishCallback();
+	                // To do this quickly when there are native promises, we must run using an unwrapped
+	                // promise implementation.
+	                var symbol = Zone.__symbol__;
+	                var NativePromise = window[symbol('Promise')];
+	                if (NativePromise) {
+	                    NativePromise.resolve(true)[symbol('then')](function () {
+	                        if (!_this._alreadyErrored) {
+	                            _this.runZone.run(_this._finishCallback);
 	                        }
-	                    }, 0);
-	                });
+	                    });
+	                }
+	                else {
+	                    // For implementations which do not have nativePromise, use setTimeout(0). This is slower,
+	                    // but it also works because Zones will handle errors when rejected promises have no
+	                    // listeners after one macrotask.
+	                    this.runZone.run(function () {
+	                        setTimeout(function () {
+	                            if (!_this._alreadyErrored) {
+	                                _this._finishCallback();
+	                            }
+	                        }, 0);
+	                    });
+	                }
 	            }
 	        };
 	        // Note - we need to use onInvoke at the moment to call finish when a test is

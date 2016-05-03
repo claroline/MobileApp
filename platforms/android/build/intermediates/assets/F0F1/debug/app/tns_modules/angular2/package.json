@@ -2,14 +2,14 @@
   "_args": [
     [
       "angular2@2.0.0-beta.14",
-      "/home/dat/nativescript_angular2/Claroline Connect/node_modules/nativescript-angular"
+      "/home/dat/nativescript_angular2/connect"
     ]
   ],
   "_from": "angular2@2.0.0-beta.14",
   "_id": "angular2@2.0.0-beta.14",
   "_inCache": true,
   "_installable": true,
-  "_location": "/nativescript-angular/angular2",
+  "_location": "/angular2",
   "_nodeVersion": "5.5.0",
   "_npmOperationalInternal": {
     "host": "packages-12-west.internal.npmjs.com",
@@ -30,13 +30,13 @@
     "type": "version"
   },
   "_requiredBy": [
-    "/nativescript-angular"
+    "/"
   ],
   "_resolved": "https://registry.npmjs.org/angular2/-/angular2-2.0.0-beta.14.tgz",
   "_shasum": "86d3e195ec1e5069168c14bc60a7dcab56b7dfdf",
   "_shrinkwrap": null,
   "_spec": "angular2@2.0.0-beta.14",
-  "_where": "/home/dat/nativescript_angular2/Claroline Connect/node_modules/nativescript-angular",
+  "_where": "/home/dat/nativescript_angular2/connect",
   "bugs": {
     "url": "https://github.com/angular/angular/issues"
   },

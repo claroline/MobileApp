@@ -2,18 +2,18 @@
 <items version="2" >
 
     <item
+        jar="/home/dat/nativescript_angular2/connect/platforms/android/libs/nativescript.jar"
+        jumboMode="false"
+        revision="23.0.3"
+        sha1="57b3fa4e07f606555cab1d8373106c80acd79f64">
+        <dex dex="/home/dat/nativescript_angular2/connect/platforms/android/build/intermediates/pre-dexed/F0F1/debug/nativescript_49fd045e39a7b5b65f135c4f2ae13d4eca9417f6.jar" />
+    </item>
+    <item
         jar="/home/dat/android-sdk/extras/android/m2repository/com/android/support/support-annotations/23.3.0/support-annotations-23.3.0.jar"
         jumboMode="false"
         revision="23.0.3"
         sha1="db7791d75a07fef9844d06236c1c59ba7bf6997c">
-        <dex dex="/home/dat/nativescript_angular2/Claroline Connect/platforms/android/build/intermediates/pre-dexed/F0F1/debug/support-annotations-23.3.0_69212ed549b92a7f8a6939630c5cc7eea40c7e83.jar" />
-    </item>
-    <item
-        jar="/home/dat/nativescript_angular2/Claroline Connect/platforms/android/libs/nativescript.jar"
-        jumboMode="false"
-        revision="23.0.3"
-        sha1="57b3fa4e07f606555cab1d8373106c80acd79f64">
-        <dex dex="/home/dat/nativescript_angular2/Claroline Connect/platforms/android/build/intermediates/pre-dexed/F0F1/debug/nativescript_b19db4236e40f677048cb6e4d492538e0339c93d.jar" />
+        <dex dex="/home/dat/nativescript_angular2/connect/platforms/android/build/intermediates/pre-dexed/F0F1/debug/support-annotations-23.3.0_69212ed549b92a7f8a6939630c5cc7eea40c7e83.jar" />
     </item>
 
 </items>

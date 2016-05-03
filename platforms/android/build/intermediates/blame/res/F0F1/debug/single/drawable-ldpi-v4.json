@@ -1,22 +1,26 @@
 [
     {
-        "merged": "/home/dat/nativescript_angular2/Claroline Connect/platforms/android/build/intermediates/res/merged/F0F1/debug/drawable-ldpi-v4/icon.png",
-        "source": "/home/dat/nativescript_angular2/Claroline Connect/platforms/android/src/main/res/drawable-ldpi/icon.png"
+        "merged": "/home/dat/nativescript_angular2/connect/platforms/android/build/intermediates/res/merged/F0F1/debug/drawable-ldpi-v4/logo.png",
+        "source": "/home/dat/nativescript_angular2/connect/platforms/android/src/main/res/drawable-ldpi/logo.png"
     },
     {
-        "merged": "/home/dat/nativescript_angular2/Claroline Connect/platforms/android/build/intermediates/res/merged/F0F1/debug/drawable-ldpi-v4/ic_menu_delete.png",
-        "source": "/home/dat/nativescript_angular2/Claroline Connect/platforms/android/src/main/res/drawable-ldpi/ic_menu_delete.png"
+        "merged": "/home/dat/nativescript_angular2/connect/platforms/android/build/intermediates/res/merged/F0F1/debug/drawable-ldpi-v4/logout.png",
+        "source": "/home/dat/nativescript_angular2/connect/platforms/android/src/main/res/drawable-ldpi/logout.png"
     },
     {
-        "merged": "/home/dat/nativescript_angular2/Claroline Connect/platforms/android/build/intermediates/res/merged/F0F1/debug/drawable-ldpi-v4/logout.png",
-        "source": "/home/dat/nativescript_angular2/Claroline Connect/platforms/android/src/main/res/drawable-ldpi/logout.png"
+        "merged": "/home/dat/nativescript_angular2/connect/platforms/android/build/intermediates/res/merged/F0F1/debug/drawable-ldpi-v4/icon.png",
+        "source": "/home/dat/nativescript_angular2/connect/platforms/android/src/main/res/drawable-ldpi/icon.png"
     },
     {
-        "merged": "/home/dat/nativescript_angular2/Claroline Connect/platforms/android/build/intermediates/res/merged/F0F1/debug/drawable-ldpi-v4/claroline3.png",
-        "source": "/home/dat/nativescript_angular2/Claroline Connect/platforms/android/src/main/res/drawable-ldpi/claroline3.png"
+        "merged": "/home/dat/nativescript_angular2/connect/platforms/android/build/intermediates/res/merged/F0F1/debug/drawable-ldpi-v4/clarolineconnect.png",
+        "source": "/home/dat/nativescript_angular2/connect/platforms/android/src/main/res/drawable-ldpi/clarolineconnect.png"
     },
     {
-        "merged": "/home/dat/nativescript_angular2/Claroline Connect/platforms/android/build/intermediates/res/merged/F0F1/debug/drawable-ldpi-v4/logo.png",
-        "source": "/home/dat/nativescript_angular2/Claroline Connect/platforms/android/src/main/res/drawable-ldpi/logo.png"
+        "merged": "/home/dat/nativescript_angular2/connect/platforms/android/build/intermediates/res/merged/F0F1/debug/drawable-ldpi-v4/claroline3.png",
+        "source": "/home/dat/nativescript_angular2/connect/platforms/android/src/main/res/drawable-ldpi/claroline3.png"
+    },
+    {
+        "merged": "/home/dat/nativescript_angular2/connect/platforms/android/build/intermediates/res/merged/F0F1/debug/drawable-ldpi-v4/ic_menu_delete.png",
+        "source": "/home/dat/nativescript_angular2/connect/platforms/android/src/main/res/drawable-ldpi/ic_menu_delete.png"
     }
 ]

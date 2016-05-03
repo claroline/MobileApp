@@ -1,6 +1,6 @@
 [
     {
-        "outputFile": "/home/dat/nativescript_angular2/Claroline Connect/platforms/android/build/intermediates/res/merged/F0F1/debug/values-v21/values-v21.xml",
+        "outputFile": "/home/dat/nativescript_angular2/connect/platforms/android/build/intermediates/res/merged/F0F1/debug/values-v21/values-v21.xml",
         "map": [
             {
                 "to": {
@@ -11,7 +11,7 @@
                     "endOffset": 94
                 },
                 "from": {
-                    "file": "/home/dat/nativescript_angular2/Claroline Connect/platforms/android/src/main/res/values-v21/colors.xml",
+                    "file": "/home/dat/nativescript_angular2/connect/platforms/android/src/main/res/values-v21/colors.xml",
                     "position": {
                         "startLine": 2,
                         "startColumn": 1,
@@ -31,7 +31,7 @@
                     "endOffset": 318
                 },
                 "from": {
-                    "file": "/home/dat/nativescript_angular2/Claroline Connect/platforms/android/src/main/res/values-v21/styles.xml",
+                    "file": "/home/dat/nativescript_angular2/connect/platforms/android/src/main/res/values-v21/styles.xml",
                     "position": {
                         "startLine": 4,
                         "startColumn": 4,
@@ -51,7 +51,7 @@
                     "endOffset": 409
                 },
                 "from": {
-                    "file": "/home/dat/nativescript_angular2/Claroline Connect/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/values-v21/values-v21.xml",
+                    "file": "/home/dat/nativescript_angular2/connect/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/values-v21/values-v21.xml",
                     "position": {
                         "startLine": 2,
                         "startColumn": 4,
@@ -70,7 +70,7 @@
                     "endOffset": 512
                 },
                 "from": {
-                    "file": "/home/dat/nativescript_angular2/Claroline Connect/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/values-v21/values-v21.xml",
+                    "file": "/home/dat/nativescript_angular2/connect/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/values-v21/values-v21.xml",
                     "position": {
                         "startLine": 3,
                         "startColumn": 4,
@@ -89,7 +89,7 @@
                     "endOffset": 615
                 },
                 "from": {
-                    "file": "/home/dat/nativescript_angular2/Claroline Connect/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/values-v21/values-v21.xml",
+                    "file": "/home/dat/nativescript_angular2/connect/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/values-v21/values-v21.xml",
                     "position": {
                         "startLine": 4,
                         "startColumn": 4,
@@ -108,7 +108,7 @@
                     "endOffset": 720
                 },
                 "from": {
-                    "file": "/home/dat/nativescript_angular2/Claroline Connect/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/values-v21/values-v21.xml",
+                    "file": "/home/dat/nativescript_angular2/connect/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/values-v21/values-v21.xml",
                     "position": {
                         "startLine": 5,
                         "startColumn": 4,
@@ -127,7 +127,7 @@
                     "endOffset": 827
                 },
                 "from": {
-                    "file": "/home/dat/nativescript_angular2/Claroline Connect/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/values-v21/values-v21.xml",
+                    "file": "/home/dat/nativescript_angular2/connect/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/values-v21/values-v21.xml",
                     "position": {
                         "startLine": 6,
                         "startColumn": 4,
@@ -146,7 +146,7 @@
                     "endOffset": 936
                 },
                 "from": {
-                    "file": "/home/dat/nativescript_angular2/Claroline Connect/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/values-v21/values-v21.xml",
+                    "file": "/home/dat/nativescript_angular2/connect/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/values-v21/values-v21.xml",
                     "position": {
                         "startLine": 7,
                         "startColumn": 4,
@@ -165,7 +165,7 @@
                     "endOffset": 1045
                 },
                 "from": {
-                    "file": "/home/dat/nativescript_angular2/Claroline Connect/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/values-v21/values-v21.xml",
+                    "file": "/home/dat/nativescript_angular2/connect/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/values-v21/values-v21.xml",
                     "position": {
                         "startLine": 8,
                         "startColumn": 4,
@@ -184,7 +184,7 @@
                     "endOffset": 1154
                 },
                 "from": {
-                    "file": "/home/dat/nativescript_angular2/Claroline Connect/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/values-v21/values-v21.xml",
+                    "file": "/home/dat/nativescript_angular2/connect/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/values-v21/values-v21.xml",
                     "position": {
                         "startLine": 9,
                         "startColumn": 4,
@@ -203,7 +203,7 @@
                     "endOffset": 1263
                 },
                 "from": {
-                    "file": "/home/dat/nativescript_angular2/Claroline Connect/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/values-v21/values-v21.xml",
+                    "file": "/home/dat/nativescript_angular2/connect/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/values-v21/values-v21.xml",
                     "position": {
                         "startLine": 10,
                         "startColumn": 4,
@@ -222,7 +222,7 @@
                     "endOffset": 1372
                 },
                 "from": {
-                    "file": "/home/dat/nativescript_angular2/Claroline Connect/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/values-v21/values-v21.xml",
+                    "file": "/home/dat/nativescript_angular2/connect/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/values-v21/values-v21.xml",
                     "position": {
                         "startLine": 11,
                         "startColumn": 4,
@@ -241,7 +241,7 @@
                     "endOffset": 1479
                 },
                 "from": {
-                    "file": "/home/dat/nativescript_angular2/Claroline Connect/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/values-v21/values-v21.xml",
+                    "file": "/home/dat/nativescript_angular2/connect/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/values-v21/values-v21.xml",
                     "position": {
                         "startLine": 12,
                         "startColumn": 4,
@@ -260,7 +260,7 @@
                     "endOffset": 1582
                 },
                 "from": {
-                    "file": "/home/dat/nativescript_angular2/Claroline Connect/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/values-v21/values-v21.xml",
+                    "file": "/home/dat/nativescript_angular2/connect/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/values-v21/values-v21.xml",
                     "position": {
                         "startLine": 13,
                         "startColumn": 4,
@@ -279,7 +279,7 @@
                     "endOffset": 1701
                 },
                 "from": {
-                    "file": "/home/dat/nativescript_angular2/Claroline Connect/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/values-v21/values-v21.xml",
+                    "file": "/home/dat/nativescript_angular2/connect/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/values-v21/values-v21.xml",
                     "position": {
                         "startLine": 14,
                         "startColumn": 4,
@@ -299,7 +299,7 @@
                     "endOffset": 1856
                 },
                 "from": {
-                    "file": "/home/dat/nativescript_angular2/Claroline Connect/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/values-v21/values-v21.xml",
+                    "file": "/home/dat/nativescript_angular2/connect/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/values-v21/values-v21.xml",
                     "position": {
                         "startLine": 15,
                         "startColumn": 4,
@@ -320,7 +320,7 @@
                     "endOffset": 2011
                 },
                 "from": {
-                    "file": "/home/dat/nativescript_angular2/Claroline Connect/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/values-v21/values-v21.xml",
+                    "file": "/home/dat/nativescript_angular2/connect/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/values-v21/values-v21.xml",
                     "position": {
                         "startLine": 17,
                         "startColumn": 4,
@@ -340,7 +340,7 @@
                     "endOffset": 2116
                 },
                 "from": {
-                    "file": "/home/dat/nativescript_angular2/Claroline Connect/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/values-v21/values-v21.xml",
+                    "file": "/home/dat/nativescript_angular2/connect/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/values-v21/values-v21.xml",
                     "position": {
                         "startLine": 19,
                         "startColumn": 4,
@@ -359,7 +359,7 @@
                     "endOffset": 2237
                 },
                 "from": {
-                    "file": "/home/dat/nativescript_angular2/Claroline Connect/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/values-v21/values-v21.xml",
+                    "file": "/home/dat/nativescript_angular2/connect/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/values-v21/values-v21.xml",
                     "position": {
                         "startLine": 20,
                         "startColumn": 4,
@@ -378,7 +378,7 @@
                     "endOffset": 2338
                 },
                 "from": {
-                    "file": "/home/dat/nativescript_angular2/Claroline Connect/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/values-v21/values-v21.xml",
+                    "file": "/home/dat/nativescript_angular2/connect/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/values-v21/values-v21.xml",
                     "position": {
                         "startLine": 21,
                         "startColumn": 4,
@@ -398,7 +398,7 @@
                     "endOffset": 2485
                 },
                 "from": {
-                    "file": "/home/dat/nativescript_angular2/Claroline Connect/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/values-v21/values-v21.xml",
+                    "file": "/home/dat/nativescript_angular2/connect/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/values-v21/values-v21.xml",
                     "position": {
                         "startLine": 22,
                         "startColumn": 4,
@@ -419,7 +419,7 @@
                     "endOffset": 2626
                 },
                 "from": {
-                    "file": "/home/dat/nativescript_angular2/Claroline Connect/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/values-v21/values-v21.xml",
+                    "file": "/home/dat/nativescript_angular2/connect/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/values-v21/values-v21.xml",
                     "position": {
                         "startLine": 24,
                         "startColumn": 4,
@@ -439,7 +439,7 @@
                     "endOffset": 2729
                 },
                 "from": {
-                    "file": "/home/dat/nativescript_angular2/Claroline Connect/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/values-v21/values-v21.xml",
+                    "file": "/home/dat/nativescript_angular2/connect/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/values-v21/values-v21.xml",
                     "position": {
                         "startLine": 26,
                         "startColumn": 4,
@@ -458,7 +458,7 @@
                     "endOffset": 2848
                 },
                 "from": {
-                    "file": "/home/dat/nativescript_angular2/Claroline Connect/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/values-v21/values-v21.xml",
+                    "file": "/home/dat/nativescript_angular2/connect/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/values-v21/values-v21.xml",
                     "position": {
                         "startLine": 27,
                         "startColumn": 4,
@@ -477,7 +477,7 @@
                     "endOffset": 2955
                 },
                 "from": {
-                    "file": "/home/dat/nativescript_angular2/Claroline Connect/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/values-v21/values-v21.xml",
+                    "file": "/home/dat/nativescript_angular2/connect/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/values-v21/values-v21.xml",
                     "position": {
                         "startLine": 28,
                         "startColumn": 4,
@@ -496,7 +496,7 @@
                     "endOffset": 3058
                 },
                 "from": {
-                    "file": "/home/dat/nativescript_angular2/Claroline Connect/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/values-v21/values-v21.xml",
+                    "file": "/home/dat/nativescript_angular2/connect/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/values-v21/values-v21.xml",
                     "position": {
                         "startLine": 29,
                         "startColumn": 4,
@@ -516,7 +516,7 @@
                     "endOffset": 3213
                 },
                 "from": {
-                    "file": "/home/dat/nativescript_angular2/Claroline Connect/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/values-v21/values-v21.xml",
+                    "file": "/home/dat/nativescript_angular2/connect/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/values-v21/values-v21.xml",
                     "position": {
                         "startLine": 30,
                         "startColumn": 4,
@@ -537,7 +537,7 @@
                     "endOffset": 3384
                 },
                 "from": {
-                    "file": "/home/dat/nativescript_angular2/Claroline Connect/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/values-v21/values-v21.xml",
+                    "file": "/home/dat/nativescript_angular2/connect/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/values-v21/values-v21.xml",
                     "position": {
                         "startLine": 32,
                         "startColumn": 4,
@@ -558,7 +558,7 @@
                     "endOffset": 3533
                 },
                 "from": {
-                    "file": "/home/dat/nativescript_angular2/Claroline Connect/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/values-v21/values-v21.xml",
+                    "file": "/home/dat/nativescript_angular2/connect/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/values-v21/values-v21.xml",
                     "position": {
                         "startLine": 34,
                         "startColumn": 4,
@@ -579,7 +579,7 @@
                     "endOffset": 3698
                 },
                 "from": {
-                    "file": "/home/dat/nativescript_angular2/Claroline Connect/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/values-v21/values-v21.xml",
+                    "file": "/home/dat/nativescript_angular2/connect/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/values-v21/values-v21.xml",
                     "position": {
                         "startLine": 36,
                         "startColumn": 4,
@@ -600,7 +600,7 @@
                     "endOffset": 3855
                 },
                 "from": {
-                    "file": "/home/dat/nativescript_angular2/Claroline Connect/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/values-v21/values-v21.xml",
+                    "file": "/home/dat/nativescript_angular2/connect/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/values-v21/values-v21.xml",
                     "position": {
                         "startLine": 38,
                         "startColumn": 4,
@@ -621,7 +621,7 @@
                     "endOffset": 4006
                 },
                 "from": {
-                    "file": "/home/dat/nativescript_angular2/Claroline Connect/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/values-v21/values-v21.xml",
+                    "file": "/home/dat/nativescript_angular2/connect/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/values-v21/values-v21.xml",
                     "position": {
                         "startLine": 40,
                         "startColumn": 4,
@@ -641,7 +641,7 @@
                     "endOffset": 4125
                 },
                 "from": {
-                    "file": "/home/dat/nativescript_angular2/Claroline Connect/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/values-v21/values-v21.xml",
+                    "file": "/home/dat/nativescript_angular2/connect/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/values-v21/values-v21.xml",
                     "position": {
                         "startLine": 42,
                         "startColumn": 4,
@@ -661,7 +661,7 @@
                     "endOffset": 4274
                 },
                 "from": {
-                    "file": "/home/dat/nativescript_angular2/Claroline Connect/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/values-v21/values-v21.xml",
+                    "file": "/home/dat/nativescript_angular2/connect/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/values-v21/values-v21.xml",
                     "position": {
                         "startLine": 43,
                         "startColumn": 4,
@@ -682,7 +682,7 @@
                     "endOffset": 4423
                 },
                 "from": {
-                    "file": "/home/dat/nativescript_angular2/Claroline Connect/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/values-v21/values-v21.xml",
+                    "file": "/home/dat/nativescript_angular2/connect/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/values-v21/values-v21.xml",
                     "position": {
                         "startLine": 45,
                         "startColumn": 4,
@@ -702,7 +702,7 @@
                     "endOffset": 4535
                 },
                 "from": {
-                    "file": "/home/dat/nativescript_angular2/Claroline Connect/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/values-v21/values-v21.xml",
+                    "file": "/home/dat/nativescript_angular2/connect/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/values-v21/values-v21.xml",
                     "position": {
                         "startLine": 47,
                         "startColumn": 4,
@@ -721,7 +721,7 @@
                     "endOffset": 4682
                 },
                 "from": {
-                    "file": "/home/dat/nativescript_angular2/Claroline Connect/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/values-v21/values-v21.xml",
+                    "file": "/home/dat/nativescript_angular2/connect/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/values-v21/values-v21.xml",
                     "position": {
                         "startLine": 48,
                         "startColumn": 4,
@@ -741,7 +741,7 @@
                     "endOffset": 4835
                 },
                 "from": {
-                    "file": "/home/dat/nativescript_angular2/Claroline Connect/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/values-v21/values-v21.xml",
+                    "file": "/home/dat/nativescript_angular2/connect/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/values-v21/values-v21.xml",
                     "position": {
                         "startLine": 49,
                         "startColumn": 4,
@@ -762,7 +762,7 @@
                     "endOffset": 4982
                 },
                 "from": {
-                    "file": "/home/dat/nativescript_angular2/Claroline Connect/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/values-v21/values-v21.xml",
+                    "file": "/home/dat/nativescript_angular2/connect/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/values-v21/values-v21.xml",
                     "position": {
                         "startLine": 51,
                         "startColumn": 4,
@@ -782,7 +782,7 @@
                     "endOffset": 5057
                 },
                 "from": {
-                    "file": "/home/dat/nativescript_angular2/Claroline Connect/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/values-v21/values-v21.xml",
+                    "file": "/home/dat/nativescript_angular2/connect/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/values-v21/values-v21.xml",
                     "position": {
                         "startLine": 53,
                         "startColumn": 4,
@@ -801,7 +801,7 @@
                     "endOffset": 5146
                 },
                 "from": {
-                    "file": "/home/dat/nativescript_angular2/Claroline Connect/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/values-v21/values-v21.xml",
+                    "file": "/home/dat/nativescript_angular2/connect/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/values-v21/values-v21.xml",
                     "position": {
                         "startLine": 54,
                         "startColumn": 4,
@@ -820,7 +820,7 @@
                     "endOffset": 5233
                 },
                 "from": {
-                    "file": "/home/dat/nativescript_angular2/Claroline Connect/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/values-v21/values-v21.xml",
+                    "file": "/home/dat/nativescript_angular2/connect/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/values-v21/values-v21.xml",
                     "position": {
                         "startLine": 55,
                         "startColumn": 4,
@@ -839,7 +839,7 @@
                     "endOffset": 5334
                 },
                 "from": {
-                    "file": "/home/dat/nativescript_angular2/Claroline Connect/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/values-v21/values-v21.xml",
+                    "file": "/home/dat/nativescript_angular2/connect/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/values-v21/values-v21.xml",
                     "position": {
                         "startLine": 56,
                         "startColumn": 4,
@@ -859,7 +859,7 @@
                     "endOffset": 8402
                 },
                 "from": {
-                    "file": "/home/dat/nativescript_angular2/Claroline Connect/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/values-v21/values-v21.xml",
+                    "file": "/home/dat/nativescript_angular2/connect/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/values-v21/values-v21.xml",
                     "position": {
                         "startLine": 57,
                         "startColumn": 4,
@@ -880,7 +880,7 @@
                     "endOffset": 8588
                 },
                 "from": {
-                    "file": "/home/dat/nativescript_angular2/Claroline Connect/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/values-v21/values-v21.xml",
+                    "file": "/home/dat/nativescript_angular2/connect/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/values-v21/values-v21.xml",
                     "position": {
                         "startLine": 101,
                         "startColumn": 4,
@@ -901,7 +901,7 @@
                     "endOffset": 11668
                 },
                 "from": {
-                    "file": "/home/dat/nativescript_angular2/Claroline Connect/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/values-v21/values-v21.xml",
+                    "file": "/home/dat/nativescript_angular2/connect/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/values-v21/values-v21.xml",
                     "position": {
                         "startLine": 104,
                         "startColumn": 4,
@@ -922,7 +922,7 @@
                     "endOffset": 11866
                 },
                 "from": {
-                    "file": "/home/dat/nativescript_angular2/Claroline Connect/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/values-v21/values-v21.xml",
+                    "file": "/home/dat/nativescript_angular2/connect/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/values-v21/values-v21.xml",
                     "position": {
                         "startLine": 148,
                         "startColumn": 4,
@@ -943,7 +943,7 @@
                     "endOffset": 11989
                 },
                 "from": {
-                    "file": "/home/dat/nativescript_angular2/Claroline Connect/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/values-v21/values-v21.xml",
+                    "file": "/home/dat/nativescript_angular2/connect/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/values-v21/values-v21.xml",
                     "position": {
                         "startLine": 151,
                         "startColumn": 4,
@@ -964,7 +964,7 @@
                     "endOffset": 12112
                 },
                 "from": {
-                    "file": "/home/dat/nativescript_angular2/Claroline Connect/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/values-v21/values-v21.xml",
+                    "file": "/home/dat/nativescript_angular2/connect/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/values-v21/values-v21.xml",
                     "position": {
                         "startLine": 153,
                         "startColumn": 4,
@@ -985,7 +985,7 @@
                     "endOffset": 12225
                 },
                 "from": {
-                    "file": "/home/dat/nativescript_angular2/Claroline Connect/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/values-v21/values-v21.xml",
+                    "file": "/home/dat/nativescript_angular2/connect/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/values-v21/values-v21.xml",
                     "position": {
                         "startLine": 155,
                         "startColumn": 4,
@@ -1006,7 +1006,7 @@
                     "endOffset": 12408
                 },
                 "from": {
-                    "file": "/home/dat/nativescript_angular2/Claroline Connect/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/values-v21/values-v21.xml",
+                    "file": "/home/dat/nativescript_angular2/connect/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/values-v21/values-v21.xml",
                     "position": {
                         "startLine": 157,
                         "startColumn": 4,
@@ -1027,7 +1027,7 @@
                     "endOffset": 12539
                 },
                 "from": {
-                    "file": "/home/dat/nativescript_angular2/Claroline Connect/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/values-v21/values-v21.xml",
+                    "file": "/home/dat/nativescript_angular2/connect/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/values-v21/values-v21.xml",
                     "position": {
                         "startLine": 160,
                         "startColumn": 4,
@@ -1048,7 +1048,7 @@
                     "endOffset": 12740
                 },
                 "from": {
-                    "file": "/home/dat/nativescript_angular2/Claroline Connect/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/values-v21/values-v21.xml",
+                    "file": "/home/dat/nativescript_angular2/connect/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/values-v21/values-v21.xml",
                     "position": {
                         "startLine": 162,
                         "startColumn": 4,
@@ -1068,7 +1068,7 @@
                     "endOffset": 12829
                 },
                 "from": {
-                    "file": "/home/dat/nativescript_angular2/Claroline Connect/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/values-v21/values-v21.xml",
+                    "file": "/home/dat/nativescript_angular2/connect/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/values-v21/values-v21.xml",
                     "position": {
                         "startLine": 165,
                         "startColumn": 4,
@@ -1087,7 +1087,7 @@
                     "endOffset": 12940
                 },
                 "from": {
-                    "file": "/home/dat/nativescript_angular2/Claroline Connect/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/values-v21/values-v21.xml",
+                    "file": "/home/dat/nativescript_angular2/connect/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/values-v21/values-v21.xml",
                     "position": {
                         "startLine": 166,
                         "startColumn": 4,
@@ -1106,7 +1106,7 @@
                     "endOffset": 13067
                 },
                 "from": {
-                    "file": "/home/dat/nativescript_angular2/Claroline Connect/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/values-v21/values-v21.xml",
+                    "file": "/home/dat/nativescript_angular2/connect/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/values-v21/values-v21.xml",
                     "position": {
                         "startLine": 167,
                         "startColumn": 4,
@@ -1125,7 +1125,7 @@
                     "endOffset": 13168
                 },
                 "from": {
-                    "file": "/home/dat/nativescript_angular2/Claroline Connect/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/values-v21/values-v21.xml",
+                    "file": "/home/dat/nativescript_angular2/connect/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/values-v21/values-v21.xml",
                     "position": {
                         "startLine": 168,
                         "startColumn": 4,
@@ -1144,7 +1144,7 @@
                     "endOffset": 13263
                 },
                 "from": {
-                    "file": "/home/dat/nativescript_angular2/Claroline Connect/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/values-v21/values-v21.xml",
+                    "file": "/home/dat/nativescript_angular2/connect/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/values-v21/values-v21.xml",
                     "position": {
                         "startLine": 169,
                         "startColumn": 4,
@@ -1163,7 +1163,7 @@
                     "endOffset": 13386
                 },
                 "from": {
-                    "file": "/home/dat/nativescript_angular2/Claroline Connect/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/values-v21/values-v21.xml",
+                    "file": "/home/dat/nativescript_angular2/connect/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/values-v21/values-v21.xml",
                     "position": {
                         "startLine": 170,
                         "startColumn": 4,
@@ -1182,7 +1182,7 @@
                     "endOffset": 13515
                 },
                 "from": {
-                    "file": "/home/dat/nativescript_angular2/Claroline Connect/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/values-v21/values-v21.xml",
+                    "file": "/home/dat/nativescript_angular2/connect/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/values-v21/values-v21.xml",
                     "position": {
                         "startLine": 171,
                         "startColumn": 4,
@@ -1201,7 +1201,7 @@
                     "endOffset": 13632
                 },
                 "from": {
-                    "file": "/home/dat/nativescript_angular2/Claroline Connect/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/values-v21/values-v21.xml",
+                    "file": "/home/dat/nativescript_angular2/connect/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/values-v21/values-v21.xml",
                     "position": {
                         "startLine": 172,
                         "startColumn": 4,
@@ -1221,7 +1221,7 @@
                     "endOffset": 13809
                 },
                 "from": {
-                    "file": "/home/dat/nativescript_angular2/Claroline Connect/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/values-v21/values-v21.xml",
+                    "file": "/home/dat/nativescript_angular2/connect/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/values-v21/values-v21.xml",
                     "position": {
                         "startLine": 173,
                         "startColumn": 4,
@@ -1241,7 +1241,7 @@
                     "endOffset": 13908
                 },
                 "from": {
-                    "file": "/home/dat/nativescript_angular2/Claroline Connect/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/values-v21/values-v21.xml",
+                    "file": "/home/dat/nativescript_angular2/connect/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/values-v21/values-v21.xml",
                     "position": {
                         "startLine": 176,
                         "startColumn": 4,
@@ -1261,7 +1261,7 @@
                     "endOffset": 14043
                 },
                 "from": {
-                    "file": "/home/dat/nativescript_angular2/Claroline Connect/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/values-v21/values-v21.xml",
+                    "file": "/home/dat/nativescript_angular2/connect/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/values-v21/values-v21.xml",
                     "position": {
                         "startLine": 177,
                         "startColumn": 4,
@@ -1282,7 +1282,7 @@
                     "endOffset": 14186
                 },
                 "from": {
-                    "file": "/home/dat/nativescript_angular2/Claroline Connect/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/values-v21/values-v21.xml",
+                    "file": "/home/dat/nativescript_angular2/connect/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/values-v21/values-v21.xml",
                     "position": {
                         "startLine": 179,
                         "startColumn": 4,
@@ -1303,7 +1303,7 @@
                     "endOffset": 14321
                 },
                 "from": {
-                    "file": "/home/dat/nativescript_angular2/Claroline Connect/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/values-v21/values-v21.xml",
+                    "file": "/home/dat/nativescript_angular2/connect/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/values-v21/values-v21.xml",
                     "position": {
                         "startLine": 181,
                         "startColumn": 4,
@@ -1324,7 +1324,7 @@
                     "endOffset": 14440
                 },
                 "from": {
-                    "file": "/home/dat/nativescript_angular2/Claroline Connect/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/values-v21/values-v21.xml",
+                    "file": "/home/dat/nativescript_angular2/connect/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/values-v21/values-v21.xml",
                     "position": {
                         "startLine": 183,
                         "startColumn": 4,
@@ -1345,7 +1345,7 @@
                     "endOffset": 14641
                 },
                 "from": {
-                    "file": "/home/dat/nativescript_angular2/Claroline Connect/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/values-v21/values-v21.xml",
+                    "file": "/home/dat/nativescript_angular2/connect/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/values-v21/values-v21.xml",
                     "position": {
                         "startLine": 185,
                         "startColumn": 4,
@@ -1366,7 +1366,7 @@
                     "endOffset": 14760
                 },
                 "from": {
-                    "file": "/home/dat/nativescript_angular2/Claroline Connect/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/values-v21/values-v21.xml",
+                    "file": "/home/dat/nativescript_angular2/connect/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/values-v21/values-v21.xml",
                     "position": {
                         "startLine": 189,
                         "startColumn": 4,
@@ -1386,7 +1386,7 @@
                     "endOffset": 14853
                 },
                 "from": {
-                    "file": "/home/dat/nativescript_angular2/Claroline Connect/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/values-v21/values-v21.xml",
+                    "file": "/home/dat/nativescript_angular2/connect/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/values-v21/values-v21.xml",
                     "position": {
                         "startLine": 191,
                         "startColumn": 4,
@@ -1405,7 +1405,7 @@
                     "endOffset": 14964
                 },
                 "from": {
-                    "file": "/home/dat/nativescript_angular2/Claroline Connect/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/values-v21/values-v21.xml",
+                    "file": "/home/dat/nativescript_angular2/connect/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/values-v21/values-v21.xml",
                     "position": {
                         "startLine": 192,
                         "startColumn": 4,
@@ -1424,7 +1424,7 @@
                     "endOffset": 15020
                 },
                 "from": {
-                    "file": "/home/dat/nativescript_angular2/Claroline Connect/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/values-v21/values-v21.xml",
+                    "file": "/home/dat/nativescript_angular2/connect/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/values-v21/values-v21.xml",
                     "position": {
                         "startLine": 193,
                         "startColumn": 4,
@@ -1444,7 +1444,7 @@
                     "endOffset": 15127
                 },
                 "from": {
-                    "file": "/home/dat/nativescript_angular2/Claroline Connect/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/values-v21/values-v21.xml",
+                    "file": "/home/dat/nativescript_angular2/connect/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/values-v21/values-v21.xml",
                     "position": {
                         "startLine": 194,
                         "startColumn": 4,
@@ -1465,7 +1465,7 @@
                     "endOffset": 15322
                 },
                 "from": {
-                    "file": "/home/dat/nativescript_angular2/Claroline Connect/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/values-v21/values-v21.xml",
+                    "file": "/home/dat/nativescript_angular2/connect/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/values-v21/values-v21.xml",
                     "position": {
                         "startLine": 196,
                         "startColumn": 4,
@@ -1486,7 +1486,7 @@
                     "endOffset": 15433
                 },
                 "from": {
-                    "file": "/home/dat/nativescript_angular2/Claroline Connect/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/values-v21/values-v21.xml",
+                    "file": "/home/dat/nativescript_angular2/connect/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/values-v21/values-v21.xml",
                     "position": {
                         "startLine": 200,
                         "startColumn": 4,
@@ -1507,7 +1507,7 @@
                     "endOffset": 15566
                 },
                 "from": {
-                    "file": "/home/dat/nativescript_angular2/Claroline Connect/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/values-v21/values-v21.xml",
+                    "file": "/home/dat/nativescript_angular2/connect/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/values-v21/values-v21.xml",
                     "position": {
                         "startLine": 202,
                         "startColumn": 4,
@@ -1527,7 +1527,7 @@
                     "endOffset": 15661
                 },
                 "from": {
-                    "file": "/home/dat/nativescript_angular2/Claroline Connect/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/values-v21/values-v21.xml",
+                    "file": "/home/dat/nativescript_angular2/connect/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/values-v21/values-v21.xml",
                     "position": {
                         "startLine": 204,
                         "startColumn": 4,
@@ -1546,7 +1546,7 @@
                     "endOffset": 15752
                 },
                 "from": {
-                    "file": "/home/dat/nativescript_angular2/Claroline Connect/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/values-v21/values-v21.xml",
+                    "file": "/home/dat/nativescript_angular2/connect/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/values-v21/values-v21.xml",
                     "position": {
                         "startLine": 205,
                         "startColumn": 4,
@@ -1565,7 +1565,7 @@
                     "endOffset": 15843
                 },
                 "from": {
-                    "file": "/home/dat/nativescript_angular2/Claroline Connect/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/values-v21/values-v21.xml",
+                    "file": "/home/dat/nativescript_angular2/connect/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/values-v21/values-v21.xml",
                     "position": {
                         "startLine": 206,
                         "startColumn": 4,
@@ -1584,7 +1584,7 @@
                     "endOffset": 15960
                 },
                 "from": {
-                    "file": "/home/dat/nativescript_angular2/Claroline Connect/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/values-v21/values-v21.xml",
+                    "file": "/home/dat/nativescript_angular2/connect/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/values-v21/values-v21.xml",
                     "position": {
                         "startLine": 207,
                         "startColumn": 4,
@@ -1604,7 +1604,7 @@
                     "endOffset": 16099
                 },
                 "from": {
-                    "file": "/home/dat/nativescript_angular2/Claroline Connect/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/values-v21/values-v21.xml",
+                    "file": "/home/dat/nativescript_angular2/connect/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/values-v21/values-v21.xml",
                     "position": {
                         "startLine": 208,
                         "startColumn": 4,
@@ -1625,7 +1625,7 @@
                     "endOffset": 16244
                 },
                 "from": {
-                    "file": "/home/dat/nativescript_angular2/Claroline Connect/platforms/android/src/main/res/values-v21/styles.xml",
+                    "file": "/home/dat/nativescript_angular2/connect/platforms/android/src/main/res/values-v21/styles.xml",
                     "position": {
                         "startLine": 19,
                         "startColumn": 1,
@@ -1646,7 +1646,7 @@
                     "endOffset": 16757
                 },
                 "from": {
-                    "file": "/home/dat/nativescript_angular2/Claroline Connect/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/values-v21/values-v21.xml",
+                    "file": "/home/dat/nativescript_angular2/connect/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/values-v21/values-v21.xml",
                     "position": {
                         "startLine": 210,
                         "startColumn": 4,
@@ -1667,7 +1667,7 @@
                     "endOffset": 17282
                 },
                 "from": {
-                    "file": "/home/dat/nativescript_angular2/Claroline Connect/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/values-v21/values-v21.xml",
+                    "file": "/home/dat/nativescript_angular2/connect/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/values-v21/values-v21.xml",
                     "position": {
                         "startLine": 220,
                         "startColumn": 4,
@@ -1688,7 +1688,7 @@
                     "endOffset": 17962
                 },
                 "from": {
-                    "file": "/home/dat/nativescript_angular2/Claroline Connect/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/values-v21/values-v21.xml",
+                    "file": "/home/dat/nativescript_angular2/connect/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/values-v21/values-v21.xml",
                     "position": {
                         "startLine": 230,
                         "startColumn": 4,
@@ -1708,7 +1708,7 @@
                     "endOffset": 18019
                 },
                 "from": {
-                    "file": "/home/dat/nativescript_angular2/Claroline Connect/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/values-v21/values-v21.xml",
+                    "file": "/home/dat/nativescript_angular2/connect/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/values-v21/values-v21.xml",
                     "position": {
                         "startLine": 240,
                         "startColumn": 4,
@@ -1727,7 +1727,7 @@
                     "endOffset": 18077
                 },
                 "from": {
-                    "file": "/home/dat/nativescript_angular2/Claroline Connect/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/values-v21/values-v21.xml",
+                    "file": "/home/dat/nativescript_angular2/connect/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/values-v21/values-v21.xml",
                     "position": {
                         "startLine": 241,
                         "startColumn": 4,
@@ -1747,7 +1747,7 @@
                     "endOffset": 18236
                 },
                 "from": {
-                    "file": "/home/dat/nativescript_angular2/Claroline Connect/platforms/android/src/main/res/values-v21/styles.xml",
+                    "file": "/home/dat/nativescript_angular2/connect/platforms/android/src/main/res/values-v21/styles.xml",
                     "position": {
                         "startLine": 10,
                         "startColumn": 4,
@@ -1768,7 +1768,7 @@
                     "endOffset": 18395
                 },
                 "from": {
-                    "file": "/home/dat/nativescript_angular2/Claroline Connect/platforms/android/src/main/res/values-v21/styles.xml",
+                    "file": "/home/dat/nativescript_angular2/connect/platforms/android/src/main/res/values-v21/styles.xml",
                     "position": {
                         "startLine": 15,
                         "startColumn": 4,

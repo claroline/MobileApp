@@ -58,12 +58,14 @@ export let RouterOutlet = class {
             provide(RouteParams, { useValue: new RouteParams(nextInstruction.params) }),
             provide(routerMod.Router, { useValue: childRouter })
         ]);
-        return this._loader.loadNextToLocation(componentType, this._elementRef, providers)
-            .then((componentRef) => {
-            this._componentRef = componentRef;
+        this._componentRef =
+            this._loader.loadNextToLocation(componentType, this._elementRef, providers);
+        return this._componentRef.then((componentRef) => {
             if (hasLifecycleHook(hookMod.routerOnActivate, componentType)) {
-                return this._componentRef.instance
-                    .routerOnActivate(nextInstruction, previousInstruction);
+                return this._componentRef.then((ref) => ref.instance.routerOnActivate(nextInstruction, previousInstruction));
+            }
+            else {
+                return componentRef;
             }
         });
     }
@@ -81,10 +83,11 @@ export let RouterOutlet = class {
         if (isBlank(this._componentRef)) {
             return this.activate(nextInstruction);
         }
-        return PromiseWrapper.resolve(hasLifecycleHook(hookMod.routerOnReuse, this._currentInstruction.componentType) ?
-            this._componentRef.instance
-                .routerOnReuse(nextInstruction, previousInstruction) :
-            true);
+        else {
+            return PromiseWrapper.resolve(hasLifecycleHook(hookMod.routerOnReuse, this._currentInstruction.componentType) ?
+                this._componentRef.then((ref) => ref.instance.routerOnReuse(nextInstruction, previousInstruction)) :
+                true);
+        }
     }
     /**
      * Called by the {@link Router} when an outlet disposes of a component's contents.
@@ -94,13 +97,14 @@ export let RouterOutlet = class {
         var next = _resolveToTrue;
         if (isPresent(this._componentRef) && isPresent(this._currentInstruction) &&
             hasLifecycleHook(hookMod.routerOnDeactivate, this._currentInstruction.componentType)) {
-            next = PromiseWrapper.resolve(this._componentRef.instance
+            next = this._componentRef.then((ref) => ref.instance
                 .routerOnDeactivate(nextInstruction, this._currentInstruction));
         }
         return next.then((_) => {
             if (isPresent(this._componentRef)) {
-                this._componentRef.dispose();
+                var onDispose = this._componentRef.then((ref) => ref.dispose());
                 this._componentRef = null;
+                return onDispose;
             }
         });
     }
@@ -117,10 +121,12 @@ export let RouterOutlet = class {
             return _resolveToTrue;
         }
         if (hasLifecycleHook(hookMod.routerCanDeactivate, this._currentInstruction.componentType)) {
-            return PromiseWrapper.resolve(this._componentRef.instance
+            return this._componentRef.then((ref) => ref.instance
                 .routerCanDeactivate(nextInstruction, this._currentInstruction));
         }
-        return _resolveToTrue;
+        else {
+            return _resolveToTrue;
+        }
     }
     /**
      * Called by the {@link Router} during recognition phase of a navigation.
@@ -139,8 +145,7 @@ export let RouterOutlet = class {
             result = false;
         }
         else if (hasLifecycleHook(hookMod.routerCanReuse, this._currentInstruction.componentType)) {
-            result = this._componentRef.instance
-                .routerCanReuse(nextInstruction, this._currentInstruction);
+            result = this._componentRef.then((ref) => ref.instance.routerCanReuse(nextInstruction, this._currentInstruction));
         }
         else {
             result = nextInstruction == this._currentInstruction ||

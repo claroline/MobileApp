@@ -1,14 +1,14 @@
 [
     {
-        "merged": "/home/dat/nativescript_angular2/Claroline Connect/platforms/android/build/intermediates/res/merged/F0F1/debug/drawable-v21/abc_btn_colored_material.xml",
-        "source": "/home/dat/nativescript_angular2/Claroline Connect/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/drawable-v21/abc_btn_colored_material.xml"
+        "merged": "/home/dat/nativescript_angular2/connect/platforms/android/build/intermediates/res/merged/F0F1/debug/drawable-v21/abc_action_bar_item_background_material.xml",
+        "source": "/home/dat/nativescript_angular2/connect/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/drawable-v21/abc_action_bar_item_background_material.xml"
     },
     {
-        "merged": "/home/dat/nativescript_angular2/Claroline Connect/platforms/android/build/intermediates/res/merged/F0F1/debug/drawable-v21/abc_edit_text_material.xml",
-        "source": "/home/dat/nativescript_angular2/Claroline Connect/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/drawable-v21/abc_edit_text_material.xml"
+        "merged": "/home/dat/nativescript_angular2/connect/platforms/android/build/intermediates/res/merged/F0F1/debug/drawable-v21/abc_edit_text_material.xml",
+        "source": "/home/dat/nativescript_angular2/connect/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/drawable-v21/abc_edit_text_material.xml"
     },
     {
-        "merged": "/home/dat/nativescript_angular2/Claroline Connect/platforms/android/build/intermediates/res/merged/F0F1/debug/drawable-v21/abc_action_bar_item_background_material.xml",
-        "source": "/home/dat/nativescript_angular2/Claroline Connect/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/drawable-v21/abc_action_bar_item_background_material.xml"
+        "merged": "/home/dat/nativescript_angular2/connect/platforms/android/build/intermediates/res/merged/F0F1/debug/drawable-v21/abc_btn_colored_material.xml",
+        "source": "/home/dat/nativescript_angular2/connect/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/drawable-v21/abc_btn_colored_material.xml"
     }
 ]

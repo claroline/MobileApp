@@ -2,14 +2,14 @@
   "_args": [
     [
       "rxjs@5.0.0-beta.2",
-      "/home/dat/nativescript_angular2/mobile"
+      "/home/dat/nativescript_angular2/connect/node_modules/nativescript-angular"
     ]
   ],
   "_from": "rxjs@5.0.0-beta.2",
   "_id": "rxjs@5.0.0-beta.2",
   "_inCache": true,
   "_installable": true,
-  "_location": "/rxjs",
+  "_location": "/nativescript-angular/rxjs",
   "_nodeVersion": "5.0.0",
   "_npmOperationalInternal": {
     "host": "packages-5-east.internal.npmjs.com",
@@ -30,14 +30,13 @@
     "type": "version"
   },
   "_requiredBy": [
-    "/",
     "/nativescript-angular"
   ],
   "_resolved": "https://registry.npmjs.org/rxjs/-/rxjs-5.0.0-beta.2.tgz",
   "_shasum": "f775df8b8598c0657031e5ff8ff8251e1c5c0185",
   "_shrinkwrap": null,
   "_spec": "rxjs@5.0.0-beta.2",
-  "_where": "/home/dat/nativescript_angular2/mobile",
+  "_where": "/home/dat/nativescript_angular2/connect/node_modules/nativescript-angular",
   "author": {
     "email": "blesh@netflix.com",
     "name": "Ben Lesh"

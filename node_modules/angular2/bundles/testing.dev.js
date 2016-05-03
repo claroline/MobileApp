@@ -370,11 +370,11 @@ System.register("angular2/src/mock/ng_zone_mock", ["angular2/src/core/di", "angu
     __extends(MockNgZone, _super);
     function MockNgZone() {
       _super.call(this, {enableLongStackTrace: false});
-      this._mockOnEventDone = new async_1.EventEmitter(false);
+      this._mockOnStable = new async_1.EventEmitter(false);
     }
-    Object.defineProperty(MockNgZone.prototype, "onEventDone", {
+    Object.defineProperty(MockNgZone.prototype, "onStable", {
       get: function() {
-        return this._mockOnEventDone;
+        return this._mockOnStable;
       },
       enumerable: true,
       configurable: true
@@ -386,7 +386,7 @@ System.register("angular2/src/mock/ng_zone_mock", ["angular2/src/core/di", "angu
       return fn();
     };
     MockNgZone.prototype.simulateZoneExit = function() {
-      async_1.ObservableWrapper.callNext(this.onEventDone, null);
+      async_1.ObservableWrapper.callNext(this.onStable, null);
     };
     MockNgZone = __decorate([di_1.Injectable(), __metadata('design:paramtypes', [])], MockNgZone);
     return MockNgZone;
@@ -422,10 +422,10 @@ System.register("angular2/src/testing/utils", ["angular2/core", "angular2/src/fa
   var lang_1 = require("angular2/src/facade/lang");
   var Log = (function() {
     function Log() {
-      this._result = [];
+      this.logItems = [];
     }
     Log.prototype.add = function(value) {
-      this._result.push(value);
+      this.logItems.push(value);
     };
     Log.prototype.fn = function(value) {
       var _this = this;
@@ -445,14 +445,14 @@ System.register("angular2/src/testing/utils", ["angular2/core", "angular2/src/fa
         if (a5 === void 0) {
           a5 = null;
         }
-        _this._result.push(value);
+        _this.logItems.push(value);
       };
     };
     Log.prototype.clear = function() {
-      this._result = [];
+      this.logItems = [];
     };
     Log.prototype.result = function() {
-      return this._result.join("; ");
+      return this.logItems.join("; ");
     };
     Log = __decorate([core_1.Injectable(), __metadata('design:paramtypes', [])], Log);
     return Log;
@@ -845,7 +845,8 @@ System.register("angular2/src/testing/test_component_builder", ["angular2/core",
         dom_adapter_1.DOM.remove(oldRoots[i]);
       }
       dom_adapter_1.DOM.appendChild(doc.body, rootEl);
-      return this._injector.get(core_1.DynamicComponentLoader).loadAsRoot(rootComponentType, "#" + rootElId, this._injector).then(function(componentRef) {
+      var promise = this._injector.get(core_1.DynamicComponentLoader).loadAsRoot(rootComponentType, "#" + rootElId, this._injector);
+      return promise.then(function(componentRef) {
         return new ComponentFixture_(componentRef);
       });
     };
@@ -1343,18 +1344,56 @@ System.register("angular2/src/testing/fake_async", ["angular2/src/facade/lang", 
   var _microtasks = [];
   var _pendingPeriodicTimers = [];
   var _pendingTimers = [];
+  var FakeAsyncZoneSpec = (function() {
+    function FakeAsyncZoneSpec() {
+      this.name = 'fakeAsync';
+      this.properties = {'inFakeAsyncZone': true};
+    }
+    FakeAsyncZoneSpec.assertInZone = function() {
+      if (!Zone.current.get('inFakeAsyncZone')) {
+        throw new Error('The code should be running in the fakeAsync zone to call this function');
+      }
+    };
+    FakeAsyncZoneSpec.prototype.onScheduleTask = function(delegate, current, target, task) {
+      switch (task.type) {
+        case 'microTask':
+          _microtasks.push(task.invoke);
+          break;
+        case 'macroTask':
+          switch (task.source) {
+            case 'setTimeout':
+              task.data['handleId'] = _setTimeout(task.invoke, task.data['delay'], task.data['args']);
+              break;
+            case 'setInterval':
+              task.data['handleId'] = _setInterval(task.invoke, task.data['delay'], task.data['args']);
+              break;
+            default:
+              task = delegate.scheduleTask(target, task);
+          }
+          break;
+        case 'eventTask':
+          task = delegate.scheduleTask(target, task);
+          break;
+      }
+      return task;
+    };
+    FakeAsyncZoneSpec.prototype.onCancelTask = function(delegate, current, target, task) {
+      switch (task.source) {
+        case 'setTimeout':
+          return _clearTimeout(task.data['handleId']);
+        case 'setInterval':
+          return _clearInterval(task.data['handleId']);
+        default:
+          return delegate.scheduleTask(target, task);
+      }
+    };
+    return FakeAsyncZoneSpec;
+  })();
   function fakeAsync(fn) {
-    if (lang_1.global.zone._inFakeAsyncZone) {
+    if (Zone.current.get('inFakeAsyncZone')) {
       throw new Error('fakeAsync() calls can not be nested');
     }
-    var fakeAsyncZone = lang_1.global.zone.fork({
-      setTimeout: _setTimeout,
-      clearTimeout: _clearTimeout,
-      setInterval: _setInterval,
-      clearInterval: _clearInterval,
-      scheduleMicrotask: _scheduleMicrotask,
-      _inFakeAsyncZone: true
-    });
+    var fakeAsyncZone = Zone.current.fork(new FakeAsyncZoneSpec());
     return function() {
       var args = [];
       for (var _i = 0; _i < arguments.length; _i++) {
@@ -1389,24 +1428,20 @@ System.register("angular2/src/testing/fake_async", ["angular2/src/facade/lang", 
     if (millis === void 0) {
       millis = 0;
     }
-    _assertInFakeAsyncZone();
+    FakeAsyncZoneSpec.assertInZone();
     flushMicrotasks();
     _scheduler.tick(millis);
   }
   exports.tick = tick;
   function flushMicrotasks() {
-    _assertInFakeAsyncZone();
+    FakeAsyncZoneSpec.assertInZone();
     while (_microtasks.length > 0) {
       var microtask = collection_1.ListWrapper.removeAt(_microtasks, 0);
       microtask();
     }
   }
   exports.flushMicrotasks = flushMicrotasks;
-  function _setTimeout(fn, delay) {
-    var args = [];
-    for (var _i = 2; _i < arguments.length; _i++) {
-      args[_i - 2] = arguments[_i];
-    }
+  function _setTimeout(fn, delay, args) {
     var cb = _fnAndFlush(fn);
     var id = _scheduler.scheduleFunction(cb, delay, args);
     _pendingTimers.push(id);
@@ -1441,18 +1476,10 @@ System.register("angular2/src/testing/fake_async", ["angular2/src/facade/lang", 
       flushMicrotasks();
     };
   }
-  function _scheduleMicrotask(microtask) {
-    _microtasks.push(microtask);
-  }
   function _dequeueTimer(id) {
     return function() {
       collection_1.ListWrapper.remove(_pendingTimers, id);
     };
-  }
-  function _assertInFakeAsyncZone() {
-    if (!lang_1.global.zone || !lang_1.global.zone._inFakeAsyncZone) {
-      throw new Error('The code should be running in the fakeAsync zone to call this function');
-    }
   }
   global.define = __define;
   return module.exports;
@@ -1673,6 +1700,22 @@ System.register("angular2/src/testing/matchers", ["angular2/src/platform/dom/dom
               };
             }
           }};
+      },
+      toMatchPattern: function() {
+        return {
+          compare: buildError(false),
+          negativeCompare: buildError(true)
+        };
+        function buildError(isNot) {
+          return function(actual, regex) {
+            return {
+              pass: regex.test(actual) == !isNot,
+              get message() {
+                return "Expected " + actual + " " + (isNot ? 'not ' : '') + "to match " + regex.toString();
+              }
+            };
+          };
+        }
       },
       toImplement: function() {
         return {compare: function(actualObject, expectedInterface) {

@@ -54,6 +54,10 @@ export class ConfigService {
 		appSettings.remove(key);
 	}
 
+	hasKey(key:string){
+		return appSettings.hasKey(key);
+	}
+
 
 	getClientIdAndSecretFromHost(){
 		let host = this.getHost();

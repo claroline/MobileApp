@@ -8,6 +8,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 import { CONST } from 'angular2/src/facade/lang';
+var __make_dart_analyzer_happy = null;
 /**
  * The `RouteConfig` decorator defines routes for a given component.
  *

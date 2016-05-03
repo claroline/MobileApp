@@ -75,7 +75,7 @@ export class Router {
    *
    * You probably don't need to use this unless you're writing a reusable component.
    */
-  registerPrimaryOutlet(outlet: RouterOutlet): Promise<boolean> {
+  registerPrimaryOutlet(outlet: RouterOutlet): Promise<any> {
     if (isPresent(outlet.name)) {
       throw new BaseException(`registerPrimaryOutlet expects to be called with an unnamed outlet.`);
     }
@@ -109,7 +109,7 @@ export class Router {
    *
    * You probably don't need to use this unless you're writing a reusable component.
    */
-  registerAuxOutlet(outlet: RouterOutlet): Promise<boolean> {
+  registerAuxOutlet(outlet: RouterOutlet): Promise<any> {
     var outletName = outlet.name;
     if (isBlank(outletName)) {
       throw new BaseException(`registerAuxOutlet expects to be called with an outlet with a name.`);
@@ -230,7 +230,7 @@ export class Router {
         unsettledInstructions.push(this._settleInstruction(instruction.child));
       }
 
-      StringMapWrapper.forEach(instruction.auxInstruction, (instruction, _) => {
+      StringMapWrapper.forEach(instruction.auxInstruction, (instruction: Instruction, _) => {
         unsettledInstructions.push(this._settleInstruction(instruction));
       });
       return PromiseWrapper.all(unsettledInstructions);
@@ -260,6 +260,7 @@ export class Router {
   }
 
   private _emitNavigationFinish(url): void { ObservableWrapper.callEmit(this._subject, url); }
+  _emitNavigationFail(url): void { ObservableWrapper.callError(this._subject, url); }
 
   private _afterPromiseFinishNavigating(promise: Promise<any>): Promise<any> {
     return PromiseWrapper.catchError(promise.then((_) => this._finishNavigating()), (err) => {
@@ -311,7 +312,7 @@ export class Router {
       next = this._outlet.routerCanDeactivate(componentInstruction);
     }
     // TODO: aux route lifecycle hooks
-    return next.then((result) => {
+    return next.then<boolean>((result): boolean | Promise<boolean> => {
       if (result == false) {
         return false;
       }
@@ -346,7 +347,7 @@ export class Router {
       }
     }
 
-    var promises = [];
+    var promises: Promise<any>[] = [];
     this._auxRouters.forEach((router, name) => {
       if (isPresent(instruction.auxInstruction[name])) {
         promises.push(router.commit(instruction.auxInstruction[name]));
@@ -367,8 +368,8 @@ export class Router {
   /**
    * Subscribe to URL updates from the router
    */
-  subscribe(onNext: (value: any) => void): Object {
-    return ObservableWrapper.subscribe(this._subject, onNext);
+  subscribe(onNext: (value: any) => void, onError?: (value: any) => void): Object {
+    return ObservableWrapper.subscribe(this._subject, onNext, onError);
   }
 
 
@@ -405,7 +406,7 @@ export class Router {
   }
 
   private _getAncestorInstructions(): Instruction[] {
-    var ancestorInstructions = [this.currentInstruction];
+    var ancestorInstructions: Instruction[] = [this.currentInstruction];
     var ancestorRouter: Router = this;
     while (isPresent(ancestorRouter = ancestorRouter.parent)) {
       ancestorInstructions.unshift(ancestorRouter.currentInstruction);
@@ -451,31 +452,35 @@ export class RootRouter extends Router {
       // we call recognize ourselves
       this.recognize(change['url'])
           .then((instruction) => {
-            this.navigateByInstruction(instruction, isPresent(change['pop']))
-                .then((_) => {
-                  // this is a popstate event; no need to change the URL
-                  if (isPresent(change['pop']) && change['type'] != 'hashchange') {
-                    return;
-                  }
-                  var emitPath = instruction.toUrlPath();
-                  var emitQuery = instruction.toUrlQuery();
-                  if (emitPath.length > 0 && emitPath[0] != '/') {
-                    emitPath = '/' + emitPath;
-                  }
-
-                  // Because we've opted to use All hashchange events occur outside Angular.
-                  // However, apps that are migrating might have hash links that operate outside
-                  // angular to which routing must respond.
-                  // To support these cases where we respond to hashchanges and redirect as a
-                  // result, we need to replace the top item on the stack.
-                  if (change['type'] == 'hashchange') {
-                    if (instruction.toRootUrl() != this._location.path()) {
-                      this._location.replaceState(emitPath, emitQuery);
+            if (isPresent(instruction)) {
+              this.navigateByInstruction(instruction, isPresent(change['pop']))
+                  .then((_) => {
+                    // this is a popstate event; no need to change the URL
+                    if (isPresent(change['pop']) && change['type'] != 'hashchange') {
+                      return;
                     }
-                  } else {
-                    this._location.go(emitPath, emitQuery);
-                  }
-                });
+                    var emitPath = instruction.toUrlPath();
+                    var emitQuery = instruction.toUrlQuery();
+                    if (emitPath.length > 0 && emitPath[0] != '/') {
+                      emitPath = '/' + emitPath;
+                    }
+
+                    // Because we've opted to use All hashchange events occur outside Angular.
+                    // However, apps that are migrating might have hash links that operate outside
+                    // angular to which routing must respond.
+                    // To support these cases where we respond to hashchanges and redirect as a
+                    // result, we need to replace the top item on the stack.
+                    if (change['type'] == 'hashchange') {
+                      if (instruction.toRootUrl() != this._location.path()) {
+                        this._location.replaceState(emitPath, emitQuery);
+                      }
+                    } else {
+                      this._location.go(emitPath, emitQuery);
+                    }
+                  });
+            } else {
+              this._emitNavigationFail(change['url']);
+            }
           });
     });
 
@@ -534,7 +539,7 @@ function canActivateOne(nextInstruction: Instruction,
     next = canActivateOne(nextInstruction.child,
                           isPresent(prevInstruction) ? prevInstruction.child : null);
   }
-  return next.then((result) => {
+  return next.then<boolean>((result: boolean): boolean => {
     if (result == false) {
       return false;
     }

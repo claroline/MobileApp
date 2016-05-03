@@ -1,3 +1,4 @@
+import { Type } from 'angular2/src/facade/lang';
 import { RouteDefinition } from '../route_definition';
 import { RegexSerializer } from '../rules/route_paths/regex_route_path';
 export { RouteDefinition } from '../route_definition';
@@ -97,7 +98,7 @@ export declare class AuxRoute extends AbstractRoute {
  * ```
  */
 export declare class AsyncRoute extends AbstractRoute {
-    loader: Function;
+    loader: () => Promise<Type>;
     aux: string;
     constructor({name, useAsDefault, path, regex, serializer, data, loader}: RouteDefinition);
 }

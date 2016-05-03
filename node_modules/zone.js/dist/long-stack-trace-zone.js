@@ -79,7 +79,8 @@
 	        return error.stack ? error.stack.split(NEWLINE) : [];
 	    }
 	    function addErrorStack(lines, error) {
-	        var trace = getFrames(error);
+	        var trace;
+	        trace = getFrames(error);
 	        for (var i = 0; i < trace.length; i++) {
 	            var frame = trace[i];
 	            // Filter out the Frames which are part of stack capturing.
@@ -122,11 +123,11 @@
 	            if (error instanceof Error && parentTask) {
 	                var descriptor = Object.getOwnPropertyDescriptor(error, 'stack');
 	                if (descriptor) {
-	                    var delegateGet_1 = descriptor.get;
-	                    var value_1 = descriptor.value;
+	                    var delegateGet = descriptor.get;
+	                    var value = descriptor.value;
 	                    descriptor = {
 	                        get: function () {
-	                            return renderLongStackTrace(parentTask.data && parentTask.data[creationTrace], delegateGet_1 ? delegateGet_1.apply(this) : value_1);
+	                            return renderLongStackTrace(parentTask.data && parentTask.data[creationTrace], delegateGet ? delegateGet.apply(this) : value);
 	                        }
 	                    };
 	                    Object.defineProperty(error, 'stack', descriptor);

@@ -1,11 +1,10 @@
 <ActionBar title="Claroline Connect"> 
-    <ActionItem android.systemIcon="ic_lock_power_off" (tap)="logOut()"></ActionItem>
+    <ActionItem ios.systemIcon="14" android.systemIcon="ic_lock_power_off" (tap)="logOut()"></ActionItem>
 </ActionBar>
 
 <TabView>
   <StackLayout *tabItem="{title: 'Accueil'}">
-
-  <Placeholder creatingView="creatingView"></Placeholder>
+    
   </StackLayout>
   <StackLayout *tabItem="{title: 'Notifications'}" >
    <PullToRefresh (refresh)="refreshNotificationPage($event)">
@@ -36,6 +35,7 @@
     </ListView>
   </StackLayout>
 </PullToRefresh>
+  
 
 </StackLayout>
 </TabView>
