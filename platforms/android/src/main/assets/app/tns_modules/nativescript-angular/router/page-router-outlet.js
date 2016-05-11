@@ -16,18 +16,20 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
-var async_1 = require('angular2/src/facade/async');
-var lang_1 = require('angular2/src/facade/lang');
-var collection_1 = require('angular2/src/facade/collection');
-var core_1 = require('angular2/core');
-var routerHooks = require('angular2/src/router/lifecycle/lifecycle_annotations');
-var route_lifecycle_reflector_1 = require('angular2/src/router/lifecycle/route_lifecycle_reflector');
-var router_1 = require('angular2/router');
+var async_1 = require('@angular/core/src/facade/async');
+var lang_1 = require('@angular/core/src/facade/lang');
+var collection_1 = require('@angular/core/src/facade/collection');
+var core_1 = require('@angular/core');
+var routerHooks = require('@angular/router-deprecated/src/lifecycle/lifecycle_annotations');
+var route_lifecycle_reflector_1 = require('@angular/router-deprecated/src/lifecycle/route_lifecycle_reflector');
+var router_deprecated_1 = require('@angular/router-deprecated');
 var frame_1 = require("ui/frame");
 var page_1 = require("ui/page");
+var platform_providers_1 = require("../platform-providers");
 var common_1 = require("./common");
 var ns_location_strategy_1 = require("./ns-location-strategy");
 var detached_loader_1 = require("../common/detached-loader");
+var view_util_1 = require("../view-util");
 var _resolveToTrue = async_1.PromiseWrapper.resolve(true);
 /**
  * Reference Cache
@@ -58,9 +60,9 @@ var RefCache = (function () {
  */
 var PageRouterOutlet = (function (_super) {
     __extends(PageRouterOutlet, _super);
-    function PageRouterOutlet(elementRef, loader, parentRouter, nameAttr, location) {
-        _super.call(this, elementRef, loader, parentRouter, nameAttr);
-        this.elementRef = elementRef;
+    function PageRouterOutlet(containerRef, loader, parentRouter, nameAttr, location, device) {
+        _super.call(this, containerRef, loader, parentRouter, nameAttr);
+        this.containerRef = containerRef;
         this.loader = loader;
         this.parentRouter = parentRouter;
         this.location = location;
@@ -68,6 +70,7 @@ var PageRouterOutlet = (function (_super) {
         this.refCache = new RefCache();
         this.componentRef = null;
         this.currentInstruction = null;
+        this.viewUtil = new view_util_1.ViewUtil(device);
     }
     /**
      * Called by the Router to instantiate a new component during the commit phase of a navigation.
@@ -103,20 +106,20 @@ var PageRouterOutlet = (function (_super) {
         var loaderRef = undefined;
         var childRouter = this.parentRouter.childRouter(componentType);
         var providersArray = [
-            core_1.provide(router_1.RouteData, { useValue: nextInstruction.routeData }),
-            core_1.provide(router_1.RouteParams, { useValue: new router_1.RouteParams(nextInstruction.params) }),
-            core_1.provide(router_1.Router, { useValue: childRouter }),
+            core_1.provide(router_deprecated_1.RouteData, { useValue: nextInstruction.routeData }),
+            core_1.provide(router_deprecated_1.RouteParams, { useValue: new router_deprecated_1.RouteParams(nextInstruction.params) }),
+            core_1.provide(router_deprecated_1.Router, { useValue: childRouter }),
         ];
         if (this.isInitalPage) {
             common_1.log("PageRouterOutlet.activate() inital page - just load component: " + componentType.name);
             this.isInitalPage = false;
-            resultPromise = this.loader.loadNextToLocation(componentType, this.elementRef, core_1.Injector.resolve(providersArray));
+            resultPromise = this.loader.loadNextToLocation(componentType, this.containerRef, core_1.ReflectiveInjector.resolve(providersArray));
         }
         else {
             common_1.log("PageRouterOutlet.activate() forward navigation - create detached loader in the loader container: " + componentType.name);
             var page_2 = new page_1.Page();
             providersArray.push(core_1.provide(page_1.Page, { useValue: page_2 }));
-            resultPromise = this.loader.loadIntoLocation(detached_loader_1.DetachedLoader, this.elementRef, "loader", core_1.Injector.resolve(providersArray))
+            resultPromise = this.loader.loadNextToLocation(detached_loader_1.DetachedLoader, this.childContainerRef, core_1.ReflectiveInjector.resolve(providersArray))
                 .then(function (pageComponentRef) {
                 loaderRef = pageComponentRef;
                 return loaderRef.instance.loadComponent(componentType);
@@ -139,9 +142,7 @@ var PageRouterOutlet = (function (_super) {
         //Component loaded. Find its root native view.
         var componentView = componentRef.location.nativeElement;
         //Remove it from original native parent.
-        if (componentView.parent) {
-            componentView.parent.removeChild(componentView);
-        }
+        this.viewUtil.removeChild(componentView.parent, componentView);
         //Add it to the new page
         page.content = componentView;
         this.location.navigateToNewPage();
@@ -177,7 +178,7 @@ var PageRouterOutlet = (function (_super) {
             next = async_1.PromiseWrapper.resolve(this.componentRef.instance.routerOnDeactivate(nextInstruction, this.currentInstruction));
         }
         if (this.location.isPageNavigatingBack()) {
-            common_1.log("PageRouterOutlet.deactivate() while going back - should dispose: " + instruction.componentType.name);
+            common_1.log("PageRouterOutlet.deactivate() while going back - should destroy: " + instruction.componentType.name);
             return next.then(function (_) {
                 var popedItem = _this.refCache.pop();
                 var popedRef = popedItem.componentRef;
@@ -185,11 +186,11 @@ var PageRouterOutlet = (function (_super) {
                     throw new Error("Current componentRef is different for cached componentRef");
                 }
                 if (lang_1.isPresent(_this.componentRef)) {
-                    _this.componentRef.dispose();
+                    _this.componentRef.destroy();
                     _this.componentRef = null;
                 }
                 if (lang_1.isPresent(popedItem.loaderRef)) {
-                    popedItem.loaderRef.dispose();
+                    popedItem.loaderRef.destroy();
                 }
             });
         }
@@ -262,15 +263,20 @@ var PageRouterOutlet = (function (_super) {
     PageRouterOutlet.prototype.log = function (method, nextInstruction) {
         common_1.log("PageRouterOutlet." + method + " isBack: " + this.location.isPageNavigatingBack() + " nextUrl: " + nextInstruction.urlPath);
     };
+    __decorate([
+        core_1.ViewChild('loader', { read: core_1.ViewContainerRef }), 
+        __metadata('design:type', core_1.ViewContainerRef)
+    ], PageRouterOutlet.prototype, "childContainerRef", void 0);
     PageRouterOutlet = __decorate([
         core_1.Component({
             selector: 'page-router-outlet',
             template: "\n        <DetachedContainer>\n            <Placeholder #loader></Placeholder>\n        </DetachedContainer>"
         }),
-        __param(3, core_1.Attribute('name')), 
-        __metadata('design:paramtypes', [core_1.ElementRef, core_1.DynamicComponentLoader, router_1.Router, String, ns_location_strategy_1.NSLocationStrategy])
+        __param(3, core_1.Attribute('name')),
+        __param(5, core_1.Inject(platform_providers_1.DEVICE)), 
+        __metadata('design:paramtypes', [core_1.ViewContainerRef, core_1.DynamicComponentLoader, router_deprecated_1.Router, String, ns_location_strategy_1.NSLocationStrategy, Object])
     ], PageRouterOutlet);
     return PageRouterOutlet;
-}(router_1.RouterOutlet));
+}(router_deprecated_1.RouterOutlet));
 exports.PageRouterOutlet = PageRouterOutlet;
 //# sourceMappingURL=page-router-outlet.js.map

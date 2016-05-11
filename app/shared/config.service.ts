@@ -1,6 +1,6 @@
-import {Injectable} from "angular2/core";
+import {Injectable} from "@angular/core";
 import appSettings = require('application-settings');
-import {Http} from "angular2/http";
+import {Http} from "@angular/http";
 
 
 @Injectable()
@@ -8,7 +8,7 @@ export class ConfigService {
 
 
 	constructor(private _http: Http){}
-	
+
 
 	setHost(host:string){
 		appSettings.setString("host",host);

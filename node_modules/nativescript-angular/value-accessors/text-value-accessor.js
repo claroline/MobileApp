@@ -13,9 +13,9 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-var core_1 = require('angular2/core');
-var control_value_accessor_1 = require('angular2/src/common/forms/directives/control_value_accessor');
-var lang_1 = require('angular2/src/facade/lang');
+var core_1 = require('@angular/core');
+var control_value_accessor_1 = require('@angular/common/src/forms/directives/control_value_accessor');
+var lang_1 = require('@angular/core/src/facade/lang');
 var base_value_accessor_1 = require('./base-value-accessor');
 var TEXT_VALUE_ACCESSOR = core_1.provide(control_value_accessor_1.NG_VALUE_ACCESSOR, { useExisting: core_1.forwardRef(function () { return TextValueAccessor; }), multi: true });
 /**

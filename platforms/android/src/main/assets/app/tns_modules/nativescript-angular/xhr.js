@@ -5,7 +5,7 @@ var __extends = (this && this.__extends) || function (d, b) {
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
 var file_system_1 = require("file-system");
-var xhr_1 = require("angular2/src/compiler/xhr");
+var xhr_1 = require("@angular/compiler/src/xhr");
 var FileSystemXHR = (function (_super) {
     __extends(FileSystemXHR, _super);
     function FileSystemXHR() {

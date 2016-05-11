@@ -8,17 +8,27 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-var core_1 = require('angular2/core');
-var collection_1 = require('angular2/src/facade/collection');
+var core_1 = require('@angular/core');
+var collection_1 = require('@angular/core/src/facade/collection');
 var observable_array_1 = require('data/observable-array');
 var layout_base_1 = require('ui/layouts/layout-base');
 var NG_VIEW = "_ngViewRef";
+var ListItemContext = (function () {
+    function ListItemContext($implicit, item, index, even, odd) {
+        this.$implicit = $implicit;
+        this.item = item;
+        this.index = index;
+        this.even = even;
+        this.odd = odd;
+    }
+    return ListItemContext;
+}());
+exports.ListItemContext = ListItemContext;
 var ListViewComponent = (function () {
-    function ListViewComponent(_elementRef, _iterableDiffers, _cdr, _appViewManager) {
+    function ListViewComponent(_elementRef, _iterableDiffers, _cdr) {
         this._elementRef = _elementRef;
         this._iterableDiffers = _iterableDiffers;
         this._cdr = _cdr;
-        this._appViewManager = _appViewManager;
         this.setupItemView = new core_1.EventEmitter();
         this.doCheckDelay = 5;
         this.listView = _elementRef.nativeElement;
@@ -52,19 +62,20 @@ var ListViewComponent = (function () {
         }
         else {
             console.log("ListView.onItemLoading: " + index + " - Creating view from template");
-            viewRef = this._appViewManager.createEmbeddedViewInContainer(this.loader, 0, this.itemTemplate);
+            viewRef = this.loader.createEmbeddedView(this.itemTemplate, new ListItemContext(), 0);
             args.view = getSingleViewFromViewRef(viewRef);
             args.view[NG_VIEW] = viewRef;
         }
         this.setupViewRef(viewRef, currentItem, index);
     };
     ListViewComponent.prototype.setupViewRef = function (viewRef, data, index) {
-        viewRef.setLocal('\$implicit', data);
-        viewRef.setLocal("item", data);
-        viewRef.setLocal("index", index);
-        viewRef.setLocal('even', (index % 2 == 0));
-        viewRef.setLocal('odd', (index % 2 == 1));
-        this.setupItemView.next({ 'view': viewRef, 'data': data, 'index': index });
+        var context = viewRef.context;
+        context.$implicit = data;
+        context.item = data;
+        context.index = index;
+        context.even = (index % 2 == 0);
+        context.odd = !context.even;
+        this.setupItemView.next({ view: viewRef, data: data, index: index, context: context });
     };
     ListViewComponent.prototype.ngDoCheck = function () {
         var _this = this;
@@ -82,8 +93,8 @@ var ListViewComponent = (function () {
         }, this.doCheckDelay);
     };
     __decorate([
-        core_1.ViewChild('loader'), 
-        __metadata('design:type', core_1.ElementRef)
+        core_1.ViewChild('loader', { read: core_1.ViewContainerRef }), 
+        __metadata('design:type', core_1.ViewContainerRef)
     ], ListViewComponent.prototype, "loader", void 0);
     __decorate([
         core_1.Output(), 
@@ -105,7 +116,7 @@ var ListViewComponent = (function () {
             template: "\n        <DetachedContainer>\n            <Placeholder #loader></Placeholder>\n        </DetachedContainer>",
             inputs: ['items']
         }), 
-        __metadata('design:paramtypes', [core_1.ElementRef, core_1.IterableDiffers, core_1.ChangeDetectorRef, core_1.AppViewManager])
+        __metadata('design:paramtypes', [core_1.ElementRef, core_1.IterableDiffers, core_1.ChangeDetectorRef])
     ], ListViewComponent);
     return ListViewComponent;
 }());

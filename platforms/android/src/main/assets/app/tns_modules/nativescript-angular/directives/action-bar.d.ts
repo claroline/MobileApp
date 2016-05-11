@@ -1,4 +1,4 @@
-import { ElementRef } from 'angular2/core';
+import { ElementRef } from '@angular/core';
 import { Page } from "ui/page";
 export declare class ActionBarComponent {
     element: ElementRef;

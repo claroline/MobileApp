@@ -11,9 +11,9 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
-var core_1 = require('angular2/core');
+var core_1 = require('@angular/core');
 var action_bar_1 = require("ui/action-bar");
-var lang_1 = require("angular2/src/facade/lang");
+var lang_1 = require("@angular/core/src/facade/lang");
 var page_1 = require("ui/page");
 var view_1 = require('ui/core/view');
 var element_registry_1 = require('../element-registry');

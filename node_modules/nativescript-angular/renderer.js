@@ -16,11 +16,11 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
-var di_1 = require('angular2/src/core/di');
-var api_1 = require('angular2/src/core/render/api');
+var di_1 = require('@angular/core/src/di');
+var api_1 = require('@angular/core/src/render/api');
 var platform_providers_1 = require("./platform-providers");
-var lang_1 = require('angular2/src/facade/lang');
-var dom_renderer_1 = require('angular2/src/platform/dom/dom_renderer');
+var lang_1 = require('@angular/core/src/facade/lang');
+var dom_renderer_1 = require('@angular/platform-browser/src/dom/dom_renderer');
 var view_1 = require("ui/core/view");
 var application = require("application");
 var frame_1 = require('ui/frame');
@@ -130,10 +130,16 @@ var NativeScriptRenderer = (function (_super) {
     NativeScriptRenderer.prototype.attachViewAfter = function (anchorNode, viewRootNodes) {
         var _this = this;
         view_util_1.traceLog('NativeScriptRenderer.attachViewAfter: ' + anchorNode.nodeName + ' ' + anchorNode);
-        var parent = (anchorNode.parent || anchorNode.templateParent);
+        //HACK: The anchor.templateParent precedence and child.templateParent
+        //assignment are a workaround for RadSideDrawer.
+        //Remove it once we ship the fix in the RadSideDrawer directives.
+        var parent = (anchorNode.templateParent || anchorNode.parent);
         var insertPosition = this.viewUtil.getChildIndex(parent, anchorNode);
         viewRootNodes.forEach(function (node, index) {
             var childIndex = insertPosition + index + 1;
+            //Remember the template parent in case someone moves the view element
+            //before Angular attaches the next view.
+            node.templateParent = parent;
             _this.viewUtil.insertChild(parent, node, childIndex);
             _this.animateNodeEnter(node);
         });
@@ -210,7 +216,7 @@ var NativeScriptRenderer = (function (_super) {
             }
         });
     };
-    NativeScriptRenderer.prototype.createText = function (value) {
+    NativeScriptRenderer.prototype.createText = function (parentElement, value) {
         view_util_1.traceLog('NativeScriptRenderer.createText');
         return this.viewUtil.createText(value);
         ;

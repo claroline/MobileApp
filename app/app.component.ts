@@ -1,6 +1,6 @@
 import "reflect-metadata";
-import {Component} from "angular2/core";
-import {RouteConfig, CanActivate} from "angular2/router";
+import {Component} from "@angular/core";
+import {RouteConfig} from "@angular/router-deprecated";
 import {NS_ROUTER_DIRECTIVES} from "nativescript-angular/router";
 
 import {LoginPage} from "./pages/login/login.component";
@@ -12,9 +12,9 @@ import {ListPage} from './pages/platformsList/list.component';
     directives: [NS_ROUTER_DIRECTIVES],
     template: `
     	<page-router-outlet>
-    		
+
     	</page-router-outlet>
-	
+
     `
 })
 
@@ -24,5 +24,5 @@ import {ListPage} from './pages/platformsList/list.component';
     { path: "/", component: ListPage, as: "List", useAsDefault: true }
 ])
 export class AppComponent {
-	
+
 }

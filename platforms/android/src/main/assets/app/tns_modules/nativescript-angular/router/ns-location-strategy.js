@@ -4,8 +4,8 @@ var __extends = (this && this.__extends) || function (d, b) {
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
-var router_1 = require('angular2/router');
-var common_1 = require("./common");
+var common_1 = require('@angular/common');
+var common_2 = require("./common");
 var frame_1 = require("ui/frame");
 var NSLocationStrategy = (function (_super) {
     __extends(NSLocationStrategy, _super);
@@ -17,16 +17,16 @@ var NSLocationStrategy = (function (_super) {
         this._isPageNavigatingForward = false;
     }
     NSLocationStrategy.prototype.path = function () {
-        common_1.log("NSLocationStrategy.path()");
+        common_2.log("NSLocationStrategy.path()");
         var state = this.peekState();
         return state ? state.url : "/";
     };
     NSLocationStrategy.prototype.prepareExternalUrl = function (internal) {
-        common_1.log("NSLocationStrategy.prepareExternalUrl() internal: " + internal);
+        common_2.log("NSLocationStrategy.prepareExternalUrl() internal: " + internal);
         return internal;
     };
     NSLocationStrategy.prototype.pushState = function (state, title, url, queryParams) {
-        common_1.log("NSLocationStrategy.pushState state: " + state + ", title: " + title + ", url: " + url + ", queryParams: " + queryParams);
+        common_2.log("NSLocationStrategy.pushState state: " + state + ", title: " + title + ", url: " + url + ", queryParams: " + queryParams);
         var isNewPage = this._isPageNavigatingForward;
         this._isPageNavigatingForward = false;
         this.states.push({
@@ -38,11 +38,11 @@ var NSLocationStrategy = (function (_super) {
         });
     };
     NSLocationStrategy.prototype.replaceState = function (state, title, url, queryParams) {
-        common_1.log("NSLocationStrategy.replaceState state: " + state + ", title: " + title + ", url: " + url + ", queryParams: " + queryParams);
+        common_2.log("NSLocationStrategy.replaceState state: " + state + ", title: " + title + ", url: " + url + ", queryParams: " + queryParams);
         throw new Error("Not implemented");
     };
     NSLocationStrategy.prototype.forward = function () {
-        common_1.log("NSLocationStrategy.forward");
+        common_2.log("NSLocationStrategy.forward");
         throw new Error("Not implemented");
     };
     NSLocationStrategy.prototype.back = function () {
@@ -55,29 +55,29 @@ var NSLocationStrategy = (function (_super) {
                 state = this.states.pop();
                 count++;
             }
-            common_1.log("NSLocationStrategy.back() while navigating back. States popped: " + count);
+            common_2.log("NSLocationStrategy.back() while navigating back. States popped: " + count);
             this.callPopState(state, true);
         }
         else {
             var state = this.peekState();
             if (state.isPageNavigation) {
                 // This was a page navigation - so navigate through frame.
-                common_1.log("NSLocationStrategy.back() while not navigating back but top state is page - will call frame.goback()");
+                common_2.log("NSLocationStrategy.back() while not navigating back but top state is page - will call frame.goback()");
                 frame_1.topmost().goBack();
             }
             else {
                 // Nested navigation - just pop the state
-                common_1.log("NSLocationStrategy.back() while not navigating back but top state is not page - just pop");
+                common_2.log("NSLocationStrategy.back() while not navigating back but top state is not page - just pop");
                 this.callPopState(this.states.pop(), true);
             }
         }
     };
     NSLocationStrategy.prototype.onPopState = function (fn) {
-        common_1.log("NSLocationStrategy.onPopState");
+        common_2.log("NSLocationStrategy.onPopState");
         this.popStateCallbacks.push(fn);
     };
     NSLocationStrategy.prototype.getBaseHref = function () {
-        common_1.log("NSLocationStrategy.getBaseHref()");
+        common_2.log("NSLocationStrategy.getBaseHref()");
         return "";
     };
     NSLocationStrategy.prototype.callPopState = function (state, pop) {
@@ -96,14 +96,14 @@ var NSLocationStrategy = (function (_super) {
     };
     // Methods for syncing with page navigation in PageRouterOutlet
     NSLocationStrategy.prototype.beginBackPageNavigation = function () {
-        common_1.log("NSLocationStrategy.startGoBack()");
+        common_2.log("NSLocationStrategy.startGoBack()");
         if (this._isPageNavigationgBack) {
             throw new Error("Calling startGoBack while going back.");
         }
         this._isPageNavigationgBack = true;
     };
     NSLocationStrategy.prototype.finishBackPageNavigation = function () {
-        common_1.log("NSLocationStrategy.finishBackPageNavigation()");
+        common_2.log("NSLocationStrategy.finishBackPageNavigation()");
         if (!this._isPageNavigationgBack) {
             throw new Error("Calling endGoBack while not going back.");
         }
@@ -113,13 +113,13 @@ var NSLocationStrategy = (function (_super) {
         return this._isPageNavigationgBack;
     };
     NSLocationStrategy.prototype.navigateToNewPage = function () {
-        common_1.log("NSLocationStrategy.navigateToNewPage()");
+        common_2.log("NSLocationStrategy.navigateToNewPage()");
         if (this._isPageNavigatingForward) {
             throw new Error("Calling navigateToNewPage while already navigating to new page.");
         }
         this._isPageNavigatingForward = true;
     };
     return NSLocationStrategy;
-}(router_1.LocationStrategy));
+}(common_1.LocationStrategy));
 exports.NSLocationStrategy = NSLocationStrategy;
 //# sourceMappingURL=ns-location-strategy.js.map

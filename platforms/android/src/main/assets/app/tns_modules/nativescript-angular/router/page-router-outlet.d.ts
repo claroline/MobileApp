@@ -1,5 +1,6 @@
-import { DynamicComponentLoader, ElementRef } from 'angular2/core';
-import { ComponentInstruction, RouterOutlet, Router } from 'angular2/router';
+import { DynamicComponentLoader, ViewContainerRef } from '@angular/core';
+import { Router, RouterOutlet, ComponentInstruction } from '@angular/router-deprecated';
+import { Device } from "platform";
 import { NSLocationStrategy } from "./ns-location-strategy";
 /**
  * A router outlet that does page navigation in NativeScript
@@ -11,7 +12,7 @@ import { NSLocationStrategy } from "./ns-location-strategy";
  * ```
  */
 export declare class PageRouterOutlet extends RouterOutlet {
-    private elementRef;
+    private containerRef;
     private loader;
     private parentRouter;
     private location;
@@ -19,7 +20,9 @@ export declare class PageRouterOutlet extends RouterOutlet {
     private refCache;
     private componentRef;
     private currentInstruction;
-    constructor(elementRef: ElementRef, loader: DynamicComponentLoader, parentRouter: Router, nameAttr: string, location: NSLocationStrategy);
+    private viewUtil;
+    childContainerRef: ViewContainerRef;
+    constructor(containerRef: ViewContainerRef, loader: DynamicComponentLoader, parentRouter: Router, nameAttr: string, location: NSLocationStrategy, device: Device);
     /**
      * Called by the Router to instantiate a new component during the commit phase of a navigation.
      * This method in turn is responsible for calling the `routerOnActivate` hook of its child.

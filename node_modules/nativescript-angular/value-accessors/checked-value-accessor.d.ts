@@ -1,4 +1,4 @@
-import { ElementRef } from 'angular2/core';
+import { ElementRef } from '@angular/core';
 import { BaseValueAccessor } from './base-value-accessor';
 import { Switch } from "ui/switch";
 /**

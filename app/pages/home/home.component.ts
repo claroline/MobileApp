@@ -1,8 +1,8 @@
 /// <reference path="../../../node_modules/nativescript-pulltorefresh/pulltorefresh.d.ts" />
 "use strict";
 
-import {Component} from "angular2/core";
-import {Router} from "angular2/router";
+import {Component} from "@angular/core";
+import {Router} from "@angular/router-deprecated";
 import {UserService} from "../../shared/user/user.service";
 import {Observable} from "rxjs/Rx";
 import {NotificationsService} from "../../shared/notification/notifications.service";
@@ -75,5 +75,5 @@ export class HomePage {
 
 
 
- 
+
 }

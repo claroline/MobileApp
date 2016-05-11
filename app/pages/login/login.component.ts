@@ -1,5 +1,5 @@
-import {Component} from "angular2/core";
-import {Router,CanActivate} from "angular2/router";
+import {Component} from "@angular/core";
+import {Router} from "@angular/router-deprecated";
 import {User} from "../../shared/user/user";
 import {UserService} from "../../shared/user/user.service";
 import {ConfigService} from "../../shared/config.service";
@@ -22,7 +22,7 @@ export class LoginPage {
         private _userService: UserService,
         private _configService: ConfigService) {
 
-          
+
         this.user = new User();
 
         // Harcoded values to avoid typing them

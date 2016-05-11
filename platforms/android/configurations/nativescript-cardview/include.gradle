@@ -1,10 +1,10 @@
 //default elements
 android {
     productFlavors {
-              "F0" {
-                dimension "nativescriptcardview"
-              }
-            }
+        "nativescriptcardview" {
+            dimension "nativescriptcardview"
+        }
+    }
 }
 
 dependencies {

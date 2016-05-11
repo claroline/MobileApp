@@ -8,9 +8,9 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-var core_1 = require("angular2/core");
+var core_1 = require("@angular/core");
 var appSettings = require('application-settings');
-var http_1 = require("angular2/http");
+var http_1 = require("@angular/http");
 var ConfigService = (function () {
     function ConfigService(_http) {
         this._http = _http;

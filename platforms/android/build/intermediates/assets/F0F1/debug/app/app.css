@@ -12,7 +12,12 @@ TextField, TextView {
   font-size : 16px;
 }
 
-
+Button {
+  margin: 10;
+  padding: 10;
+  color: #ffffff;
+  background-color: #3598db;
+}
 
 ActionBar {
   color: white;

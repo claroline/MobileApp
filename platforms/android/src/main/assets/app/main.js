@@ -1,6 +1,6 @@
 "use strict";
 var application_1 = require("nativescript-angular/application");
-var http_1 = require("angular2/http");
+var http_1 = require("@angular/http");
 var router_1 = require("nativescript-angular/router");
 var app_component_1 = require("./app.component");
 var config_service_1 = require("./shared/config.service");

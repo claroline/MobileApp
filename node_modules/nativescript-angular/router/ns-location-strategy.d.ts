@@ -1,4 +1,4 @@
-import { LocationStrategy } from 'angular2/router';
+import { LocationStrategy } from '@angular/common';
 export declare class NSLocationStrategy extends LocationStrategy {
     private states;
     private popStateCallbacks;

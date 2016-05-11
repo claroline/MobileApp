@@ -8,7 +8,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-var core_1 = require('angular2/core');
+var core_1 = require('@angular/core');
 var page_1 = require('ui/page');
 var detached_loader_1 = require('../common/detached-loader');
 var ModalDialogParams = (function () {
@@ -25,13 +25,13 @@ var ModalDialogService = (function () {
         this.page = page;
         this.loader = loader;
     }
-    ModalDialogService.prototype.registerElementRef = function (ref) {
-        this.elementRef = ref;
+    ModalDialogService.prototype.registerViewContainerRef = function (ref) {
+        this.containerRef = ref;
     };
     ModalDialogService.prototype.showModal = function (type, options) {
         var _this = this;
-        if (!this.elementRef) {
-            throw new Error("No elementRef: Make sure you have the modal-dialog-host directive inside your component.");
+        if (!this.containerRef) {
+            throw new Error("No viewContainerRef: Make sure you have the modal-dialog-host directive inside your component.");
         }
         return new Promise(function (resove, reject) {
             var page = new page_1.Page();
@@ -43,14 +43,14 @@ var ModalDialogService = (function () {
                 }
                 resove.apply(undefined, args);
                 page.closeModal();
-                detachedLoaderRef.dispose();
+                detachedLoaderRef.destroy();
             };
             var modalParams = new ModalDialogParams(options.context, closeCallback);
-            var providers = core_1.Injector.resolve([
+            var providers = core_1.ReflectiveInjector.resolve([
                 core_1.provide(page_1.Page, { useValue: page }),
                 core_1.provide(ModalDialogParams, { useValue: modalParams }),
             ]);
-            _this.loader.loadNextToLocation(detached_loader_1.DetachedLoader, _this.elementRef, providers)
+            _this.loader.loadNextToLocation(detached_loader_1.DetachedLoader, _this.containerRef, providers)
                 .then(function (loaderRef) {
                 detachedLoaderRef = loaderRef;
                 return loaderRef.instance.loadComponent(type);
@@ -74,14 +74,14 @@ var ModalDialogService = (function () {
 }());
 exports.ModalDialogService = ModalDialogService;
 var ModalDialogHost = (function () {
-    function ModalDialogHost(elementRef, modalService) {
-        modalService.registerElementRef(elementRef);
+    function ModalDialogHost(containerRef, modalService) {
+        modalService.registerViewContainerRef(containerRef);
     }
     ModalDialogHost = __decorate([
         core_1.Directive({
             selector: "[modal-dialog-host]"
         }), 
-        __metadata('design:paramtypes', [core_1.ElementRef, ModalDialogService])
+        __metadata('design:paramtypes', [core_1.ViewContainerRef, ModalDialogService])
     ], ModalDialogHost);
     return ModalDialogHost;
 }());

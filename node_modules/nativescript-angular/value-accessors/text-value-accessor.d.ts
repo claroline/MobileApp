@@ -1,4 +1,4 @@
-import { ElementRef } from 'angular2/core';
+import { ElementRef } from '@angular/core';
 import { BaseValueAccessor } from './base-value-accessor';
 import { View } from "ui/core/view";
 export declare type TextView = {

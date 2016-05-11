@@ -1,4 +1,4 @@
-import { ElementRef } from 'angular2/core';
+import { ElementRef } from '@angular/core';
 import { BaseValueAccessor } from './base-value-accessor';
 import { View } from "ui/core/view";
 export declare type SelectableView = {
@@ -16,6 +16,9 @@ export declare type SelectableView = {
 export declare class SelectedIndexValueAccessor extends BaseValueAccessor<SelectableView> {
     onTouched: () => void;
     constructor(elementRef: ElementRef);
+    private _normalizedValue;
+    private viewInitialized;
     writeValue(value: any): void;
+    ngAfterViewInit(): void;
     registerOnTouched(fn: () => void): void;
 }

@@ -1,7 +1,7 @@
 "use strict";
 var frame_1 = require('ui/frame');
 var page_1 = require('ui/page');
-var di_1 = require('angular2/src/core/di');
+var di_1 = require('@angular/core/src/di');
 var platform_1 = require("platform");
 exports.APP_ROOT_VIEW = new di_1.OpaqueToken('App Root View');
 exports.DEVICE = new di_1.OpaqueToken('platfrom device');

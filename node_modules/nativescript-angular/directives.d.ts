@@ -1,4 +1,4 @@
-import { Type } from 'angular2/src/facade/lang';
+import { Type } from '@angular/core/src/facade/lang';
 export declare const NS_DIRECTIVES: Type[];
 export { ListViewComponent, SetupItemViewArgs } from './directives/list-view-comp';
 export { TextValueAccessor } from './value-accessors/text-value-accessor';

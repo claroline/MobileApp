@@ -1,7 +1,7 @@
-import {Injectable} from "angular2/core";
+import {Injectable} from "@angular/core";
 import {Notification} from "./notification";
 import {Observable} from "rxjs/Rx";
-import {Http} from "angular2/http";
+import {Http} from "@angular/http";
 import {ConfigService} from "../config.service";
 
 "use strict";
@@ -97,5 +97,5 @@ export class NotificationsService {
         });
     }
 
-    
+
 }

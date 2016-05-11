@@ -1,11 +1,15 @@
-import { DynamicComponentLoader, ComponentRef, ElementRef, Type } from 'angular2/core';
+import { DynamicComponentLoader, ComponentRef, ViewContainerRef, Type } from '@angular/core';
 /**
- * Wrapper component used for loading compnenets when navigating
- * It uses DetachedContainer as selector so that it is elementRef is not attached to the visual tree.
+ * Wrapper component used for loading components when navigating
+ * It uses DetachedContainer as selector so that it is containerRef is not attached to the visual tree.
  */
 export declare class DetachedLoader {
-    private element;
     private loader;
-    constructor(element: ElementRef, loader: DynamicComponentLoader);
-    loadComponent(componentType: Type): Promise<ComponentRef>;
+    containerRef: ViewContainerRef;
+    private viewLoaded;
+    private pendingLoads;
+    constructor(loader: DynamicComponentLoader);
+    ngAfterViewInit(): void;
+    private loadInLocation(componentType);
+    loadComponent(componentType: Type): Promise<ComponentRef<any>>;
 }

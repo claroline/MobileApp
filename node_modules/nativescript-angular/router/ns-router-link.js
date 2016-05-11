@@ -8,9 +8,10 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-var core_1 = require('angular2/core');
-var router_1 = require('angular2/router');
-var common_1 = require("./common");
+var core_1 = require('@angular/core');
+var router_deprecated_1 = require('@angular/router-deprecated');
+var common_1 = require('@angular/common');
+var common_2 = require("./common");
 /**
  * The NSRouterLink directive lets you link to specific parts of your app.
  *
@@ -58,7 +59,7 @@ var NSRouterLink = (function () {
         configurable: true
     });
     NSRouterLink.prototype.onTap = function () {
-        common_1.log("NSRouterLink onTap() instruction: " + JSON.stringify(this._navigationInstruction));
+        common_2.log("NSRouterLink onTap() instruction: " + JSON.stringify(this._navigationInstruction));
         this._router.navigateByInstruction(this._navigationInstruction);
     };
     NSRouterLink = __decorate([
@@ -70,7 +71,7 @@ var NSRouterLink = (function () {
                 '[class.router-link-active]': 'isRouteActive'
             }
         }), 
-        __metadata('design:paramtypes', [router_1.Router, router_1.Location])
+        __metadata('design:paramtypes', [router_deprecated_1.Router, common_1.Location])
     ], NSRouterLink);
     return NSRouterLink;
 }());

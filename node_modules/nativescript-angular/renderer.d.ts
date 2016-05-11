@@ -1,4 +1,4 @@
-import { Renderer, RootRenderer, RenderComponentType, RenderDebugInfo } from 'angular2/src/core/render/api';
+import { Renderer, RootRenderer, RenderComponentType, RenderDebugInfo } from '@angular/core/src/render/api';
 import { View } from "ui/core/view";
 import { Page } from 'ui/page';
 import { ViewUtil, NgView } from "./view-util";
@@ -51,7 +51,7 @@ export declare class NativeScriptRenderer extends Renderer {
     setText(renderNode: any, text: string): void;
     createTemplateAnchor(parentElement: NgView): NgView;
     createElement(parentElement: NgView, name: string): NgView;
-    createText(value: string): NgView;
+    createText(parentElement: NgView, value: string): NgView;
     listen(renderElement: NgView, eventName: string, callback: Function): Function;
     listenGlobal(target: string, eventName: string, callback: Function): Function;
 }

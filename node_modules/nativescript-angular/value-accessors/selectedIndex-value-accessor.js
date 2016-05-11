@@ -13,9 +13,9 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-var core_1 = require('angular2/core');
-var control_value_accessor_1 = require('angular2/src/common/forms/directives/control_value_accessor');
-var lang_1 = require('angular2/src/facade/lang');
+var core_1 = require('@angular/core');
+var control_value_accessor_1 = require('@angular/common/src/forms/directives/control_value_accessor');
+var lang_1 = require('@angular/core/src/facade/lang');
 var base_value_accessor_1 = require('./base-value-accessor');
 var SELECTED_INDEX_VALUE_ACCESSOR = core_1.provide(control_value_accessor_1.NG_VALUE_ACCESSOR, { useExisting: core_1.forwardRef(function () { return SelectedIndexValueAccessor; }), multi: true });
 /**
@@ -47,12 +47,19 @@ var SelectedIndexValueAccessor = (function (_super) {
                 normalizedValue = isNaN(parsedValue) ? 0 : parsedValue;
             }
         }
-        this.view.selectedIndex = Math.round(normalizedValue);
+        this._normalizedValue = Math.round(normalizedValue);
+        if (this.viewInitialized) {
+            this.view.selectedIndex = this._normalizedValue;
+        }
+    };
+    SelectedIndexValueAccessor.prototype.ngAfterViewInit = function () {
+        this.viewInitialized = true;
+        this.view.selectedIndex = this._normalizedValue;
     };
     SelectedIndexValueAccessor.prototype.registerOnTouched = function (fn) { this.onTouched = fn; };
     SelectedIndexValueAccessor = __decorate([
         core_1.Directive({
-            selector: 'SegmentedBar[ngModel], ListPicker[ngModel]',
+            selector: 'SegmentedBar[ngModel], ListPicker[ngModel], TabView[ngModel]',
             host: { '(selectedIndexChange)': 'onChange($event.value)' },
             bindings: [SELECTED_INDEX_VALUE_ACCESSOR]
         }), 

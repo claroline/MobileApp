@@ -1,4 +1,4 @@
-import { DynamicComponentLoader, ElementRef, Type } from 'angular2/core';
+import { DynamicComponentLoader, ViewContainerRef, Type } from '@angular/core';
 import { Page } from 'ui/page';
 export interface ModalDialogOptions {
     context?: any;
@@ -12,11 +12,11 @@ export declare class ModalDialogParams {
 export declare class ModalDialogService {
     private page;
     private loader;
-    private elementRef;
+    private containerRef;
     constructor(page: Page, loader: DynamicComponentLoader);
-    registerElementRef(ref: ElementRef): void;
+    registerViewContainerRef(ref: ViewContainerRef): void;
     showModal(type: Type, options: ModalDialogOptions): Promise<any>;
 }
 export declare class ModalDialogHost {
-    constructor(elementRef: ElementRef, modalService: ModalDialogService);
+    constructor(containerRef: ViewContainerRef, modalService: ModalDialogService);
 }

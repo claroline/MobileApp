@@ -1,4 +1,5 @@
-import { Router, Location } from 'angular2/router';
+import { Router } from '@angular/router-deprecated';
+import { Location } from '@angular/common';
 /**
  * The NSRouterLink directive lets you link to specific parts of your app.
  *
