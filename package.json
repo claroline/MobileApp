@@ -37,7 +37,8 @@
     "es6-promise": "^3.1.2",
     "es6-shim": "^0.35.0",
     "nativescript-angular": "^0.1.1",
-    "nativescript-pulltorefresh": "^1.1.0",
+    "nativescript-pulltorefresh": "^1.1.3",
+    "nativescript-telerik-ui": "^1.1.1",
     "parse5": "^1.4.2",
     "punycode": "1.4.1",
     "querystring": "0.2.0",
@@ -55,6 +56,7 @@
     "lazy": "1.0.11",
     "nativescript-dev-typescript": "^0.3.2",
     "shelljs": "^0.7.0",
+    "tns-platform-declarations": "^2.0.0",
     "typescript": "^1.8.10",
     "typings": "^0.8.1"
   }

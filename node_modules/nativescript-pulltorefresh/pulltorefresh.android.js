@@ -34,9 +34,6 @@ var PullToRefresh = (function (_super) {
         enumerable: true,
         configurable: true
     });
-    PullToRefresh.prototype.setRefreshing = function (newValue) {
-        this._android.setRefreshing(newValue);
-    };
     PullToRefresh.prototype._createUI = function () {
         var that = new WeakRef(this);
         this._android = new android.support.v4.widget.SwipeRefreshLayout(this._context);
@@ -88,3 +85,4 @@ var PullToRefreshStyler = (function () {
 }());
 exports.PullToRefreshStyler = PullToRefreshStyler;
 PullToRefreshStyler.registerHandlers();
+//# sourceMappingURL=pulltorefresh.android.js.map

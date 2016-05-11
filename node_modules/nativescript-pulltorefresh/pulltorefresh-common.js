@@ -35,3 +35,4 @@ var PullToRefresh = (function (_super) {
     return PullToRefresh;
 }(contentView.ContentView));
 exports.PullToRefresh = PullToRefresh;
+//# sourceMappingURL=pulltorefresh-common.js.map
