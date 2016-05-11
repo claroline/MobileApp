@@ -1,4 +1,4 @@
-/// <reference path="../../../node_modules/nativescript-pulltorefresh/pulltorefresh.d.ts" />
+
 
 "use strict";
 
@@ -12,12 +12,12 @@ import {MessageService} from "../../shared/message/messages.service";
 import {Message} from "../../shared/message/message";
 import { registerElement, ViewClass } from "nativescript-angular/element-registry";
 import {ConfigService} from "../../shared/config.service";
-
+import dialogs = require("ui/dialogs");
 
 
 registerElement("PullToRefresh", () => require("nativescript-pulltorefresh").PullToRefresh);
 registerElement("CardView", () => require("nativescript-cardview").CardView);
-
+registerElement("Fab", () => require("nativescript-floatingactionbutton").Fab);
 
 
 
@@ -70,9 +70,23 @@ export class HomePage {
     }
 
     logOut(){
-      this._configService.remove("access_token");
-      this._configService.remove("refresh_token");
-      this._router.navigate(['Login']);
+        dialogs.confirm({
+          title: "Déconnexion",
+          message: "Êtes-vous sûr(e) de vouloir vous déconnecter ?",
+          okButtonText: "Oui",
+          cancelButtonText: "Non",
+          neutralButtonText: ""
+        })
+        .then(result=>{
+          if (result){
+            this._configService.remove("access_token");
+            this._configService.remove("refresh_token");
+            this._router.navigate(['Login']);
+          }
+        });
+
+
+
     }
 
 

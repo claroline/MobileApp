@@ -1,4 +1,7 @@
-﻿# NativeScript CardView :diamonds: :clubs:
+﻿[![npm](https://img.shields.io/npm/v/nativescript-cardview.svg)](https://www.npmjs.com/package/nativescript-cardview)
+[![npm](https://img.shields.io/npm/dt/nativescript-cardview.svg?label=npm%20downloads)](https://www.npmjs.com/package/nativescript-cardview)
+
+# NativeScript CardView :diamonds: :clubs:
 
 A NativeScript plugin to provide an XML widget to implement the Material Design CardView component.
 
@@ -9,25 +12,33 @@ A NativeScript plugin to provide an XML widget to implement the Material Design 
 
 ## Installation
 `npm install nativescript-cardview`
-
+  
 ## Usage
 
  <span style="color:red">IMPORTANT: </span>*Make sure you include `xmlns:Card="nativescript-cardview"` on the Page element*
 
-###
+### XML
 ```XML
 <Page xmlns:Card="nativescript-cardview">
    <StackLayout>     
-      <Card:CardView margin="10">
+      <Card:CardView class="cardStyle" margin="10" elevation="40" radius="5">
            <grid-layout rows="200, auto, auto" columns="auto, auto, *">
                <image src="~/images/batman.jpg" stretch="aspectFill" colSpan="3" row="0" />
                <label text="Batman wants to be friends?" class="info" textWrap="true" row="1" colSpan="3" />          
-               <button text="DECLINE" tap="goAway" class="clear-btn blue" row="2" col="0" />
-               <button text="ACCEPT" class="clear-btn blue" row="2" col="1" />
+               <button text="DECLINE" tap="goAway" row="2" col="0" />
+               <button text="ACCEPT" row="2" col="1" />
            </grid-layout>
        </Card:CardView>
    </StackLayout>
 </Page>
+```
+
+### CSS
+```CSS
+.cardStyle {
+    background-color: #3489db;
+    color: #fff;
+}
 ```
 
 ## Attributes
@@ -35,12 +46,6 @@ A NativeScript plugin to provide an XML widget to implement the Material Design 
 * **radius** *optional*
 
 An attribute to control the 'border-radius' of the card.
-
-* **backgroundColor** *optional*
-
-This uses the internal backgroundColor stying provided by NativeScript, but I wanted to point out that if you apply this
-you will lose any elevation and radius property set. This could be enhanced in the future to override the NativeScript styling
-to use the native method available on the CardView component.
 
 ### Platform specific options
 

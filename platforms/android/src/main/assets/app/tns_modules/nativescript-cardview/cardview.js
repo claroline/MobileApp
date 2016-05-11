@@ -1,18 +1,16 @@
+"use strict";
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
-var common = require("./cardview-common");
-var proxy_1 = require("ui/core/proxy");
-var dependency_observable_1 = require("ui/core/dependency-observable");
-global.moduleMerge(common, exports);
-var radiusProp = new dependency_observable_1.Property("radius", "CardView", new proxy_1.PropertyMetadata(undefined, dependency_observable_1.PropertyMetadataSettings.None));
-var elevationProp = new dependency_observable_1.Property("elevation", "CardView", new proxy_1.PropertyMetadata(undefined, dependency_observable_1.PropertyMetadataSettings.None));
+var content_view_1 = require('ui/content-view');
+var style = require("ui/styling/style");
+var color = require("color");
 var CardView = (function (_super) {
     __extends(CardView, _super);
     function CardView() {
-        _super.call(this);
+        _super.apply(this, arguments);
     }
     Object.defineProperty(CardView.prototype, "android", {
         get: function () {
@@ -29,21 +27,19 @@ var CardView = (function (_super) {
         configurable: true
     });
     Object.defineProperty(CardView.prototype, "radius", {
-        get: function () {
-            return this._getValue(CardView.radiusProp);
-        },
         set: function (value) {
-            this._setValue(CardView.radiusProp, value);
+            this._radius = value;
+            if (this._android)
+                this._android.setRadius(value);
         },
         enumerable: true,
         configurable: true
     });
     Object.defineProperty(CardView.prototype, "elevation", {
-        get: function () {
-            return this._getValue(CardView.elevationProp);
-        },
         set: function (value) {
-            this._setValue(CardView.elevationProp, value);
+            this._elevation = value;
+            if (this._android)
+                this._android.setCardElevation(value);
         },
         enumerable: true,
         configurable: true
@@ -54,14 +50,30 @@ var CardView = (function (_super) {
             this._androidViewId = android.view.View.generateViewId();
         }
         this._android.setId(this._androidViewId);
-        if (this.radius)
-            this._android.setRadius(this.radius);
-        if (this.elevation)
-            this._android.setCardElevation(this.elevation);
+        if (this._radius)
+            this.radius = this._radius;
+        if (this._elevation)
+            this.elevation = this._elevation;
     };
-    CardView.radiusProp = radiusProp;
-    CardView.elevationProp = elevationProp;
     return CardView;
-})(common.CardView);
+}(content_view_1.ContentView));
 exports.CardView = CardView;
+var CardViewStyler = (function () {
+    function CardViewStyler() {
+    }
+    CardViewStyler.setBackgroundProperty = function (view, newValue) {
+        var card = view.android;
+        var droidColor = new color.Color(newValue).android;
+        card.setCardBackgroundColor(droidColor);
+    };
+    CardViewStyler.resetBackgroundProperty = function (view, nativeValue) {
+    };
+    CardViewStyler.registerHandlers = function () {
+        style.registerHandler(style.backgroundColorProperty, new style.StylePropertyChangedHandler(CardViewStyler.setBackgroundProperty, CardViewStyler.resetBackgroundProperty), "CardView");
+        style.registerHandler(style.backgroundInternalProperty, style.ignorePropertyHandler, "CardView");
+    };
+    return CardViewStyler;
+}());
+exports.CardViewStyler = CardViewStyler;
+CardViewStyler.registerHandlers();
 //# sourceMappingURL=cardview.android.js.map

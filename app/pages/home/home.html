@@ -20,21 +20,23 @@
   </PullToRefresh>
 </StackLayout>
 <StackLayout *tabItem="{title: 'Messages'}" >
-  <PullToRefresh (refresh)="refreshMessagePage($event)">
-   <StackLayout>
-     <ListView [items]="messagesList | async" separatorColor="transparent">
-      <template let-item="item" [ngIf]="messagesList.length>0">
-        <CardView  margin="10">
-          <StackLayout>
-            <Label text="De : {{item.sender}}" textWrap="true" [class.boldFont]="true" [class.renderTextMsg]= "true"></Label>
-            <Label text="Objet : {{item.objet}}" [class.renderTextMsg]= "true" textWrap="true"></Label>
-            <HtmlView html="{{item.contenu}}" [class.renderTextMsg]= "true"></HtmlView>
-          </StackLayout>
-        </CardView>
-      </template>
-    </ListView>
-  </StackLayout>
-</PullToRefresh>
+
+    <PullToRefresh (refresh)="refreshMessagePage($event)">
+     <StackLayout>
+       <ListView [items]="messagesList | async" separatorColor="transparent">
+        <template let-item="item" [ngIf]="messagesList.length>0">
+          <CardView  margin="10">
+            <StackLayout>
+              <Label text="De : {{item.sender}}" textWrap="true" [class.boldFont]="true" [class.renderTextMsg]= "true"></Label>
+              <Label text="Objet : {{item.objet}}" [class.renderTextMsg]= "true" textWrap="true"></Label>
+              <HtmlView html="{{item.contenu}}" [class.renderTextMsg]= "true"></HtmlView>
+            </StackLayout>
+          </CardView>
+        </template>
+      </ListView>
+    </StackLayout>
+  </PullToRefresh>
+
 
 
 </StackLayout>

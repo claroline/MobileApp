@@ -1,30 +1,30 @@
 {
   "_args": [
     [
-      "nativescript-cardview",
-      "/home/dat/nativescript_angular2/mobile"
+      "nativescript-cardview@latest",
+      "/home/dat/nativescript_angular2/connect"
     ]
   ],
   "_from": "nativescript-cardview@latest",
-  "_id": "nativescript-cardview@1.1.0",
+  "_id": "nativescript-cardview@1.1.6",
   "_inCache": true,
   "_installable": true,
   "_location": "/nativescript-cardview",
-  "_nodeVersion": "5.5.0",
+  "_nodeVersion": "5.7.1",
   "_npmOperationalInternal": {
-    "host": "packages-13-west.internal.npmjs.com",
-    "tmp": "tmp/nativescript-cardview-1.1.0.tgz_1458675008092_0.8450857226271182"
+    "host": "packages-12-west.internal.npmjs.com",
+    "tmp": "tmp/nativescript-cardview-1.1.6.tgz_1462931911972_0.6735111300367862"
   },
   "_npmUser": {
-    "email": "walkerrunpdx@gmail.com",
-    "name": "walkerrunpdx"
+    "email": "bradmartin0905@gmail.com",
+    "name": "bradmartin"
   },
-  "_npmVersion": "3.5.3",
+  "_npmVersion": "3.6.0",
   "_phantomChildren": {},
   "_requested": {
     "name": "nativescript-cardview",
-    "raw": "nativescript-cardview",
-    "rawSpec": "",
+    "raw": "nativescript-cardview@latest",
+    "rawSpec": "latest",
     "scope": null,
     "spec": "latest",
     "type": "tag"
@@ -32,11 +32,11 @@
   "_requiredBy": [
     "#USER"
   ],
-  "_resolved": "https://registry.npmjs.org/nativescript-cardview/-/nativescript-cardview-1.1.0.tgz",
-  "_shasum": "39a2ac801c0dce7b693a338f16521406a2d97cd2",
+  "_resolved": "https://registry.npmjs.org/nativescript-cardview/-/nativescript-cardview-1.1.6.tgz",
+  "_shasum": "6d27994efac480fed4f2757a9048058f2d327e4e",
   "_shrinkwrap": null,
-  "_spec": "nativescript-cardview",
-  "_where": "/home/dat/nativescript_angular2/mobile",
+  "_spec": "nativescript-cardview@latest",
+  "_where": "/home/dat/nativescript_angular2/connect",
   "author": {
     "email": "bradwaynemartin@gmail.com",
     "name": "Brad Martin",
@@ -62,15 +62,17 @@
   "devDependencies": {},
   "directories": {},
   "dist": {
-    "shasum": "39a2ac801c0dce7b693a338f16521406a2d97cd2",
-    "tarball": "https://registry.npmjs.org/nativescript-cardview/-/nativescript-cardview-1.1.0.tgz"
+    "shasum": "6d27994efac480fed4f2757a9048058f2d327e4e",
+    "tarball": "https://registry.npmjs.org/nativescript-cardview/-/nativescript-cardview-1.1.6.tgz"
   },
-  "gitHead": "242820aa8169198c82c3d0b1260541c5d69e2dad",
+  "gitHead": "554ef07f8f1314f006ff4f5466d876a7906df8e8",
   "homepage": "https://github.com/bradmartin/nativescript-cardview",
   "keywords": [
     "NativeScript",
     "native",
     "script",
+    "TypeScript",
+    "javascript",
     "Card",
     "android",
     "ios",
@@ -98,7 +100,7 @@
   "name": "nativescript-cardview",
   "nativescript": {
     "platforms": {
-      "android": "1.7.0",
+      "android": "1.7.1",
       "ios": "1.7.0"
     }
   },
@@ -115,5 +117,5 @@
     "preparedemo": "npm run build; cd demo; tns plugin remove nativescript-cardview; tns plugin add ..; tns install",
     "setup": "cd demo; npm install; cd ..; npm run build; cd demo; tns plugin add ..; cd .."
   },
-  "version": "1.1.0"
+  "version": "1.1.6"
 }
