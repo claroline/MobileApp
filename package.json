@@ -36,7 +36,7 @@
     "@angular/upgrade": "^2.0.0-rc.1",
     "es6-promise": "^3.2.1",
     "es6-shim": "^0.35.1",
-    "nativescript-angular": "^0.1.1",
+    "nativescript-angular": "^0.1.2",
     "nativescript-floatingactionbutton": "^2.2.2",
     "nativescript-pulltorefresh": "^1.1.4",
     "nativescript-telerik-ui": "^1.1.1",

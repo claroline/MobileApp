@@ -1,15 +1,15 @@
 {
   "_args": [
     [
-      "reflect-metadata@^0.1.3",
-      "/home/dat/nativescript_angular2/connect/node_modules/nativescript-angular"
+      "reflect-metadata@latest",
+      "/home/dat/nativescript_angular2/connect"
     ]
   ],
-  "_from": "reflect-metadata@>=0.1.3 <0.2.0",
+  "_from": "reflect-metadata@latest",
   "_id": "reflect-metadata@0.1.3",
   "_inCache": true,
   "_installable": true,
-  "_location": "/nativescript-angular/reflect-metadata",
+  "_location": "/reflect-metadata",
   "_nodeVersion": "4.2.1",
   "_npmUser": {
     "email": "rbuckton@chronicles.org",
@@ -19,20 +19,20 @@
   "_phantomChildren": {},
   "_requested": {
     "name": "reflect-metadata",
-    "raw": "reflect-metadata@^0.1.3",
-    "rawSpec": "^0.1.3",
+    "raw": "reflect-metadata@latest",
+    "rawSpec": "latest",
     "scope": null,
-    "spec": ">=0.1.3 <0.2.0",
-    "type": "range"
+    "spec": "latest",
+    "type": "tag"
   },
   "_requiredBy": [
-    "/nativescript-angular"
+    "/"
   ],
   "_resolved": "https://registry.npmjs.org/reflect-metadata/-/reflect-metadata-0.1.3.tgz",
   "_shasum": "64f8a41974e4f5a5aa9978dac54cfd442dc2f1d5",
   "_shrinkwrap": null,
-  "_spec": "reflect-metadata@^0.1.3",
-  "_where": "/home/dat/nativescript_angular2/connect/node_modules/nativescript-angular",
+  "_spec": "reflect-metadata@latest",
+  "_where": "/home/dat/nativescript_angular2/connect",
   "author": {
     "email": "ron.buckton@microsoft.com",
     "name": "Ron Buckton",

@@ -11,11 +11,21 @@ var FileSystemXHR = (function (_super) {
     function FileSystemXHR() {
         _super.apply(this, arguments);
     }
+    FileSystemXHR.prototype.resolve = function (url, baseUrl) {
+        //Angular assembles absolute URL's and prefixes them with //
+        if (url.indexOf("//") !== 0) {
+            //Resolve relative URL's based on the app root.
+            return file_system_1.path.join(baseUrl, url);
+        }
+        else {
+            return url;
+        }
+    };
     FileSystemXHR.prototype.get = function (url) {
         var appDir = file_system_1.knownFolders.currentApp().path;
-        var templatePath = file_system_1.path.join(appDir, url);
+        var templatePath = this.resolve(url, appDir);
         if (!file_system_1.File.exists(templatePath)) {
-            throw new Error("File " + url + " does not exist.");
+            throw new Error("File " + templatePath + " does not exist. Resolved from: " + url + ".");
         }
         var templateFile = file_system_1.File.fromPath(templatePath);
         return templateFile.readText();

@@ -6,14 +6,14 @@
     ]
   ],
   "_from": "nativescript-angular@latest",
-  "_id": "nativescript-angular@0.1.1",
+  "_id": "nativescript-angular@0.1.2",
   "_inCache": true,
   "_installable": true,
   "_location": "/nativescript-angular",
   "_nodeVersion": "5.9.1",
   "_npmOperationalInternal": {
     "host": "packages-16-east.internal.npmjs.com",
-    "tmp": "tmp/nativescript-angular-0.1.1.tgz_1462456419524_0.7509834456723183"
+    "tmp": "tmp/nativescript-angular-0.1.2.tgz_1463053680858_0.8808359680697322"
   },
   "_npmUser": {
     "email": "hristo@deshev.com",
@@ -34,8 +34,8 @@
   "_requiredBy": [
     "/"
   ],
-  "_resolved": "https://registry.npmjs.org/nativescript-angular/-/nativescript-angular-0.1.1.tgz",
-  "_shasum": "4791b4a450ac9a2eeeba064a4c3aa1cecb638a5e",
+  "_resolved": "https://registry.npmjs.org/nativescript-angular/-/nativescript-angular-0.1.2.tgz",
+  "_shasum": "3858e4888014ca799234b55fd6437299c28e1534",
   "_shrinkwrap": null,
   "_spec": "nativescript-angular@latest",
   "_where": "/home/dat/nativescript_angular2/connect",
@@ -79,8 +79,8 @@
   },
   "directories": {},
   "dist": {
-    "shasum": "4791b4a450ac9a2eeeba064a4c3aa1cecb638a5e",
-    "tarball": "https://registry.npmjs.org/nativescript-angular/-/nativescript-angular-0.1.1.tgz"
+    "shasum": "3858e4888014ca799234b55fd6437299c28e1534",
+    "tarball": "https://registry.npmjs.org/nativescript-angular/-/nativescript-angular-0.1.2.tgz"
   },
   "homepage": "http://www.telerik.com",
   "license": "Apache-2.0",
@@ -124,5 +124,5 @@
   "scripts": {
     "postinstall": "node postinstall.js"
   },
-  "version": "0.1.1"
+  "version": "0.1.2"
 }
