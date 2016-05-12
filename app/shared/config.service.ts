@@ -72,7 +72,13 @@ export class ConfigService {
 		appSettings.clear();
 	}
 
+	expire(expired : boolean){
+		appSettings.setBoolean("hasExpired",expired);
+	}
 
+	isExpired(){
+		return appSettings.getBoolean("hasExpired");
+	}
 
 
 }

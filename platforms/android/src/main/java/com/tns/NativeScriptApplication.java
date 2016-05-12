@@ -1,54 +1,52 @@
 package com.tns;
 
-import android.app.Application;
-
-@JavaScriptImplementation(javaScriptFile = "./tns_modules/application/application.js")
+@com.tns.JavaScriptImplementation(javaScriptFile = "./tns_modules/application/application.js")
 public class NativeScriptApplication extends android.app.Application implements com.tns.NativeScriptHashCodeProvider {
+	private static android.app.Application thiz;
 
-    private static NativeScriptApplication thiz;
+	public NativeScriptApplication(){
+		super();
+		thiz = this;
+	}
 
-    public NativeScriptApplication() {
-        thiz = this;
-    }
-
-    public void onCreate() {
+	public void onCreate()  {
 		new RuntimeHelper(this).initRuntime();
-		if (Runtime.isInitialized()) {
-	        java.lang.Object[] params = null;
-	        com.tns.Runtime.callJSMethod(this, "onCreate", void.class, params);
-		} else {
+		if (!Runtime.isInitialized()) {
 			super.onCreate();
+			return;
 		}
-    }
+		java.lang.Object[] args = null;
+		com.tns.Runtime.callJSMethod(this, "onCreate", void.class, args);
+	}
 
-    public void onLowMemory() {
-    	if (Runtime.isInitialized()) {
-	        java.lang.Object[] params = null;
-	        com.tns.Runtime.callJSMethod(this, "onLowMemory", void.class, params);
-    	} else {
-    		super.onLowMemory();
-    	}
-    }
+	public void onLowMemory()  {
+		if (!Runtime.isInitialized()) {
+			super.onLowMemory();
+			return;
+		}
+		java.lang.Object[] args = null;
+		com.tns.Runtime.callJSMethod(this, "onLowMemory", void.class, args);
+	}
 
-    public void onTrimMemory(int level) {
-    	if (Runtime.isInitialized()) {
-	        java.lang.Object[] params = new Object[1];
-	        params[0] = level;
-	        com.tns.Runtime.callJSMethod(this, "onTrimMemory", void.class, params);
-    	} else {
-    		super.onTrimMemory(level);
-    	}
-    }
+	public void onTrimMemory(int param_0)  {
+		if (!Runtime.isInitialized()) {
+			super.onTrimMemory(param_0);
+			return;
+		}
+		java.lang.Object[] args = new java.lang.Object[1];
+		args[0] = param_0;
+		com.tns.Runtime.callJSMethod(this, "onTrimMemory", void.class, args);
+	}
 
-    public boolean equals__super(java.lang.Object other) {
-        return super.equals(other);
-    }
+	public boolean equals__super(java.lang.Object other) {
+		return super.equals(other);
+	}
 
-    public int hashCode__super() {
-        return super.hashCode();
-    }
+	public int hashCode__super() {
+		return super.hashCode();
+	}
 
-    public static Application getInstance() {
-        return thiz;
-    }
+	public static android.app.Application getInstance() {
+		return thiz;
+	}
 }

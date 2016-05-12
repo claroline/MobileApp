@@ -6,14 +6,14 @@
     ]
   ],
   "_from": "nativescript-pulltorefresh@latest",
-  "_id": "nativescript-pulltorefresh@1.1.3",
+  "_id": "nativescript-pulltorefresh@1.1.4",
   "_inCache": true,
   "_installable": true,
   "_location": "/nativescript-pulltorefresh",
   "_nodeVersion": "5.7.1",
   "_npmOperationalInternal": {
-    "host": "packages-16-east.internal.npmjs.com",
-    "tmp": "tmp/nativescript-pulltorefresh-1.1.3.tgz_1462932031271_0.9431399831082672"
+    "host": "packages-12-west.internal.npmjs.com",
+    "tmp": "tmp/nativescript-pulltorefresh-1.1.4.tgz_1463024924781_0.614126754924655"
   },
   "_npmUser": {
     "email": "bradmartin0905@gmail.com",
@@ -32,8 +32,8 @@
   "_requiredBy": [
     "/"
   ],
-  "_resolved": "https://registry.npmjs.org/nativescript-pulltorefresh/-/nativescript-pulltorefresh-1.1.3.tgz",
-  "_shasum": "b35a7a3a7a1b3e5bf20f7112146a9e44ef6eb380",
+  "_resolved": "https://registry.npmjs.org/nativescript-pulltorefresh/-/nativescript-pulltorefresh-1.1.4.tgz",
+  "_shasum": "023df2437f833b027d1bd38cded7169ad9fffe17",
   "_shrinkwrap": null,
   "_spec": "nativescript-pulltorefresh@latest",
   "_where": "/home/dat/nativescript_angular2/connect",
@@ -62,10 +62,10 @@
   "devDependencies": {},
   "directories": {},
   "dist": {
-    "shasum": "b35a7a3a7a1b3e5bf20f7112146a9e44ef6eb380",
-    "tarball": "https://registry.npmjs.org/nativescript-pulltorefresh/-/nativescript-pulltorefresh-1.1.3.tgz"
+    "shasum": "023df2437f833b027d1bd38cded7169ad9fffe17",
+    "tarball": "https://registry.npmjs.org/nativescript-pulltorefresh/-/nativescript-pulltorefresh-1.1.4.tgz"
   },
-  "gitHead": "64bf03e6ce66599fb9fd338a34ac9917309626e9",
+  "gitHead": "99d7cd197470604ee88cb5f48900998eb8d40f55",
   "homepage": "https://github.com/bradmartin/nativescript-pulltorefresh",
   "keywords": [
     "NativeScript",
@@ -110,5 +110,5 @@
     "url": "git+https://github.com/bradmartin/nativescript-pulltorefresh.git"
   },
   "scripts": {},
-  "version": "1.1.3"
+  "version": "1.1.4"
 }

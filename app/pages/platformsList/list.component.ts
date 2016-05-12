@@ -3,19 +3,30 @@
 import {Component} from "@angular/core";
 import {Router, CanActivate} from "@angular/router-deprecated";
 import {ConfigService} from "../../shared/config.service";
+import {UserService} from "../../shared/user/user.service";
 import {appInjector} from "../../app-injector";
 
 @CanActivate((next, prev) => {
   let injector = appInjector();
   let router = injector.get(Router);
 	let config = injector.get(ConfigService);
+  let userService = injector.get(UserService);
 
-  if (config.hasKey("host")) {
+  userService.isTokenExpired();
+
+
+
+  if (config.hasKey("host") && config.isExpired()) {
     router.navigate(['Login']);
     return false;
+  } else if (config.hasKey("host") && !config.isExpired() ){
+    router.navigate(['Home']);
+    return false;
+  } else {
+    return true;
   }
 
-  return true;
+
 })
 @Component({
 	selector:'list',

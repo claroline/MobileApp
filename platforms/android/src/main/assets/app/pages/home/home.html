@@ -20,7 +20,10 @@
   </PullToRefresh>
 </StackLayout>
 <StackLayout *tabItem="{title: 'Messages'}" >
-
+  <FAB (tap)="fabTap()"
+             icon="res://ic_create_white"
+             rippleColor="#f1f1f1"
+             class="fab-button"></FAB>
     <PullToRefresh (refresh)="refreshMessagePage($event)">
      <StackLayout>
        <ListView [items]="messagesList | async" separatorColor="transparent">
@@ -36,8 +39,5 @@
       </ListView>
     </StackLayout>
   </PullToRefresh>
-
-
-
 </StackLayout>
 </TabView>

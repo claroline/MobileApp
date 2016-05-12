@@ -74,3 +74,10 @@ ActionBar {
 .boldFont{
   font-weight:bold;
 }
+.fab-button {
+height: 70;
+margin: 15;
+background-color: #2E6DAD;
+horizontal-align: right;
+vertical-align: bottom;
+}

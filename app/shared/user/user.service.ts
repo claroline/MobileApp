@@ -61,7 +61,19 @@ export class UserService {
             (data) => {
                 this._configService.setAccessToken(data.json().access_token);
                 this._configService.setRefreshToken(data.json().refresh_token);
+                this._configService.expire(false);
             });
+    }
+
+    isTokenExpired(){
+      let host = this._configService.getHost();
+      let url = host + "/client/expired.json";
+
+      return this._http.get(url)
+      .map(res=>res.json())
+      .subscribe(data=>{
+        this._configService.expire(data.hasExpired);
+      });
     }
 
 

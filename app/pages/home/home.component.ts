@@ -17,7 +17,7 @@ import dialogs = require("ui/dialogs");
 
 registerElement("PullToRefresh", () => require("nativescript-pulltorefresh").PullToRefresh);
 registerElement("CardView", () => require("nativescript-cardview").CardView);
-registerElement("Fab", () => require("nativescript-floatingactionbutton").Fab);
+registerElement("FAB", () => require("nativescript-floatingactionbutton").Fab);
 
 
 
@@ -48,6 +48,8 @@ export class HomePage {
         this._userService.refreshToken();
         console.log("New access token : "+this._configService.getAccessToken());
       },3600000);
+
+      
 
     }
 
@@ -87,6 +89,10 @@ export class HomePage {
 
 
 
+    }
+
+    fabTap(){
+      alert("coucou");
     }
 
 

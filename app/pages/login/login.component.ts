@@ -39,9 +39,12 @@ export class LoginPage {
                 this._configService.setRefreshToken(data.json().refresh_token);
                 this._router.navigate(['Home']);
                 console.log(this._configService.getAccessToken());
+
                 },
                 (error) => alert("Mauvaise combinaison nom d'utilisateur/mot de passe")
             );
+
+            
     }
 
 
