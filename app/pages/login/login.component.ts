@@ -38,13 +38,14 @@ export class LoginPage {
                 this._configService.setAccessToken(data.json().access_token);
                 this._configService.setRefreshToken(data.json().refresh_token);
                 this._router.navigate(['Home']);
+                this._configService.expire(false);
                 console.log(this._configService.getAccessToken());
 
                 },
                 (error) => alert("Mauvaise combinaison nom d'utilisateur/mot de passe")
             );
 
-            
+
     }
 
 

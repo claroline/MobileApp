@@ -57,7 +57,7 @@ var ListViewComponent = (function () {
         var currentItem = typeof (items.getItem) === "function" ? items.getItem(index) : items[index];
         var viewRef;
         if (args.view) {
-            console.log("ListView.onItemLoading: " + index + " - Reusing exisiting view");
+            console.log("ListView.onItemLoading: " + index + " - Reusing existing view");
             viewRef = args.view[NG_VIEW];
         }
         else {

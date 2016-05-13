@@ -45,11 +45,12 @@ export class HomePage {
       this.notificationsList = this._notificationService.load();
       this.messagesList = this._messageService.loadReceivedMessages();
       setInterval(()=>{
+        this._configService.expire(true);
         this._userService.refreshToken();
         console.log("New access token : "+this._configService.getAccessToken());
       },3600000);
 
-      
+
 
     }
 
@@ -81,6 +82,7 @@ export class HomePage {
         })
         .then(result=>{
           if (result){
+            this._configService.expire(true);
             this._configService.remove("access_token");
             this._configService.remove("refresh_token");
             this._router.navigate(['Login']);

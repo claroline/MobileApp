@@ -20,13 +20,11 @@
   </PullToRefresh>
 </StackLayout>
 <StackLayout *tabItem="{title: 'Messages'}" >
-  <FAB (tap)="fabTap()"
-             icon="res://ic_create_white"
-             rippleColor="#f1f1f1"
-             class="fab-button"></FAB>
+  <GridLayout rows="auto, *">
+
     <PullToRefresh (refresh)="refreshMessagePage($event)">
      <StackLayout>
-       <ListView [items]="messagesList | async" separatorColor="transparent">
+       <ListView  id="messagesList" [items]="messagesList | async" separatorColor="transparent">
         <template let-item="item" [ngIf]="messagesList.length>0">
           <CardView  margin="10">
             <StackLayout>
@@ -37,7 +35,15 @@
           </CardView>
         </template>
       </ListView>
+      <FAB (tap)="fabTap()"
+                 icon="res://ic_create_white"
+                 rippleColor="#f1f1f1"
+                 class="fab-button"
+                 hideOnSwipeOfView="messagesList"
+                 swipeAnimation="scale"></FAB>
     </StackLayout>
   </PullToRefresh>
+
+</GridLayout>
 </StackLayout>
 </TabView>
