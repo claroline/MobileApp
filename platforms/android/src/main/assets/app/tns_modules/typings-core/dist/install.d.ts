@@ -1,12 +1,12 @@
 import Promise = require('any-promise');
 import { parseDependencyExpression, buildDependencyExpression } from './utils/parse';
-import { DependencyTree, Emitter } from './interfaces';
+import { DependencyTree, Emitter, ResolutionMap } from './interfaces';
 export { parseDependencyExpression, buildDependencyExpression };
 export interface InstallDependencyOptions {
     save?: boolean;
     saveDev?: boolean;
     savePeer?: boolean;
-    ambient?: boolean;
+    global?: boolean;
     cwd: string;
     emitter?: Emitter;
 }
@@ -18,6 +18,9 @@ export interface InstallOptions {
 export interface InstallResult {
     tree: DependencyTree;
     name?: string;
+}
+export interface InstallDependencyNestedOptions extends InstallDependencyOptions {
+    resolutions: ResolutionMap;
 }
 export declare function install(options: InstallOptions): Promise<InstallResult>;
 export interface InstallExpression {

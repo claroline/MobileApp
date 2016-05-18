@@ -166,9 +166,9 @@ function resolveDependency(raw, filename) {
     throw new TypeError("Unable to resolve dependency from \"" + raw + "\"");
 }
 exports.resolveDependency = resolveDependency;
-function parseDependencyExpression(raw, options) {
-    var _a = /^(?:([^=!:#]+)=)?(?:([\w]+\:.+)|((?:[\w]+\!)?.+))$/.exec(raw), name = _a[1], scheme = _a[2], registry = _a[3];
-    var location = scheme || expandRegistry(registry, options);
+function parseDependencyExpression(raw) {
+    var _a = /^(?:([^=!:#]+)=)?(?:([\w]+\:.+)|((?:[\w]+\~)?.+))$/.exec(raw), name = _a[1], scheme = _a[2], registry = _a[3];
+    var location = scheme || expandRegistry(registry);
     return {
         name: name,
         location: location
@@ -192,12 +192,12 @@ function buildDependencyExpression(type, meta) {
     throw new TypeError("Unable to expand dependency type: \"" + type + "\"");
 }
 exports.buildDependencyExpression = buildDependencyExpression;
-function expandRegistry(raw, options) {
+function expandRegistry(raw) {
     if (typeof raw !== 'string') {
         throw new TypeError("Expected registry name to be a string, not " + typeof raw);
     }
-    var indexOf = raw.indexOf('!');
-    var source = options.ambient ? rc_1.default.defaultAmbientSource : rc_1.default.defaultSource;
+    var indexOf = raw.indexOf('~');
+    var source = rc_1.default.defaultSource;
     var name;
     if (indexOf === -1) {
         name = raw;

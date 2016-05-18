@@ -6,14 +6,14 @@
     ]
   ],
   "_from": "nativescript-angular@latest",
-  "_id": "nativescript-angular@0.1.2",
+  "_id": "nativescript-angular@0.1.6",
   "_inCache": true,
   "_installable": true,
   "_location": "/nativescript-angular",
   "_nodeVersion": "5.9.1",
   "_npmOperationalInternal": {
     "host": "packages-16-east.internal.npmjs.com",
-    "tmp": "tmp/nativescript-angular-0.1.2.tgz_1463053680858_0.8808359680697322"
+    "tmp": "tmp/nativescript-angular-0.1.6.tgz_1463494330360_0.12987374211661518"
   },
   "_npmUser": {
     "email": "hristo@deshev.com",
@@ -34,8 +34,8 @@
   "_requiredBy": [
     "/"
   ],
-  "_resolved": "https://registry.npmjs.org/nativescript-angular/-/nativescript-angular-0.1.2.tgz",
-  "_shasum": "3858e4888014ca799234b55fd6437299c28e1534",
+  "_resolved": "https://registry.npmjs.org/nativescript-angular/-/nativescript-angular-0.1.6.tgz",
+  "_shasum": "ba70174a78cbd3f56b85e6bf7f639fdb3259b6d5",
   "_shrinkwrap": null,
   "_spec": "nativescript-angular@latest",
   "_where": "/home/dat/nativescript_angular2/connect",
@@ -65,7 +65,7 @@
     "url": "0.10.3",
     "zone.js": "^0.6.12"
   },
-  "description": "Bringing NativeScript and Angular 2 together. This project implements a renderer that lets you build native mobile apps with Angular using the NativeScript widgets.",
+  "description": "An Angular 2 renderer that lets you build mobile apps with NativeScript.",
   "devDependencies": {
     "grunt": "0.4.5",
     "grunt-contrib-clean": "0.6.0",
@@ -79,8 +79,8 @@
   },
   "directories": {},
   "dist": {
-    "shasum": "3858e4888014ca799234b55fd6437299c28e1534",
-    "tarball": "https://registry.npmjs.org/nativescript-angular/-/nativescript-angular-0.1.2.tgz"
+    "shasum": "ba70174a78cbd3f56b85e6bf7f639fdb3259b6d5",
+    "tarball": "https://registry.npmjs.org/nativescript-angular/-/nativescript-angular-0.1.6.tgz"
   },
   "homepage": "http://www.telerik.com",
   "license": "Apache-2.0",
@@ -114,7 +114,7 @@
   "nativescript": {},
   "optionalDependencies": {},
   "peerDependencies": {
-    "tns-core-modules": ">=2.0.0 || >=2.0.0-2016 || >=2.0.0-angular-4"
+    "tns-core-modules": ">=2.0.0 || >=2.0.0-2016 || >=2.0.0-angular-7"
   },
   "readme": "ERROR: No README data found!",
   "repository": {
@@ -124,5 +124,5 @@
   "scripts": {
     "postinstall": "node postinstall.js"
   },
-  "version": "0.1.2"
+  "version": "0.1.6"
 }

@@ -5,7 +5,8 @@ var chalk = require('chalk');
 var objectAssign = require('object-assign');
 var widestLine = require('widest-line');
 var filledArray = require('filled-array');
-var borderChars = require('./border-characters');
+var cliBoxes = require('cli-boxes');
+var camelCase = require('camelcase');
 
 var getObject = function (detail) {
 	var obj;
@@ -42,7 +43,7 @@ var getBorderChars = function (borderStyle) {
 	var chars;
 
 	if (typeof borderStyle === 'string') {
-		chars = borderChars[borderStyle];
+		chars = cliBoxes[borderStyle];
 
 		if (!chars) {
 			throw new TypeError('Invalid border style: ' + borderStyle);
@@ -60,14 +61,27 @@ var getBorderChars = function (borderStyle) {
 	return chars;
 };
 
+var getBackgroundColorName = function (x) {
+	return camelCase('bg', x);
+};
+
 module.exports = function (text, opts) {
 	opts = objectAssign({
 		padding: 0,
-		borderStyle: 'single'
+		borderStyle: 'single',
+		dimBorder: false
 	}, opts);
+
+	if (opts.backgroundColor) {
+		opts.backgroundColor = getBackgroundColorName(opts.backgroundColor);
+	}
 
 	if (opts.borderColor && !chalk[opts.borderColor]) {
 		throw new Error(opts.borderColor + ' is not a valid borderColor');
+	}
+
+	if (opts.backgroundColor && !chalk[opts.backgroundColor]) {
+		throw new Error(opts.backgroundColor + ' is not a valid backgroundColor');
 	}
 
 	var chars = getBorderChars(opts.borderStyle);
@@ -75,7 +89,12 @@ module.exports = function (text, opts) {
 	var margin = getObject(opts.margin);
 
 	var colorizeBorder = function (x) {
-		return opts.borderColor ? chalk[opts.borderColor](x) : x;
+		var ret = opts.borderColor ? chalk[opts.borderColor](x) : x;
+		return opts.dimBorder ? chalk.dim(ret) : ret;
+	};
+
+	var colorizeContent = function (x) {
+		return opts.backgroundColor ? chalk[opts.backgroundColor](x) : x;
 	};
 
 	var NL = '\n';
@@ -102,10 +121,10 @@ module.exports = function (text, opts) {
 	var middle = lines.map(function (line) {
 		var paddingRight = repeating(PAD, contentWidth - stringWidth(line) - padding.left);
 
-		return marginLeft + side + paddingLeft + line + paddingRight + side;
+		return marginLeft + side + colorizeContent(paddingLeft + line + paddingRight) + side;
 	}).join(NL);
 
 	return top + NL + middle + NL + bottom;
 };
 
-module.exports._borderStyles = borderChars;
+module.exports._borderStyles = cliBoxes;

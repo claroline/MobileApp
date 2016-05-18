@@ -36,5 +36,7 @@ export declare class ViewUtil {
     removeClass(view: NgView, className: string): void;
     private setClasses(view, classesValue);
     private syncClasses(view);
+    private resolveCssValue(styleValue);
+    private setStyleValue(view, property, value);
     setStyleProperty(view: NgView, styleName: string, styleValue: string): void;
 }

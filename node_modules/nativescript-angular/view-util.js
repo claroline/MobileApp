@@ -6,6 +6,8 @@ var content_view_1 = require('ui/content-view');
 var layout_base_1 = require('ui/layouts/layout-base');
 var element_registry_1 = require('./element-registry');
 var special_properties_1 = require("ui/builder/special-properties");
+var style_property_1 = require("ui/styling/style-property");
+var dependency_observable_1 = require("ui/core/dependency-observable");
 var trace = require("trace");
 var platform_1 = require("platform");
 var IOS_PREFX = "@ios:";
@@ -261,8 +263,39 @@ var ViewUtil = (function () {
         var classValue = Array.from(this.cssClasses(view).keys()).join(' ');
         view.cssClass = classValue;
     };
+    ViewUtil.prototype.resolveCssValue = function (styleValue) {
+        return styleValue;
+    };
+    ViewUtil.prototype.setStyleValue = function (view, property, value) {
+        try {
+            view.style._setValue(property, value, dependency_observable_1.ValueSource.Local);
+        }
+        catch (ex) {
+            trace.write("Error setting property: " + property.name + " view: " + view + " value: " + value + " " + ex, trace.categories.Style, trace.messageType.error);
+        }
+    };
     ViewUtil.prototype.setStyleProperty = function (view, styleName, styleValue) {
-        throw new Error("Not implemented: setStyleProperty");
+        var _this = this;
+        traceLog("setStyleProperty: " + styleName + " = " + styleValue);
+        var name = styleName;
+        var resolvedValue = this.resolveCssValue(styleValue);
+        style_property_1.withStyleProperty(name, resolvedValue, function (property, value) {
+            if (types_1.isString(property)) {
+                //Fall back to resolving property by name.
+                var propertyName = property;
+                var resolvedProperty = style_property_1.getPropertyByName(name);
+                if (resolvedProperty) {
+                    _this.setStyleValue(view, resolvedProperty, resolvedValue);
+                }
+                else {
+                    traceLog("Unknown style property: " + styleName);
+                }
+            }
+            else {
+                var resolvedProperty = property;
+                _this.setStyleValue(view, resolvedProperty, resolvedValue);
+            }
+        });
     };
     return ViewUtil;
 }());

@@ -93,7 +93,7 @@ export class HomePage {
 
     }
 
-    fabTap(){
+    newMessage(){
       alert("coucou");
     }
 

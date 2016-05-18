@@ -10,6 +10,8 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 var core_1 = require("@angular/core");
 var tab_view_1 = require("ui/tab-view");
+var utils = require('../common/utils');
+var lang_1 = require('@angular/core/src/facade/lang');
 var TabViewDirective = (function () {
     function TabViewDirective(element) {
         this.element = element;
@@ -20,7 +22,8 @@ var TabViewDirective = (function () {
             return this._selectedIndex;
         },
         set: function (value) {
-            this._selectedIndex = value;
+            debugger;
+            this._selectedIndex = utils.convertToInt(value);
             if (this.viewInitialized) {
                 this.tabView.selectedIndex = this._selectedIndex;
             }
@@ -30,7 +33,11 @@ var TabViewDirective = (function () {
     });
     TabViewDirective.prototype.ngAfterViewInit = function () {
         this.viewInitialized = true;
-        this.tabView.selectedIndex = this._selectedIndex;
+        debugger;
+        console.log("this._selectedIndex: " + this._selectedIndex);
+        if (!lang_1.isBlank(this._selectedIndex)) {
+            this.tabView.selectedIndex = this._selectedIndex;
+        }
     };
     TabViewDirective = __decorate([
         core_1.Directive({
@@ -51,6 +58,7 @@ var TabViewItemDirective = (function () {
     TabViewItemDirective.prototype.ngOnInit = function () {
         this.item = new tab_view_1.TabViewItem();
         this.item.title = this.config.title;
+        this.item.iconSource = this.config.iconSource;
         var viewRef = this.viewContainer.createEmbeddedView(this.templateRef);
         //Filter out text nodes, etc
         var realViews = viewRef.rootNodes.filter(function (node) {
