@@ -19,7 +19,7 @@ I invite you to follow the instructions written by [Nativescript](https://docs.n
 
 It will tell you if everything is alright for your installation
 
-Development
+Usage
 -----------
 
 The easiest way to run the application is with an emulator (I invite you to download [Genymotion](https://www.genymotion.com/)). 
@@ -32,6 +32,17 @@ or
     tns run ios
 
 This command allows you to build the .apk file (Android) and the .ipa file (iOS).
+
+The first time you launch the application, it will ask you to enter a url. Enter this one :
+
+        http://dat.claroline.com
+
+Then, you'll have to enter a username and a password :
+
+        username : captain_america
+        password : avengers
+
+
 
 
 
