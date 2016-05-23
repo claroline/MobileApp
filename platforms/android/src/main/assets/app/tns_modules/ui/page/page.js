@@ -71,8 +71,8 @@ function ensureDialogFragmentClass() {
 }
 var Page = (function (_super) {
     __extends(Page, _super);
-    function Page(options) {
-        _super.call(this, options);
+    function Page() {
+        _super.apply(this, arguments);
         this._isBackNavigation = false;
     }
     Object.defineProperty(Page.prototype, "android", {

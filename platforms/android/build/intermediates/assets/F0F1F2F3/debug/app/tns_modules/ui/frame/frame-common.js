@@ -150,6 +150,7 @@ var Frame = (function (_super) {
         var backstackEntry = {
             entry: entry,
             resolvedPage: page,
+            isNavigation: true
         };
         var navigationContext = {
             entry: backstackEntry,
@@ -344,6 +345,16 @@ var Frame = (function (_super) {
     };
     Frame.prototype._removeViewFromNativeVisualTree = function (child) {
         child._isAddedToNativeVisualTree = false;
+    };
+    Frame.prototype._printFrameBackStack = function () {
+        var length = this.backStack.length;
+        var i = length - 1;
+        console.log("---------------------------");
+        console.log("Frame Back Stack (" + length + ")");
+        while (i >= 0) {
+            var backstackEntry = this.backStack[i--];
+            console.log("[ " + backstackEntry.resolvedPage.id + " ]");
+        }
     };
     Frame.androidOptionSelectedEvent = "optionSelected";
     Frame.defaultAnimatedNavigation = true;

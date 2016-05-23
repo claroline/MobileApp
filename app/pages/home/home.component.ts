@@ -94,7 +94,7 @@ export class HomePage {
     }
 
     newMessage(){
-      alert("coucou");
+      
     }
 
 

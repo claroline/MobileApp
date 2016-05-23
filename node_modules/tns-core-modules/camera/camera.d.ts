@@ -10,6 +10,11 @@ declare module "camera" {
      * @param options - Optional parameter for setting different camera options.
      */
     export function takePicture(options?: CameraOptions): Promise<imageSource.ImageSource>;
+    
+    /**
+     * Is the camera available to use
+     */
+    export function isAvailable(): Boolean;
 
     export interface CameraOptions {
         /**
@@ -31,5 +36,10 @@ declare module "camera" {
          * This property could affect width or heigth return values.
          */
         keepAspectRatio?: boolean;
+        
+        /**
+         * Defines if camera picture should be copied to photo Gallery (Android) or Photos (iOS) 
+         */
+        saveToGallery?: boolean;
     }
 }

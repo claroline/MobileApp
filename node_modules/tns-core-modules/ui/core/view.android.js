@@ -210,8 +210,6 @@ var View = (function (_super) {
         if (this._nativeView && !(this._nativeView.getLayoutParams() instanceof org.nativescript.widgets.CommonLayoutParams)) {
             this._nativeView.setLayoutParams(new org.nativescript.widgets.CommonLayoutParams());
         }
-        utils.copyFrom(this._options, this);
-        delete this._options;
         this._syncNativeProperties();
         trace.notifyEvent(this, "_onContextChanged");
     };
@@ -572,6 +570,9 @@ var ViewStyler = (function () {
     ViewStyler.setZIndexProperty = function (view, newValue) {
         if (view.android.setZ) {
             view.android.setZ(newValue);
+            if (view.android instanceof android.widget.Button) {
+                view.android.setStateListAnimator(null);
+            }
         }
     };
     ViewStyler.resetZIndexProperty = function (view, nativeValue) {
@@ -589,6 +590,7 @@ var ViewStyler = (function () {
         style.registerHandler(style.borderWidthProperty, borderHandler);
         style.registerHandler(style.borderColorProperty, borderHandler);
         style.registerHandler(style.borderRadiusProperty, borderHandler);
+        style.registerHandler(style.clipPathProperty, borderHandler);
         style.registerHandler(style.nativeLayoutParamsProperty, new style.StylePropertyChangedHandler(ViewStyler.setNativeLayoutParamsProperty, ViewStyler.resetNativeLayoutParamsProperty));
         style.registerHandler(style.nativePaddingsProperty, new style.StylePropertyChangedHandler(ViewStyler.setPaddingProperty, ViewStyler.resetPaddingProperty), "TextBase");
         style.registerHandler(style.nativePaddingsProperty, new style.StylePropertyChangedHandler(ViewStyler.setPaddingProperty, ViewStyler.resetPaddingProperty), "Button");

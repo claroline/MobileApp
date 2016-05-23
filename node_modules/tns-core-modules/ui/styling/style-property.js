@@ -14,6 +14,25 @@ function registerProperty(property) {
         inheritableProperties.push(property);
     }
 }
+function withStyleProperty(name, value, resolvedCallback) {
+    var property = getPropertyByCssName(name);
+    if (property) {
+        resolvedCallback(property, value);
+    }
+    else {
+        var pairs = getShorthandPairs(name, value);
+        if (pairs) {
+            for (var j = 0; j < pairs.length; j++) {
+                var pair = pairs[j];
+                resolvedCallback(pair.property, pair.value);
+            }
+        }
+        else {
+            resolvedCallback(name, value);
+        }
+    }
+}
+exports.withStyleProperty = withStyleProperty;
 function getShorthandPairs(name, value) {
     var callback = callbackByShorthandName.get(name);
     if (callback) {

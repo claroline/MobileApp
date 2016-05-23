@@ -42,15 +42,16 @@ function onFragmentShown(fragment) {
     }
     transitionModule._onFragmentShown(fragment, isBack);
 }
-function onFragmentHidden(fragment) {
+function onFragmentHidden(fragment, destroyed) {
     trace.write("HIDDEN " + fragment.getTag(), trace.categories.NativeLifecycle);
     if (fragment[CLEARING_HISTORY]) {
-        trace.write(fragment.getTag() + " has been hidden, but we are currently clearing history. Returning.", trace.categories.NativeLifecycle);
-        return null;
+        trace.write(fragment.getTag() + " has been hidden, but we are currently clearing history. Clearing any existing transitions.", trace.categories.NativeLifecycle);
+        transitionModule._clearBackwardTransitions(fragment);
+        transitionModule._clearForwardTransitions(fragment);
     }
     var isBack = fragment.entry[IS_BACK];
     fragment.entry[IS_BACK] = undefined;
-    transitionModule._onFragmentHidden(fragment, isBack);
+    transitionModule._onFragmentHidden(fragment, isBack, destroyed);
 }
 var Frame = (function (_super) {
     __extends(Frame, _super);
@@ -117,6 +118,10 @@ var Frame = (function (_super) {
         }
         var manager = activity.getFragmentManager();
         var isFirstNavigation = types.isNullOrUndefined(this._currentEntry);
+        backstackEntry.isNavigation = true;
+        if (this._currentEntry) {
+            this._currentEntry.isNavigation = true;
+        }
         if (backstackEntry.entry.clearHistory) {
             var backStackEntryCount = manager.getBackStackEntryCount();
             var i = backStackEntryCount - 1;
@@ -158,9 +163,9 @@ var Frame = (function (_super) {
         var navigationTransition = this._getNavigationTransition(backstackEntry.entry);
         if (currentFragment) {
             transitionModule._clearForwardTransitions(currentFragment);
-        }
-        if (animated && navigationTransition) {
-            transitionModule._setAndroidFragmentTransitions(navigationTransition, currentFragment, newFragment, fragmentTransaction);
+            if (animated && navigationTransition) {
+                transitionModule._setAndroidFragmentTransitions(navigationTransition, currentFragment, newFragment, fragmentTransaction);
+            }
         }
         newFragment.frame = this;
         newFragment.entry = backstackEntry;
@@ -209,8 +214,10 @@ var Frame = (function (_super) {
     };
     Frame.prototype._goBackCore = function (backstackEntry) {
         navDepth = backstackEntry[NAV_DEPTH];
+        backstackEntry.isNavigation = true;
         if (this._currentEntry) {
             this._currentEntry[IS_BACK] = true;
+            this._currentEntry.isNavigation = true;
         }
         trace.write(this + "._goBackCore(pageId: " + backstackEntry.resolvedPage.id + ", backstackVisible: " + this._isEntryBackstackVisible(backstackEntry) + ", clearHistory: " + backstackEntry.entry.clearHistory + "), navDepth: " + navDepth, trace.categories.Navigation);
         var manager = this._android.activity.getFragmentManager();
@@ -260,16 +267,6 @@ var Frame = (function (_super) {
         while (i >= 0) {
             var fragment = manager.findFragmentByTag(manager.getBackStackEntryAt(i--).getName());
             console.log("[ " + fragment.getTag() + " ]");
-        }
-    };
-    Frame.prototype._printFrameBackStack = function () {
-        var length = this.backStack.length;
-        var i = length - 1;
-        console.log("---------------------------");
-        console.log("Frame Back Stack (" + length + ")");
-        while (i >= 0) {
-            var backstackEntry = this.backStack[i--];
-            console.log("[ " + backstackEntry.resolvedPage.id + " ]");
         }
     };
     Frame.prototype._getNavBarVisible = function (page) {
@@ -496,7 +493,7 @@ var FragmentClass = (function (_super) {
         trace.write(this.getTag() + ".onHiddenChanged(" + hidden + ")", trace.categories.NativeLifecycle);
         _super.prototype.onHiddenChanged.call(this, hidden);
         if (hidden) {
-            onFragmentHidden(this);
+            onFragmentHidden(this, false);
         }
         else {
             onFragmentShown(this);
@@ -549,12 +546,7 @@ var FragmentClass = (function (_super) {
     FragmentClass.prototype.onDestroyView = function () {
         trace.write(this.getTag() + ".onDestroyView()", trace.categories.NativeLifecycle);
         _super.prototype.onDestroyView.call(this);
-        onFragmentHidden(this);
-        var entry = this.entry;
-        var page = entry.resolvedPage;
-        if (page._context) {
-            page._onDetached(true);
-        }
+        onFragmentHidden(this, true);
     };
     FragmentClass.prototype.onDestroy = function () {
         trace.write(this.getTag() + ".onDestroy()", trace.categories.NativeLifecycle);

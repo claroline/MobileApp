@@ -9,6 +9,7 @@ declare module "ui/builder" {
     export interface LoadOptions {
         path: string;
         name: string;
+        attributes?: any;
         exports?: any;
         page?: page.Page;
     }

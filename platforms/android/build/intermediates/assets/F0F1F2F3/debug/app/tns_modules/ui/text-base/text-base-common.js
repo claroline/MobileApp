@@ -26,8 +26,8 @@ function onFormattedTextPropertyChanged(data) {
 formattedTextProperty.metadata.onSetNativeValue = onFormattedTextPropertyChanged;
 var TextBase = (function (_super) {
     __extends(TextBase, _super);
-    function TextBase(options) {
-        _super.call(this, options);
+    function TextBase() {
+        _super.apply(this, arguments);
     }
     TextBase.prototype._onBindingContextChanged = function (oldValue, newValue) {
         _super.prototype._onBindingContextChanged.call(this, oldValue, newValue);

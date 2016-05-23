@@ -158,6 +158,9 @@ var FileSystemAccess = (function () {
         var dir = utils.ad.getApplicationContext().getCacheDir();
         return dir.getAbsolutePath();
     };
+    FileSystemAccess.prototype.getCurrentAppPath = function () {
+        return this.getLogicalRootPath() + "/app";
+    };
     FileSystemAccess.prototype.read = function (path, onError) {
         try {
             var javaFile = new java.io.File(path);
@@ -247,6 +250,9 @@ var FileSystemAccess = (function () {
     };
     FileSystemAccess.prototype.deleteFolderContent = function (file) {
         var filesList = file.listFiles();
+        if (filesList.length === 0) {
+            return true;
+        }
         var i, childFile, success = false;
         for (i = 0; i < filesList.length; i++) {
             childFile = filesList[i];

@@ -322,6 +322,11 @@ function isWhiteSpaceValid(value) {
 function isPaddingValid(value) {
     return isFinite(value) && !isNaN(value) && value >= 0;
 }
+var supportedPaths = ["rect", "circle", "ellipse", "polygon"];
+function isClipPathValid(value) {
+    var functionName = value.substring(0, value.indexOf("(")).trim();
+    return supportedPaths.indexOf(functionName) !== -1 || value === "";
+}
 function isMarginValid(value) {
     var result = convertToPercentHelper(value);
     if (result.isError) {
@@ -529,6 +534,16 @@ var Style = (function (_super) {
         },
         set: function (value) {
             this._setValue(exports.borderRadiusProperty, value);
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Style.prototype, "clipPath", {
+        get: function () {
+            return this._getValue(exports.clipPathProperty);
+        },
+        set: function (value) {
+            this._setValue(exports.clipPathProperty, value);
         },
         enumerable: true,
         configurable: true
@@ -894,6 +909,10 @@ var Style = (function (_super) {
         if (!this._getValue(exports.backgroundInternalProperty).isEmpty()) {
             this._applyProperty(exports.backgroundInternalProperty, this._getValue(exports.backgroundInternalProperty));
         }
+        var clipPathPropertyValue = this._getValue(exports.clipPathProperty);
+        if (types.isString(clipPathPropertyValue) && clipPathPropertyValue !== "") {
+            this._applyProperty(exports.clipPathProperty, clipPathPropertyValue);
+        }
     };
     Style.prototype._applyProperty = function (property, newValue) {
         this._applyStyleProperty(property, newValue);
@@ -1015,6 +1034,7 @@ exports.backgroundPositionProperty = new styleProperty.Property("backgroundPosit
 exports.borderColorProperty = new styleProperty.Property("borderColor", "border-color", new dependency_observable_1.PropertyMetadata(undefined, dependency_observable_1.PropertyMetadataSettings.None, undefined, color_1.Color.isValid, color_1.Color.equals), converters.colorConverter);
 exports.borderWidthProperty = new styleProperty.Property("borderWidth", "border-width", new dependency_observable_1.PropertyMetadata(0, AffectsLayout, null, isPaddingValid), converters.numberConverter);
 exports.borderRadiusProperty = new styleProperty.Property("borderRadius", "border-radius", new dependency_observable_1.PropertyMetadata(0, AffectsLayout, null, isPaddingValid), converters.numberConverter);
+exports.clipPathProperty = new styleProperty.Property("clipPath", "clip-path", new dependency_observable_1.PropertyMetadata(undefined, AffectsLayout, null, isClipPathValid));
 exports.backgroundInternalProperty = new styleProperty.Property("_backgroundInternal", "_backgroundInternal", new dependency_observable_1.PropertyMetadata(background.Background.default, dependency_observable_1.PropertyMetadataSettings.None, undefined, undefined, background.Background.equals));
 exports.fontSizeProperty = new styleProperty.Property("fontSize", "font-size", new dependency_observable_1.PropertyMetadata(undefined, dependency_observable_1.PropertyMetadataSettings.Inheritable, onFontSizeChanged), converters.fontSizeConverter);
 exports.fontFamilyProperty = new styleProperty.Property("fontFamily", "font-family", new dependency_observable_1.PropertyMetadata(undefined, dependency_observable_1.PropertyMetadataSettings.Inheritable, onFontFamilyChanged));

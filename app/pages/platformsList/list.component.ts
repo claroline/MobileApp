@@ -41,9 +41,6 @@ export class ListPage {
 
 
 	constructor(private _router:Router, private _configService: ConfigService){
-		// if (this._configService.hasKey("host")){
-		// 	this._router.navigate(['Login']);
-		// }
 	}
 
 	goToLogin(){
@@ -57,7 +54,7 @@ export class ListPage {
 				this._configService.setClientSecret(data.client_secret);
 				this._router.navigate(['Login']);
 			}, err=>{
-				alert("L'url que vous avez entrée n'est pas valide !");
+				alert("Entrez une url valide.");
 			});
 		}
 	}

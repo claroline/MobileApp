@@ -4,8 +4,8 @@ var utils = require("utils/utils");
 var types = require("utils/types");
 var EditableTextBase = (function (_super) {
     __extends(EditableTextBase, _super);
-    function EditableTextBase(options) {
-        _super.call(this, options);
+    function EditableTextBase() {
+        _super.apply(this, arguments);
     }
     Object.defineProperty(EditableTextBase.prototype, "android", {
         get: function () {

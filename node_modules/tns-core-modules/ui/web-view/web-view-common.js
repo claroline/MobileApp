@@ -49,7 +49,7 @@ srcProperty.metadata.onSetNativeValue = onSrcPropertyChanged;
 var WebView = (function (_super) {
     __extends(WebView, _super);
     function WebView() {
-        _super.call(this);
+        _super.apply(this, arguments);
     }
     Object.defineProperty(WebView.prototype, "url", {
         get: function () {

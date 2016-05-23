@@ -3,8 +3,8 @@ var editableTextBase = require("ui/editable-text-base");
 global.moduleMerge(textBase, exports);
 var TextView = (function (_super) {
     __extends(TextView, _super);
-    function TextView(options) {
-        _super.call(this, options);
+    function TextView() {
+        _super.apply(this, arguments);
     }
     return TextView;
 }(editableTextBase.EditableTextBase));

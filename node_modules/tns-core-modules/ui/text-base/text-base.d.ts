@@ -18,8 +18,6 @@ declare module "ui/text-base" {
          */
         public static formattedTextProperty: dependencyObservable.Property;
 
-        constructor(options?: Options);
-
         /**
          * Gets or sets the text.
          */
@@ -49,15 +47,5 @@ declare module "ui/text-base" {
         _addChildFromBuilder(name: string, value: any): void;
 
         
-    }
-
-    /**
-     * Defines interface for an optional parameter used to create a text-base component.
-     */
-    export interface Options extends view.Options {
-        /**
-         * Gets or sets the text.
-         */
-        text?: string;
     }
 }

@@ -175,5 +175,7 @@ declare module "ui/layouts/grid-layout" {
          * Gets array of row specifications defined on this instance of GridLayout.
          */
         public getRows(): Array<ItemSpec>;
+
+        
     }
 }

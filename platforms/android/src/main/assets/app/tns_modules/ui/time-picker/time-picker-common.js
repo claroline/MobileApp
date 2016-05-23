@@ -145,7 +145,7 @@ function onMinuteIntervalPropertyChanged(data) {
 var TimePicker = (function (_super) {
     __extends(TimePicker, _super);
     function TimePicker() {
-        _super.call(this);
+        _super.apply(this, arguments);
     }
     Object.defineProperty(TimePicker.prototype, "hour", {
         get: function () {

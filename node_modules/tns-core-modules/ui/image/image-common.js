@@ -49,8 +49,8 @@ function onSrcPropertyChanged(data) {
 }
 var Image = (function (_super) {
     __extends(Image, _super);
-    function Image(options) {
-        _super.call(this, options);
+    function Image() {
+        _super.apply(this, arguments);
     }
     Object.defineProperty(Image.prototype, "imageSource", {
         get: function () {

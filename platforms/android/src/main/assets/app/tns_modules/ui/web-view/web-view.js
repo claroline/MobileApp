@@ -84,6 +84,12 @@ var WebView = (function (_super) {
         this._android.getSettings().setBuiltInZoomControls(true);
         this._android.setWebViewClient(this._webViewClient);
     };
+    WebView.prototype._onDetached = function (force) {
+        if (this.android) {
+            this.android.destroy();
+        }
+        _super.prototype._onDetached.call(this, force);
+    };
     WebView.prototype._loadUrl = function (url) {
         if (!this._android) {
             return;

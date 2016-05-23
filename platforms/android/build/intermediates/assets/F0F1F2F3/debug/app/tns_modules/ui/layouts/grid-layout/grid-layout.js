@@ -82,30 +82,30 @@ var GridLayout = (function (_super) {
     GridLayout.prototype._createUI = function () {
         var _this = this;
         this._layout = new org.nativescript.widgets.GridLayout(this._context);
-        this.getRows().forEach(function (itemSpec, index, rows) { _this.onRowAdded(itemSpec); }, this);
-        this.getColumns().forEach(function (itemSpec, index, rows) { _this.onColumnAdded(itemSpec); }, this);
+        this.getRows().forEach(function (itemSpec, index, rows) { _this._onRowAdded(itemSpec); }, this);
+        this.getColumns().forEach(function (itemSpec, index, rows) { _this._onColumnAdded(itemSpec); }, this);
     };
-    GridLayout.prototype.onRowAdded = function (itemSpec) {
+    GridLayout.prototype._onRowAdded = function (itemSpec) {
         if (this._layout) {
             var nativeSpec = createNativeSpec(itemSpec);
             itemSpec.nativeSpec = nativeSpec;
             this._layout.addRow(nativeSpec);
         }
     };
-    GridLayout.prototype.onColumnAdded = function (itemSpec) {
+    GridLayout.prototype._onColumnAdded = function (itemSpec) {
         if (this._layout) {
             var nativeSpec = createNativeSpec(itemSpec);
             itemSpec.nativeSpec = nativeSpec;
             this._layout.addColumn(nativeSpec);
         }
     };
-    GridLayout.prototype.onRowRemoved = function (itemSpec, index) {
+    GridLayout.prototype._onRowRemoved = function (itemSpec, index) {
         itemSpec.nativeSpec = null;
         if (this._layout) {
             this._layout.removeRowAt(index);
         }
     };
-    GridLayout.prototype.onColumnRemoved = function (itemSpec, index) {
+    GridLayout.prototype._onColumnRemoved = function (itemSpec, index) {
         itemSpec.nativeSpec = null;
         if (this._layout) {
             this._layout.removeColumnAt(index);

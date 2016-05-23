@@ -29,8 +29,8 @@ function onActionBarHiddenPropertyChanged(data) {
 actionBarHiddenProperty.metadata.onSetNativeValue = onActionBarHiddenPropertyChanged;
 var Page = (function (_super) {
     __extends(Page, _super);
-    function Page(options) {
-        _super.call(this, options);
+    function Page() {
+        _super.call(this);
         this._styleScope = new styleScope.StyleScope();
         this._cssFiles = {};
         this.actionBar = new action_bar_1.ActionBar();

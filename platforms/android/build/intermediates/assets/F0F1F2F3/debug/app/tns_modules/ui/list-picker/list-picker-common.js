@@ -7,7 +7,7 @@ exports.traceCategory = "ListPicker";
 var ListPicker = (function (_super) {
     __extends(ListPicker, _super);
     function ListPicker() {
-        _super.call(this);
+        _super.apply(this, arguments);
     }
     Object.defineProperty(ListPicker.prototype, "selectedIndex", {
         get: function () {

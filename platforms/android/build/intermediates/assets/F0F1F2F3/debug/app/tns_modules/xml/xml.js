@@ -1,3 +1,4 @@
+"use strict";
 var easysax = require("js-libs/easysax");
 var ParserEventType = (function () {
     function ParserEventType() {
@@ -251,3 +252,4 @@ var XmlParser = (function () {
     return XmlParser;
 }());
 exports.XmlParser = XmlParser;
+//# sourceMappingURL=xml.js.map

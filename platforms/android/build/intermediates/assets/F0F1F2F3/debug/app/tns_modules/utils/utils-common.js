@@ -31,7 +31,10 @@ function escapeRegexSymbols(source) {
 exports.escapeRegexSymbols = escapeRegexSymbols;
 function convertString(value) {
     var result;
-    if (value.trim() === "") {
+    if (!types.isString(value)) {
+        result = value;
+    }
+    else if (value.trim() === "") {
         result = value;
     }
     else {

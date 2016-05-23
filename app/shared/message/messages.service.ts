@@ -16,7 +16,7 @@ export class MessageService{
 
 		let host = this._configService.getHost();
 		let access = this._configService.getAccessToken();
-		let url = host+"/message/api/received/messages.json?access_token="+access;
+		let url = host+"/message/api/received.json?access_token="+access;
 		return this._http.get(url)
 		.map(res=>{
 			return res.json();
@@ -44,7 +44,7 @@ export class MessageService{
 
 		let host = this._configService.getHost();
 		let access = this._configService.getAccessToken();
-		let url = host+"/message/api/sent/messages.json?access_token="+access;
+		let url = host+"/message/api/sent.json?access_token="+access;
 		return this._http.get(url)
 		.map(res=>{
 			return res.json();

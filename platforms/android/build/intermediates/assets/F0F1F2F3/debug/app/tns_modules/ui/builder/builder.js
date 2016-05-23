@@ -86,7 +86,7 @@ function load(pathOrOptions, context) {
     if (!context) {
         if (!types_1.isString(pathOrOptions)) {
             var options = pathOrOptions;
-            componentModule = loadCustomComponent(options.path, options.name, undefined, options.exports, options.page);
+            componentModule = loadCustomComponent(options.path, options.name, options.attributes, options.exports, options.page);
         }
         else {
             var path_1 = pathOrOptions;

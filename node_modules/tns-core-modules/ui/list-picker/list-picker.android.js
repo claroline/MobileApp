@@ -4,7 +4,7 @@ global.moduleMerge(common, exports);
 var ListPicker = (function (_super) {
     __extends(ListPicker, _super);
     function ListPicker() {
-        _super.call(this);
+        _super.apply(this, arguments);
     }
     Object.defineProperty(ListPicker.prototype, "android", {
         get: function () {

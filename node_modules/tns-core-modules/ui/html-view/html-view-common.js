@@ -3,8 +3,8 @@ var proxy = require("ui/core/proxy");
 var view = require("ui/core/view");
 var HtmlView = (function (_super) {
     __extends(HtmlView, _super);
-    function HtmlView(options) {
-        _super.call(this, options);
+    function HtmlView() {
+        _super.apply(this, arguments);
     }
     Object.defineProperty(HtmlView.prototype, "html", {
         get: function () {

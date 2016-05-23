@@ -9,8 +9,8 @@ function ensureEnums() {
 }
 var Label = (function (_super) {
     __extends(Label, _super);
-    function Label(options) {
-        _super.call(this, options);
+    function Label() {
+        _super.apply(this, arguments);
     }
     Object.defineProperty(Label.prototype, "textWrap", {
         get: function () {

@@ -341,7 +341,7 @@ var CustomPanGestureDetector = (function () {
         }
     };
     CustomPanGestureDetector.prototype.trackStart = function (currentEvent) {
-        var inital = this.getMotionEventCenter(this.lastEventCache ? this.lastEventCache : currentEvent);
+        var inital = this.getEventCoordinates(this.lastEventCache ? this.lastEventCache : currentEvent);
         this.initialX = inital.x;
         this.initialY = inital.y;
         this.isTracking = true;
@@ -349,22 +349,32 @@ var CustomPanGestureDetector = (function () {
         _executeCallback(this.observer, args);
     };
     CustomPanGestureDetector.prototype.trackChange = function (currentEvent) {
-        var current = this.getMotionEventCenter(currentEvent);
+        var current = this.getEventCoordinates(currentEvent);
         this.deltaX = current.x - this.initialX;
         this.deltaY = current.y - this.initialY;
         var args = _getPanArgs(this.deltaX, this.deltaY, this.target, common.GestureStateTypes.changed, null, currentEvent);
         _executeCallback(this.observer, args);
     };
-    CustomPanGestureDetector.prototype.getMotionEventCenter = function (event) {
+    CustomPanGestureDetector.prototype.getEventCoordinates = function (event) {
         var count = event.getPointerCount();
-        var res = { x: 0, y: 0 };
-        for (var i = 0; i < count; i++) {
-            res.x += event.getX(i);
-            res.y += event.getY(i);
+        if (count === 1) {
+            return {
+                x: event.getRawX() / this.density,
+                y: event.getRawY() / this.density
+            };
         }
-        res.x /= (count * this.density);
-        res.y /= (count * this.density);
-        return res;
+        else {
+            var offX = event.getRawX() - event.getX();
+            var offY = event.getRawY() - event.getY();
+            var res = { x: 0, y: 0 };
+            for (var i = 0; i < count; i++) {
+                res.x += event.getX(i) + offX;
+                res.y += event.getY(i) + offY;
+            }
+            res.x /= (count * this.density);
+            res.y /= (count * this.density);
+            return res;
+        }
     };
     return CustomPanGestureDetector;
 }());

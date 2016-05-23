@@ -115,8 +115,8 @@ var isEnabledProperty = new dependency_observable_1.Property("isEnabled", "View"
 var isUserInteractionEnabledProperty = new dependency_observable_1.Property("isUserInteractionEnabled", "View", new proxy_1.PropertyMetadata(true));
 var View = (function (_super) {
     __extends(View, _super);
-    function View(options) {
-        _super.call(this);
+    function View() {
+        _super.call(this, {});
         this._isVisibleCache = true;
         this._measuredWidth = Number.NaN;
         this._measuredHeight = Number.NaN;
@@ -130,7 +130,6 @@ var View = (function (_super) {
         this._isAddedToNativeVisualTree = false;
         this._cssClasses = [];
         this._gestureObservers = {};
-        this._options = options;
         this._style = new style.Style(this);
         this._domId = viewIdCounter++;
         this._visualState = visualStateConstants.Normal;

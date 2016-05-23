@@ -2,14 +2,14 @@
   "_args": [
     [
       "tns-core-modules-widgets@2.0.0",
-      "/home/dat/nativescript_angular2/Claroline Connect/node_modules/tns-core-modules"
+      "/home/dat/nativescript_angular2/connect/node_modules/tns-core-modules"
     ]
   ],
   "_from": "tns-core-modules-widgets@2.0.0",
   "_id": "tns-core-modules-widgets@2.0.0",
   "_inCache": true,
   "_installable": true,
-  "_location": "/tns-core-modules/tns-core-modules-widgets",
+  "_location": "/tns-core-modules-widgets",
   "_nodeVersion": "5.10.0",
   "_npmOperationalInternal": {
     "host": "packages-12-west.internal.npmjs.com",
@@ -36,7 +36,7 @@
   "_shasum": "0369fd83fc30df95c33bedfa3f0c0183fd62576f",
   "_shrinkwrap": null,
   "_spec": "tns-core-modules-widgets@2.0.0",
-  "_where": "/home/dat/nativescript_angular2/Claroline Connect/node_modules/tns-core-modules",
+  "_where": "/home/dat/nativescript_angular2/connect/node_modules/tns-core-modules",
   "author": {
     "name": "NativeScript team"
   },

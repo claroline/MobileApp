@@ -1,30 +1,15 @@
-var observable = require("data/observable");
-var dependencyObservable = require("ui/core/dependency-observable");
+var observable_1 = require("data/observable");
+var dependency_observable_1 = require("ui/core/dependency-observable");
 var weakEvents = require("ui/core/weak-event-listener");
 var types = require("utils/types");
 var trace = require("trace");
 var bindingBuilder = require("../builder/binding-builder");
 var viewModule = require("ui/core/view");
+var application = require("application");
+var polymerExpressions = require("js-libs/polymer-expressions");
+var specialProperties = require("ui/builder/special-properties");
 var utils = require("utils/utils");
-var application;
-function ensureApplication() {
-    if (!application) {
-        application = require("application");
-    }
-}
-var expressions;
-function ensureExpressions() {
-    if (!expressions) {
-        expressions = require("js-libs/polymer-expressions");
-    }
-}
-var specialProperties;
-function ensureSpecialProperties() {
-    if (!specialProperties) {
-        specialProperties = require("ui/builder/special-properties");
-    }
-}
-var bindingContextProperty = new dependencyObservable.Property("bindingContext", "Bindable", new dependencyObservable.PropertyMetadata(undefined, dependencyObservable.PropertyMetadataSettings.Inheritable, onBindingContextChanged));
+var bindingContextProperty = new dependency_observable_1.Property("bindingContext", "Bindable", new dependency_observable_1.PropertyMetadata(undefined, dependency_observable_1.PropertyMetadataSettings.Inheritable, onBindingContextChanged));
 function onBindingContextChanged(data) {
     var bindable = data.object;
     bindable._onBindingContextChanged(data.oldValue, data.newValue);
@@ -32,21 +17,13 @@ function onBindingContextChanged(data) {
 var contextKey = "context";
 var paramsRegex = /\[\s*(['"])*(\w*)\1\s*\]/;
 var bc = bindingBuilder.bindingConstants;
+var defaultBindingSource = {};
 var Bindable = (function (_super) {
     __extends(Bindable, _super);
     function Bindable() {
         _super.apply(this, arguments);
+        this.bindings = new Map();
     }
-    Object.defineProperty(Bindable.prototype, "bindings", {
-        get: function () {
-            if (!this._bindings) {
-                this._bindings = {};
-            }
-            return this._bindings;
-        },
-        enumerable: true,
-        configurable: true
-    });
     Object.defineProperty(Bindable.prototype, "bindingContext", {
         get: function () {
             return this._getValue(Bindable.bindingContextProperty);
@@ -58,14 +35,15 @@ var Bindable = (function (_super) {
         configurable: true
     });
     Bindable.prototype.bind = function (options, source) {
-        var binding = this.bindings[options.targetProperty];
+        if (source === void 0) { source = defaultBindingSource; }
+        var binding = this.bindings.get(options.targetProperty);
         if (binding) {
             binding.unbind();
         }
         binding = new Binding(this, options);
-        this.bindings[options.targetProperty] = binding;
+        this.bindings.set(options.targetProperty, binding);
         var bindingSource = source;
-        if (!bindingSource) {
+        if (bindingSource === defaultBindingSource) {
             bindingSource = this.bindingContext;
             binding.sourceIsBindingContext = true;
         }
@@ -74,14 +52,14 @@ var Bindable = (function (_super) {
         }
     };
     Bindable.prototype.unbind = function (property) {
-        var binding = this.bindings[property];
+        var binding = this.bindings.get(property);
         if (binding) {
             binding.unbind();
-            delete this.bindings[property];
+            this.bindings.delete(property);
         }
     };
     Bindable.prototype._updateTwoWayBinding = function (propertyName, value) {
-        var binding = this.bindings[propertyName];
+        var binding = this.bindings.get(propertyName);
         if (binding) {
             binding.updateTwoWay(value);
         }
@@ -98,7 +76,7 @@ var Bindable = (function (_super) {
                 return;
             }
         }
-        var binding = this.bindings[property.name];
+        var binding = this.bindings.get(property.name);
         if (binding && !binding.updating) {
             if (binding.options.twoWay) {
                 trace.write((this + "._updateTwoWayBinding(" + property.name + ", " + newValue + ");") + property.name, trace.categories.Binding);
@@ -111,101 +89,103 @@ var Bindable = (function (_super) {
         }
     };
     Bindable.prototype._onBindingContextChanged = function (oldValue, newValue) {
-        var binding;
-        for (var p in this.bindings) {
-            binding = this.bindings[p];
-            if (binding.updating || !binding.sourceIsBindingContext) {
-                continue;
-            }
-            trace.write("Binding " + binding.target.get() + "." + binding.options.targetProperty + " to new context " + newValue, trace.categories.Binding);
-            binding.unbind();
-            if (!types.isNullOrUndefined(newValue)) {
+        this.bindings.forEach(function (binding, index, bindings) {
+            if (!binding.updating && binding.sourceIsBindingContext) {
+                trace.write("Binding " + binding.target.get() + "." + binding.options.targetProperty + " to new context " + newValue, trace.categories.Binding);
                 binding.bind(newValue);
             }
-        }
+        });
     };
     Bindable.bindingContextProperty = bindingContextProperty;
     return Bindable;
-}(dependencyObservable.DependencyObservable));
+}(dependency_observable_1.DependencyObservable));
 exports.Bindable = Bindable;
+var emptyArray = [];
+function getProperties(property) {
+    var result = emptyArray;
+    if (property) {
+        var parentsMatches = property.match(bindingBuilder.parentsRegex);
+        result = property.replace(bindingBuilder.parentsRegex, "parentsMatch")
+            .replace(/\]/g, "")
+            .split(/\.|\[/);
+        var parentsMatchesCounter = 0;
+        for (var i = 0, resultLength = result.length; i < resultLength; i++) {
+            if (result[i] === "parentsMatch") {
+                result[i] = parentsMatches[parentsMatchesCounter++];
+            }
+        }
+    }
+    return result;
+}
 var Binding = (function () {
     function Binding(target, options) {
-        this.updating = false;
-        this.propertyChangeListeners = {};
+        this.propertyChangeListeners = new Map();
         this.target = new WeakRef(target);
         this.options = options;
+        this.sourceProperties = getProperties(options.sourceProperty);
+        this.targetOptions = this.resolveOptions(target, getProperties(options.targetProperty));
     }
     Binding.prototype.loadedHandlerVisualTreeBinding = function (args) {
-        var targetInstance = args.object;
-        targetInstance.off(viewModule.View.loadedEvent, this.loadedHandlerVisualTreeBinding, this);
-        this.unbind();
-        if (!types.isNullOrUndefined(targetInstance.bindingContext)) {
-            this.bind(targetInstance.bindingContext);
+        var target = args.object;
+        target.off(viewModule.View.loadedEvent, this.loadedHandlerVisualTreeBinding, this);
+        if (!types.isNullOrUndefined(target.bindingContext)) {
+            this.bind(target.bindingContext);
         }
     };
     ;
-    Binding.prototype.bind = function (obj) {
-        if (types.isNullOrUndefined(obj)) {
-            throw new Error("Expected valid object reference as a source in the Binding.bind method.");
+    Binding.prototype.clearSource = function () {
+        var _this = this;
+        this.propertyChangeListeners.forEach(function (observable, index, map) {
+            weakEvents.removeWeakEventListener(observable, observable_1.Observable.propertyChangeEvent, _this.onSourcePropertyChanged, _this);
+        });
+        this.propertyChangeListeners.clear();
+        this.sourcesAndProperties = null;
+        if (this.source) {
+            this.source.clear();
         }
-        if (typeof (obj) === "number") {
-            obj = new Number(obj);
+        if (this.sourceOptions) {
+            this.sourceOptions.instance.clear();
+            this.sourceOptions = undefined;
         }
-        if (typeof (obj) === "boolean") {
-            obj = new Boolean(obj);
-        }
-        if (typeof (obj) === "string") {
-            obj = new String(obj);
-        }
-        this.source = new WeakRef(obj);
-        this.updateTarget(this.getSourcePropertyValue());
-        if (!this.sourceOptions) {
-            this.sourceOptions = this.resolveOptions(this.source, this.getSourceProperties());
-        }
-        this.addPropertyChangeListeners(this.source, this.getSourceProperties());
     };
-    Binding.prototype.getSourceProperties = function () {
-        if (!this.sourcePropertiesArray) {
-            this.sourcePropertiesArray = Binding.getProperties(this.options.sourceProperty);
+    Binding.prototype.sourceAsObject = function (source) {
+        var objectType = typeof source;
+        if (objectType === "number") {
+            source = new Number(source);
         }
-        return this.sourcePropertiesArray;
+        else if (objectType === "boolean") {
+            source = new Boolean(source);
+        }
+        else if (objectType === "string") {
+            source = new String(source);
+        }
+        return source;
     };
-    Binding.getProperties = function (property) {
-        var result;
-        if (property) {
-            var parentsMatches = property.match(bindingBuilder.parentsRegex);
-            result = property.replace(bindingBuilder.parentsRegex, "parentsMatch")
-                .replace(/\]/g, "")
-                .split(/\.|\[/);
-            var i;
-            var resultLength = result.length;
-            var parentsMatchesCounter = 0;
-            for (i = 0; i < resultLength; i++) {
-                if (result[i] === "parentsMatch") {
-                    result[i] = parentsMatches[parentsMatchesCounter];
-                    parentsMatchesCounter++;
-                }
-            }
-            return result;
+    Binding.prototype.bind = function (source) {
+        this.clearSource();
+        source = this.sourceAsObject(source);
+        if (!types.isNullOrUndefined(source)) {
+            this.source = new WeakRef(source);
+            this.sourceOptions = this.resolveOptions(source, this.sourceProperties);
+            var sourceValue = this.getSourcePropertyValue();
+            this.updateTarget(sourceValue);
+            this.addPropertyChangeListeners(this.source, this.sourceProperties);
         }
         else {
-            return [];
+            this.updateTarget(source);
         }
     };
-    Binding.prototype.resolveObjectsAndProperties = function (source, propsArray) {
+    Binding.prototype.resolveObjectsAndProperties = function (source, properties) {
         var result = [];
-        var i;
-        var propsArrayLength = propsArray.length;
         var currentObject = source;
-        var objProp = "";
         var currentObjectChanged = false;
-        for (i = 0; i < propsArrayLength; i++) {
-            objProp = propsArray[i];
-            if (objProp === bc.bindingValueKey) {
+        for (var i = 0, propsArrayLength = properties.length; i < propsArrayLength; i++) {
+            var property = properties[i];
+            if (property === bc.bindingValueKey) {
                 currentObjectChanged = true;
             }
-            if (objProp === bc.parentValueKey || objProp.indexOf(bc.parentsValueKey) === 0) {
-                var parentView = this.getParentView(this.target.get(), objProp).view;
+            if (property === bc.parentValueKey || property.indexOf(bc.parentsValueKey) === 0) {
+                var parentView = this.getParentView(this.target.get(), property).view;
                 if (parentView) {
                     currentObject = parentView.bindingContext;
                 }
@@ -217,30 +197,27 @@ var Binding = (function () {
                 currentObjectChanged = true;
             }
             if (currentObject) {
-                result.push({ instance: currentObject, property: objProp });
+                result.push({ instance: currentObject, property: property });
             }
             else {
                 break;
             }
             if (!currentObjectChanged && (i < propsArrayLength - 1)) {
-                currentObject = currentObject ? currentObject[propsArray[i]] : null;
+                currentObject = currentObject ? currentObject[properties[i]] : null;
             }
             currentObjectChanged = false;
         }
         return result;
     };
-    Binding.prototype.addPropertyChangeListeners = function (source, sourceProperty) {
+    Binding.prototype.addPropertyChangeListeners = function (source, sourceProperty, parentProperies) {
         var objectsAndProperties = this.resolveObjectsAndProperties(source.get(), sourceProperty);
-        var objectsAndPropertiesLength = objectsAndProperties.length;
-        if (objectsAndPropertiesLength > 0) {
-            var i;
-            for (i = 0; i < objectsAndPropertiesLength; i++) {
-                var prop = objectsAndProperties[i].property;
-                var currentObject = objectsAndProperties[i].instance;
-                if (!this.propertyChangeListeners[prop] && currentObject instanceof observable.Observable) {
-                    weakEvents.addWeakEventListener(currentObject, observable.Observable.propertyChangeEvent, this.onSourcePropertyChanged, this);
-                    this.propertyChangeListeners[prop] = currentObject;
-                }
+        var prop = parentProperies || "";
+        for (var i = 0, length_1 = objectsAndProperties.length; i < length_1; i++) {
+            prop += "$" + objectsAndProperties[i].property;
+            var currentObject = objectsAndProperties[i].instance;
+            if (!this.propertyChangeListeners.has(prop) && currentObject instanceof observable_1.Observable) {
+                weakEvents.addWeakEventListener(currentObject, observable_1.Observable.propertyChangeEvent, this.onSourcePropertyChanged, this);
+                this.propertyChangeListeners.set(prop, currentObject);
             }
         }
     };
@@ -248,23 +225,11 @@ var Binding = (function () {
         if (!this.source) {
             return;
         }
-        var i;
-        var propertyChangeListenersKeys = Object.keys(this.propertyChangeListeners);
-        for (i = 0; i < propertyChangeListenersKeys.length; i++) {
-            weakEvents.removeWeakEventListener(this.propertyChangeListeners[propertyChangeListenersKeys[i]], observable.Observable.propertyChangeEvent, this.onSourcePropertyChanged, this);
-            delete this.propertyChangeListeners[propertyChangeListenersKeys[i]];
-        }
-        if (this.source) {
-            this.source.clear();
-        }
-        if (this.sourceOptions) {
-            this.sourceOptions.instance.clear();
-            this.sourceOptions = undefined;
-        }
+        this.clearSource();
         if (this.targetOptions) {
             this.targetOptions = undefined;
         }
-        this.sourcePropertiesArray = undefined;
+        this.sourceProperties = undefined;
     };
     Binding.prototype.prepareExpressionForUpdate = function () {
         var escapedSourceProperty = utils.escapeRegexSymbols(this.options.sourceProperty);
@@ -273,55 +238,56 @@ var Binding = (function () {
         return resultExp;
     };
     Binding.prototype.updateTwoWay = function (value) {
-        if (this.updating) {
+        if (this.updating || !this.options.twoWay) {
             return;
         }
-        if (this.options.twoWay) {
-            if (this.options.expression) {
-                var changedModel = {};
-                changedModel[bc.bindingValueKey] = value;
-                changedModel[bc.newPropertyValueKey] = value;
-                var sourcePropertyName = "";
-                if (this.sourceOptions) {
-                    sourcePropertyName = this.sourceOptions.property;
-                }
-                else if (typeof this.options.sourceProperty === "string" && this.options.sourceProperty.indexOf(".") === -1) {
-                    sourcePropertyName = this.options.sourceProperty;
-                }
-                if (sourcePropertyName !== "") {
-                    changedModel[sourcePropertyName] = value;
-                }
-                var updateExpression = this.prepareExpressionForUpdate();
-                this.prepareContextForExpression(changedModel, updateExpression);
-                var expressionValue = this._getExpressionValue(updateExpression, true, changedModel);
-                if (expressionValue instanceof Error) {
-                    trace.write(expressionValue.message, trace.categories.Binding, trace.messageType.error);
-                }
-                else {
-                    this.updateSource(expressionValue);
-                }
+        var newValue = value;
+        if (this.options.expression) {
+            var changedModel = {};
+            changedModel[bc.bindingValueKey] = value;
+            changedModel[bc.newPropertyValueKey] = value;
+            var sourcePropertyName = "";
+            if (this.sourceOptions) {
+                sourcePropertyName = this.sourceOptions.property;
             }
-            else {
-                this.updateSource(value);
+            else if (typeof this.options.sourceProperty === "string" && this.options.sourceProperty.indexOf(".") === -1) {
+                sourcePropertyName = this.options.sourceProperty;
             }
+            if (sourcePropertyName !== "") {
+                changedModel[sourcePropertyName] = value;
+            }
+            var updateExpression = this.prepareExpressionForUpdate();
+            this.prepareContextForExpression(changedModel, updateExpression, undefined);
+            var expressionValue = this._getExpressionValue(updateExpression, true, changedModel);
+            if (expressionValue instanceof Error) {
+                trace.write(expressionValue.message, trace.categories.Binding, trace.messageType.error);
+            }
+            newValue = expressionValue;
         }
+        this.updateSource(newValue);
     };
     Binding.prototype._getExpressionValue = function (expression, isBackConvert, changedModel) {
         try {
-            ensureExpressions();
-            var exp = expressions.PolymerExpressions.getExpression(expression);
-            if (exp) {
-                var context = this.source && this.source.get && this.source.get() || global;
+            var exp_1 = polymerExpressions.PolymerExpressions.getExpression(expression);
+            if (exp_1) {
+                var context_1 = this.source && this.source.get && this.source.get() || global;
                 var model = {};
-                ensureApplication();
+                var addedProps = [];
                 for (var prop in application.resources) {
-                    if (application.resources.hasOwnProperty(prop) && !context.hasOwnProperty(prop)) {
-                        context[prop] = application.resources[prop];
+                    if (application.resources.hasOwnProperty(prop) && !context_1.hasOwnProperty(prop)) {
+                        context_1[prop] = application.resources[prop];
+                        addedProps.push(prop);
                     }
                 }
-                this.prepareContextForExpression(context, expression);
-                model[contextKey] = context;
-                return exp.getValue(model, isBackConvert, changedModel ? changedModel : model);
+                this.prepareContextForExpression(context_1, expression, addedProps);
+                model[contextKey] = context_1;
+                var result = exp_1.getValue(model, isBackConvert, changedModel ? changedModel : model);
+                var addedPropsLength = addedProps.length;
+                for (var i = 0; i < addedPropsLength; i++) {
+                    delete context_1[addedProps[i]];
+                }
+                addedProps.length = 0;
+                return result;
             }
             return new Error(expression + " is not a valid expression.");
         }
@@ -331,6 +297,17 @@ var Binding = (function () {
         }
     };
     Binding.prototype.onSourcePropertyChanged = function (data) {
+        var sourceProps = this.sourceProperties;
+        var sourcePropsLength = sourceProps.length;
+        var changedPropertyIndex = sourceProps.indexOf(data.propertyName);
+        var parentProps = "";
+        if (changedPropertyIndex > -1) {
+            parentProps = "$" + sourceProps.slice(0, changedPropertyIndex + 1).join("$");
+            while (this.propertyChangeListeners.get(parentProps) !== data.object) {
+                changedPropertyIndex += sourceProps.slice(changedPropertyIndex + 1).indexOf(data.propertyName) + 1;
+                parentProps = "$" + sourceProps.slice(0, changedPropertyIndex + 1).join("$");
+            }
+        }
         if (this.options.expression) {
             var expressionValue = this._getExpressionValue(this.options.expression, false, undefined);
             if (expressionValue instanceof Error) {
@@ -341,14 +318,12 @@ var Binding = (function () {
             }
         }
         else {
-            var propIndex = this.getSourceProperties().indexOf(data.propertyName);
-            if (propIndex > -1) {
-                var props = this.getSourceProperties().slice(propIndex + 1);
+            if (changedPropertyIndex > -1) {
+                var props = sourceProps.slice(changedPropertyIndex + 1);
                 var propsLength = props.length;
                 if (propsLength > 0) {
                     var value = data.value;
-                    var i;
-                    for (i = 0; i < propsLength; i++) {
+                    for (var i = 0; i < propsLength; i++) {
                         value = value[props[i]];
                     }
                     this.updateTarget(value);
@@ -358,42 +333,48 @@ var Binding = (function () {
                 }
             }
         }
-        var sourceProps = Binding.getProperties(this.options.sourceProperty);
-        var sourcePropsLength = sourceProps.length;
-        var changedPropertyIndex = sourceProps.indexOf(data.propertyName);
-        if (changedPropertyIndex > -1) {
-            var probablyChangedObject = this.propertyChangeListeners[sourceProps[changedPropertyIndex + 1]];
+        if (changedPropertyIndex > -1 && changedPropertyIndex < sourcePropsLength - 1) {
+            var probablyChangedObject = this.propertyChangeListeners.get(parentProps);
             if (probablyChangedObject &&
                 probablyChangedObject !== data.object[sourceProps[changedPropertyIndex]]) {
-                for (i = sourcePropsLength - 1; i > changedPropertyIndex; i--) {
-                    weakEvents.removeWeakEventListener(this.propertyChangeListeners[sourceProps[i]], observable.Observable.propertyChangeEvent, this.onSourcePropertyChanged, this);
-                    delete this.propertyChangeListeners[sourceProps[i]];
+                for (var i = sourcePropsLength - 1; i > changedPropertyIndex; i--) {
+                    var prop = "$" + sourceProps.slice(0, i + 1).join("$");
+                    if (this.propertyChangeListeners.has(prop)) {
+                        weakEvents.removeWeakEventListener(this.propertyChangeListeners.get(prop), observable_1.Observable.propertyChangeEvent, this.onSourcePropertyChanged, this);
+                        this.propertyChangeListeners.delete(prop);
+                    }
                 }
                 var newProps = sourceProps.slice(changedPropertyIndex + 1);
-                this.addPropertyChangeListeners(new WeakRef(data.object[sourceProps[changedPropertyIndex]]), newProps);
+                var newObject = data.object[sourceProps[changedPropertyIndex]];
+                if (!types.isNullOrUndefined(newObject) && typeof newObject === 'object') {
+                    this.addPropertyChangeListeners(new WeakRef(newObject), newProps, parentProps);
+                }
             }
         }
     };
-    Binding.prototype.prepareContextForExpression = function (model, expression) {
+    Binding.prototype.prepareContextForExpression = function (model, expression, newProps) {
         var parentViewAndIndex;
         var parentView;
+        var addedProps = newProps || [];
         if (expression.indexOf(bc.bindingValueKey) > -1) {
             model[bc.bindingValueKey] = model;
+            addedProps.push(bc.bindingValueKey);
         }
         if (expression.indexOf(bc.parentValueKey) > -1) {
             parentView = this.getParentView(this.target.get(), bc.parentValueKey).view;
             if (parentView) {
                 model[bc.parentValueKey] = parentView.bindingContext;
+                addedProps.push(bc.parentValueKey);
             }
         }
         var parentsArray = expression.match(bindingBuilder.parentsRegex);
         if (parentsArray) {
-            var i;
-            for (i = 0; i < parentsArray.length; i++) {
+            for (var i = 0; i < parentsArray.length; i++) {
                 parentViewAndIndex = this.getParentView(this.target.get(), parentsArray[i]);
                 if (parentViewAndIndex.view) {
                     model[bc.parentsValueKey] = model[bc.parentsValueKey] || {};
                     model[bc.parentsValueKey][parentViewAndIndex.index] = parentViewAndIndex.view.bindingContext;
+                    addedProps.push(bc.parentsValueKey);
                 }
             }
         }
@@ -410,43 +391,33 @@ var Binding = (function () {
                 return expressionValue;
             }
         }
-        if (!this.sourceOptions) {
-            this.sourceOptions = this.resolveOptions(this.source, this.getSourceProperties());
-        }
-        var value;
         if (this.sourceOptions) {
             var sourceOptionsInstance = this.sourceOptions.instance.get();
             if (this.sourceOptions.property === bc.bindingValueKey) {
-                value = sourceOptionsInstance;
+                return sourceOptionsInstance;
             }
-            else if ((sourceOptionsInstance instanceof observable.Observable) && (this.sourceOptions.property && this.sourceOptions.property !== "")) {
-                value = sourceOptionsInstance.get(this.sourceOptions.property);
+            else if ((sourceOptionsInstance instanceof observable_1.Observable) && (this.sourceOptions.property && this.sourceOptions.property !== "")) {
+                return sourceOptionsInstance.get(this.sourceOptions.property);
             }
             else if (sourceOptionsInstance && this.sourceOptions.property && this.sourceOptions.property !== "" &&
                 this.sourceOptions.property in sourceOptionsInstance) {
-                value = sourceOptionsInstance[this.sourceOptions.property];
+                return sourceOptionsInstance[this.sourceOptions.property];
             }
             else {
                 trace.write("Property: '" + this.sourceOptions.property + "' is invalid or does not exist. SourceProperty: '" + this.options.sourceProperty + "'", trace.categories.Binding, trace.messageType.error);
             }
         }
-        return value;
+        return null;
     };
     Binding.prototype.updateTarget = function (value) {
-        if (this.updating || (!this.target || !this.target.get())) {
+        if (this.updating) {
             return;
-        }
-        if (!this.targetOptions) {
-            this.targetOptions = this.resolveOptions(this.target, Binding.getProperties(this.options.targetProperty));
         }
         this.updateOptions(this.targetOptions, value);
     };
     Binding.prototype.updateSource = function (value) {
-        if (this.updating || (!this.source || !this.source.get())) {
+        if (this.updating || !this.source || !this.source.get()) {
             return;
-        }
-        if (!this.sourceOptions) {
-            this.sourceOptions = this.resolveOptions(this.source, this.getSourceProperties());
         }
         this.updateOptions(this.sourceOptions, value);
     };
@@ -458,10 +429,10 @@ var Binding = (function () {
         if (property === bc.parentValueKey) {
             result = target.parent;
         }
+        var index = null;
         if (property.indexOf(bc.parentsValueKey) === 0) {
             result = target.parent;
             var indexParams = paramsRegex.exec(property);
-            var index;
             if (indexParams && indexParams.length > 1) {
                 index = indexParams[2];
             }
@@ -481,12 +452,12 @@ var Binding = (function () {
         return { view: result, index: index };
     };
     Binding.prototype.resolveOptions = function (obj, properties) {
-        var objectsAndProperties = this.resolveObjectsAndProperties(obj.get(), properties);
+        var objectsAndProperties = this.resolveObjectsAndProperties(obj, properties);
         if (objectsAndProperties.length > 0) {
             var resolvedObj = objectsAndProperties[objectsAndProperties.length - 1].instance;
             var prop = objectsAndProperties[objectsAndProperties.length - 1].property;
             return {
-                instance: new WeakRef(resolvedObj),
+                instance: new WeakRef(this.sourceAsObject(resolvedObj)),
                 property: prop
             };
         }
@@ -509,13 +480,12 @@ var Binding = (function () {
                 optionsInstance.on(options.property, value, optionsInstance.bindingContext);
             }
             else {
-                ensureSpecialProperties();
                 var specialSetter = specialProperties.getSpecialPropertySetter(options.property);
                 if (specialSetter) {
                     specialSetter(optionsInstance, value);
                 }
                 else {
-                    if (optionsInstance instanceof observable.Observable) {
+                    if (optionsInstance instanceof observable_1.Observable) {
                         optionsInstance.set(options.property, value);
                     }
                     else {

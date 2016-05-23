@@ -41,8 +41,8 @@ function onHintPropertyChanged(data) {
 exports.hintProperty.metadata.onSetNativeValue = onHintPropertyChanged;
 var EditableTextBase = (function (_super) {
     __extends(EditableTextBase, _super);
-    function EditableTextBase(options) {
-        _super.call(this, options);
+    function EditableTextBase() {
+        _super.apply(this, arguments);
     }
     Object.defineProperty(EditableTextBase.prototype, "keyboardType", {
         get: function () {

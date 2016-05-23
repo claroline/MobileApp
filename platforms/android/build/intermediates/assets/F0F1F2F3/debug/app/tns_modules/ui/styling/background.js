@@ -33,6 +33,19 @@ var ad;
                 this._density = utils.layout.getDisplayDensity();
                 return global.__native(this);
             }
+            Object.defineProperty(BorderDrawable.prototype, "clipPath", {
+                get: function () {
+                    return this._clipPath;
+                },
+                set: function (value) {
+                    if (this._clipPath !== value) {
+                        this._clipPath = value;
+                        this.invalidateSelf();
+                    }
+                },
+                enumerable: true,
+                configurable: true
+            });
             Object.defineProperty(BorderDrawable.prototype, "borderWidth", {
                 get: function () {
                     return this._borderWidth;
@@ -98,7 +111,12 @@ var ad;
                     backgroundColorPaint.setStyle(android.graphics.Paint.Style.FILL);
                     backgroundColorPaint.setColor(this.background.color.android);
                     backgroundColorPaint.setAntiAlias(true);
-                    canvas.drawRoundRect(backgroundBoundsF, outerRadius, outerRadius, backgroundColorPaint);
+                    if (this.clipPath) {
+                        drawClipPath(this.clipPath, canvas, backgroundColorPaint, backgroundBoundsF);
+                    }
+                    else {
+                        canvas.drawRoundRect(backgroundBoundsF, outerRadius, outerRadius, backgroundColorPaint);
+                    }
                 }
                 if (this.background.image) {
                     var bitmap = this.background.image.android;
@@ -122,20 +140,25 @@ var ad;
                     var imageHeight = params.repeatY ? bounds.height() : params.sizeY;
                     params.posX = params.repeatX ? 0 : params.posX;
                     params.posY = params.repeatY ? 0 : params.posY;
-                    var supportsPathOp = android.os.Build.VERSION.SDK_INT >= 19;
-                    if (supportsPathOp) {
-                        var backgroundPath = new android.graphics.Path();
-                        backgroundPath.addRoundRect(backgroundBoundsF, outerRadius, outerRadius, android.graphics.Path.Direction.CCW);
-                        var backgroundNoRepeatPath = new android.graphics.Path();
-                        backgroundNoRepeatPath.addRect(params.posX, params.posY, params.posX + imageWidth, params.posY + imageHeight, android.graphics.Path.Direction.CCW);
-                        backgroundPath.op(backgroundNoRepeatPath, android.graphics.Path.Op.INTERSECT);
-                        canvas.drawPath(backgroundPath, backgroundImagePaint);
+                    if (this.clipPath) {
+                        drawClipPath(this.clipPath, canvas, backgroundImagePaint, backgroundBoundsF);
                     }
                     else {
-                        canvas.save();
-                        canvas.clipRect(params.posX, params.posY, params.posX + imageWidth, params.posY + imageHeight);
-                        canvas.drawRoundRect(backgroundBoundsF, outerRadius, outerRadius, backgroundImagePaint);
-                        canvas.restore();
+                        var supportsPathOp = android.os.Build.VERSION.SDK_INT >= 19;
+                        if (supportsPathOp) {
+                            var backgroundPath = new android.graphics.Path();
+                            backgroundPath.addRoundRect(backgroundBoundsF, outerRadius, outerRadius, android.graphics.Path.Direction.CCW);
+                            var backgroundNoRepeatPath = new android.graphics.Path();
+                            backgroundNoRepeatPath.addRect(params.posX, params.posY, params.posX + imageWidth, params.posY + imageHeight, android.graphics.Path.Direction.CCW);
+                            backgroundPath.op(backgroundNoRepeatPath, android.graphics.Path.Op.INTERSECT);
+                            canvas.drawPath(backgroundPath, backgroundImagePaint);
+                        }
+                        else {
+                            canvas.save();
+                            canvas.clipRect(params.posX, params.posY, params.posX + imageWidth, params.posY + imageHeight);
+                            canvas.drawRoundRect(backgroundBoundsF, outerRadius, outerRadius, backgroundImagePaint);
+                            canvas.restore();
+                        }
                     }
                 }
                 if (borderWidth > 0 && this._borderColor) {
@@ -143,25 +166,32 @@ var ad;
                     var borderPaint = new android.graphics.Paint();
                     borderPaint.setColor(this._borderColor);
                     borderPaint.setAntiAlias(true);
-                    if (outerRadius <= 0) {
+                    if (this.clipPath) {
                         borderPaint.setStyle(android.graphics.Paint.Style.STROKE);
                         borderPaint.setStrokeWidth(borderWidth);
-                        canvas.drawRect(middleBoundsF, borderPaint);
-                    }
-                    else if (outerRadius >= borderWidth) {
-                        borderPaint.setStyle(android.graphics.Paint.Style.STROKE);
-                        borderPaint.setStrokeWidth(borderWidth);
-                        var middleRadius = Math.max(0, outerRadius - halfBorderWidth);
-                        canvas.drawRoundRect(middleBoundsF, middleRadius, middleRadius, borderPaint);
+                        drawClipPath(this.clipPath, canvas, borderPaint, backgroundBoundsF);
                     }
                     else {
-                        var borderPath = new android.graphics.Path();
-                        var borderOuterBoundsF = new android.graphics.RectF(bounds.left, bounds.top, bounds.right, bounds.bottom);
-                        borderPath.addRoundRect(borderOuterBoundsF, outerRadius, outerRadius, android.graphics.Path.Direction.CCW);
-                        var borderInnerBoundsF = new android.graphics.RectF(bounds.left + borderWidth, bounds.top + borderWidth, bounds.right - borderWidth, bounds.bottom - borderWidth);
-                        borderPath.addRect(borderInnerBoundsF, android.graphics.Path.Direction.CW);
-                        borderPaint.setStyle(android.graphics.Paint.Style.FILL);
-                        canvas.drawPath(borderPath, borderPaint);
+                        if (outerRadius <= 0) {
+                            borderPaint.setStyle(android.graphics.Paint.Style.STROKE);
+                            borderPaint.setStrokeWidth(borderWidth);
+                            canvas.drawRect(middleBoundsF, borderPaint);
+                        }
+                        else if (outerRadius >= borderWidth) {
+                            borderPaint.setStyle(android.graphics.Paint.Style.STROKE);
+                            borderPaint.setStrokeWidth(borderWidth);
+                            var middleRadius = Math.max(0, outerRadius - halfBorderWidth);
+                            canvas.drawRoundRect(middleBoundsF, middleRadius, middleRadius, borderPaint);
+                        }
+                        else {
+                            var borderPath = new android.graphics.Path();
+                            var borderOuterBoundsF = new android.graphics.RectF(bounds.left, bounds.top, bounds.right, bounds.bottom);
+                            borderPath.addRoundRect(borderOuterBoundsF, outerRadius, outerRadius, android.graphics.Path.Direction.CCW);
+                            var borderInnerBoundsF = new android.graphics.RectF(bounds.left + borderWidth, bounds.top + borderWidth, bounds.right - borderWidth, bounds.bottom - borderWidth);
+                            borderPath.addRect(borderInnerBoundsF, android.graphics.Path.Direction.CW);
+                            borderPaint.setStyle(android.graphics.Paint.Style.FILL);
+                            canvas.drawPath(borderPath, borderPaint);
+                        }
                     }
                 }
             };
@@ -184,18 +214,19 @@ var ad;
         }
         ensureBorderDrawable();
         ensureLazyRequires();
+        var clipPathValue = v.style._getValue(style.clipPathProperty);
         var backgroundValue = v.style._getValue(style.backgroundInternalProperty);
         var borderWidth = v.borderWidth;
         var bkg = nativeView.getBackground();
         if (v instanceof button.Button && !types.isNullOrUndefined(bkg) && types.isFunction(bkg.setColorFilter) &&
-            v.borderWidth === 0 && v.borderRadius === 0 &&
+            v.borderWidth === 0 && v.borderRadius === 0 && !clipPathValue &&
             types.isNullOrUndefined(v.style._getValue(style.backgroundImageProperty)) &&
             !types.isNullOrUndefined(v.style._getValue(style.backgroundColorProperty))) {
             var backgroundColor = bkg.backgroundColor = v.style._getValue(style.backgroundColorProperty).android;
             bkg.setColorFilter(backgroundColor, android.graphics.PorterDuff.Mode.SRC_IN);
             bkg.backgroundColor = backgroundColor;
         }
-        else if (v.borderWidth !== 0 || v.borderRadius !== 0 || !backgroundValue.isEmpty()) {
+        else if (v.borderWidth !== 0 || v.borderRadius !== 0 || !backgroundValue.isEmpty() || clipPathValue) {
             if (!(bkg instanceof BorderDrawableClass)) {
                 bkg = new BorderDrawableClass();
                 var viewClass = types.getClass(v);
@@ -208,6 +239,7 @@ var ad;
             bkg.cornerRadius = v.borderRadius;
             bkg.borderColor = v.borderColor ? v.borderColor.android : android.graphics.Color.TRANSPARENT;
             bkg.background = backgroundValue;
+            bkg.clipPath = clipPathValue;
             if (getSDK() < 18) {
                 nativeView.setLayerType(android.view.View.LAYER_TYPE_SOFTWARE, null);
             }
@@ -235,3 +267,53 @@ var ad;
     }
     ad.onBackgroundOrBorderPropertyChanged = onBackgroundOrBorderPropertyChanged;
 })(ad = exports.ad || (exports.ad = {}));
+function drawClipPath(clipPath, canvas, paint, bounds) {
+    var functionName = clipPath.substring(0, clipPath.indexOf("("));
+    var value = clipPath.replace(functionName + "(", "").replace(")", "");
+    if (functionName === "rect") {
+        var arr = value.split(/[\s]+/);
+        var top = common.cssValueToDevicePixels(arr[0], bounds.top);
+        var left = common.cssValueToDevicePixels(arr[1], bounds.left);
+        var bottom = common.cssValueToDevicePixels(arr[2], bounds.bottom);
+        var right = common.cssValueToDevicePixels(arr[3], bounds.right);
+        canvas.drawRect(left, top, right, bottom, paint);
+    }
+    else if (functionName === "circle") {
+        var arr = value.split(/[\s]+/);
+        var radius = common.cssValueToDevicePixels(arr[0], (bounds.width() > bounds.height() ? bounds.height() : bounds.width()) / 2);
+        var y = common.cssValueToDevicePixels(arr[2], bounds.height());
+        var x = common.cssValueToDevicePixels(arr[3], bounds.width());
+        canvas.drawCircle(x, y, radius, paint);
+    }
+    else if (functionName === "ellipse") {
+        var arr = value.split(/[\s]+/);
+        var rX = common.cssValueToDevicePixels(arr[0], bounds.right);
+        var rY = common.cssValueToDevicePixels(arr[1], bounds.bottom);
+        var cX = common.cssValueToDevicePixels(arr[3], bounds.right);
+        var cY = common.cssValueToDevicePixels(arr[4], bounds.bottom);
+        var left = cX - rX;
+        var top = cY - rY;
+        var right = (rX * 2) + left;
+        var bottom = (rY * 2) + top;
+        canvas.drawOval(new android.graphics.RectF(left, top, right, bottom), paint);
+    }
+    else if (functionName === "polygon") {
+        var path = new android.graphics.Path();
+        var firstPoint;
+        var arr = value.split(/[,]+/);
+        for (var i = 0; i < arr.length; i++) {
+            var xy = arr[i].trim().split(/[\s]+/);
+            var point = {
+                x: common.cssValueToDevicePixels(xy[0], bounds.width()),
+                y: common.cssValueToDevicePixels(xy[1], bounds.height())
+            };
+            if (!firstPoint) {
+                firstPoint = point;
+                path.moveTo(point.x, point.y);
+            }
+            path.lineTo(point.x, point.y);
+        }
+        path.lineTo(firstPoint.x, firstPoint.y);
+        canvas.drawPath(path, paint);
+    }
+}

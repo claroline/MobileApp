@@ -1,6 +1,7 @@
 var colorModule = require("color");
 var enums = require("ui/enums");
 var cssValue = require("css-value");
+var utils = require("utils/utils");
 var types;
 function ensureTypes() {
     if (!types) {
@@ -180,3 +181,18 @@ var Background = (function () {
     return Background;
 }());
 exports.Background = Background;
+function cssValueToDevicePixels(source, total) {
+    var result;
+    source = source.trim();
+    if (source.indexOf("px") !== -1) {
+        result = parseFloat(source.replace("px", ""));
+    }
+    else if (source.indexOf("%") !== -1 && total > 0) {
+        result = (parseFloat(source.replace("%", "")) / 100) * utils.layout.toDeviceIndependentPixels(total);
+    }
+    else {
+        result = parseFloat(source);
+    }
+    return utils.layout.toDevicePixels(result);
+}
+exports.cssValueToDevicePixels = cssValueToDevicePixels;

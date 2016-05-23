@@ -154,14 +154,14 @@ var GridLayout = (function (_super) {
         GridLayout.validateItemSpec(itemSpec);
         itemSpec.owner = this;
         this._rows.push(itemSpec);
-        this.onRowAdded(itemSpec);
+        this._onRowAdded(itemSpec);
         this.invalidate();
     };
     GridLayout.prototype.addColumn = function (itemSpec) {
         GridLayout.validateItemSpec(itemSpec);
         itemSpec.owner = this;
         this._cols.push(itemSpec);
-        this.onColumnAdded(itemSpec);
+        this._onColumnAdded(itemSpec);
         this.invalidate();
     };
     GridLayout.prototype.removeRow = function (itemSpec) {
@@ -174,7 +174,7 @@ var GridLayout = (function (_super) {
         }
         itemSpec.index = -1;
         this._rows.splice(index, 1);
-        this.onRowRemoved(itemSpec, index);
+        this._onRowRemoved(itemSpec, index);
         this.invalidate();
     };
     GridLayout.prototype.removeColumn = function (itemSpec) {
@@ -187,19 +187,23 @@ var GridLayout = (function (_super) {
         }
         itemSpec.index = -1;
         this._cols.splice(index, 1);
-        this.onColumnRemoved(itemSpec, index);
+        this._onColumnRemoved(itemSpec, index);
         this.invalidate();
     };
     GridLayout.prototype.removeColumns = function () {
-        for (var i = 0; i < this._cols.length; i++) {
-            this._cols[i].index = -1;
+        for (var i = this._cols.length - 1; i >= 0; i--) {
+            var colSpec = this._cols[i];
+            this._onColumnRemoved(colSpec, i);
+            colSpec.index = -1;
         }
         this._cols.length = 0;
         this.invalidate();
     };
     GridLayout.prototype.removeRows = function () {
-        for (var i = 0; i < this._rows.length; i++) {
-            this._rows[i].index = -1;
+        for (var i = this._rows.length - 1; i >= 0; i--) {
+            var rowSpec = this._rows[i];
+            this._onRowRemoved(rowSpec, i);
+            rowSpec.index = -1;
         }
         this._rows.length = 0;
         this.invalidate();
@@ -216,13 +220,13 @@ var GridLayout = (function (_super) {
     GridLayout.prototype.onColumnSpanChanged = function (element, oldValue, newValue) {
         this.invalidate();
     };
-    GridLayout.prototype.onRowAdded = function (itemSpec) {
+    GridLayout.prototype._onRowAdded = function (itemSpec) {
     };
-    GridLayout.prototype.onColumnAdded = function (itemSpec) {
+    GridLayout.prototype._onColumnAdded = function (itemSpec) {
     };
-    GridLayout.prototype.onRowRemoved = function (itemSpec, index) {
+    GridLayout.prototype._onRowRemoved = function (itemSpec, index) {
     };
-    GridLayout.prototype.onColumnRemoved = function (itemSpec, index) {
+    GridLayout.prototype._onColumnRemoved = function (itemSpec, index) {
     };
     GridLayout.prototype.getColumns = function () {
         return this._cols.slice();

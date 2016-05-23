@@ -435,14 +435,9 @@ var knownFolders;
     };
     knownFolders.currentApp = function () {
         if (!_app) {
-            var currentDir = __dirname;
-            var tnsModulesIndex = currentDir.indexOf("/tns_modules");
-            var appPath = currentDir;
-            if (tnsModulesIndex !== -1) {
-                appPath = currentDir.substring(0, tnsModulesIndex);
-            }
+            var path = getFileAccess().getCurrentAppPath();
             _app = new Folder();
-            _app[pathProperty] = appPath;
+            _app[pathProperty] = path;
             _app[isKnownProperty] = true;
         }
         return _app;

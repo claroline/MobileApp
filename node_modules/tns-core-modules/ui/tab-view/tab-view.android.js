@@ -70,10 +70,6 @@ function ensurePagerAdapterClass() {
             if (nativeView.toString() !== _object.toString()) {
                 throw new Error("Expected " + nativeView.toString() + " to equal " + _object.toString());
             }
-            if (!this[VIEWS_STATES]) {
-                this[VIEWS_STATES] = new android.util.SparseArray();
-            }
-            nativeView.saveHierarchyState(this[VIEWS_STATES]);
             container.removeView(nativeView);
             if (item.view.parent === this.owner) {
                 this.owner._removeView(item.view);

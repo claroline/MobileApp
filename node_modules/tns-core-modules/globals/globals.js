@@ -30,6 +30,15 @@ global.zonedCallback = function (callback) {
         return callback;
     }
 };
+global.__extends = global.__extends || function (d, b) {
+    for (var p in b) {
+        if (b.hasOwnProperty(p)) {
+            d[p] = b[p];
+        }
+    }
+    function __() { this.constructor = d; }
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+};
 global.registerModule("timer", function () { return require("timer"); });
 global.registerModule("ui/dialogs", function () { return require("ui/dialogs"); });
 global.registerModule("xhr", function () { return require("xhr"); });

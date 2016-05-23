@@ -1,6 +1,6 @@
 var observable = require("ui/core/dependency-observable");
 var trace = require("trace");
-var styleProperty = require("ui/styling/style-property");
+var style_property_1 = require("ui/styling/style-property");
 var types = require("utils/types");
 var utils = require("utils/utils");
 var keyframeAnimation = require("ui/animation/keyframe-animation");
@@ -71,22 +71,24 @@ var CssSelector = (function () {
         var modifier = valueSourceModifier || this.valueSourceModifier;
         this.eachSetter(function (property, value) {
             if (types.isString(property)) {
+                var propertyName = property;
                 var attrHandled = false;
-                var specialSetter = special_properties_1.getSpecialPropertySetter(property);
+                var specialSetter = special_properties_1.getSpecialPropertySetter(propertyName);
                 if (!attrHandled && specialSetter) {
                     specialSetter(view, value);
                     attrHandled = true;
                 }
-                if (!attrHandled && property in view) {
-                    view[property] = utils.convertString(value);
+                if (!attrHandled && propertyName in view) {
+                    view[propertyName] = utils.convertString(value);
                 }
             }
             else {
+                var resolvedProperty = property;
                 try {
-                    view.style._setValue(property, value, modifier);
+                    view.style._setValue(resolvedProperty, value, modifier);
                 }
                 catch (ex) {
-                    trace.write("Error setting property: " + property.name + " view: " + view + " value: " + value + " " + ex, trace.categories.Style, trace.messageType.error);
+                    trace.write("Error setting property: " + resolvedProperty.name + " view: " + view + " value: " + value + " " + ex, trace.categories.Style, trace.messageType.error);
                 }
             }
         });
@@ -112,22 +114,7 @@ var CssSelector = (function () {
             var declaration = this._declarations[i];
             var name_1 = declaration.property;
             var resolvedValue = declaration.value;
-            var property = styleProperty.getPropertyByCssName(name_1);
-            if (property) {
-                callback(property, resolvedValue);
-            }
-            else {
-                var pairs = styleProperty.getShorthandPairs(name_1, resolvedValue);
-                if (pairs) {
-                    for (var j = 0; j < pairs.length; j++) {
-                        var pair = pairs[j];
-                        callback(pair.property, pair.value);
-                    }
-                }
-                else {
-                    callback(declaration.property, declaration.value);
-                }
-            }
+            style_property_1.withStyleProperty(name_1, resolvedValue, callback);
         }
     };
     Object.defineProperty(CssSelector.prototype, "declarationText", {
@@ -159,7 +146,12 @@ var CssTypeSelector = (function (_super) {
     }
     Object.defineProperty(CssTypeSelector.prototype, "specificity", {
         get: function () {
-            return TYPE_SPECIFICITY;
+            var result = TYPE_SPECIFICITY;
+            var dotIndex = this.expression.indexOf(DOT);
+            if (dotIndex > -1) {
+                result += CLASS_SPECIFICITY;
+            }
+            return result;
         },
         enumerable: true,
         configurable: true
@@ -503,7 +495,8 @@ var InlineStyleSelector = (function (_super) {
     }
     InlineStyleSelector.prototype.apply = function (view) {
         this.eachSetter(function (property, value) {
-            view.style._setValue(property, value, observable.ValueSource.Local);
+            var resolvedProperty = property;
+            view.style._setValue(resolvedProperty, value, observable.ValueSource.Local);
         });
     };
     InlineStyleSelector.prototype.toString = function () {
