@@ -26,8 +26,8 @@ export class LoginPage {
         this.user = new User();
 
         // Harcoded values to avoid typing them
-        this.user.username = "stan";
-        this.user.password = "stan";
+        //this.user.username = "stan";
+        //this.user.password = "stan";
 
     }
 
