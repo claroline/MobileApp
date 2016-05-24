@@ -42,7 +42,12 @@ Then, you'll have to enter a username and a password :
         username : captain_america
         password : avengers
 
+And here's the admin account :
 
+        username : root
+        password : root
+
+So you'll be able to test messages and notifications reception. 
 
 
 
