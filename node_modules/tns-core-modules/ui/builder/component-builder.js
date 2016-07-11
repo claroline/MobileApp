@@ -35,15 +35,23 @@ function getComponentModule(elementName, namespace, attributes, exports) {
         elementName.split(/(?=[A-Z])/).join("-").toLowerCase();
     try {
         if (types_1.isString(namespace)) {
-            var pathInsideTNSModules = file_system_1.path.join(file_system_1.knownFolders.currentApp().path, "tns_modules", namespace);
-            if (file_system_1.Folder.exists(pathInsideTNSModules)) {
-                moduleId = pathInsideTNSModules;
+            if (global.moduleExists(namespace)) {
+                moduleId = namespace;
             }
             else {
-                moduleId = file_system_1.path.join(file_system_1.knownFolders.currentApp().path, namespace);
+                var pathInsideTNSModules = file_system_1.path.join(file_system_1.knownFolders.currentApp().path, "tns_modules", namespace);
+                try {
+                    instanceModule = global.require(pathInsideTNSModules);
+                    moduleId = pathInsideTNSModules;
+                }
+                catch (e) {
+                    moduleId = file_system_1.path.join(file_system_1.knownFolders.currentApp().path, namespace);
+                }
             }
         }
-        instanceModule = global.loadModule(moduleId);
+        if (!instanceModule) {
+            instanceModule = global.loadModule(moduleId);
+        }
         var instanceType = instanceModule[elementName] || Object;
         instance = new instanceType();
     }

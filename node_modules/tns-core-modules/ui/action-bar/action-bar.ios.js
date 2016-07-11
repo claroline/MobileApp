@@ -114,29 +114,23 @@ var ActionBar = (function (_super) {
                 leftBarItems.push(barButtonItem);
             }
             else {
-                rightBarItems.push(barButtonItem);
+                rightBarItems.splice(0, 0, barButtonItem);
             }
         }
-        var leftArray = leftBarItems.length > 0 ? NSMutableArray.new() : null;
-        leftBarItems.forEach(function (barItem, i, a) { return leftArray.addObject(barItem); });
-        var rightArray = rightBarItems.length > 0 ? NSMutableArray.new() : null;
-        rightBarItems.reverse();
-        rightBarItems.forEach(function (barItem, i, a) { return rightArray.addObject(barItem); });
-        navigationItem.leftItemsSupplementBackButton = true;
-        navigationItem.setLeftBarButtonItemsAnimated(leftArray, true);
-        navigationItem.setRightBarButtonItemsAnimated(rightArray, true);
+        navigationItem.setLeftBarButtonItemsAnimated(leftBarItems, false);
+        navigationItem.setRightBarButtonItemsAnimated(rightBarItems, false);
+        if (leftBarItems.length > 0) {
+            navigationItem.leftItemsSupplementBackButton = true;
+        }
     };
     ActionBar.prototype.createBarButtonItem = function (item) {
         var tapHandler = TapBarItemHandlerImpl.initWithOwner(new WeakRef(item));
         item.handler = tapHandler;
         var barButtonItem;
         if (item.actionView && item.actionView.ios) {
-            var buttonView = UIButton.buttonWithType(UIButtonType.UIButtonTypeSystem);
-            item.actionView.ios.userInteractionEnabled = false;
-            buttonView.addTargetActionForControlEvents(tapHandler, "tap", UIControlEvents.UIControlEventTouchUpInside);
-            buttonView.frame = CGRectMake(0, 0, item.actionView.getMeasuredWidth(), item.actionView.getMeasuredHeight());
-            buttonView.addSubview(item.actionView.ios);
-            barButtonItem = UIBarButtonItem.alloc().initWithCustomView(buttonView);
+            var recognizer = UITapGestureRecognizer.alloc().initWithTargetAction(tapHandler, "tap");
+            item.actionView.ios.addGestureRecognizer(recognizer);
+            barButtonItem = UIBarButtonItem.alloc().initWithCustomView(item.actionView.ios);
         }
         else if (types.isNumber(item.ios.systemIcon)) {
             barButtonItem = UIBarButtonItem.alloc().initWithBarButtonSystemItemTargetAction(item.ios.systemIcon, tapHandler, "tap");
@@ -214,14 +208,14 @@ var ActionBar = (function (_super) {
             if (actionItem.actionView && actionItem.actionView.ios) {
                 var measuredWidth = actionItem.actionView.getMeasuredWidth();
                 var measuredHeight = actionItem.actionView.getMeasuredHeight();
-                var buttonView = actionItem.actionView.ios.superview;
                 view.View.layoutChild(_this, actionItem.actionView, 0, 0, measuredWidth, measuredHeight);
-                if (buttonView) {
-                    buttonView.frame = CGRectMake(0, 0, measuredWidth, measuredHeight);
-                }
             }
         });
         _super.prototype.onLayout.call(this, left, top, right, bottom);
+        var navigationBar = this.ios;
+        if (navigationBar) {
+            navigationBar.setNeedsLayout();
+        }
     };
     ActionBar.prototype.layoutNativeView = function (left, top, right, bottom) {
         return;

@@ -41,7 +41,9 @@ var AnimatedTransitioning = (function (_super) {
                 this._transitionType = "none";
                 break;
         }
-        trace.write("START " + this._transition + " " + this._transitionType, trace.categories.Transition);
+        if (trace.enabled) {
+            trace.write("START " + this._transition + " " + this._transitionType, trace.categories.Transition);
+        }
         this._transition.animateIOSTransition(containerView, this._fromVC.view, this._toVC.view, this._operation, completion);
     };
     AnimatedTransitioning.prototype.transitionDuration = function (transitionContext) {
@@ -49,10 +51,14 @@ var AnimatedTransitioning = (function (_super) {
     };
     AnimatedTransitioning.prototype.animationEnded = function (transitionCompleted) {
         if (transitionCompleted) {
-            trace.write("END " + this._transition + " " + this._transitionType, trace.categories.Transition);
+            if (trace.enabled) {
+                trace.write("END " + this._transition + " " + this._transitionType, trace.categories.Transition);
+            }
         }
         else {
-            trace.write("CANCEL " + this._transition + " " + this._transitionType, trace.categories.Transition);
+            if (trace.enabled) {
+                trace.write("CANCEL " + this._transition + " " + this._transitionType, trace.categories.Transition);
+            }
         }
     };
     AnimatedTransitioning.ObjCProtocols = [UIViewControllerAnimatedTransitioning];

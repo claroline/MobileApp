@@ -42,7 +42,9 @@ var UIViewControllerImpl = (function (_super) {
         if (!owner) {
             return;
         }
-        trace.write(owner + " viewDidLayoutSubviews, isLoaded = " + owner.isLoaded, trace.categories.ViewHierarchy);
+        if (trace.enabled) {
+            trace.write(owner + " viewDidLayoutSubviews, isLoaded = " + owner.isLoaded, trace.categories.ViewHierarchy);
+        }
         if (!owner.isLoaded) {
             return;
         }
@@ -85,7 +87,9 @@ var UIViewControllerImpl = (function (_super) {
                     }
                 }
             }
-            trace.write(owner + ", native frame = " + NSStringFromCGRect(this.view.frame), trace.categories.Layout);
+            if (trace.enabled) {
+                trace.write(owner + ", native frame = " + NSStringFromCGRect(this.view.frame), trace.categories.Layout);
+            }
         }
         else {
             owner._updateLayout();
@@ -93,7 +97,11 @@ var UIViewControllerImpl = (function (_super) {
     };
     UIViewControllerImpl.prototype.viewWillAppear = function (animated) {
         var page = this._owner.get();
-        trace.write(page + " viewWillAppear", trace.categories.Navigation);
+        if (trace.enabled) {
+            if (trace.enabled) {
+                trace.write(page + " viewWillAppear", trace.categories.Navigation);
+            }
+        }
         if (!page) {
             return;
         }
@@ -128,7 +136,9 @@ var UIViewControllerImpl = (function (_super) {
     };
     UIViewControllerImpl.prototype.viewDidAppear = function (animated) {
         var page = this._owner.get();
-        trace.write(page + " viewDidAppear", trace.categories.Navigation);
+        if (trace.enabled) {
+            trace.write(page + " viewDidAppear", trace.categories.Navigation);
+        }
         if (!page) {
             return;
         }
@@ -156,7 +166,9 @@ var UIViewControllerImpl = (function (_super) {
     ;
     UIViewControllerImpl.prototype.viewWillDisappear = function (animated) {
         var page = this._owner.get();
-        trace.write(page + " viewWillDisappear", trace.categories.Navigation);
+        if (trace.enabled) {
+            trace.write(page + " viewWillDisappear", trace.categories.Navigation);
+        }
         if (!page) {
             return;
         }
@@ -172,7 +184,9 @@ var UIViewControllerImpl = (function (_super) {
     };
     UIViewControllerImpl.prototype.viewDidDisappear = function (animated) {
         var page = this._owner.get();
-        trace.write(page + " viewDidDisappear", trace.categories.Navigation);
+        if (trace.enabled) {
+            trace.write(page + " viewDidDisappear", trace.categories.Navigation);
+        }
         if (!page || page.modal || page._presentedViewController) {
             return;
         }
@@ -231,7 +245,9 @@ var Page = (function (_super) {
     };
     Page.prototype._addNativeView = function (view) {
         if (view) {
-            trace.write("Native: Adding " + view + " to " + this, trace.categories.ViewHierarchy);
+            if (trace.enabled) {
+                trace.write("Native: Adding " + view + " to " + this, trace.categories.ViewHierarchy);
+            }
             if (view.ios instanceof UIView) {
                 this._ios.view.addSubview(view.ios);
             }
@@ -243,7 +259,9 @@ var Page = (function (_super) {
     };
     Page.prototype._removeNativeView = function (view) {
         if (view) {
-            trace.write("Native: Removing " + view + " from " + this, trace.categories.ViewHierarchy);
+            if (trace.enabled) {
+                trace.write("Native: Removing " + view + " from " + this, trace.categories.ViewHierarchy);
+            }
             if (view.ios instanceof UIView) {
                 view.ios.removeFromSuperview();
             }

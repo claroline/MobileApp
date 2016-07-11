@@ -1,3 +1,4 @@
+var observable = require("data/observable");
 var common = require("./list-view-common");
 var stackLayout = require("ui/layouts/stack-layout");
 var proxy_view_container_1 = require("ui/proxy-view-container");
@@ -11,7 +12,6 @@ function ensureColor() {
 var ITEMLOADING = common.ListView.itemLoadingEvent;
 var LOADMOREITEMS = common.ListView.loadMoreItemsEvent;
 var ITEMTAP = common.ListView.itemTapEvent;
-var REALIZED_INDEX = "realizedIndex";
 global.moduleMerge(common, exports);
 function onSeparatorColorPropertyChanged(data) {
     var bar = data.object;
@@ -29,8 +29,8 @@ var ListView = (function (_super) {
     __extends(ListView, _super);
     function ListView() {
         _super.apply(this, arguments);
-        this._realizedItems = {};
         this._androidViewId = -1;
+        this._realizedItems = new Map();
     }
     ListView.prototype._createUI = function () {
         this._android = new android.widget.ListView(this._context);
@@ -42,33 +42,6 @@ var ListView = (function (_super) {
         ensureListViewAdapterClass();
         this.android.setAdapter(new ListViewAdapterClass(this));
         var that = new WeakRef(this);
-        this.android.setOnScrollListener(new android.widget.AbsListView.OnScrollListener({
-            onScrollStateChanged: function (view, scrollState) {
-                var owner = this.owner;
-                if (!owner) {
-                    return;
-                }
-                if (scrollState === android.widget.AbsListView.OnScrollListener.SCROLL_STATE_IDLE) {
-                    owner._setValue(common.ListView.isScrollingProperty, false);
-                    owner._notifyScrollIdle();
-                }
-                else {
-                    owner._setValue(common.ListView.isScrollingProperty, true);
-                }
-            },
-            onScroll: function (view, firstVisibleItem, visibleItemCount, totalItemCount) {
-                var owner = this.owner;
-                if (!owner) {
-                    return;
-                }
-                if (totalItemCount > 0 && firstVisibleItem + visibleItemCount === totalItemCount) {
-                    owner.notify({ eventName: LOADMOREITEMS, object: owner });
-                }
-            },
-            get owner() {
-                return that.get();
-            }
-        }));
         this.android.setOnItemClickListener(new android.widget.AdapterView.OnItemClickListener({
             onItemClick: function (parent, convertView, index, id) {
                 var owner = that.get();
@@ -89,6 +62,11 @@ var ListView = (function (_super) {
         if (!this._android || !this._android.getAdapter()) {
             return;
         }
+        this._realizedItems.forEach(function (view, nativeView, map) {
+            if (!(view.bindingContext instanceof observable.Observable)) {
+                view.bindingContext = null;
+            }
+        });
         this.android.getAdapter().notifyDataSetChanged();
     };
     ListView.prototype.scrollToIndex = function (index) {
@@ -98,59 +76,44 @@ var ListView = (function (_super) {
     };
     ListView.prototype._onDetached = function (force) {
         _super.prototype._onDetached.call(this, force);
-        var keys = Object.keys(this._realizedItems);
-        var i;
-        var length = keys.length;
-        var view;
-        var key;
-        for (i = 0; i < length; i++) {
-            key = keys[i];
-            view = this._realizedItems[key];
-            view.parent._removeView(view);
-            delete this._realizedItems[key];
-        }
+        this.clearRealizedCells();
     };
     Object.defineProperty(ListView.prototype, "_childrenCount", {
         get: function () {
-            var keys = Object.keys(this._realizedItems);
-            return keys.length;
+            return this._realizedItems.size;
         },
         enumerable: true,
         configurable: true
     });
     ListView.prototype._eachChildView = function (callback) {
-        var keys = Object.keys(this._realizedItems);
-        var length = keys.length;
-        for (var i = 0; i < length; i++) {
-            var key = keys[i];
-            var view = this._realizedItems[key];
-            callback(view);
-        }
+        this._realizedItems.forEach(function (view, nativeView, map) {
+            if (view.parent instanceof ListView) {
+                callback(view);
+            }
+            else {
+                if (view.parent) {
+                    callback(view.parent);
+                }
+            }
+        });
     };
     ListView.prototype._getRealizedView = function (convertView, index) {
         if (!convertView) {
             return this._getItemTemplateContent(index);
         }
-        return this._realizedItems[convertView.hashCode()];
+        return this._realizedItems.get(convertView);
     };
-    ListView.prototype._notifyScrollIdle = function () {
-        var keys = Object.keys(this._realizedItems);
-        var i;
-        var length = keys.length;
-        var view;
-        var key;
-        for (i = 0; i < length; i++) {
-            key = keys[i];
-            view = this._realizedItems[key];
-            if (view[REALIZED_INDEX] < this.items.length) {
-                this.notify({
-                    eventName: ITEMLOADING,
-                    object: this,
-                    index: view[REALIZED_INDEX],
-                    view: view
-                });
+    ListView.prototype.clearRealizedCells = function () {
+        var _this = this;
+        this._realizedItems.forEach(function (view, nativeView, map) {
+            if (view.parent) {
+                if (!(view.parent instanceof ListView)) {
+                    _this._removeView(view.parent);
+                }
+                view.parent._removeView(view);
             }
-        }
+        });
+        this._realizedItems.clear();
     };
     return ListView;
 }(common.ListView));
@@ -186,6 +149,10 @@ function ensureListViewAdapterClass() {
             if (!this._listView) {
                 return null;
             }
+            var totalItemCount = this._listView.items ? this._listView.items.length : 0;
+            if (index === (totalItemCount - 1)) {
+                this._listView.notify({ eventName: LOADMOREITEMS, object: this._listView });
+            }
             var view = this._listView._getRealizedView(convertView, index);
             var args = {
                 eventName: ITEMLOADING, object: this._listView, index: index, view: view,
@@ -217,8 +184,7 @@ function ensureListViewAdapterClass() {
                         convertView = sp.android;
                     }
                 }
-                this._listView._realizedItems[convertView.hashCode()] = args.view;
-                args.view[REALIZED_INDEX] = index;
+                this._listView._realizedItems.set(convertView, args.view);
             }
             return convertView;
         };

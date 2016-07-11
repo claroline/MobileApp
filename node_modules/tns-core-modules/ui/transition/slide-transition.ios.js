@@ -13,6 +13,8 @@ var SlideTransition = (function (_super) {
         this._direction = direction;
     }
     SlideTransition.prototype.animateIOSTransition = function (containerView, fromView, toView, operation, completion) {
+        var originalToViewTransform = toView.transform;
+        var originalFromViewTransform = fromView.transform;
         var fromViewEndTransform;
         var toViewBeginTransform;
         var push = (operation === UINavigationControllerOperation.UINavigationControllerOperationPush);
@@ -50,7 +52,11 @@ var SlideTransition = (function (_super) {
             UIView.setAnimationCurve(curve);
             toView.transform = CGAffineTransformIdentity;
             fromView.transform = fromViewEndTransform;
-        }, completion);
+        }, function (finished) {
+            toView.transform = originalToViewTransform;
+            fromView.transform = originalFromViewTransform;
+            completion(finished);
+        });
     };
     return SlideTransition;
 }(transition.Transition));

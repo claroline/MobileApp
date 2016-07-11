@@ -29,6 +29,7 @@ var Image = (function (_super) {
     __extends(Image, _super);
     function Image() {
         _super.call(this);
+        this._imageSourceAffectsLayout = true;
         this._ios = new UIImageView();
         this._ios.contentMode = UIViewContentMode.UIViewContentModeScaleAspectFit;
         this._ios.clipsToBounds = true;
@@ -43,7 +44,7 @@ var Image = (function (_super) {
     });
     Image.prototype._setNativeImage = function (nativeImage) {
         this.ios.image = nativeImage;
-        if (isNaN(this.width) || isNaN(this.height)) {
+        if (this._imageSourceAffectsLayout) {
             this.requestLayout();
         }
     };
@@ -59,16 +60,19 @@ var Image = (function (_super) {
         var measureHeight = Math.max(nativeHeight, this.minHeight);
         var finiteWidth = widthMode !== utils.layout.UNSPECIFIED;
         var finiteHeight = heightMode !== utils.layout.UNSPECIFIED;
+        this._imageSourceAffectsLayout = widthMode !== utils.layout.EXACTLY || heightMode !== utils.layout.EXACTLY;
         if (nativeWidth !== 0 && nativeHeight !== 0 && (finiteWidth || finiteHeight)) {
             var scale = Image.computeScaleFactor(width, height, finiteWidth, finiteHeight, nativeWidth, nativeHeight, this.stretch);
-            var resultW = Math.floor(nativeWidth * scale.width);
-            var resultH = Math.floor(nativeHeight * scale.height);
+            var resultW = Math.round(nativeWidth * scale.width);
+            var resultH = Math.round(nativeHeight * scale.height);
             measureWidth = finiteWidth ? Math.min(resultW, width) : resultW;
             measureHeight = finiteHeight ? Math.min(resultH, height) : resultH;
             var trace = require("trace");
-            trace.write("Image stretch: " + this.stretch +
-                ", nativeWidth: " + nativeWidth +
-                ", nativeHeight: " + nativeHeight, trace.categories.Layout);
+            if (trace.enabled) {
+                trace.write("Image stretch: " + this.stretch +
+                    ", nativeWidth: " + nativeWidth +
+                    ", nativeHeight: " + nativeHeight, trace.categories.Layout);
+            }
         }
         var view = require("ui/core/view");
         var widthAndState = view.View.resolveSizeAndState(measureWidth, width, widthMode, 0);

@@ -44,8 +44,6 @@ function onItemsPropertyChanged(data) {
         if (types.isNumber(view.selectedIndex) && view.android.getCurrentTab() !== view.selectedIndex) {
             view.android.setCurrentTab(view.selectedIndex);
         }
-        view.android.setOnTabChangedListener(null);
-        view.android.setOnTabChangedListener(view._listener);
         var tabHost = view.android;
         var tabIndex;
         if (view.selectedBackgroundColor) {
@@ -163,6 +161,11 @@ var SegmentedBar = (function (_super) {
             }
         }));
         this.android.addTab(tab);
+        this.resetNativeListener();
+    };
+    SegmentedBar.prototype.resetNativeListener = function () {
+        this.android.setOnTabChangedListener(null);
+        this.android.setOnTabChangedListener(this._listener);
     };
     return SegmentedBar;
 }(common.SegmentedBar));

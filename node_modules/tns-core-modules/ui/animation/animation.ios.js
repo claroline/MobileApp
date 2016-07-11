@@ -44,8 +44,8 @@ var AnimationDelegateImpl = (function (_super) {
                 targetStyle._setValue(style.translateYProperty, value.y, valueSource);
                 break;
             case common.Properties.scale:
-                targetStyle._setValue(style.scaleXProperty, value.x, valueSource);
-                targetStyle._setValue(style.scaleYProperty, value.y, valueSource);
+                targetStyle._setValue(style.scaleXProperty, value.x === 0 ? 0.001 : value.x, valueSource);
+                targetStyle._setValue(style.scaleYProperty, value.y === 0 ? 0.001 : value.y, valueSource);
                 break;
             case _transform:
                 if (value[common.Properties.translate] !== undefined) {
@@ -53,8 +53,10 @@ var AnimationDelegateImpl = (function (_super) {
                     targetStyle._setValue(style.translateYProperty, value[common.Properties.translate].y, valueSource);
                 }
                 if (value[common.Properties.scale] !== undefined) {
-                    targetStyle._setValue(style.scaleXProperty, value[common.Properties.scale].x, valueSource);
-                    targetStyle._setValue(style.scaleYProperty, value[common.Properties.scale].y, valueSource);
+                    var x = value[common.Properties.scale].x;
+                    var y = value[common.Properties.scale].y;
+                    targetStyle._setValue(style.scaleXProperty, x === 0 ? 0.001 : x, valueSource);
+                    targetStyle._setValue(style.scaleYProperty, y === 0 ? 0.001 : y, valueSource);
                 }
                 break;
         }
@@ -78,9 +80,13 @@ var Animation = (function (_super) {
             this._valueSource = animationDefinitions[0].valueSource;
         }
         if (!playSequentially) {
-            trace.write("Non-merged Property Animations: " + this._propertyAnimations.length, trace.categories.Animation);
+            if (trace.enabled) {
+                trace.write("Non-merged Property Animations: " + this._propertyAnimations.length, trace.categories.Animation);
+            }
             this._mergedPropertyAnimations = Animation._mergeAffineTransformAnimations(this._propertyAnimations);
-            trace.write("Merged Property Animations: " + this._mergedPropertyAnimations.length, trace.categories.Animation);
+            if (trace.enabled) {
+                trace.write("Merged Property Animations: " + this._mergedPropertyAnimations.length, trace.categories.Animation);
+            }
         }
         else {
             this._mergedPropertyAnimations = this._propertyAnimations;
@@ -103,11 +109,15 @@ var Animation = (function (_super) {
                     that._finishedAnimations++;
                 }
                 if (that._cancelledAnimations > 0 && (that._cancelledAnimations + that._finishedAnimations) === that._mergedPropertyAnimations.length) {
-                    trace.write(that._cancelledAnimations + " animations cancelled.", trace.categories.Animation);
+                    if (trace.enabled) {
+                        trace.write(that._cancelledAnimations + " animations cancelled.", trace.categories.Animation);
+                    }
                     that._rejectAnimationFinishedPromise();
                 }
                 else if (that._finishedAnimations === that._mergedPropertyAnimations.length) {
-                    trace.write(that._finishedAnimations + " animations finished.", trace.categories.Animation);
+                    if (trace.enabled) {
+                        trace.write(that._finishedAnimations + " animations finished.", trace.categories.Animation);
+                    }
                     that._resolveAnimationFinishedPromise();
                 }
             }
@@ -136,7 +146,9 @@ var Animation = (function (_super) {
     Animation._createiOSAnimationFunction = function (propertyAnimations, index, playSequentially, valueSource, finishedCallback) {
         return function (cancelled) {
             if (cancelled && finishedCallback) {
-                trace.write("Animation " + (index - 1).toString() + " was cancelled. Will skip the rest of animations and call finishedCallback(true).", trace.categories.Animation);
+                if (trace.enabled) {
+                    trace.write("Animation " + (index - 1).toString() + " was cancelled. Will skip the rest of animations and call finishedCallback(true).", trace.categories.Animation);
+                }
                 finishedCallback(cancelled);
                 return;
             }
@@ -152,26 +164,22 @@ var Animation = (function (_super) {
     };
     Animation._getNativeAnimationArguments = function (animation, valueSource) {
         var nativeView = animation.target._nativeView;
-        var presentationLayer = nativeView.layer.presentationLayer();
         var propertyNameToAnimate = animation.property;
         var value = animation.value;
         var originalValue;
-        var tempRotate = animation.target.rotate * Math.PI / 180;
+        var tempRotate = (animation.target.rotate || 0) * Math.PI / 180;
         var abs;
+        if (valueSource === undefined) {
+            valueSource = dependencyObservable.ValueSource.Local;
+        }
         switch (animation.property) {
             case common.Properties.backgroundColor:
                 animation._originalValue = animation.target.backgroundColor;
                 animation._propertyResetCallback = function (value, valueSource) {
-                    animation.target._setValue(style.backgroundColorProperty, value, valueSource);
+                    animation.target.style._setValue(style.backgroundColorProperty, value, valueSource);
                 };
-                if (presentationLayer != null && valueSource !== dependencyObservable.ValueSource.Css) {
-                    originalValue = presentationLayer.backgroundColor;
-                }
-                else {
-                    originalValue = nativeView.layer.backgroundColor;
-                }
+                originalValue = nativeView.layer.backgroundColor;
                 if (nativeView instanceof UILabel) {
-                    originalValue = nativeView.layer.backgroundColor;
                     nativeView.setValueForKey(UIColor.clearColor(), "backgroundColor");
                 }
                 value = value.CGColor;
@@ -179,28 +187,19 @@ var Animation = (function (_super) {
             case common.Properties.opacity:
                 animation._originalValue = animation.target.opacity;
                 animation._propertyResetCallback = function (value, valueSource) {
-                    animation.target._setValue(style.opacityProperty, value, valueSource);
+                    animation.target.style._setValue(style.opacityProperty, value, valueSource);
                 };
-                if (presentationLayer != null && valueSource !== dependencyObservable.ValueSource.Css) {
-                    originalValue = presentationLayer.opacity;
-                }
-                else {
-                    originalValue = nativeView.layer.opacity;
-                }
+                originalValue = nativeView.layer.opacity;
                 break;
             case common.Properties.rotate:
-                animation._originalValue = animation.target.rotate;
+                animation._originalValue = animation.target.rotate !== undefined ? animation.target.rotate : 0;
                 animation._propertyResetCallback = function (value, valueSource) {
-                    animation.target._setValue(style.rotateProperty, value, valueSource);
+                    animation.target.style._setValue(style.rotateProperty, value, valueSource);
                 };
                 propertyNameToAnimate = "transform.rotation";
-                if (presentationLayer != null && valueSource !== dependencyObservable.ValueSource.Css) {
-                    originalValue = presentationLayer.valueForKeyPath("transform.rotation");
-                }
-                else {
-                    originalValue = nativeView.layer.valueForKeyPath("transform.rotation");
-                }
-                if (originalValue === 0 && animation.target.rotate !== 0 && Math.floor(value / 360) - value / 360 === 0) {
+                originalValue = nativeView.layer.valueForKeyPath("transform.rotation");
+                if (originalValue === 0 && animation.target.rotate !== undefined &&
+                    animation.target.rotate !== 0 && Math.floor(value / 360) - value / 360 === 0) {
                     originalValue = animation.target.rotate * Math.PI / 180;
                 }
                 value = value * Math.PI / 180;
@@ -212,47 +211,38 @@ var Animation = (function (_super) {
             case common.Properties.translate:
                 animation._originalValue = { x: animation.target.translateX, y: animation.target.translateY };
                 animation._propertyResetCallback = function (value, valueSource) {
-                    animation.target._setValue(style.translateXProperty, value.x, valueSource);
-                    animation.target._setValue(style.translateYProperty, value.y, valueSource);
+                    animation.target.style._setValue(style.translateXProperty, value.x, valueSource);
+                    animation.target.style._setValue(style.translateYProperty, value.y, valueSource);
                 };
                 propertyNameToAnimate = "transform";
-                if (presentationLayer != null && valueSource !== dependencyObservable.ValueSource.Css) {
-                    originalValue = NSValue.valueWithCATransform3D(presentationLayer.transform);
-                }
-                else {
-                    originalValue = NSValue.valueWithCATransform3D(nativeView.layer.transform);
-                }
+                originalValue = NSValue.valueWithCATransform3D(nativeView.layer.transform);
                 value = NSValue.valueWithCATransform3D(CATransform3DTranslate(nativeView.layer.transform, value.x, value.y, 0));
                 break;
             case common.Properties.scale:
+                if (value.x === 0) {
+                    value.x = 0.001;
+                }
+                if (value.y === 0) {
+                    value.y = 0.001;
+                }
                 animation._originalValue = { x: animation.target.scaleX, y: animation.target.scaleY };
                 animation._propertyResetCallback = function (value, valueSource) {
-                    animation.target._setValue(style.scaleXProperty, value.x, valueSource);
-                    animation.target._setValue(style.scaleYProperty, value.y, valueSource);
+                    animation.target.style._setValue(style.scaleXProperty, value.x, valueSource);
+                    animation.target.style._setValue(style.scaleYProperty, value.y, valueSource);
                 };
                 propertyNameToAnimate = "transform";
-                if (presentationLayer != null && valueSource !== dependencyObservable.ValueSource.Css) {
-                    originalValue = NSValue.valueWithCATransform3D(presentationLayer.transform);
-                }
-                else {
-                    originalValue = NSValue.valueWithCATransform3D(nativeView.layer.transform);
-                }
+                originalValue = NSValue.valueWithCATransform3D(nativeView.layer.transform);
                 value = NSValue.valueWithCATransform3D(CATransform3DScale(nativeView.layer.transform, value.x, value.y, 1));
                 break;
             case _transform:
-                if (presentationLayer != null && valueSource !== dependencyObservable.ValueSource.Css) {
-                    originalValue = NSValue.valueWithCATransform3D(presentationLayer.transform);
-                }
-                else {
-                    originalValue = NSValue.valueWithCATransform3D(nativeView.layer.transform);
-                }
+                originalValue = NSValue.valueWithCATransform3D(nativeView.layer.transform);
                 animation._originalValue = { xs: animation.target.scaleX, ys: animation.target.scaleY,
                     xt: animation.target.translateX, yt: animation.target.translateY };
                 animation._propertyResetCallback = function (value, valueSource) {
-                    animation.target._setValue(style.translateXProperty, value.xt, valueSource);
-                    animation.target._setValue(style.translateYProperty, value.yt, valueSource);
-                    animation.target._setValue(style.scaleXProperty, value.xs, valueSource);
-                    animation.target._setValue(style.scaleYProperty, value.ys, valueSource);
+                    animation.target.style._setValue(style.translateXProperty, value.xt, valueSource);
+                    animation.target.style._setValue(style.translateYProperty, value.yt, valueSource);
+                    animation.target.style._setValue(style.scaleXProperty, value.xs, valueSource);
+                    animation.target.style._setValue(style.scaleYProperty, value.ys, valueSource);
                 };
                 propertyNameToAnimate = "transform";
                 value = NSValue.valueWithCATransform3D(Animation._createNativeAffineTransform(animation));
@@ -392,7 +382,7 @@ var Animation = (function (_super) {
         if (value[common.Properties.scale] !== undefined) {
             var x = value[common.Properties.scale].x;
             var y = value[common.Properties.scale].y;
-            result = CATransform3DScale(result, x, y, 1);
+            result = CATransform3DScale(result, x === 0 ? 0.001 : x, y === 0 ? 0.001 : y, 1);
         }
         return result;
     };
@@ -433,14 +423,20 @@ var Animation = (function (_super) {
                     iterations: propertyAnimations[i].iterations,
                     curve: propertyAnimations[i].curve
                 };
-                trace.write("Curve: " + propertyAnimations[i].curve, trace.categories.Animation);
+                if (trace.enabled) {
+                    trace.write("Curve: " + propertyAnimations[i].curve, trace.categories.Animation);
+                }
                 newTransformAnimation.value[propertyAnimations[i].property] = propertyAnimations[i].value;
-                trace.write("Created new transform animation: " + common.Animation._getAnimationInfo(newTransformAnimation), trace.categories.Animation);
+                if (trace.enabled) {
+                    trace.write("Created new transform animation: " + common.Animation._getAnimationInfo(newTransformAnimation), trace.categories.Animation);
+                }
                 j = i + 1;
                 if (j < length) {
                     for (; j < length; j++) {
                         if (Animation._canBeMerged(propertyAnimations[i], propertyAnimations[j])) {
-                            trace.write("Merging animations: " + common.Animation._getAnimationInfo(newTransformAnimation) + " + " + common.Animation._getAnimationInfo(propertyAnimations[j]) + ";", trace.categories.Animation);
+                            if (trace.enabled) {
+                                trace.write("Merging animations: " + common.Animation._getAnimationInfo(newTransformAnimation) + " + " + common.Animation._getAnimationInfo(propertyAnimations[j]) + ";", trace.categories.Animation);
+                            }
                             newTransformAnimation.value[propertyAnimations[j].property] = propertyAnimations[j].value;
                             propertyAnimations[j][_skip] = true;
                         }
@@ -482,9 +478,9 @@ function _resolveAnimationCurve(curve) {
 exports._resolveAnimationCurve = _resolveAnimationCurve;
 function _getTransformMismatchErrorMessage(view) {
     var result = CGAffineTransformIdentity;
-    result = CGAffineTransformTranslate(result, view.translateX, view.translateY);
-    result = CGAffineTransformRotate(result, view.rotate * Math.PI / 180);
-    result = CGAffineTransformScale(result, view.scaleX, view.scaleY);
+    result = CGAffineTransformTranslate(result, view.translateX || 0, view.translateY || 0);
+    result = CGAffineTransformRotate(result, (view.rotate || 0) * Math.PI / 180);
+    result = CGAffineTransformScale(result, view.scaleX || 1, view.scaleY || 1);
     var viewTransform = NSStringFromCGAffineTransform(result);
     var nativeTransform = NSStringFromCGAffineTransform(view._nativeView.transform);
     if (viewTransform !== nativeTransform) {

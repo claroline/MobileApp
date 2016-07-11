@@ -40,7 +40,9 @@ var ListPicker = (function (_super) {
         return index.toString();
     };
     ListPicker.prototype._onSelectedIndexPropertyChanged = function (data) {
-        trace.write("ListPicker._onSelectedIndexPropertyChanged(" + data.oldValue + " => " + data.newValue + ");", exports.traceCategory);
+        if (trace.enabled) {
+            trace.write("ListPicker._onSelectedIndexPropertyChanged(" + data.oldValue + " => " + data.newValue + ");", exports.traceCategory);
+        }
         var index = this.selectedIndex;
         if (types.isUndefined(index)) {
             return;
@@ -55,7 +57,9 @@ var ListPicker = (function (_super) {
     ListPicker.prototype._onItemsPropertyChanged = function (data) {
     };
     ListPicker.prototype._updateSelectedIndexOnItemsPropertyChanged = function (newItems) {
-        trace.write("ListPicker._updateSelectedIndexOnItemsPropertyChanged(" + newItems + ");", exports.traceCategory);
+        if (trace.enabled) {
+            trace.write("ListPicker._updateSelectedIndexOnItemsPropertyChanged(" + newItems + ");", exports.traceCategory);
+        }
         var newItemsCount = 0;
         if (newItems && newItems.length) {
             newItemsCount = newItems.length;

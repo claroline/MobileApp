@@ -46,6 +46,7 @@ function parseInternal(value, context, uri) {
 function loadCustomComponent(componentPath, componentName, attributes, context, parentPage) {
     var result;
     componentPath = componentPath.replace("~/", "");
+    var moduleName = componentPath + "/" + componentName;
     var fullComponentPathFilePathWithoutExt = componentPath;
     if (!file_system_1.File.exists(componentPath) || componentPath === "." || componentPath === "./") {
         fullComponentPathFilePathWithoutExt = file_system_1.path.join(file_system_1.knownFolders.currentApp().path, componentPath, componentName);
@@ -54,8 +55,13 @@ function loadCustomComponent(componentPath, componentName, attributes, context, 
     if (xmlFilePath) {
         var jsFilePath = file_name_resolver_1.resolveFileName(fullComponentPathFilePathWithoutExt, "js");
         var subExports = context;
-        if (jsFilePath) {
-            subExports = global.loadModule(jsFilePath);
+        if (global.moduleExists(moduleName)) {
+            subExports = global.loadModule(moduleName);
+        }
+        else {
+            if (jsFilePath) {
+                subExports = global.loadModule(jsFilePath);
+            }
         }
         result = loadInternal(xmlFilePath, subExports);
         if (types_1.isDefined(result) && types_1.isDefined(result.component) && types_1.isDefined(attributes)) {

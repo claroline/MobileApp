@@ -5,11 +5,15 @@ function onBusyPropertyChanged(data) {
     if (!indicator.ios) {
         return;
     }
+    var activityIndicator = indicator.ios;
     if (data.newValue) {
-        indicator.ios.startAnimating();
+        activityIndicator.startAnimating();
     }
     else {
-        indicator.ios.stopAnimating();
+        activityIndicator.stopAnimating();
+    }
+    if (activityIndicator.hidesWhenStopped) {
+        indicator.requestLayout();
     }
 }
 aiCommon.ActivityIndicator.busyProperty.metadata.onSetNativeValue = onBusyPropertyChanged;

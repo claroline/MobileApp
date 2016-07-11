@@ -51,7 +51,9 @@ var ProxyViewContainer = (function (_super) {
         });
     };
     ProxyViewContainer.prototype._addViewToNativeVisualTree = function (child, atIndex) {
-        trace.write("ViewContainer._addViewToNativeVisualTree for a child " + child + " ViewContainer.parent: " + this.parent, trace.categories.ViewHierarchy);
+        if (trace.enabled) {
+            trace.write("ViewContainer._addViewToNativeVisualTree for a child " + child + " ViewContainer.parent: " + this.parent, trace.categories.ViewHierarchy);
+        }
         _super.prototype._addViewToNativeVisualTree.call(this, child);
         var parent = this.parent;
         if (parent) {
@@ -66,13 +68,17 @@ var ProxyViewContainer = (function (_super) {
             else {
                 insideIndex = this._getNativeViewsCount();
             }
-            trace.write("ProxyViewContainer._addViewToNativeVisualTree at: " + atIndex + " base: " + baseIndex + " additional: " + insideIndex, trace.categories.ViewHierarchy);
+            if (trace.enabled) {
+                trace.write("ProxyViewContainer._addViewToNativeVisualTree at: " + atIndex + " base: " + baseIndex + " additional: " + insideIndex, trace.categories.ViewHierarchy);
+            }
             return parent._addViewToNativeVisualTree(child, baseIndex + insideIndex);
         }
         return false;
     };
     ProxyViewContainer.prototype._removeViewFromNativeVisualTree = function (child) {
-        trace.write("ProxyViewContainer._removeViewFromNativeVisualTree for a child " + child + " ViewContainer.parent: " + this.parent, trace.categories.ViewHierarchy);
+        if (trace.enabled) {
+            trace.write("ProxyViewContainer._removeViewFromNativeVisualTree for a child " + child + " ViewContainer.parent: " + this.parent, trace.categories.ViewHierarchy);
+        }
         _super.prototype._removeViewFromNativeVisualTree.call(this, child);
         var parent = this.parent;
         if (parent) {

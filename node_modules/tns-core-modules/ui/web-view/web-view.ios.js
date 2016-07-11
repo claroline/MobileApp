@@ -32,16 +32,22 @@ var UIWebViewDelegateImpl = (function (_super) {
                     navTypeIndex = common.WebView.navigationTypes.indexOf("formResubmitted");
                     break;
             }
-            trace.write("UIWebViewDelegateClass.webViewShouldStartLoadWithRequestNavigationType(" + request.URL.absoluteString + ", " + navigationType + ")", trace.categories.Debug);
+            if (trace.enabled) {
+                trace.write("UIWebViewDelegateClass.webViewShouldStartLoadWithRequestNavigationType(" + request.URL.absoluteString + ", " + navigationType + ")", trace.categories.Debug);
+            }
             owner._onLoadStarted(request.URL.absoluteString, common.WebView.navigationTypes[navTypeIndex]);
         }
         return true;
     };
     UIWebViewDelegateImpl.prototype.webViewDidStartLoad = function (webView) {
-        trace.write("UIWebViewDelegateClass.webViewDidStartLoad(" + webView.request.URL + ")", trace.categories.Debug);
+        if (trace.enabled) {
+            trace.write("UIWebViewDelegateClass.webViewDidStartLoad(" + webView.request.URL + ")", trace.categories.Debug);
+        }
     };
     UIWebViewDelegateImpl.prototype.webViewDidFinishLoad = function (webView) {
-        trace.write("UIWebViewDelegateClass.webViewDidFinishLoad(" + webView.request.URL + ")", trace.categories.Debug);
+        if (trace.enabled) {
+            trace.write("UIWebViewDelegateClass.webViewDidFinishLoad(" + webView.request.URL + ")", trace.categories.Debug);
+        }
         var owner = this._owner.get();
         if (owner) {
             owner._onLoadFinished(webView.request.URL.absoluteString);
@@ -54,7 +60,9 @@ var UIWebViewDelegateImpl = (function (_super) {
             if (webView.request && webView.request.URL) {
                 url = webView.request.URL.absoluteString;
             }
-            trace.write("UIWebViewDelegateClass.webViewDidFailLoadWithError(" + error.localizedDescription + ")", trace.categories.Debug);
+            if (trace.enabled) {
+                trace.write("UIWebViewDelegateClass.webViewDidFailLoadWithError(" + error.localizedDescription + ")", trace.categories.Debug);
+            }
             if (owner) {
                 owner._onLoadFinished(url, error.localizedDescription);
             }
@@ -89,7 +97,9 @@ var WebView = (function (_super) {
         this._ios.stopLoading();
     };
     WebView.prototype._loadUrl = function (url) {
-        trace.write("WebView._loadUrl(" + url + ")", trace.categories.Debug);
+        if (trace.enabled) {
+            trace.write("WebView._loadUrl(" + url + ")", trace.categories.Debug);
+        }
         if (this._ios.loading) {
             this._ios.stopLoading();
         }

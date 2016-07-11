@@ -47,9 +47,7 @@ var Bindable = (function (_super) {
             bindingSource = this.bindingContext;
             binding.sourceIsBindingContext = true;
         }
-        if (!types.isNullOrUndefined(bindingSource)) {
-            binding.bind(bindingSource);
-        }
+        binding.bind(bindingSource);
     };
     Bindable.prototype.unbind = function (property) {
         var binding = this.bindings.get(property);
@@ -69,21 +67,27 @@ var Bindable = (function (_super) {
         this._updateTwoWayBinding(data.propertyName, data.value);
     };
     Bindable.prototype._onPropertyChanged = function (property, oldValue, newValue) {
-        trace.write(this + "._onPropertyChanged(" + property.name + ", " + oldValue + ", " + newValue + ")", trace.categories.Binding);
+        if (trace.enabled) {
+            trace.write(this + "._onPropertyChanged(" + property.name + ", " + oldValue + ", " + newValue + ")", trace.categories.Binding);
+        }
         _super.prototype._onPropertyChanged.call(this, property, oldValue, newValue);
         if (this instanceof viewModule.View) {
-            if (property.metadata.inheritable && this._isInheritedChange() === true) {
+            if (property.inheritable && this._isInheritedChange() === true) {
                 return;
             }
         }
         var binding = this.bindings.get(property.name);
         if (binding && !binding.updating) {
             if (binding.options.twoWay) {
-                trace.write((this + "._updateTwoWayBinding(" + property.name + ", " + newValue + ");") + property.name, trace.categories.Binding);
+                if (trace.enabled) {
+                    trace.write((this + "._updateTwoWayBinding(" + property.name + ", " + newValue + ");") + property.name, trace.categories.Binding);
+                }
                 this._updateTwoWayBinding(property.name, newValue);
             }
             else {
-                trace.write(this + ".unbind(" + property.name + ");", trace.categories.Binding);
+                if (trace.enabled) {
+                    trace.write(this + ".unbind(" + property.name + ");", trace.categories.Binding);
+                }
                 this.unbind(property.name);
             }
         }
@@ -91,8 +95,15 @@ var Bindable = (function (_super) {
     Bindable.prototype._onBindingContextChanged = function (oldValue, newValue) {
         this.bindings.forEach(function (binding, index, bindings) {
             if (!binding.updating && binding.sourceIsBindingContext) {
-                trace.write("Binding " + binding.target.get() + "." + binding.options.targetProperty + " to new context " + newValue, trace.categories.Binding);
-                binding.bind(newValue);
+                if (trace.enabled) {
+                    trace.write("Binding " + binding.target.get() + "." + binding.options.targetProperty + " to new context " + newValue, trace.categories.Binding);
+                }
+                if (!types.isNullOrUndefined(newValue)) {
+                    binding.bind(newValue);
+                }
+                else {
+                    binding.clearBinding();
+                }
             }
         });
     };
@@ -164,15 +175,17 @@ var Binding = (function () {
     Binding.prototype.bind = function (source) {
         this.clearSource();
         source = this.sourceAsObject(source);
+        var sourceValue;
         if (!types.isNullOrUndefined(source)) {
             this.source = new WeakRef(source);
             this.sourceOptions = this.resolveOptions(source, this.sourceProperties);
-            var sourceValue = this.getSourcePropertyValue();
+            sourceValue = this.getSourcePropertyValue();
             this.updateTarget(sourceValue);
             this.addPropertyChangeListeners(this.source, this.sourceProperties);
         }
-        else {
-            this.updateTarget(source);
+        else if (!this.sourceIsBindingContext) {
+            sourceValue = this.getSourcePropertyValue();
+            this.updateTarget(sourceValue ? sourceValue : source);
         }
     };
     Binding.prototype.resolveObjectsAndProperties = function (source, properties) {
@@ -382,7 +395,7 @@ var Binding = (function () {
     Binding.prototype.getSourcePropertyValue = function () {
         if (this.options.expression) {
             var changedModel = {};
-            changedModel[bc.bindingValueKey] = this.source.get();
+            changedModel[bc.bindingValueKey] = this.source ? this.source.get() : undefined;
             var expressionValue = this._getExpressionValue(this.options.expression, false, changedModel);
             if (expressionValue instanceof Error) {
                 trace.write(expressionValue.message, trace.categories.Binding, trace.messageType.error);
@@ -409,11 +422,15 @@ var Binding = (function () {
         }
         return null;
     };
+    Binding.prototype.clearBinding = function () {
+        this.clearSource();
+        this.updateTarget(undefined);
+    };
     Binding.prototype.updateTarget = function (value) {
         if (this.updating) {
             return;
         }
-        this.updateOptions(this.targetOptions, value);
+        this.updateOptions(this.targetOptions, types.isNullOrUndefined(value) ? dependency_observable_1.unsetValue : value);
     };
     Binding.prototype.updateSource = function (value) {
         if (this.updating || !this.source || !this.source.get()) {

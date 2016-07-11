@@ -1,14 +1,14 @@
 var types = require("utils/types");
-var _enabled = false;
+exports.enabled = false;
 var _categories = {};
 var _writers = [];
 var _eventListeners = [];
 function enable() {
-    _enabled = true;
+    exports.enabled = true;
 }
 exports.enable = enable;
 function disable() {
-    _enabled = false;
+    exports.enabled = false;
 }
 exports.disable = disable;
 function isCategorySet(category) {
@@ -51,7 +51,7 @@ function write(message, category, type) {
             _writers[i].write(message, category, type);
         }
     }
-    if (!_enabled) {
+    if (!exports.enabled) {
         return;
     }
     if (!(category in _categories)) {
@@ -63,7 +63,7 @@ function write(message, category, type) {
 }
 exports.write = write;
 function notifyEvent(object, name, data) {
-    if (!_enabled) {
+    if (!exports.enabled) {
         return;
     }
     var i, listener, filters;

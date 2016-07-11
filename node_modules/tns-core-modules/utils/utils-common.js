@@ -119,3 +119,32 @@ function isDataURI(uri) {
     return firstSegment && firstSegment.indexOf("data:") === 0 && firstSegment.indexOf('base64') >= 0;
 }
 exports.isDataURI = isDataURI;
+function mergeSort(arr, compareFunc) {
+    if (arr.length < 2) {
+        return arr;
+    }
+    var middle = arr.length / 2;
+    var left = arr.slice(0, middle);
+    var right = arr.slice(middle, arr.length);
+    return merge(mergeSort(left, compareFunc), mergeSort(right, compareFunc), compareFunc);
+}
+exports.mergeSort = mergeSort;
+function merge(left, right, compareFunc) {
+    var result = [];
+    while (left.length && right.length) {
+        if (compareFunc(left[0], right[0]) <= 0) {
+            result.push(left.shift());
+        }
+        else {
+            result.push(right.shift());
+        }
+    }
+    while (left.length) {
+        result.push(left.shift());
+    }
+    while (right.length) {
+        result.push(right.shift());
+    }
+    return result;
+}
+exports.merge = merge;

@@ -16,15 +16,6 @@ function onAutomationTextPropertyChanged(data) {
     view._nativeView.accessibilityIdentifier = data.newValue;
 }
 viewCommon.View.automationTextProperty.metadata.onSetNativeValue = onAutomationTextPropertyChanged;
-function onTransfromPropertyChanged(data) {
-    var view = data.object;
-    view._updateNativeTransform();
-}
-viewCommon.View.translateXProperty.metadata.onSetNativeValue = onTransfromPropertyChanged;
-viewCommon.View.translateYProperty.metadata.onSetNativeValue = onTransfromPropertyChanged;
-viewCommon.View.scaleXProperty.metadata.onSetNativeValue = onTransfromPropertyChanged;
-viewCommon.View.scaleYProperty.metadata.onSetNativeValue = onTransfromPropertyChanged;
-viewCommon.View.rotateProperty.metadata.onSetNativeValue = onTransfromPropertyChanged;
 function onOriginPropertyChanged(data) {
     var view = data.object;
     view._updateOriginPoint();
@@ -72,6 +63,13 @@ var View = (function (_super) {
     Object.defineProperty(View.prototype, "_nativeView", {
         get: function () {
             return this.ios;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(View.prototype, "isLayoutRequired", {
+        get: function () {
+            return (this._privateFlags & PFLAG_LAYOUT_REQUIRED) === PFLAG_LAYOUT_REQUIRED;
         },
         enumerable: true,
         configurable: true
@@ -148,7 +146,9 @@ var View = (function (_super) {
     };
     View.prototype._setNativeViewFrame = function (nativeView, frame) {
         if (!CGRectEqualToRect(nativeView.frame, frame)) {
-            trace.write(this + ", Native setFrame: = " + NSStringFromCGRect(frame), trace.categories.Layout);
+            if (trace.enabled) {
+                trace.write(this + ", Native setFrame: = " + NSStringFromCGRect(frame), trace.categories.Layout);
+            }
             this._cachedFrame = frame;
             if (this._hasTransfrom) {
                 var transform = nativeView.transform;
@@ -169,7 +169,9 @@ var View = (function (_super) {
         }
         var nativeView;
         if (!this.parent && this._nativeView.subviews.count > 0 && utils.ios.MajorVersion < 8) {
-            trace.write(this + " has no parent. Setting frame to first child instead.", trace.categories.Layout);
+            if (trace.enabled) {
+                trace.write(this + " has no parent. Setting frame to first child instead.", trace.categories.Layout);
+            }
             nativeView = this._nativeView.subviews[0];
         }
         else {
@@ -226,10 +228,15 @@ var View = (function (_super) {
         this.style._sizeChanged();
     };
     View.prototype._updateNativeTransform = function () {
+        var translateX = this.translateX || 0;
+        var translateY = this.translateY || 0;
+        var scaleX = this.scaleX || 1;
+        var scaleY = this.scaleY || 1;
+        var rotate = this.rotate || 0;
         var newTransform = CGAffineTransformIdentity;
-        newTransform = CGAffineTransformTranslate(newTransform, this.translateX, this.translateY);
-        newTransform = CGAffineTransformRotate(newTransform, this.rotate * Math.PI / 180);
-        newTransform = CGAffineTransformScale(newTransform, this.scaleX, this.scaleY);
+        newTransform = CGAffineTransformTranslate(newTransform, translateX, translateY);
+        newTransform = CGAffineTransformRotate(newTransform, rotate * Math.PI / 180);
+        newTransform = CGAffineTransformScale(newTransform, scaleX === 0 ? 0.001 : scaleX, scaleY === 0 ? 0.001 : scaleY);
         if (!CGAffineTransformEqualToTransform(this._nativeView.transform, newTransform)) {
             this._nativeView.transform = newTransform;
             this._hasTransfrom = this._nativeView && !CGAffineTransformEqualToTransform(this._nativeView.transform, CGAffineTransformIdentity);
@@ -416,49 +423,69 @@ var ViewStyler = (function () {
         return 0;
     };
     ViewStyler.setRotateProperty = function (view, newValue) {
-        view.rotate = newValue;
+        view._updateNativeTransform();
     };
     ViewStyler.resetRotateProperty = function (view, nativeValue) {
-        view.rotate = nativeValue;
+        view._updateNativeTransform();
     };
     ViewStyler.getRotateProperty = function (view) {
-        return view.rotate;
+        if (view._nativeView instanceof UIView) {
+            var t = view._nativeView.transform;
+            return Math.atan2(t.b, t.a);
+        }
+        return 0;
     };
     ViewStyler.setScaleXProperty = function (view, newValue) {
-        view.scaleX = newValue;
+        view._updateNativeTransform();
     };
     ViewStyler.resetScaleXProperty = function (view, nativeValue) {
-        view.scaleX = nativeValue;
+        view._updateNativeTransform();
     };
     ViewStyler.getScaleXProperty = function (view) {
-        return view.scaleX;
+        if (view._nativeView instanceof UIView) {
+            var t = view._nativeView.transform;
+            return Math.sqrt(t.a * t.a + t.c * t.c);
+        }
+        return 0;
     };
     ViewStyler.setScaleYProperty = function (view, newValue) {
-        view.scaleY = newValue;
+        view._updateNativeTransform();
     };
     ViewStyler.resetScaleYProperty = function (view, nativeValue) {
-        view.scaleY = nativeValue;
+        view._updateNativeTransform();
     };
     ViewStyler.getScaleYProperty = function (view) {
-        return view.scaleY;
+        if (view._nativeView instanceof UIView) {
+            var t = view._nativeView.transform;
+            return Math.sqrt(t.b * t.b + t.d * t.d);
+        }
+        return 0;
     };
     ViewStyler.setTranslateXProperty = function (view, newValue) {
-        view.translateX = newValue;
+        view._updateNativeTransform();
     };
     ViewStyler.resetTranslateXProperty = function (view, nativeValue) {
-        view.translateX = nativeValue;
+        view._updateNativeTransform();
     };
     ViewStyler.getTranslateXProperty = function (view) {
-        return view.translateX;
+        if (view._nativeView instanceof UIView) {
+            var t = view._nativeView.transform;
+            return t.tx;
+        }
+        return 0;
     };
     ViewStyler.setTranslateYProperty = function (view, newValue) {
-        view.translateY = newValue;
+        view._updateNativeTransform();
     };
     ViewStyler.resetTranslateYProperty = function (view, nativeValue) {
-        view.translateY = nativeValue;
+        view._updateNativeTransform();
     };
     ViewStyler.getTranslateYProperty = function (view) {
-        return view.translateY;
+        if (view._nativeView instanceof UIView) {
+            var t = view._nativeView.transform;
+            return t.ty;
+        }
+        return 0;
     };
     ViewStyler.setZIndexProperty = function (view, newValue) {
         view.ios.layer.zPosition = newValue;

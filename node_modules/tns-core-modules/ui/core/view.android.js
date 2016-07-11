@@ -19,26 +19,6 @@ function onIdPropertyChanged(data) {
     view._nativeView.setTag(data.newValue);
 }
 viewCommon.View.idProperty.metadata.onSetNativeValue = onIdPropertyChanged;
-function onTranslateXPropertyChanged(data) {
-    var view = data.object;
-    view._nativeView.setTranslationX(data.newValue * utils.layout.getDisplayDensity());
-}
-viewCommon.View.translateXProperty.metadata.onSetNativeValue = onTranslateXPropertyChanged;
-function onTranslateYPropertyChanged(data) {
-    var view = data.object;
-    view._nativeView.setTranslationY(data.newValue * utils.layout.getDisplayDensity());
-}
-viewCommon.View.translateYProperty.metadata.onSetNativeValue = onTranslateYPropertyChanged;
-function onScaleXPropertyChanged(data) {
-    var view = data.object;
-    view._nativeView.setScaleX(data.newValue);
-}
-viewCommon.View.scaleXProperty.metadata.onSetNativeValue = onScaleXPropertyChanged;
-function onScaleYPropertyChanged(data) {
-    var view = data.object;
-    view._nativeView.setScaleY(data.newValue);
-}
-viewCommon.View.scaleYProperty.metadata.onSetNativeValue = onScaleYPropertyChanged;
 function onOriginXPropertyChanged(data) {
     org.nativescript.widgets.OriginPoint.setX(data.object._nativeView, data.newValue);
 }
@@ -47,11 +27,6 @@ function onOriginYPropertyChanged(data) {
     org.nativescript.widgets.OriginPoint.setY(data.object._nativeView, data.newValue);
 }
 viewCommon.View.originYProperty.metadata.onSetNativeValue = onOriginYPropertyChanged;
-function onRotatePropertyChanged(data) {
-    var view = data.object;
-    view._nativeView.setRotation(data.newValue);
-}
-viewCommon.View.rotateProperty.metadata.onSetNativeValue = onRotatePropertyChanged;
 function onIsEnabledPropertyChanged(data) {
     var view = data.object;
     view._nativeView.setEnabled(data.newValue);
@@ -103,6 +78,7 @@ var View = (function (_super) {
     };
     View.prototype.onUnloaded = function () {
         _super.prototype.onUnloaded.call(this);
+        this._unregisterAllAnimations();
         if (this._nativeView && this._nativeView.setOnTouchListener) {
             this._nativeView.setOnTouchListener(null);
             this.touchListenerIsSet = false;
@@ -154,7 +130,9 @@ var View = (function (_super) {
         if (!context) {
             throw new Error("Expected valid android.content.Context instance.");
         }
-        trace.write("calling _onAttached on view " + this._domId, trace.categories.VisualTreeEvents);
+        if (trace.enabled) {
+            trace.write(this + "._onAttached(context)", trace.categories.VisualTreeEvents);
+        }
         if (this._context === context) {
             return;
         }
@@ -177,6 +155,9 @@ var View = (function (_super) {
         }
     };
     View.prototype._onDetached = function (force) {
+        if (trace.enabled) {
+            trace.write(this + "._onDetached(force)", trace.categories.VisualTreeEvents);
+        }
         if (this._childrenCount > 0) {
             var that = this;
             var eachChild = function (child) {
@@ -190,7 +171,6 @@ var View = (function (_super) {
             };
             this._eachChildView(eachChild);
         }
-        trace.write("calling _onDetached on view " + this._domId, trace.categories.VisualTreeEvents);
         this._clearAndroidReference();
         this._context = undefined;
         trace.notifyEvent(this, "_onDetached");
@@ -205,9 +185,11 @@ var View = (function (_super) {
         this[ANDROID] = undefined;
     };
     View.prototype._onContextChanged = function () {
-        trace.write("calling _onContextChanged on view " + this._domId, trace.categories.VisualTreeEvents);
+        if (trace.enabled) {
+            trace.write(this + "._onContextChanged", trace.categories.VisualTreeEvents);
+        }
         this._createUI();
-        if (this._nativeView && !(this._nativeView.getLayoutParams() instanceof org.nativescript.widgets.CommonLayoutParams)) {
+        if (this._nativeView && !this._nativeView.getLayoutParams()) {
             this._nativeView.setLayoutParams(new org.nativescript.widgets.CommonLayoutParams());
         }
         this._syncNativeProperties();
@@ -216,6 +198,13 @@ var View = (function (_super) {
     Object.defineProperty(View.prototype, "_nativeView", {
         get: function () {
             return this.android;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(View.prototype, "isLayoutRequired", {
+        get: function () {
+            return !this.isLayoutValid;
         },
         enumerable: true,
         configurable: true
@@ -374,9 +363,15 @@ var CustomLayoutView = (function (_super) {
         _super.prototype._addViewToNativeVisualTree.call(this, child);
         if (this._nativeView && child._nativeView) {
             if (types.isNullOrUndefined(atIndex) || atIndex >= this._nativeView.getChildCount()) {
+                if (trace.enabled) {
+                    trace.write(this + "._nativeView.addView(" + child + "._nativeView)", trace.categories.VisualTreeEvents);
+                }
                 this._nativeView.addView(child._nativeView);
             }
             else {
+                if (trace.enabled) {
+                    trace.write(this + "._nativeView.addView(" + child + "._nativeView, " + atIndex + ")", trace.categories.VisualTreeEvents);
+                }
                 this._nativeView.addView(child._nativeView, atIndex);
             }
             return true;
@@ -386,6 +381,9 @@ var CustomLayoutView = (function (_super) {
     CustomLayoutView.prototype._removeViewFromNativeVisualTree = function (child) {
         _super.prototype._removeViewFromNativeVisualTree.call(this, child);
         if (this._nativeView && child._nativeView) {
+            if (trace.enabled) {
+                trace.write(this + "._nativeView.removeView(" + child + "._nativeView)", trace.categories.VisualTreeEvents);
+            }
             this._nativeView.removeView(child._nativeView);
             trace.notifyEvent(child, "childInLayoutRemovedFromNativeVisualTree");
         }
@@ -427,26 +425,8 @@ var ViewStyler = (function () {
     ViewStyler.resetMinHeightProperty = function (view, nativeValue) {
         view._nativeView.setMinimumHeight(0);
     };
-    ViewStyler.getNativeLayoutParams = function (nativeView) {
-        var lp = nativeView.getLayoutParams();
-        if (!(lp instanceof org.nativescript.widgets.CommonLayoutParams)) {
-            lp = new org.nativescript.widgets.CommonLayoutParams();
-        }
-        return lp;
-    };
     ViewStyler.setNativeLayoutParamsProperty = function (view, params) {
         var nativeView = view._nativeView;
-        var lp = ViewStyler.getNativeLayoutParams(nativeView);
-        lp.widthPercent = params.widthPercent;
-        lp.heightPercent = params.heightPercent;
-        lp.leftMarginPercent = params.leftMarginPercent;
-        lp.topMarginPercent = params.topMarginPercent;
-        lp.rightMarginPercent = params.rightMarginPercent;
-        lp.bottomMarginPercent = params.bottomMarginPercent;
-        lp.leftMargin = Math.round(params.leftMargin * utils.layout.getDisplayDensity());
-        lp.topMargin = Math.round(params.topMargin * utils.layout.getDisplayDensity());
-        lp.rightMargin = Math.round(params.rightMargin * utils.layout.getDisplayDensity());
-        lp.bottomMargin = Math.round(params.bottomMargin * utils.layout.getDisplayDensity());
         var width = params.width * utils.layout.getDisplayDensity();
         var height = params.height * utils.layout.getDisplayDensity();
         if (width < 0) {
@@ -495,13 +475,62 @@ var ViewStyler = (function () {
             default:
                 throw new Error("Invalid verticalAlignment value: " + params.verticalAlignment);
         }
-        lp.gravity = gravity;
+        var lp = nativeView.getLayoutParams();
         lp.width = Math.round(width);
         lp.height = Math.round(height);
+        if (lp instanceof org.nativescript.widgets.CommonLayoutParams) {
+            lp.widthPercent = params.widthPercent;
+            lp.heightPercent = params.heightPercent;
+            lp.leftMarginPercent = params.leftMarginPercent;
+            lp.topMarginPercent = params.topMarginPercent;
+            lp.rightMarginPercent = params.rightMarginPercent;
+            lp.bottomMarginPercent = params.bottomMarginPercent;
+            lp.leftMargin = Math.round(params.leftMargin * utils.layout.getDisplayDensity());
+            lp.topMargin = Math.round(params.topMargin * utils.layout.getDisplayDensity());
+            lp.rightMargin = Math.round(params.rightMargin * utils.layout.getDisplayDensity());
+            lp.bottomMargin = Math.round(params.bottomMargin * utils.layout.getDisplayDensity());
+            lp.gravity = gravity;
+        }
+        else {
+            var layoutParams = lp;
+            if (types.isDefined(layoutParams.widthPercent)) {
+                layoutParams.widthPercent = params.widthPercent;
+            }
+            if (types.isDefined(layoutParams.heightPercent)) {
+                layoutParams.heightPercent = params.heightPercent;
+            }
+            if (types.isDefined(layoutParams.leftMarginPercent)) {
+                layoutParams.leftMarginPercent = params.leftMarginPercent;
+            }
+            if (types.isDefined(layoutParams.topMarginPercent)) {
+                layoutParams.topMarginPercent = params.topMarginPercent;
+            }
+            if (types.isDefined(layoutParams.rightMarginPercent)) {
+                layoutParams.rightMarginPercent = params.rightMarginPercent;
+            }
+            if (types.isDefined(layoutParams.bottomMarginPercent)) {
+                layoutParams.bottomMarginPercent = params.bottomMarginPercent;
+            }
+            if (types.isDefined(layoutParams.leftMargin)) {
+                layoutParams.leftMargin = Math.round(params.leftMargin * utils.layout.getDisplayDensity());
+            }
+            if (types.isDefined(layoutParams.topMargin)) {
+                layoutParams.topMargin = Math.round(params.topMargin * utils.layout.getDisplayDensity());
+            }
+            if (types.isDefined(layoutParams.rightMargin)) {
+                layoutParams.rightMargin = Math.round(params.rightMargin * utils.layout.getDisplayDensity());
+            }
+            if (types.isDefined(layoutParams.bottomMargin)) {
+                layoutParams.bottomMargin = Math.round(params.bottomMargin * utils.layout.getDisplayDensity());
+            }
+            if (types.isDefined(layoutParams.gravity)) {
+                layoutParams.gravity = gravity;
+            }
+        }
         nativeView.setLayoutParams(lp);
     };
     ViewStyler.resetNativeLayoutParamsProperty = function (view, nativeValue) {
-        ViewStyler.setNativeLayoutParamsProperty(view, style.nativeLayoutParamsProperty.metadata.defaultValue);
+        ViewStyler.setNativeLayoutParamsProperty(view, style.nativeLayoutParamsProperty.defaultValue);
     };
     ViewStyler.setPaddingProperty = function (view, newValue) {
         var density = utils.layout.getDisplayDensity();
@@ -520,49 +549,34 @@ var ViewStyler = (function () {
         view._nativeView.setPadding(left, top, right, bottom);
     };
     ViewStyler.setRotateProperty = function (view, newValue) {
-        view.rotate = newValue;
+        view._nativeView.setRotation(newValue);
     };
     ViewStyler.resetRotateProperty = function (view, nativeValue) {
-        view.rotate = nativeValue;
-    };
-    ViewStyler.getRotateProperty = function (view) {
-        return view.rotate;
+        view._nativeView.setRotation(float(0));
     };
     ViewStyler.setScaleXProperty = function (view, newValue) {
-        view.scaleX = newValue;
+        view._nativeView.setScaleX(newValue);
     };
     ViewStyler.resetScaleXProperty = function (view, nativeValue) {
-        view.scaleX = nativeValue;
-    };
-    ViewStyler.getScaleXProperty = function (view) {
-        return view.scaleX;
+        view._nativeView.setScaleX(float(1.0));
     };
     ViewStyler.setScaleYProperty = function (view, newValue) {
-        view.scaleY = newValue;
+        view._nativeView.setScaleY(newValue);
     };
     ViewStyler.resetScaleYProperty = function (view, nativeValue) {
-        view.scaleY = nativeValue;
-    };
-    ViewStyler.getScaleYProperty = function (view) {
-        return view.scaleY;
+        view._nativeView.setScaleY(float(1.0));
     };
     ViewStyler.setTranslateXProperty = function (view, newValue) {
-        view.translateX = newValue;
+        view._nativeView.setTranslationX(newValue * utils.layout.getDisplayDensity());
     };
     ViewStyler.resetTranslateXProperty = function (view, nativeValue) {
-        view.translateX = nativeValue;
-    };
-    ViewStyler.getTranslateXProperty = function (view) {
-        return view.translateX;
+        view._nativeView.setTranslationX(float(0));
     };
     ViewStyler.setTranslateYProperty = function (view, newValue) {
-        view.translateY = newValue;
+        view._nativeView.setTranslationY(newValue * utils.layout.getDisplayDensity());
     };
     ViewStyler.resetTranslateYProperty = function (view, nativeValue) {
-        view.translateY = nativeValue;
-    };
-    ViewStyler.getTranslateYProperty = function (view) {
-        return view.translateY;
+        view._nativeView.setTranslationY(float(0));
     };
     ViewStyler.getZIndexProperty = function (view) {
         return view.android.getZ ? view.android.getZ() : 0;
@@ -595,11 +609,11 @@ var ViewStyler = (function () {
         style.registerHandler(style.nativePaddingsProperty, new style.StylePropertyChangedHandler(ViewStyler.setPaddingProperty, ViewStyler.resetPaddingProperty), "TextBase");
         style.registerHandler(style.nativePaddingsProperty, new style.StylePropertyChangedHandler(ViewStyler.setPaddingProperty, ViewStyler.resetPaddingProperty), "Button");
         style.registerHandler(style.nativePaddingsProperty, new style.StylePropertyChangedHandler(ViewStyler.setPaddingProperty, ViewStyler.resetPaddingProperty), "LayoutBase");
-        style.registerHandler(style.rotateProperty, new style.StylePropertyChangedHandler(ViewStyler.setRotateProperty, ViewStyler.resetRotateProperty, ViewStyler.getRotateProperty));
-        style.registerHandler(style.scaleXProperty, new style.StylePropertyChangedHandler(ViewStyler.setScaleXProperty, ViewStyler.resetScaleXProperty, ViewStyler.getScaleXProperty));
-        style.registerHandler(style.scaleYProperty, new style.StylePropertyChangedHandler(ViewStyler.setScaleYProperty, ViewStyler.resetScaleYProperty, ViewStyler.getScaleYProperty));
-        style.registerHandler(style.translateXProperty, new style.StylePropertyChangedHandler(ViewStyler.setTranslateXProperty, ViewStyler.resetTranslateXProperty, ViewStyler.getTranslateXProperty));
-        style.registerHandler(style.translateYProperty, new style.StylePropertyChangedHandler(ViewStyler.setTranslateYProperty, ViewStyler.resetTranslateYProperty, ViewStyler.getTranslateYProperty));
+        style.registerHandler(style.rotateProperty, new style.StylePropertyChangedHandler(ViewStyler.setRotateProperty, ViewStyler.resetRotateProperty));
+        style.registerHandler(style.scaleXProperty, new style.StylePropertyChangedHandler(ViewStyler.setScaleXProperty, ViewStyler.resetScaleXProperty));
+        style.registerHandler(style.scaleYProperty, new style.StylePropertyChangedHandler(ViewStyler.setScaleYProperty, ViewStyler.resetScaleYProperty));
+        style.registerHandler(style.translateXProperty, new style.StylePropertyChangedHandler(ViewStyler.setTranslateXProperty, ViewStyler.resetTranslateXProperty));
+        style.registerHandler(style.translateYProperty, new style.StylePropertyChangedHandler(ViewStyler.setTranslateYProperty, ViewStyler.resetTranslateYProperty));
         style.registerHandler(style.zIndexProperty, new style.StylePropertyChangedHandler(ViewStyler.setZIndexProperty, ViewStyler.resetZIndexProperty, ViewStyler.getZIndexProperty));
     };
     return ViewStyler;

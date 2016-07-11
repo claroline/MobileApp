@@ -73,25 +73,15 @@ function request(options) {
                             },
                             toImage: function () {
                                 ensureImageSource();
-                                if (UIImage.imageWithData["async"]) {
-                                    return UIImage.imageWithData["async"](UIImage, [data])
-                                        .then(function (image) {
-                                        if (!image) {
-                                            throw new Error("Response content may not be converted to an Image");
+                                return new Promise(function (resolve, reject) {
+                                    UIImage.tns_decodeImageWithDataCompletion(data, function (image) {
+                                        if (image) {
+                                            resolve(imageSource.fromNativeSource(image));
                                         }
-                                        var source = new imageSource.ImageSource();
-                                        source.setNativeSource(image);
-                                        return source;
+                                        else {
+                                            reject(new Error("Response content may not be converted to an Image"));
+                                        }
                                     });
-                                }
-                                return new Promise(function (resolveImage, rejectImage) {
-                                    var img = imageSource.fromData(data);
-                                    if (img instanceof imageSource.ImageSource) {
-                                        resolveImage(img);
-                                    }
-                                    else {
-                                        rejectImage(new Error("Response content may not be converted to an Image"));
-                                    }
                                 });
                             },
                             toFile: function (destinationFilePath) {

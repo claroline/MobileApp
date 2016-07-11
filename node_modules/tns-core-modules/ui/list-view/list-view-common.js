@@ -76,10 +76,9 @@ var ListView = (function (_super) {
     });
     Object.defineProperty(ListView.prototype, "isScrolling", {
         get: function () {
-            return this._getValue(ListView.isScrollingProperty);
+            return false;
         },
         set: function (value) {
-            this._setValue(ListView.isScrollingProperty, value);
         },
         enumerable: true,
         configurable: true
@@ -118,16 +117,12 @@ var ListView = (function (_super) {
     };
     ListView.prototype._prepareItem = function (item, index) {
         if (item) {
-            var dataItem = this._getDataItem(index);
-            if (!(dataItem instanceof observable.Observable)) {
-                item.bindingContext = null;
-            }
-            item.bindingContext = dataItem;
-            item._inheritProperties(this);
+            item.bindingContext = this._getDataItem(index);
         }
     };
     ListView.prototype._getDataItem = function (index) {
-        return this.items.getItem ? this.items.getItem(index) : this.items[index];
+        var thisItems = this.items;
+        return thisItems.getItem ? thisItems.getItem(index) : thisItems[index];
     };
     ListView.prototype._getDefaultItemContent = function (index) {
         ensureLabel();
@@ -154,8 +149,6 @@ var ListView = (function (_super) {
     };
     ListView.prototype._onRowHeightPropertyChanged = function (data) {
         this.refresh();
-    };
-    ListView.prototype._propagateInheritableProperties = function (view) {
     };
     ListView.itemLoadingEvent = "itemLoading";
     ListView.itemTapEvent = "itemTap";

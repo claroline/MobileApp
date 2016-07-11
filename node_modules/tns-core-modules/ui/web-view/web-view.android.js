@@ -20,20 +20,26 @@ function ensureWebViewClientClass() {
             return global.__native(this);
         }
         WebViewClientClassInner.prototype.shouldOverrideUrlLoading = function (view, url) {
-            trace.write("WebViewClientClass.shouldOverrideUrlLoading(" + url + ")", trace.categories.Debug);
+            if (trace.enabled) {
+                trace.write("WebViewClientClass.shouldOverrideUrlLoading(" + url + ")", trace.categories.Debug);
+            }
             return false;
         };
         WebViewClientClassInner.prototype.onPageStarted = function (view, url, favicon) {
             _super.prototype.onPageStarted.call(this, view, url, favicon);
             if (this._view) {
-                trace.write("WebViewClientClass.onPageStarted(" + url + ", " + favicon + ")", trace.categories.Debug);
+                if (trace.enabled) {
+                    trace.write("WebViewClientClass.onPageStarted(" + url + ", " + favicon + ")", trace.categories.Debug);
+                }
                 this._view._onLoadStarted(url, common.WebView.navigationTypes[common.WebView.navigationTypes.indexOf("linkClicked")]);
             }
         };
         WebViewClientClassInner.prototype.onPageFinished = function (view, url) {
             _super.prototype.onPageFinished.call(this, view, url);
             if (this._view) {
-                trace.write("WebViewClientClass.onPageFinished(" + url + ")", trace.categories.Debug);
+                if (trace.enabled) {
+                    trace.write("WebViewClientClass.onPageFinished(" + url + ")", trace.categories.Debug);
+                }
                 this._view._onLoadFinished(url, undefined);
             }
         };
@@ -45,7 +51,9 @@ function ensureWebViewClientClass() {
                 var failingUrl = arguments[3];
                 _super.prototype.onReceivedError.call(this, view, errorCode, description, failingUrl);
                 if (this._view) {
-                    trace.write("WebViewClientClass.onReceivedError(" + errorCode + ", " + description + ", " + failingUrl + ")", trace.categories.Debug);
+                    if (trace.enabled) {
+                        trace.write("WebViewClientClass.onReceivedError(" + errorCode + ", " + description + ", " + failingUrl + ")", trace.categories.Debug);
+                    }
                     this._view._onLoadFinished(failingUrl, description + "(" + errorCode + ")");
                 }
             }
@@ -54,7 +62,9 @@ function ensureWebViewClientClass() {
                 var error = arguments[2];
                 _super.prototype.onReceivedError.call(this, view, request, error);
                 if (this._view) {
-                    trace.write("WebViewClientClass.onReceivedError(" + error.getErrorCode() + ", " + error.getDescription() + ", " + (error.getUrl && error.getUrl()) + ")", trace.categories.Debug);
+                    if (trace.enabled) {
+                        trace.write("WebViewClientClass.onReceivedError(" + error.getErrorCode() + ", " + error.getDescription() + ", " + (error.getUrl && error.getUrl()) + ")", trace.categories.Debug);
+                    }
                     this._view._onLoadFinished(error.getUrl && error.getUrl(), error.getDescription() + "(" + error.getErrorCode() + ")");
                 }
             }
@@ -94,7 +104,9 @@ var WebView = (function (_super) {
         if (!this._android) {
             return;
         }
-        trace.write("WebView._loadUrl(" + url + ")", trace.categories.Debug);
+        if (trace.enabled) {
+            trace.write("WebView._loadUrl(" + url + ")", trace.categories.Debug);
+        }
         this._android.stopLoading();
         this._android.loadUrl(url);
     };

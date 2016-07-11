@@ -126,11 +126,36 @@ var ad;
         view.setEllipsize(value === enums.WhiteSpace.nowrap ? android.text.TextUtils.TruncateAt.END : null);
     }
     ad.setWhiteSpace = setWhiteSpace;
+    var nativeApp;
     function getApplication() {
-        return com.tns.NativeScriptApplication.getInstance();
+        if (!nativeApp) {
+            if (com.tns.NativeScriptApplication) {
+                nativeApp = com.tns.NativeScriptApplication.getInstance();
+            }
+            if (!nativeApp) {
+                var application = require("application");
+                nativeApp = application.android.nativeApp;
+                if (!nativeApp) {
+                    var clazz = java.lang.Class.forName("android.app.ActivityThread");
+                    if (clazz) {
+                        var method = clazz.getMethod("currentApplication", null);
+                        if (method) {
+                            nativeApp = method.invoke(null, null);
+                        }
+                    }
+                }
+            }
+            if (!nativeApp) {
+                throw new Error("Failed to retrieve native Android Application object. If you have a custom android.app.Application type implemented make sure that you've called the '<application-module>.android.init' method.");
+            }
+        }
+        return nativeApp;
     }
     ad.getApplication = getApplication;
-    function getApplicationContext() { return getApplication().getApplicationContext(); }
+    function getApplicationContext() {
+        var app = getApplication();
+        return app.getApplicationContext();
+    }
     ad.getApplicationContext = getApplicationContext;
     var inputMethodManager;
     function getInputMethodManager() {

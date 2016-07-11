@@ -6,6 +6,7 @@ var types = require("utils/types");
 var enums = require("ui/enums");
 var styleModule = require("ui/styling/style");
 var lazy_1 = require("utils/lazy");
+var dependencyObservable = require("ui/core/dependency-observable");
 global.moduleMerge(common, exports);
 var argbEvaluator;
 function ensureArgbEvaluator() {
@@ -30,42 +31,44 @@ var Animation = (function (_super) {
         var that = this;
         this._animatorListener = new android.animation.Animator.AnimatorListener({
             onAnimationStart: function (animator) {
-                trace.write("MainAnimatorListener.onAndroidAnimationStart(" + animator + ")", trace.categories.Animation);
+                if (trace.enabled) {
+                    trace.write("MainAnimatorListener.onAndroidAnimationStart(" + animator + ")", trace.categories.Animation);
+                }
             },
             onAnimationRepeat: function (animator) {
-                trace.write("MainAnimatorListener.onAnimationRepeat(" + animator + ")", trace.categories.Animation);
+                if (trace.enabled) {
+                    trace.write("MainAnimatorListener.onAnimationRepeat(" + animator + ")", trace.categories.Animation);
+                }
             },
             onAnimationEnd: function (animator) {
-                trace.write("MainAnimatorListener.onAnimationEnd(" + animator + ")", trace.categories.Animation);
+                if (trace.enabled) {
+                    trace.write("MainAnimatorListener.onAnimationEnd(" + animator + ")", trace.categories.Animation);
+                }
                 that._onAndroidAnimationEnd();
             },
             onAnimationCancel: function (animator) {
-                trace.write("MainAnimatorListener.onAnimationCancel(" + animator + ")", trace.categories.Animation);
+                if (trace.enabled) {
+                    trace.write("MainAnimatorListener.onAnimationCancel(" + animator + ")", trace.categories.Animation);
+                }
                 that._onAndroidAnimationCancel();
             }
         });
     }
     Animation.prototype.play = function () {
         var animationFinishedPromise = _super.prototype.play.call(this);
-        var i;
-        var length;
         this._animators = new Array();
         this._propertyUpdateCallbacks = new Array();
         this._propertyResetCallbacks = new Array();
-        i = 0;
-        length = this._propertyAnimations.length;
-        for (; i < length; i++) {
+        for (var i = 0, length_1 = this._propertyAnimations.length; i < length_1; i++) {
             this._createAnimators(this._propertyAnimations[i]);
         }
         this._nativeAnimatorsArray = Array.create(android.animation.Animator, this._animators.length);
-        i = 0;
-        length = this._animators.length;
-        for (; i < length; i++) {
+        for (var i = 0, length_2 = this._animators.length; i < length_2; i++) {
             this._nativeAnimatorsArray[i] = this._animators[i];
         }
         this._animatorSet = new android.animation.AnimatorSet();
         this._animatorSet.addListener(this._animatorListener);
-        if (length > 0) {
+        if (this._animators.length > 0) {
             if (this._playSequentially) {
                 this._animatorSet.playSequentially(this._nativeAnimatorsArray);
             }
@@ -73,14 +76,19 @@ var Animation = (function (_super) {
                 this._animatorSet.playTogether(this._nativeAnimatorsArray);
             }
         }
-        trace.write("Starting " + this._nativeAnimatorsArray.length + " animations " + (this._playSequentially ? "sequentially." : "together."), trace.categories.Animation);
+        this._enableHardwareAcceleration();
+        if (trace.enabled) {
+            trace.write("Starting " + this._nativeAnimatorsArray.length + " animations " + (this._playSequentially ? "sequentially." : "together."), trace.categories.Animation);
+        }
         this._animatorSet.setupStartValues();
         this._animatorSet.start();
         return animationFinishedPromise;
     };
     Animation.prototype.cancel = function () {
         _super.prototype.cancel.call(this);
-        trace.write("Cancelling AnimatorSet.", trace.categories.Animation);
+        if (trace.enabled) {
+            trace.write("Cancelling AnimatorSet.", trace.categories.Animation);
+        }
         this._animatorSet.cancel();
     };
     Animation.prototype._onAndroidAnimationEnd = function () {
@@ -92,6 +100,7 @@ var Animation = (function (_super) {
         for (; i < length; i++) {
             this._propertyUpdateCallbacks[i]();
         }
+        this._disableHardwareAcceleration();
         this._resolveAnimationFinishedPromise();
     };
     Animation.prototype._onAndroidAnimationCancel = function () {
@@ -100,13 +109,16 @@ var Animation = (function (_super) {
         for (; i < length; i++) {
             this._propertyResetCallbacks[i]();
         }
+        this._disableHardwareAcceleration();
         this._rejectAnimationFinishedPromise();
     };
     Animation.prototype._createAnimators = function (propertyAnimation) {
         if (!propertyAnimation.target._nativeView) {
             return;
         }
-        trace.write("Creating ObjectAnimator(s) for animation: " + common.Animation._getAnimationInfo(propertyAnimation) + "...", trace.categories.Animation);
+        if (trace.enabled) {
+            trace.write("Creating ObjectAnimator(s) for animation: " + common.Animation._getAnimationInfo(propertyAnimation) + "...", trace.categories.Animation);
+        }
         if (types.isNullOrUndefined(propertyAnimation.target)) {
             throw new Error("Animation target cannot be null or undefined!");
         }
@@ -138,26 +150,23 @@ var Animation = (function (_super) {
                 }
             };
         }
-        var valueSource = this._valueSource;
+        var valueSource = this._valueSource !== undefined ? this._valueSource : dependencyObservable.ValueSource.Local;
         switch (propertyAnimation.property) {
             case common.Properties.opacity:
                 originalValue1 = nativeView.getAlpha();
                 nativeArray = Array.create("float", 1);
                 nativeArray[0] = propertyAnimation.value;
-                if (this._valueSource !== undefined) {
-                    propertyUpdateCallbacks.push(checkAnimation(function () {
-                        propertyAnimation.target.style._setValue(styleModule.opacityProperty, propertyAnimation.value, valueSource);
-                    }));
-                }
-                else {
-                    propertyUpdateCallbacks.push(checkAnimation(function () { propertyAnimation.target.opacity = propertyAnimation.value; }));
-                }
-                propertyResetCallbacks.push(checkAnimation(function () { nativeView.setAlpha(originalValue1); }));
+                propertyUpdateCallbacks.push(checkAnimation(function () {
+                    propertyAnimation.target.style._setValue(styleModule.opacityProperty, propertyAnimation.value, valueSource);
+                }));
+                propertyResetCallbacks.push(checkAnimation(function () {
+                    propertyAnimation.target.style._setValue(styleModule.opacityProperty, originalValue1, valueSource);
+                }));
                 animators.push(android.animation.ObjectAnimator.ofFloat(nativeView, "alpha", nativeArray));
                 break;
             case common.Properties.backgroundColor:
                 ensureArgbEvaluator();
-                originalValue1 = nativeView.getBackground();
+                originalValue1 = propertyAnimation.target.backgroundColor;
                 nativeArray = Array.create(java.lang.Object, 2);
                 nativeArray[0] = propertyAnimation.target.backgroundColor ? java.lang.Integer.valueOf(propertyAnimation.target.backgroundColor.argb) : java.lang.Integer.valueOf(-1);
                 nativeArray[1] = java.lang.Integer.valueOf(propertyAnimation.value.argb);
@@ -168,16 +177,12 @@ var Animation = (function (_super) {
                         propertyAnimation.target.style._setValue(styleModule.backgroundColorProperty, new color.Color(argb), valueSource);
                     }
                 }));
-                if (this._valueSource !== undefined) {
-                    var valueSource_1 = this._valueSource;
-                    propertyUpdateCallbacks.push(checkAnimation(function () {
-                        propertyAnimation.target.style._setValue(styleModule.backgroundColorProperty, propertyAnimation.value, valueSource_1);
-                    }));
-                }
-                else {
-                    propertyUpdateCallbacks.push(checkAnimation(function () { propertyAnimation.target.backgroundColor = propertyAnimation.value; }));
-                }
-                propertyResetCallbacks.push(checkAnimation(function () { nativeView.setBackground(originalValue1); }));
+                propertyUpdateCallbacks.push(checkAnimation(function () {
+                    propertyAnimation.target.style._setValue(styleModule.backgroundColorProperty, propertyAnimation.value, valueSource);
+                }));
+                propertyResetCallbacks.push(checkAnimation(function () {
+                    propertyAnimation.target.style._setValue(styleModule.backgroundColorProperty, originalValue1, valueSource);
+                }));
                 animators.push(animator);
                 break;
             case common.Properties.translate:
@@ -192,21 +197,13 @@ var Animation = (function (_super) {
                 xyObjectAnimators[1].setRepeatCount(Animation._getAndroidRepeatCount(propertyAnimation.iterations));
                 originalValue1 = nativeView.getTranslationX();
                 originalValue2 = nativeView.getTranslationY();
-                if (this._valueSource !== undefined) {
-                    propertyUpdateCallbacks.push(checkAnimation(function () {
-                        propertyAnimation.target.style._setValue(styleModule.translateXProperty, propertyAnimation.value.x, valueSource);
-                        propertyAnimation.target.style._setValue(styleModule.translateYProperty, propertyAnimation.value.y, valueSource);
-                    }));
-                }
-                else {
-                    propertyUpdateCallbacks.push(checkAnimation(function () {
-                        propertyAnimation.target.translateX = propertyAnimation.value.x;
-                        propertyAnimation.target.translateY = propertyAnimation.value.y;
-                    }));
-                }
+                propertyUpdateCallbacks.push(checkAnimation(function () {
+                    propertyAnimation.target.style._setValue(styleModule.translateXProperty, propertyAnimation.value.x, valueSource);
+                    propertyAnimation.target.style._setValue(styleModule.translateYProperty, propertyAnimation.value.y, valueSource);
+                }));
                 propertyResetCallbacks.push(checkAnimation(function () {
-                    nativeView.setTranslationX(originalValue1);
-                    nativeView.setTranslationY(originalValue2);
+                    propertyAnimation.target.style._setValue(styleModule.translateXProperty, originalValue1, valueSource);
+                    propertyAnimation.target.style._setValue(styleModule.translateYProperty, originalValue2, valueSource);
                 }));
                 animatorSet = new android.animation.AnimatorSet();
                 animatorSet.playTogether(xyObjectAnimators);
@@ -225,21 +222,13 @@ var Animation = (function (_super) {
                 xyObjectAnimators[1].setRepeatCount(Animation._getAndroidRepeatCount(propertyAnimation.iterations));
                 originalValue1 = nativeView.getScaleX();
                 originalValue2 = nativeView.getScaleY();
-                if (this._valueSource !== undefined) {
-                    propertyUpdateCallbacks.push(checkAnimation(function () {
-                        propertyAnimation.target.style._setValue(styleModule.scaleXProperty, propertyAnimation.value.x, valueSource);
-                        propertyAnimation.target.style._setValue(styleModule.scaleYProperty, propertyAnimation.value.y, valueSource);
-                    }));
-                }
-                else {
-                    propertyUpdateCallbacks.push(checkAnimation(function () {
-                        propertyAnimation.target.scaleX = propertyAnimation.value.x;
-                        propertyAnimation.target.scaleY = propertyAnimation.value.y;
-                    }));
-                }
+                propertyUpdateCallbacks.push(checkAnimation(function () {
+                    propertyAnimation.target.style._setValue(styleModule.scaleXProperty, propertyAnimation.value.x, valueSource);
+                    propertyAnimation.target.style._setValue(styleModule.scaleYProperty, propertyAnimation.value.y, valueSource);
+                }));
                 propertyResetCallbacks.push(checkAnimation(function () {
-                    nativeView.setScaleY(originalValue1);
-                    nativeView.setScaleY(originalValue2);
+                    propertyAnimation.target.style._setValue(styleModule.scaleXProperty, originalValue1, valueSource);
+                    propertyAnimation.target.style._setValue(styleModule.scaleYProperty, originalValue2, valueSource);
                 }));
                 animatorSet = new android.animation.AnimatorSet();
                 animatorSet.playTogether(xyObjectAnimators);
@@ -250,15 +239,12 @@ var Animation = (function (_super) {
                 originalValue1 = nativeView.getRotation();
                 nativeArray = Array.create("float", 1);
                 nativeArray[0] = propertyAnimation.value;
-                if (this._valueSource !== undefined) {
-                    propertyUpdateCallbacks.push(checkAnimation(function () {
-                        propertyAnimation.target.style._setValue(styleModule.rotateProperty, propertyAnimation.value, valueSource);
-                    }));
-                }
-                else {
-                    propertyUpdateCallbacks.push(checkAnimation(function () { propertyAnimation.target.rotate = propertyAnimation.value; }));
-                }
-                propertyResetCallbacks.push(checkAnimation(function () { nativeView.setRotation(originalValue1); }));
+                propertyUpdateCallbacks.push(checkAnimation(function () {
+                    propertyAnimation.target.style._setValue(styleModule.rotateProperty, propertyAnimation.value, valueSource);
+                }));
+                propertyResetCallbacks.push(checkAnimation(function () {
+                    propertyAnimation.target.style._setValue(styleModule.rotateProperty, originalValue1, valueSource);
+                }));
                 animators.push(android.animation.ObjectAnimator.ofFloat(nativeView, "rotation", nativeArray));
                 break;
             default:
@@ -279,7 +265,9 @@ var Animation = (function (_super) {
             if (propertyAnimation.curve !== undefined) {
                 animators[i].setInterpolator(propertyAnimation.curve);
             }
-            trace.write("Animator created: " + animators[i], trace.categories.Animation);
+            if (trace.enabled) {
+                trace.write("Animator created: " + animators[i], trace.categories.Animation);
+            }
         }
         this._animators = this._animators.concat(animators);
         this._propertyUpdateCallbacks = this._propertyUpdateCallbacks.concat(propertyUpdateCallbacks);
@@ -287,6 +275,27 @@ var Animation = (function (_super) {
     };
     Animation._getAndroidRepeatCount = function (iterations) {
         return (iterations === Number.POSITIVE_INFINITY) ? android.view.animation.Animation.INFINITE : iterations - 1;
+    };
+    Animation.prototype._enableHardwareAcceleration = function () {
+        for (var i = 0, length_3 = this._propertyAnimations.length; i < length_3; i++) {
+            var cache = this._propertyAnimations[i].target._nativeView;
+            if (cache) {
+                var layerType = cache.getLayerType();
+                if (layerType !== android.view.View.LAYER_TYPE_HARDWARE) {
+                    cache.layerType = layerType;
+                    cache.setLayerType(android.view.View.LAYER_TYPE_HARDWARE, null);
+                }
+            }
+        }
+    };
+    Animation.prototype._disableHardwareAcceleration = function () {
+        for (var i = 0, length_4 = this._propertyAnimations.length; i < length_4; i++) {
+            var cache = this._propertyAnimations[i].target._nativeView;
+            if (cache && cache.layerType !== undefined) {
+                cache.setLayerType(cache.layerType, null);
+                cache.layerType = undefined;
+            }
+        }
     };
     return Animation;
 }(common.Animation));
@@ -299,24 +308,36 @@ var bounce = lazy_1.default(function () { return new android.view.animation.Boun
 function _resolveAnimationCurve(curve) {
     switch (curve) {
         case enums.AnimationCurve.easeIn:
-            trace.write("Animation curve resolved to android.view.animation.AccelerateInterpolator(1).", trace.categories.Animation);
+            if (trace.enabled) {
+                trace.write("Animation curve resolved to android.view.animation.AccelerateInterpolator(1).", trace.categories.Animation);
+            }
             return easeIn();
         case enums.AnimationCurve.easeOut:
-            trace.write("Animation curve resolved to android.view.animation.DecelerateInterpolator(1).", trace.categories.Animation);
+            if (trace.enabled) {
+                trace.write("Animation curve resolved to android.view.animation.DecelerateInterpolator(1).", trace.categories.Animation);
+            }
             return easeOut();
         case enums.AnimationCurve.easeInOut:
-            trace.write("Animation curve resolved to android.view.animation.AccelerateDecelerateInterpolator().", trace.categories.Animation);
+            if (trace.enabled) {
+                trace.write("Animation curve resolved to android.view.animation.AccelerateDecelerateInterpolator().", trace.categories.Animation);
+            }
             return easeInOut();
         case enums.AnimationCurve.linear:
-            trace.write("Animation curve resolved to android.view.animation.LinearInterpolator().", trace.categories.Animation);
+            if (trace.enabled) {
+                trace.write("Animation curve resolved to android.view.animation.LinearInterpolator().", trace.categories.Animation);
+            }
             return linear();
         case enums.AnimationCurve.spring:
-            trace.write("Animation curve resolved to android.view.animation.BounceInterpolator().", trace.categories.Animation);
+            if (trace.enabled) {
+                trace.write("Animation curve resolved to android.view.animation.BounceInterpolator().", trace.categories.Animation);
+            }
             return bounce();
         case enums.AnimationCurve.ease:
             return android.support.v4.view.animation.PathInterpolatorCompat.create(0.25, 0.1, 0.25, 1.0);
         default:
-            trace.write("Animation curve resolved to original: " + curve, trace.categories.Animation);
+            if (trace.enabled) {
+                trace.write("Animation curve resolved to original: " + curve, trace.categories.Animation);
+            }
             if (curve instanceof common.CubicBezierAnimationCurve) {
                 var animationCurve = curve;
                 var interpolator = android.support.v4.view.animation.PathInterpolatorCompat.create(animationCurve.x1, animationCurve.y1, animationCurve.x2, animationCurve.y2);

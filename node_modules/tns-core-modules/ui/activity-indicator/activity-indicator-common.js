@@ -1,7 +1,7 @@
-var view = require("ui/core/view");
-var dependencyObservable = require("ui/core/dependency-observable");
-var proxy = require("ui/core/proxy");
-var busyProperty = new dependencyObservable.Property("busy", "ActivityIndicator", new proxy.PropertyMetadata(false, dependencyObservable.PropertyMetadataSettings.AffectsLayout));
+var view_1 = require("ui/core/view");
+var dependency_observable_1 = require("ui/core/dependency-observable");
+var proxy_1 = require("ui/core/proxy");
+var busyProperty = new dependency_observable_1.Property("busy", "ActivityIndicator", new proxy_1.PropertyMetadata(false));
 var ActivityIndicator = (function (_super) {
     __extends(ActivityIndicator, _super);
     function ActivityIndicator() {
@@ -19,5 +19,5 @@ var ActivityIndicator = (function (_super) {
     });
     ActivityIndicator.busyProperty = busyProperty;
     return ActivityIndicator;
-}(view.View));
+}(view_1.View));
 exports.ActivityIndicator = ActivityIndicator;

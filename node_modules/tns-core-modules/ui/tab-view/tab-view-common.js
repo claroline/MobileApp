@@ -1,10 +1,12 @@
-var view = require("ui/core/view");
-var dependencyObservable = require("ui/core/dependency-observable");
-var proxy = require("ui/core/proxy");
+var view_1 = require("ui/core/view");
+var dependency_observable_1 = require("ui/core/dependency-observable");
+var bindable_1 = require("ui/core/bindable");
+var platform_1 = require("platform");
+var proxy_1 = require("ui/core/proxy");
 var types = require("utils/types");
 var trace = require("trace");
-var bindable = require("ui/core/bindable");
 var color = require("color");
+var AffectsLayout = platform_1.isAndroid ? dependency_observable_1.PropertyMetadataSettings.None : dependency_observable_1.PropertyMetadataSettings.AffectsLayout;
 exports.traceCategory = "TabView";
 var TabViewItem = (function (_super) {
     __extends(TabViewItem, _super);
@@ -56,7 +58,7 @@ var TabViewItem = (function (_super) {
     TabViewItem.prototype._update = function () {
     };
     return TabViewItem;
-}(bindable.Bindable));
+}(bindable_1.Bindable));
 exports.TabViewItem = TabViewItem;
 var TAB_VIEW = "TabView";
 var ITEMS = "items";
@@ -67,10 +69,10 @@ var knownCollections;
 (function (knownCollections) {
     knownCollections.items = "items";
 })(knownCollections = exports.knownCollections || (exports.knownCollections = {}));
-var itemsProperty = new dependencyObservable.Property(ITEMS, TAB_VIEW, new proxy.PropertyMetadata(undefined, dependencyObservable.PropertyMetadataSettings.AffectsLayout));
-var selectedIndexProperty = new dependencyObservable.Property(SELECTED_INDEX, TAB_VIEW, new proxy.PropertyMetadata(undefined, dependencyObservable.PropertyMetadataSettings.AffectsLayout));
-var selectedColorProperty = new dependencyObservable.Property(SELECTED_COLOR, TAB_VIEW, new proxy.PropertyMetadata(undefined, dependencyObservable.PropertyMetadataSettings.None));
-var tabsBackgroundColorProperty = new dependencyObservable.Property(TABS_BACKGROUND_COLOR, TAB_VIEW, new proxy.PropertyMetadata(undefined, dependencyObservable.PropertyMetadataSettings.None));
+var itemsProperty = new dependency_observable_1.Property(ITEMS, TAB_VIEW, new proxy_1.PropertyMetadata(undefined, AffectsLayout));
+var selectedIndexProperty = new dependency_observable_1.Property(SELECTED_INDEX, TAB_VIEW, new proxy_1.PropertyMetadata(undefined, AffectsLayout));
+var selectedColorProperty = new dependency_observable_1.Property(SELECTED_COLOR, TAB_VIEW, new proxy_1.PropertyMetadata(undefined));
+var tabsBackgroundColorProperty = new dependency_observable_1.Property(TABS_BACKGROUND_COLOR, TAB_VIEW, new proxy_1.PropertyMetadata(undefined));
 selectedIndexProperty.metadata.onSetNativeValue = function (data) {
     var tabView = data.object;
     tabView._onSelectedIndexPropertyChangedSetNativeValue(data);
@@ -100,7 +102,9 @@ var TabView = (function (_super) {
         configurable: true
     });
     TabView.prototype._onItemsPropertyChangedSetNativeValue = function (data) {
-        trace.write("TabView.__onItemsPropertyChangedSetNativeValue(" + data.oldValue + " -> " + data.newValue + ");", exports.traceCategory);
+        if (trace.enabled) {
+            trace.write("TabView.__onItemsPropertyChangedSetNativeValue(" + data.oldValue + " -> " + data.newValue + ");", exports.traceCategory);
+        }
         if (data.oldValue) {
             this._removeTabs(data.oldValue);
         }
@@ -110,7 +114,9 @@ var TabView = (function (_super) {
         this._updateSelectedIndexOnItemsPropertyChanged(data.newValue);
     };
     TabView.prototype._updateSelectedIndexOnItemsPropertyChanged = function (newItems) {
-        trace.write("TabView._updateSelectedIndexOnItemsPropertyChanged(" + newItems + ");", exports.traceCategory);
+        if (trace.enabled) {
+            trace.write("TabView._updateSelectedIndexOnItemsPropertyChanged(" + newItems + ");", exports.traceCategory);
+        }
         var newItemsCount = 0;
         if (newItems) {
             newItemsCount = newItems.length;
@@ -262,5 +268,5 @@ var TabView = (function (_super) {
     TabView.tabsBackgroundColorProperty = tabsBackgroundColorProperty;
     TabView.selectedIndexChangedEvent = "selectedIndexChanged";
     return TabView;
-}(view.View));
+}(view_1.View));
 exports.TabView = TabView;

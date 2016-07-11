@@ -162,13 +162,16 @@ var StyleScope = (function () {
                 mergedResult.push.apply(mergedResult, arrays[i]);
             }
         }
-        mergedResult.sort(function (a, b) { return a.specificity - b.specificity; });
+        ensureUtils();
+        mergedResult = utils.mergeSort(mergedResult, function (a, b) { return a.specificity - b.specificity; });
         return mergedResult;
     };
     StyleScope.prototype.applySelectors = function (view) {
         this.ensureSelectors();
         view.style._beginUpdate();
-        var i, selector, matchedStateSelectors = new Array();
+        var i;
+        var selector;
+        var matchedStateSelectors = new Array();
         for (i = 0; i < this._mergedCssSelectors.length; i++) {
             selector = this._mergedCssSelectors[i];
             if (selector.matches(view)) {

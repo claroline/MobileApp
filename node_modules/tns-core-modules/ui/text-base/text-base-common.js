@@ -10,7 +10,7 @@ function ensureWeakEvents() {
         weakEvents = require("ui/core/weak-event-listener");
     }
 }
-var textProperty = new dependencyObservable.Property("text", "TextBase", new proxy.PropertyMetadata("", dependencyObservable.PropertyMetadataSettings.AffectsLayout));
+var textProperty = new dependencyObservable.Property("text", "TextBase", new proxy.PropertyMetadata("", dependencyObservable.PropertyMetadataSettings.None));
 var formattedTextProperty = new dependencyObservable.Property("formattedText", "TextBase", new proxy.PropertyMetadata("", dependencyObservable.PropertyMetadataSettings.AffectsLayout));
 function onTextPropertyChanged(data) {
     var textBase = data.object;
@@ -106,6 +106,9 @@ var TextBase = (function (_super) {
     };
     TextBase.prototype._addChildFromBuilder = function (name, value) {
         formattedString.FormattedString.addFormattedStringToView(this, name, value);
+    };
+    TextBase.prototype._requestLayoutOnTextChanged = function () {
+        this.requestLayout();
     };
     TextBase.textProperty = textProperty;
     TextBase.formattedTextProperty = formattedTextProperty;

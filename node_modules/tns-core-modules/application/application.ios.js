@@ -240,8 +240,6 @@ global.__onLiveSync = function () {
     if (!started) {
         return;
     }
-    var fileResolver = require("file-system/file-name-resolver");
-    fileResolver.clearCache();
+    common.__onLiveSync();
     loadCss();
-    frame_1.reloadPage();
 };

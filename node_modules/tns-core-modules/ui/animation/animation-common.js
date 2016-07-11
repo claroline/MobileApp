@@ -40,7 +40,9 @@ var Animation = (function () {
             throw new Error("No animation definitions specified");
         }
         ensureTrace();
-        trace.write("Analyzing " + animationDefinitions.length + " animation definitions...", trace.categories.Animation);
+        if (trace.enabled) {
+            trace.write("Analyzing " + animationDefinitions.length + " animation definitions...", trace.categories.Animation);
+        }
         this._propertyAnimations = new Array();
         var i = 0;
         var length = animationDefinitions.length;
@@ -51,7 +53,9 @@ var Animation = (function () {
         if (this._propertyAnimations.length === 0) {
             throw new Error("Nothing to animate.");
         }
-        trace.write("Created " + this._propertyAnimations.length + " individual property animations.", trace.categories.Animation);
+        if (trace.enabled) {
+            trace.write("Created " + this._propertyAnimations.length + " individual property animations.", trace.categories.Animation);
+        }
         this._playSequentially = playSequentially;
     }
     Animation.prototype.play = function () {

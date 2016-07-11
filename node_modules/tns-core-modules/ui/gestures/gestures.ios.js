@@ -66,11 +66,15 @@ var GesturesObserver = (function (_super) {
         if (this.target) {
             this.type = type;
             this._onTargetLoaded = function (args) {
-                trace.write(_this.target + ".target loaded. _nativeView:" + _this.target._nativeView, "gestures");
+                if (trace.enabled) {
+                    trace.write(_this.target + ".target loaded. _nativeView:" + _this.target._nativeView, "gestures");
+                }
                 _this._attach(_this.target, type);
             };
             this._onTargetUnloaded = function (args) {
-                trace.write(_this.target + ".target unloaded. _nativeView:" + _this.target._nativeView, "gestures");
+                if (trace.enabled) {
+                    trace.write(_this.target + ".target unloaded. _nativeView:" + _this.target._nativeView, "gestures");
+                }
                 _this._detach();
             };
             this.target.on(view.View.loadedEvent, this._onTargetLoaded);
@@ -82,7 +86,9 @@ var GesturesObserver = (function (_super) {
     };
     GesturesObserver.prototype._attach = function (target, type) {
         var _this = this;
-        trace.write(target + "._attach() _nativeView:" + target._nativeView, "gestures");
+        if (trace.enabled) {
+            trace.write(target + "._attach() _nativeView:" + target._nativeView, "gestures");
+        }
         this._detach();
         if (target && target._nativeView && target._nativeView.addGestureRecognizer) {
             var nativeView = target._nativeView;
@@ -132,7 +138,9 @@ var GesturesObserver = (function (_super) {
         }
     };
     GesturesObserver.prototype._detach = function () {
-        trace.write(this.target + "._detach() _nativeView:" + this.target._nativeView, "gestures");
+        if (trace.enabled) {
+            trace.write(this.target + "._detach() _nativeView:" + this.target._nativeView, "gestures");
+        }
         if (this.target && this.target._nativeView) {
             for (var name in this._recognizers) {
                 if (this._recognizers.hasOwnProperty(name)) {

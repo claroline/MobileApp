@@ -1,5 +1,6 @@
 declare module "ui/transition" {
-    import frame = require("ui/frame");
+    import { NavigationTransition } from "ui/frame";
+    import { Page } from "ui/page";
 
     export module AndroidTransitionType {
         export var enter: string;

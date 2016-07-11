@@ -324,8 +324,11 @@ function isPaddingValid(value) {
 }
 var supportedPaths = ["rect", "circle", "ellipse", "polygon"];
 function isClipPathValid(value) {
+    if (!value) {
+        return true;
+    }
     var functionName = value.substring(0, value.indexOf("(")).trim();
-    return supportedPaths.indexOf(functionName) !== -1 || value === "";
+    return supportedPaths.indexOf(functionName) !== -1;
 }
 function isMarginValid(value) {
     var result = convertToPercentHelper(value);
@@ -887,10 +890,12 @@ var Style = (function (_super) {
         });
     };
     Style.prototype._onPropertyChanged = function (property, oldValue, newValue) {
-        trace.write("Style._onPropertyChanged view:" + this._view +
-            ", property: " + property.name +
-            ", oldValue: " + oldValue +
-            ", newValue: " + newValue, trace.categories.Style);
+        if (trace.enabled) {
+            trace.write("Style._onPropertyChanged view:" + this._view +
+                ", property: " + property.name +
+                ", oldValue: " + oldValue +
+                ", newValue: " + newValue, trace.categories.Style);
+        }
         _super.prototype._onPropertyChanged.call(this, property, oldValue, newValue);
         this._view._checkMetadataOnPropertyChanged(property.metadata);
         this._applyProperty(property, newValue);
@@ -916,14 +921,13 @@ var Style = (function (_super) {
     };
     Style.prototype._applyProperty = function (property, newValue) {
         this._applyStyleProperty(property, newValue);
-        if (this._view._childrenCount === 0 || !property.metadata.inheritable) {
+        if (this._view._childrenCount === 0 || !property.inheritable) {
             return;
         }
-        var eachChild = function (child) {
+        this._view._eachChildView(function (child) {
             child.style._inheritStyleProperty(property);
             return true;
-        };
-        this._view._eachChildView(eachChild);
+        });
     };
     Style.prototype._applyStyleProperty = function (property, newValue) {
         if (!this._view._shouldApplyStyleHandlers()) {
@@ -936,16 +940,20 @@ var Style = (function (_super) {
         try {
             var handler = getHandler(property, this._view);
             if (!handler) {
-                trace.write("No handler for property: " + property.name + " with id: " + property.id + ", view:" + this._view, trace.categories.Style);
+                if (trace.enabled) {
+                    trace.write("No handler for property: " + property.name + " with id: " + property.id + ", view:" + this._view, trace.categories.Style);
+                }
             }
             else {
-                trace.write("Found handler for property: " + property.name + ", view:" + this._view, trace.categories.Style);
+                if (trace.enabled) {
+                    trace.write("Found handler for property: " + property.name + ", view:" + this._view, trace.categories.Style);
+                }
                 var shouldReset = false;
-                if (property.metadata.equalityComparer) {
-                    shouldReset = property.metadata.equalityComparer(newValue, property.metadata.defaultValue);
+                if (property.equalityComparer) {
+                    shouldReset = property.equalityComparer(newValue, property.defaultValue);
                 }
                 else {
-                    shouldReset = (newValue === property.metadata.defaultValue);
+                    shouldReset = (newValue === property.defaultValue);
                 }
                 if (shouldReset) {
                     handler.resetProperty(property, this._view);
@@ -957,11 +965,13 @@ var Style = (function (_super) {
             }
         }
         catch (ex) {
-            trace.write("Error setting property: " + property.name + " on " + this._view + ": " + ex, trace.categories.Style, trace.messageType.error);
+            if (trace.enabled) {
+                trace.write("Error setting property: " + property.name + " on " + this._view + ": " + ex, trace.categories.Style, trace.messageType.error);
+            }
         }
     };
     Style.prototype._inheritStyleProperty = function (property) {
-        if (!property.metadata.inheritable) {
+        if (!property.inheritable) {
             throw new Error("An attempt was made to inherit a style property which is not marked as 'inheritable'.");
         }
         var currentParent = this._view.parent;
@@ -976,9 +986,9 @@ var Style = (function (_super) {
         }
     };
     Style.prototype._inheritStyleProperties = function () {
-        var that = this;
+        var _this = this;
         styleProperty.eachInheritableProperty(function (p) {
-            that._inheritStyleProperty(p);
+            _this._inheritStyleProperty(p);
         });
     };
     Object.defineProperty(Style.prototype, "_nativeView", {

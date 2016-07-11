@@ -51,20 +51,26 @@ function ensurePagerAdapterClass() {
             return this.items[index].title;
         };
         PagerAdapterClassInner.prototype.instantiateItem = function (container, index) {
-            trace.write("TabView.PagerAdapter.instantiateItem; container: " + container + "; index: " + index, common.traceCategory);
+            if (trace.enabled) {
+                trace.write("TabView.PagerAdapter.instantiateItem; container: " + container + "; index: " + index, common.traceCategory);
+            }
             var item = this.items[index];
             if (item.view.parent !== this.owner) {
                 this.owner._addView(item.view);
             }
             if (this[VIEWS_STATES]) {
-                trace.write("TabView.PagerAdapter.instantiateItem; restoreHierarchyState: " + item.view, common.traceCategory);
+                if (trace.enabled) {
+                    trace.write("TabView.PagerAdapter.instantiateItem; restoreHierarchyState: " + item.view, common.traceCategory);
+                }
                 item.view._nativeView.restoreHierarchyState(this[VIEWS_STATES]);
             }
             container.addView(item.view._nativeView);
             return item.view._nativeView;
         };
         PagerAdapterClassInner.prototype.destroyItem = function (container, index, _object) {
-            trace.write("TabView.PagerAdapter.destroyItem; container: " + container + "; index: " + index + "; _object: " + _object, common.traceCategory);
+            if (trace.enabled) {
+                trace.write("TabView.PagerAdapter.destroyItem; container: " + container + "; index: " + index + "; _object: " + _object, common.traceCategory);
+            }
             var item = this.items[index];
             var nativeView = item.view._nativeView;
             if (nativeView.toString() !== _object.toString()) {
@@ -79,7 +85,9 @@ function ensurePagerAdapterClass() {
             return view === _object;
         };
         PagerAdapterClassInner.prototype.saveState = function () {
-            trace.write("TabView.PagerAdapter.saveState", common.traceCategory);
+            if (trace.enabled) {
+                trace.write("TabView.PagerAdapter.saveState", common.traceCategory);
+            }
             var owner = this.owner;
             if (!owner || owner._childrenCount === 0) {
                 return null;
@@ -101,7 +109,9 @@ function ensurePagerAdapterClass() {
             return bundle;
         };
         PagerAdapterClassInner.prototype.restoreState = function (state, loader) {
-            trace.write("TabView.PagerAdapter.restoreState", common.traceCategory);
+            if (trace.enabled) {
+                trace.write("TabView.PagerAdapter.restoreState", common.traceCategory);
+            }
             var bundle = state;
             bundle.setClassLoader(loader);
             this[VIEWS_STATES] = bundle.getSparseParcelableArray(VIEWS_STATES);
@@ -158,7 +168,9 @@ var TabView = (function (_super) {
         configurable: true
     });
     TabView.prototype._createUI = function () {
-        trace.write("TabView._createUI(" + this + ");", common.traceCategory);
+        if (trace.enabled) {
+            trace.write("TabView._createUI(" + this + ");", common.traceCategory);
+        }
         this._grid = new org.nativescript.widgets.GridLayout(this._context);
         this._grid.addRow(new org.nativescript.widgets.ItemSpec(1, org.nativescript.widgets.GridUnitType.auto));
         this._grid.addRow(new org.nativescript.widgets.ItemSpec(1, org.nativescript.widgets.GridUnitType.star));
@@ -196,7 +208,9 @@ var TabView = (function (_super) {
     };
     TabView.prototype._onItemsPropertyChangedSetNativeValue = function (data) {
         var _this = this;
-        trace.write("TabView._onItemsPropertyChangedSetNativeValue(" + data.oldValue + " ---> " + data.newValue + ");", common.traceCategory);
+        if (trace.enabled) {
+            trace.write("TabView._onItemsPropertyChangedSetNativeValue(" + data.oldValue + " ---> " + data.newValue + ");", common.traceCategory);
+        }
         if (data.oldValue) {
             var oldItems = data.oldValue;
             oldItems.forEach(function (oldItem) {
@@ -235,13 +249,17 @@ var TabView = (function (_super) {
         }
     };
     TabView.prototype._onSelectedIndexPropertyChangedSetNativeValue = function (data) {
-        trace.write("TabView._onSelectedIndexPropertyChangedSetNativeValue(" + data.oldValue + " ---> " + data.newValue + ");", common.traceCategory);
+        if (trace.enabled) {
+            trace.write("TabView._onSelectedIndexPropertyChangedSetNativeValue(" + data.oldValue + " ---> " + data.newValue + ");", common.traceCategory);
+        }
         _super.prototype._onSelectedIndexPropertyChangedSetNativeValue.call(this, data);
         var index = data.newValue;
         if (!types.isNullOrUndefined(index)) {
             var viewPagerSelectedIndex = this._viewPager.getCurrentItem();
             if (viewPagerSelectedIndex !== index) {
-                trace.write("TabView this._viewPager.setCurrentItem(" + index + ", true);", common.traceCategory);
+                if (trace.enabled) {
+                    trace.write("TabView this._viewPager.setCurrentItem(" + index + ", true);", common.traceCategory);
+                }
                 this._viewPager.setCurrentItem(index, true);
             }
         }

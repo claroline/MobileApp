@@ -105,6 +105,10 @@ var KeyframeAnimation = (function () {
                     animation.cancel();
                 }
             }
+            if (this._nativeAnimations.length > 0) {
+                var animation = this._nativeAnimations[0];
+                this._resetAnimationValues(this._target, animation);
+            }
             this._rejectAnimationFinishedPromise();
         }
     };
@@ -119,6 +123,7 @@ var KeyframeAnimation = (function () {
         });
         this._isPlaying = true;
         this._nativeAnimations = new Array();
+        this._target = view;
         if (this.delay !== 0) {
             var that_1 = this;
             setTimeout(function () { that_1.animate(view, 0, that_1.iterations); }, that_1.delay, that_1);
@@ -164,24 +169,7 @@ var KeyframeAnimation = (function () {
             else {
                 if (this._isForwards === false) {
                     var animation = this.animations[this.animations.length - 1];
-                    var modifier = animation["valueSource"];
-                    if ("backgroundColor" in animation) {
-                        view.style._resetValue(style.backgroundColorProperty, modifier);
-                    }
-                    if ("scale" in animation) {
-                        view.style._resetValue(style.scaleXProperty, modifier);
-                        view.style._resetValue(style.scaleYProperty, modifier);
-                    }
-                    if ("translate" in animation) {
-                        view.style._resetValue(style.translateXProperty, modifier);
-                        view.style._resetValue(style.translateYProperty, modifier);
-                    }
-                    if ("rotate" in animation) {
-                        view.style._resetValue(style.rotateProperty, modifier);
-                    }
-                    if ("opacity" in animation) {
-                        view.style._resetValue(style.opacityProperty, modifier);
-                    }
+                    this._resetAnimationValues(view, animation);
                 }
                 this._resolveAnimationFinishedPromise();
             }
@@ -199,12 +187,34 @@ var KeyframeAnimation = (function () {
     KeyframeAnimation.prototype._resolveAnimationFinishedPromise = function () {
         this._nativeAnimations = new Array();
         this._isPlaying = false;
+        this._target = null;
         this._resolve();
     };
     KeyframeAnimation.prototype._rejectAnimationFinishedPromise = function () {
         this._nativeAnimations = new Array();
         this._isPlaying = false;
+        this._target = null;
         this._reject(new Error("Animation cancelled."));
+    };
+    KeyframeAnimation.prototype._resetAnimationValues = function (view, animation) {
+        var modifier = animation["valueSource"];
+        if ("backgroundColor" in animation) {
+            view.style._resetValue(style.backgroundColorProperty, modifier);
+        }
+        if ("scale" in animation) {
+            view.style._resetValue(style.scaleXProperty, modifier);
+            view.style._resetValue(style.scaleYProperty, modifier);
+        }
+        if ("translate" in animation) {
+            view.style._resetValue(style.translateXProperty, modifier);
+            view.style._resetValue(style.translateYProperty, modifier);
+        }
+        if ("rotate" in animation) {
+            view.style._resetValue(style.rotateProperty, modifier);
+        }
+        if ("opacity" in animation) {
+            view.style._resetValue(style.opacityProperty, modifier);
+        }
     };
     return KeyframeAnimation;
 }());

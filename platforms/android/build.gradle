@@ -10,14 +10,15 @@
 *			-Palias=[alias_to_use_from_keystore_file]
 *			-Ppassword=[password_for_alias]
 *
-*			-PtargetSdk=[target_sdk] (default is 22)
-*			-PbuildToolsVersion=[build_tools_version] (default is 22.0.1)
-*			-PsupportVersion=[support_version] (default (22.2.0)
-*			-PcompileSdk=[compile_sdk_version] (default 22)
-*
-*			-PdontRunSbg=[true/false] (default false)
+*			-PtargetSdk=[target_sdk]
+*			-PbuildToolsVersion=[build_tools_version]
+*			-PsupportVersion=[support_version]
+*			-PcompileSdk=[compile_sdk_version]
+
+*			-PdontRunSbg=[true/false]
 */
 
+import groovy.json.JsonSlurper //used to parse package.json
 buildscript {
     repositories {
         jcenter()
@@ -41,8 +42,10 @@ def libDir = "$projectDir/../../lib/Android/"
 def flavorNames = new ArrayList<String>()
 def configDir = file(configurationsDir)
 
-def dontRunSbg = project.hasProperty("dontRunSbg");
+def packageJsonContents = [:]
+def excludedDevDependencies = ['**/.bin/**']
 
+def dontRunSbg = project.hasProperty("dontRunSbg");
 def asbgProject = project(":asbg")
 asbgProject.ext.outDir = new File("$projectDir", "src/main/java")
 asbgProject.ext.jsCodeDir = new File("$projectDir", "src/main/assets/app")
@@ -70,7 +73,7 @@ def computeBuildToolsVersion() {
 		return buildToolsVersion
 	}
 	else {
-		return "23.0.1"
+		return "23.0.3"
 	}
 }
 project.ext.selectedBuildType = project.hasProperty("release") ? "release" : "debug"
@@ -92,6 +95,20 @@ def renameResultApks (variant) {
 	}    
 }
 
+// gets the devDependencies declared in the package.json and excludes them from the build
+task getDevDependencies << {
+	println "$configStage getDevDependencies"
+	
+	String content = new File("$projectDir/../../package.json").getText("UTF-8")
+	def jsonSlurper = new JsonSlurper()
+	def packageJsonMap = jsonSlurper.parseText(content)
+	
+	packageJsonContents = packageJsonMap.devDependencies;
+	
+	packageJsonContents.each { entry ->
+		excludedDevDependencies.add(entry.key + '/platforms/android/**/*.jar')
+	}
+}
 ////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////// CONFIGURATIONS ///////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////
@@ -143,7 +160,6 @@ android {
 		
 		def generateBuildConfigTask = variant.generateBuildConfig;
 		generateBuildConfigTask.finalizedBy(collectAllJars)
-
 		if(!dontRunSbg) {
 			collectAllJars.finalizedBy(setProperties)
 		}
@@ -173,13 +189,16 @@ dependencies {
 	compile fileTree(dir: "$projectDir/libs", include: ["**/*.jar"])
 
 	// take all jars within the node_modules dir
-	compile fileTree(dir: nodeModulesDir, include: ["**/platforms/android/**/*.jar"], exclude: '**/.bin/**')
+	compile fileTree(dir: nodeModulesDir, include: ["**/platforms/android/**/*.jar"], exclude: excludedDevDependencies)
+
 	
 	//when gradle has aar support this will be preferred instead of addAarDependencies
 	// compile files("$rootDir/libs/aar") {
         // builtBy 'copyAarDependencies'
     // }
-
+	
+	compile project(':binding-generator')
+	compile project(':runtime')
 }
 
 
@@ -203,30 +222,87 @@ task pluginStructureCheck {
 	}
 }
 
+def updateProductFlavorsContent(flavor, dimensionName, oldContent) {
+	def endIndex = oldContent.length() - 1;
+		def index = 0;
+		def newContent = "";
+		def level = -1;
+		def dimensionFound = false;
+
+		while(index <= endIndex) {
+			if(level == 0 && (oldContent[index] == '"' || oldContent[index] == "'")) {
+				def closingQuotes = oldContent.indexOf('"', index + 1);
+				if(closingQuotes == -1) {
+					closingQuotes = oldContent.indexOf("'", index + 1);
+				}
+
+				index = closingQuotes + 1;
+				newContent += "\"${flavor}\"";
+				continue;
+			}
+
+			if(oldContent[index] == "{") {
+				level++;	
+			}
+
+			if(oldContent[index] == "}") {
+				level--;
+			}
+
+			if(level > 0) {
+				if(!dimensionFound && oldContent.indexOf("dimension", index) == index) {
+					newContent += "dimension \"${dimensionName}\"";
+					dimensionFound = true;
+					index += "dimension ".length();
+					def openingQuoutes = oldContent.indexOf('"', index);
+					if(openingQuoutes == -1) {
+						openingQuoutes = oldContent.indexOf("'", index);
+					}
+
+					def closingQuotes = oldContent.indexOf('"', openingQuoutes + 1);
+					if(closingQuotes == -1) {
+						closingQuotes = closingQuotes.indexOf("'", openingQuoutes + 1);
+					}	
+
+					index = closingQuotes + 1;
+				}
+			}
+
+			newContent += oldContent[index];
+
+			index++;
+		}
+
+		return newContent;
+}
+
 def createProductFlavorsContent(flavor, dimensionName, includeAndroidContent = true)
 {
 	if (includeAndroidContent)
   	{
-    	def content = """android {
-          productFlavors {
-            "${flavor}" {
-              dimension "${dimensionName}"
-            }
-          }
-        }"""
+    	def content = """
+android {
+    productFlavors {
+        "${flavor}" {
+            dimension "${dimensionName}"
+        }
+    }
+}
+"""
     	return content;
 	}
 	else
 	{
-    	def content = """productFlavors {
-              "${flavor}" {
-                dimension "${dimensionName}"
-              }
-            }"""
+    	def content = """
+    productFlavors {
+        "${flavor}" {
+            dimension "${dimensionName}"
+        }
+    }
+"""
       return content;
 	}
 }
-
 
 def createIncludeFile (filePath, flavor, dimensionName) {
 	println "\t + creating include.gradle file for ${filePath}" 
@@ -241,39 +317,38 @@ def sanatizeDimensionName(str) {
 
 def replaceProductFlavorInContent(content, dimension, flavor)
 {
-  def indexStart = content.indexOf("productFlavors");
-  def index = indexStart  + "productFlavors".length();
-  def indexEnd = -1;
-  def nestedOpenBraketsCount = 0;
+	def indexStart = content.indexOf("productFlavors");
+	def index = indexStart  + "productFlavors".length();
+	def indexEnd = -1;
+	def nestedOpenBraketsCount = 0;
 
-  while (index < content.length())
-  {
-      print content[index]
-      if (content[index] == "}")
-      {
-          if (nestedOpenBraketsCount == 0)
-          {
-              indexEnd = index;
-              break;
-          }
-          else
-          {
-              nestedOpenBraketsCount--;
-          }
-      }
-      else if (content[index] == "{")
-      {
-          nestedOpenBraketsCount++;
-      }
+	while (index < content.length())
+	{
+		// print content[index];
+		if (content[index] == "}")
+		{
+			nestedOpenBraketsCount--;
 
-      index++;
-  }
+			if (nestedOpenBraketsCount == 0)
+			{
+				indexEnd = index;
+				break;
+			}
+		}
+		else if (content[index] == "{")
+		{
+			nestedOpenBraketsCount++;
+		}
 
-    if (indexEnd != -1)
+		index++;
+	}
+
+	if (indexEnd != -1)
     {
-      def oldProductFlavorsText = content.substring(indexStart, indexEnd - 1);
-      
-      def newProductFlavorsContent = createProductFlavorsContent(flavor, dimension, false);
+		// full content of productFlavors { ... } -> the substring is parenthesis to parenthesis -> { ... }
+      def oldProductFlavorsText = content.substring(indexStart, indexEnd + 1);
+
+      def newProductFlavorsContent = updateProductFlavorsContent(flavor, dimension, oldProductFlavorsText);
       
       return content.replace(oldProductFlavorsText, newProductFlavorsContent);
     }
@@ -292,7 +367,6 @@ def replaceProductFlavorInContent(content, dimension, flavor)
         }
     }
 }
-
 //make sure the include.gradle file, produced by the user, has only allowed characters in dimension attribute and remove any invalid characters if necessary
 def updateIncludeGradleFile(targetFile, dimensionName, flavor)
 {
@@ -330,14 +404,13 @@ task createDefaultIncludeFiles {
 			def foundIncludeFile = false
 			
 			def flavor = "F" + flavorNumber++
-			
 			println "\t+found plugins: " + fileName
 			fl.listFiles().each { subFile ->
 			
 				if(subFile.name == "include.gradle") {
 					foundIncludeFile = true
 					updateIncludeGradleFile(subFile, dimensionName, flavor)
-					renamePluginDirToFlavorName(subFile.getParentFile(), flavor);
+                                        renamePluginDirToFlavorName(subFile.getParentFile(), flavor);
 				}
 			}
 			
@@ -363,9 +436,11 @@ task createPluginsConfigFile {
 			println "\t Creating product flavors include.gradle file in $configurationsDir folder..."
 			def flavors = flavorNames.join(", ")
 			
-			def content = """android {
-						flavorDimensions ${flavors}
-					}"""
+			def content = """
+android {
+    flavorDimensions ${flavors}
+}
+"""
 			
 			flavorsFile.text =  content
 		}
@@ -549,19 +624,6 @@ task buildMetadata (type: JavaExec) {
 	}
 }
 
-
-task deleteExplodedAarFolder (type: Delete) {
-
-	outputs.upToDateWhen {
-		!buildMetadata.didWork
-	}
-	
-	def explodedAarDir = project.buildDir.getAbsolutePath() + "/intermediates/exploded-aar"
-	delete explodedAarDir
-}
-
-
-
 ////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////// OPTIONAL TASKS //////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////
@@ -612,6 +674,24 @@ task buildapk {
 	else {
 		dependsOn assembleDebug
 	}
-	
-	dependsOn deleteExplodedAarFolder
 }
+
+//////// custom clean ///////////
+task deleteMetadata (type: Delete){
+	delete "$projectDir/metadata/output"
+}
+
+task deleteFlavors (type: Delete){
+	doLast {
+		def srcDir = new File("$projectDir/src")
+		srcDir.listFiles().each({ f ->
+			if(!f.getName().equals("main"))	{
+				delete f
+			}
+		})
+	}
+}
+
+deleteFlavors.dependsOn(deleteMetadata)
+clean.dependsOn(deleteFlavors)
+

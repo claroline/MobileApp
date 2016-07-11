@@ -11,6 +11,7 @@ var TextBase = (function (_super) {
         this.ios.text = newValue;
         this.style._updateTextDecoration();
         this.style._updateTextTransform();
+        this._requestLayoutOnTextChanged();
     };
     TextBase.prototype._setFormattedTextPropertyToNative = function (value) {
         var newText = value ? value._formattedText : null;

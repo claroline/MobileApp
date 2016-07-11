@@ -68,6 +68,7 @@ var CssSelector = (function () {
         return false;
     };
     CssSelector.prototype.apply = function (view, valueSourceModifier) {
+        view._unregisterAllAnimations();
         var modifier = valueSourceModifier || this.valueSourceModifier;
         this.eachSetter(function (property, value) {
             if (types.isString(property)) {
@@ -88,11 +89,12 @@ var CssSelector = (function () {
                     view.style._setValue(resolvedProperty, value, modifier);
                 }
                 catch (ex) {
-                    trace.write("Error setting property: " + resolvedProperty.name + " view: " + view + " value: " + value + " " + ex, trace.categories.Style, trace.messageType.error);
+                    if (trace.enabled) {
+                        trace.write("Error setting property: " + resolvedProperty.name + " view: " + view + " value: " + value + " " + ex, trace.categories.Style, trace.messageType.error);
+                    }
                 }
             }
         });
-        view._unregisterAllAnimations();
         if (this.animations && view.isLoaded && view._nativeView !== undefined) {
             var _loop_1 = function(animationInfo) {
                 var animation = keyframeAnimation.KeyframeAnimation.keyframeAnimationFromInfo(animationInfo, modifier);

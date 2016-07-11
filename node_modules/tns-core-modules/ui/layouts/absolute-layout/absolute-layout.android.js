@@ -6,12 +6,11 @@ function setNativeProperty(data, setter) {
     var view = data.object;
     if (view instanceof view_1.View) {
         var nativeView = view._nativeView;
-        var lp = nativeView.getLayoutParams();
-        if (!(lp instanceof org.nativescript.widgets.CommonLayoutParams)) {
-            lp = new org.nativescript.widgets.CommonLayoutParams();
+        var lp = nativeView.getLayoutParams() || new org.nativescript.widgets.CommonLayoutParams();
+        if (lp instanceof org.nativescript.widgets.CommonLayoutParams) {
+            setter(lp);
+            nativeView.setLayoutParams(lp);
         }
-        setter(lp);
-        nativeView.setLayoutParams(lp);
     }
 }
 function setNativeLeftProperty(data) {

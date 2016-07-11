@@ -5,6 +5,8 @@ var FadeTransition = (function (_super) {
         _super.apply(this, arguments);
     }
     FadeTransition.prototype.animateIOSTransition = function (containerView, fromView, toView, operation, completion) {
+        var originalToViewAlpha = toView.alpha;
+        var originalFromViewAlpha = fromView.alpha;
         toView.alpha = 0.0;
         fromView.alpha = 1.0;
         switch (operation) {
@@ -21,7 +23,11 @@ var FadeTransition = (function (_super) {
             UIView.setAnimationCurve(curve);
             toView.alpha = 1.0;
             fromView.alpha = 0.0;
-        }, completion);
+        }, function (finished) {
+            toView.alpha = originalToViewAlpha;
+            fromView.alpha = originalFromViewAlpha;
+            completion(finished);
+        });
     };
     return FadeTransition;
 }(transition.Transition));

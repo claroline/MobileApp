@@ -25,7 +25,7 @@ function ensureCompleteCallback() {
     if (completeCallback) {
         return;
     }
-    completeCallback = new com.tns.Async.CompleteCallback({
+    completeCallback = new org.nativescript.widgets.Async.CompleteCallback({
         onComplete: function (result, context) {
             onRequestComplete(context, result);
         }
@@ -106,7 +106,7 @@ function buildJavaOptions(options) {
     if (!types.isString(options.url)) {
         throw new Error("Http request must provide a valid url.");
     }
-    var javaOptions = new com.tns.Async.Http.RequestOptions();
+    var javaOptions = new org.nativescript.widgets.Async.Http.RequestOptions();
     javaOptions.url = options.url;
     if (types.isString(options.method)) {
         javaOptions.method = options.method;
@@ -119,7 +119,7 @@ function buildJavaOptions(options) {
     }
     if (options.headers) {
         var arrayList = new java.util.ArrayList();
-        var pair = com.tns.Async.Http.KeyValuePair;
+        var pair = org.nativescript.widgets.Async.Http.KeyValuePair;
         for (var key in options.headers) {
             arrayList.add(new pair(key, options.headers[key] + ""));
         }
@@ -145,7 +145,7 @@ function request(options) {
             };
             pendingRequests[requestIdCounter] = callbacks;
             ensureCompleteCallback();
-            com.tns.Async.Http.MakeRequest(javaOptions, completeCallback, new java.lang.Integer(requestIdCounter));
+            org.nativescript.widgets.Async.Http.MakeRequest(javaOptions, completeCallback, new java.lang.Integer(requestIdCounter));
             requestIdCounter++;
         }
         catch (ex) {

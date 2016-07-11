@@ -29,10 +29,10 @@ var TimePicker = (function (_super) {
         });
         this._android.setOnTimeChangedListener(this._listener);
         var c = java.util.Calendar.getInstance();
-        if (this.hour === common.TimePicker.hourProperty.metadata.defaultValue) {
+        if (this.hour === common.TimePicker.hourProperty.defaultValue) {
             this.hour = c.get(java.util.Calendar.HOUR_OF_DAY);
         }
-        if (this.minute === common.TimePicker.minuteProperty.metadata.defaultValue) {
+        if (this.minute === common.TimePicker.minuteProperty.defaultValue) {
             this.minute = c.get(java.util.Calendar.MINUTE);
         }
         var validTime = common.getValidTime(this, this.hour, this.minute);

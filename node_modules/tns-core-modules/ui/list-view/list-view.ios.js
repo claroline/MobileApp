@@ -1,3 +1,4 @@
+var observable = require("data/observable");
 var common = require("./list-view-common");
 var utils = require("utils/utils");
 var view = require("ui/core/view");
@@ -61,7 +62,7 @@ var DataSource = (function (_super) {
         if (owner) {
             owner._prepareCell(cell, indexPath);
             var cellView = cell.view;
-            if (cellView) {
+            if (cellView && cellView.isLayoutRequired) {
                 var width = utils.layout.getMeasureSpecSize(owner.widthMeasureSpec);
                 var rowHeight = owner._nativeView.rowHeight;
                 var cellHeight = rowHeight > 0 ? rowHeight : owner.getHeight(indexPath.row);
@@ -104,7 +105,7 @@ var UITableViewDelegateImpl = (function (_super) {
     UITableViewDelegateImpl.prototype.tableViewHeightForRowAtIndexPath = function (tableView, indexPath) {
         var owner = this._owner.get();
         if (!owner) {
-            return 44;
+            return DEFAULT_HEIGHT;
         }
         var height = undefined;
         if (utils.ios.MajorVersion >= 8) {
@@ -152,7 +153,7 @@ var UITableViewRowHeightDelegateImpl = (function (_super) {
         if (!owner) {
             return DEFAULT_HEIGHT;
         }
-        return owner.rowHeight;
+        return owner._rowHeight;
     };
     UITableViewRowHeightDelegateImpl.ObjCProtocols = [UITableViewDelegate];
     return UITableViewRowHeightDelegateImpl;
@@ -174,6 +175,7 @@ var ListView = (function (_super) {
         _super.call(this);
         this._preparingCell = false;
         this._isDataDirty = false;
+        this._rowHeight = -1;
         this.widthMeasureSpec = 0;
         this._ios = new UITableView();
         this._ios.registerClassForCellReuseIdentifier(ListViewCell.class(), CELLIDENTIFIER);
@@ -213,7 +215,7 @@ var ListView = (function (_super) {
     ListView.prototype._eachChildView = function (callback) {
         this._map.forEach(function (view, key) {
             callback(view);
-        }, this._map);
+        });
     };
     ListView.prototype.scrollToIndex = function (index) {
         if (this._ios) {
@@ -221,6 +223,11 @@ var ListView = (function (_super) {
         }
     };
     ListView.prototype.refresh = function () {
+        this._map.forEach(function (view, nativeView, map) {
+            if (!(view.bindingContext instanceof observable.Observable)) {
+                view.bindingContext = null;
+            }
+        });
         if (this.isLoaded) {
             this._ios.reloadData();
             this.requestLayout();
@@ -237,6 +244,7 @@ var ListView = (function (_super) {
         this._heights[index] = value;
     };
     ListView.prototype._onRowHeightPropertyChanged = function (data) {
+        this._rowHeight = data.newValue;
         if (data.newValue < 0) {
             this._nativeView.rowHeight = UITableViewAutomaticDimension;
             this._nativeView.estimatedRowHeight = DEFAULT_HEIGHT;
@@ -267,12 +275,12 @@ var ListView = (function (_super) {
     };
     ListView.prototype._layoutCell = function (cellView, indexPath) {
         if (cellView) {
-            var measuredSize = view.View.measureChild(this, cellView, this.widthMeasureSpec, infinity);
+            var measuredSize = view.View.measureChild(this, cellView, this.widthMeasureSpec, this._rowHeight < 0 ? infinity : this._rowHeight);
             var height = measuredSize.measuredHeight;
             this.setHeight(indexPath.row, height);
             return height;
         }
-        return 0;
+        return DEFAULT_HEIGHT;
     };
     ListView.prototype._prepareCell = function (cell, indexPath) {
         var cellHeight;
@@ -311,7 +319,11 @@ var ListView = (function (_super) {
         return cellHeight;
     };
     ListView.prototype._removeContainer = function (cell) {
-        this._removeView(cell.view);
+        var view = cell.view;
+        if (!(view.parent instanceof ListView)) {
+            this._removeView(view.parent);
+        }
+        view.parent._removeView(view);
         this._map.delete(cell);
     };
     return ListView;

@@ -106,8 +106,8 @@ var Request = (function () {
 }());
 exports.Request = Request;
 var NetworkDomainDebugger = (function () {
-    function NetworkDomainDebugger(dispatchMessage) {
-        this.events = new inspectorCommands.NetworkDomain.NetworkFrontend(dispatchMessage);
+    function NetworkDomainDebugger() {
+        this.events = new inspectorCommands.NetworkDomain.NetworkFrontend();
     }
     Object.defineProperty(NetworkDomainDebugger.prototype, "enabled", {
         get: function () {
@@ -161,9 +161,14 @@ var NetworkDomainDebugger = (function () {
     NetworkDomainDebugger.prototype.setCacheDisabled = function (params) {
     };
     NetworkDomainDebugger.prototype.loadResource = function (params) {
+        var appPath = NSBundle.mainBundle().bundlePath;
+        var pathUrl = params.url.replace("file://", appPath);
+        var fileManager = NSFileManager.defaultManager();
+        var data = fileManager.fileExistsAtPath(pathUrl) ? fileManager.contentsAtPath(pathUrl) : undefined;
+        var content = data ? NSString.alloc().initWithDataEncoding(data, NSUTF8StringEncoding) : "";
         return {
-            content: "",
-            mimeType: "",
+            content: content.toString(),
+            mimeType: "application/octet-stream",
             status: 200
         };
     };

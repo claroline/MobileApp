@@ -18,11 +18,15 @@ var GesturesObserver = (function (_super) {
         if (this.target) {
             this.type = type;
             this._onTargetLoaded = function (args) {
-                trace.write(_this.target + ".target loaded. android:" + _this.target._nativeView, "gestures");
+                if (trace.enabled) {
+                    trace.write(_this.target + ".target loaded. android:" + _this.target._nativeView, "gestures");
+                }
                 _this._attach(_this.target, type);
             };
             this._onTargetUnloaded = function (args) {
-                trace.write(_this.target + ".target unloaded. android:" + _this.target._nativeView, "gestures");
+                if (trace.enabled) {
+                    trace.write(_this.target + ".target unloaded. android:" + _this.target._nativeView, "gestures");
+                }
                 _this._detach();
             };
             this.target.on(view.View.loadedEvent, this._onTargetLoaded);
@@ -43,7 +47,9 @@ var GesturesObserver = (function (_super) {
         _super.prototype.disconnect.call(this);
     };
     GesturesObserver.prototype._detach = function () {
-        trace.write(this.target + "._detach() android:" + this.target._nativeView, "gestures");
+        if (trace.enabled) {
+            trace.write(this.target + "._detach() android:" + this.target._nativeView, "gestures");
+        }
         this._notifyTouch = false;
         this._simpleGestureDetector = null;
         this._scaleGestureDetector = null;
@@ -53,7 +59,9 @@ var GesturesObserver = (function (_super) {
         this._eventData = null;
     };
     GesturesObserver.prototype._attach = function (target, type) {
-        trace.write(this.target + "._attach() android:" + this.target._nativeView, "gestures");
+        if (trace.enabled) {
+            trace.write(this.target + "._attach() android:" + this.target._nativeView, "gestures");
+        }
         this._detach();
         if (type & definition.GestureTypes.tap || type & definition.GestureTypes.doubleTap || type & definition.GestureTypes.longPress) {
             ensureTapAndDoubleTapGestureListenerClass();

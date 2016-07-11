@@ -28,7 +28,7 @@ var Cache = (function (_super) {
         var cacheSize = maxMemory / 8;
         this._cache = new LruBitmapCacheClass(cacheSize);
         var that = new WeakRef(this);
-        this._callback = new com.tns.Async.CompleteCallback({
+        this._callback = new org.nativescript.widgets.Async.CompleteCallback({
             onComplete: function (result, context) {
                 var instance = that.get();
                 if (instance) {
@@ -38,7 +38,7 @@ var Cache = (function (_super) {
         });
     }
     Cache.prototype._downloadCore = function (request) {
-        com.tns.Async.DownloadImage(request.url, this._callback, request.key);
+        org.nativescript.widgets.Async.DownloadImage(request.url, this._callback, request.key);
     };
     Cache.prototype.get = function (key) {
         var result = this._cache.get(key);

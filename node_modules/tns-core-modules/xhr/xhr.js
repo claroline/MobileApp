@@ -152,9 +152,13 @@ var XMLHttpRequest = (function () {
     XMLHttpRequest.prototype.getResponseHeader = function (header) {
         if (types.isString(header) && this._readyState > 1
             && this._headers
-            && this._headers[header]
             && !this._errorFlag) {
-            return this._headers[header];
+            header = header.toLowerCase();
+            for (var i in this._headers) {
+                if (i.toLowerCase() === header) {
+                    return this._headers[i];
+                }
+            }
         }
         return null;
     };

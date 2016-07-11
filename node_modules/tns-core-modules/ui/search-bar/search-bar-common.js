@@ -1,7 +1,9 @@
-var view = require("ui/core/view");
-var dependencyObservable = require("ui/core/dependency-observable");
-var proxy = require("ui/core/proxy");
-var color = require("color");
+var view_1 = require("ui/core/view");
+var dependency_observable_1 = require("ui/core/dependency-observable");
+var proxy_1 = require("ui/core/proxy");
+var color_1 = require("color");
+var platform_1 = require("platform");
+var AffectsLayout = platform_1.isAndroid ? dependency_observable_1.PropertyMetadataSettings.None : dependency_observable_1.PropertyMetadataSettings.AffectsLayout;
 var SearchBar = (function (_super) {
     __extends(SearchBar, _super);
     function SearchBar() {
@@ -32,7 +34,7 @@ var SearchBar = (function (_super) {
             return this._getValue(SearchBar.textFieldBackgroundColorProperty);
         },
         set: function (value) {
-            this._setValue(SearchBar.textFieldBackgroundColorProperty, value instanceof color.Color ? value : new color.Color(value));
+            this._setValue(SearchBar.textFieldBackgroundColorProperty, value instanceof color_1.Color ? value : new color_1.Color(value));
         },
         enumerable: true,
         configurable: true
@@ -42,7 +44,7 @@ var SearchBar = (function (_super) {
             return this._getValue(SearchBar.textFieldHintColorProperty);
         },
         set: function (value) {
-            this._setValue(SearchBar.textFieldHintColorProperty, value instanceof color.Color ? value : new color.Color(value));
+            this._setValue(SearchBar.textFieldHintColorProperty, value instanceof color_1.Color ? value : new color_1.Color(value));
         },
         enumerable: true,
         configurable: true
@@ -51,10 +53,10 @@ var SearchBar = (function (_super) {
     };
     SearchBar.submitEvent = "submit";
     SearchBar.clearEvent = "clear";
-    SearchBar.textFieldBackgroundColorProperty = new dependencyObservable.Property("textFieldBackgroundColor", "SearchBar", new proxy.PropertyMetadata(undefined));
-    SearchBar.textFieldHintColorProperty = new dependencyObservable.Property("textFieldHintColor", "SearchBar", new proxy.PropertyMetadata(undefined));
-    SearchBar.hintProperty = new dependencyObservable.Property("hint", "SearchBar", new proxy.PropertyMetadata(""));
-    SearchBar.textProperty = new dependencyObservable.Property("text", "SearchBar", new proxy.PropertyMetadata("", dependencyObservable.PropertyMetadataSettings.AffectsLayout));
+    SearchBar.textFieldBackgroundColorProperty = new dependency_observable_1.Property("textFieldBackgroundColor", "SearchBar", new proxy_1.PropertyMetadata(undefined));
+    SearchBar.textFieldHintColorProperty = new dependency_observable_1.Property("textFieldHintColor", "SearchBar", new proxy_1.PropertyMetadata(undefined));
+    SearchBar.hintProperty = new dependency_observable_1.Property("hint", "SearchBar", new proxy_1.PropertyMetadata(""));
+    SearchBar.textProperty = new dependency_observable_1.Property("text", "SearchBar", new proxy_1.PropertyMetadata("", AffectsLayout));
     return SearchBar;
-}(view.View));
+}(view_1.View));
 exports.SearchBar = SearchBar;

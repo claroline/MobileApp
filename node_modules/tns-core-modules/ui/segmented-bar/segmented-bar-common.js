@@ -120,11 +120,11 @@ var SegmentedBar = (function (_super) {
         var idx;
         var itemsLength = this.items ? this.items.length : 0;
         if (types.isNullOrUndefined(index)) {
-            idx = itemsLength;
+            idx = itemsLength - 1;
         }
         else {
             if (index < 0 || index > itemsLength) {
-                idx = itemsLength;
+                idx = itemsLength - 1;
             }
             else {
                 idx = index;

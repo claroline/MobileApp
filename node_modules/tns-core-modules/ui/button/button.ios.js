@@ -47,7 +47,7 @@ var Button = (function (_super) {
     };
     Button.prototype._onPropertyChanged = function (property, oldValue, newValue) {
         _super.prototype._onPropertyChanged.call(this, property, oldValue, newValue);
-        if (property.metadata.affectsStyle) {
+        if (property.affectsStyle) {
             this._updateHandler();
         }
     };

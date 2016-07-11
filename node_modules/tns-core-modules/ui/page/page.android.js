@@ -111,7 +111,9 @@ var Page = (function (_super) {
         var skipDetached = !force && this.frame.android.cachePagesOnNavigate && !this._isBackNavigation;
         if (skipDetached) {
             ensureTrace();
-            trace.write("Caching " + this, trace.categories.NativeLifecycle);
+            if (trace.enabled) {
+                trace.write("Caching " + this, trace.categories.NativeLifecycle);
+            }
         }
         else {
             _super.prototype._onDetached.call(this);

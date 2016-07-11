@@ -16,7 +16,7 @@ global.loadModule = function (name) {
         return loader();
     }
     else {
-        return require(name);
+        return global.require(name);
     }
 };
 global.zonedCallback = function (callback) {
@@ -74,6 +74,9 @@ if (global.__snapshot) {
     global.FormData = xhr.FormData;
     var fetch = require("fetch");
     global.fetch = fetch.fetch;
+    global.Headers = fetch.Headers;
+    global.Request = fetch.Request;
+    global.Response = fetch.Response;
 }
 else {
     registerOnGlobalContext("setTimeout", "timer");

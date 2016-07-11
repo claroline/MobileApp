@@ -7,8 +7,30 @@ var ImageSource = (function () {
     function ImageSource() {
     }
     ImageSource.prototype.loadFromResource = function (name) {
-        this.ios = UIImage.imageNamed(name) || UIImage.imageNamed(name + ".jpg");
+        this.ios = UIImage.tns_safeImageNamed(name) || UIImage.tns_safeImageNamed(name + ".jpg");
         return this.ios != null;
+    };
+    ImageSource.prototype.fromResource = function (name) {
+        var _this = this;
+        return new Promise(function (resolve, reject) {
+            try {
+                UIImage.tns_safeDecodeImageNamedCompletion(name, function (image) {
+                    if (image) {
+                        _this.ios = image;
+                        resolve(true);
+                    }
+                    else {
+                        UIImage.tns_safeDecodeImageNamedCompletion(name + ".jpg", function (image) {
+                            _this.ios = image;
+                            resolve(true);
+                        });
+                    }
+                });
+            }
+            catch (ex) {
+                reject(ex);
+            }
+        });
     };
     ImageSource.prototype.loadFromFile = function (path) {
         var fileName = types.isString(path) ? path.trim() : "";
@@ -18,9 +40,41 @@ var ImageSource = (function () {
         this.ios = UIImage.imageWithContentsOfFile(fileName);
         return this.ios != null;
     };
+    ImageSource.prototype.fromFile = function (path) {
+        var _this = this;
+        return new Promise(function (resolve, reject) {
+            try {
+                var fileName = types.isString(path) ? path.trim() : "";
+                if (fileName.indexOf("~/") === 0) {
+                    fileName = fs.path.join(fs.knownFolders.currentApp().path, fileName.replace("~/", ""));
+                }
+                UIImage.tns_decodeImageWidthContentsOfFileCompletion(fileName, function (image) {
+                    _this.ios = image;
+                    resolve(true);
+                });
+            }
+            catch (ex) {
+                reject(ex);
+            }
+        });
+    };
     ImageSource.prototype.loadFromData = function (data) {
         this.ios = UIImage.imageWithData(data);
         return this.ios != null;
+    };
+    ImageSource.prototype.fromData = function (data) {
+        var _this = this;
+        return new Promise(function (resolve, reject) {
+            try {
+                UIImage.tns_decodeImageWithDataCompletion(data, function (image) {
+                    _this.ios = image;
+                    resolve(true);
+                });
+            }
+            catch (ex) {
+                reject(ex);
+            }
+        });
     };
     ImageSource.prototype.loadFromBase64 = function (source) {
         if (types.isString(source)) {
@@ -28,6 +82,21 @@ var ImageSource = (function () {
             this.ios = UIImage.imageWithData(data);
         }
         return this.ios != null;
+    };
+    ImageSource.prototype.fromBase64 = function (source) {
+        var _this = this;
+        return new Promise(function (resolve, reject) {
+            try {
+                var data = NSData.alloc().initWithBase64EncodedStringOptions(source, NSDataBase64DecodingOptions.NSDataBase64DecodingIgnoreUnknownCharacters);
+                UIImage.imageWithData["async"](UIImage, [data]).then(function (image) {
+                    _this.ios = image;
+                    resolve(true);
+                });
+            }
+            catch (ex) {
+                reject(ex);
+            }
+        });
     };
     ImageSource.prototype.setNativeSource = function (source) {
         this.ios = source;

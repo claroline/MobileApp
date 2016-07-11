@@ -1,35 +1,9 @@
 var appModule = require("./application-common");
-var frame = require("ui/frame");
 var observable = require("data/observable");
+var enums;
 global.moduleMerge(appModule, exports);
 var typedExports = exports;
-var NativeScriptApplication = (function (_super) {
-    __extends(NativeScriptApplication, _super);
-    function NativeScriptApplication() {
-        _super.call(this);
-        return global.__native(this);
-    }
-    NativeScriptApplication.prototype.onCreate = function () {
-        androidApp.init(this);
-        setupOrientationListener(androidApp);
-    };
-    NativeScriptApplication.prototype.onLowMemory = function () {
-        gc();
-        java.lang.System.gc();
-        _super.prototype.onLowMemory.call(this);
-        typedExports.notify({ eventName: typedExports.lowMemoryEvent, object: this, android: this });
-    };
-    NativeScriptApplication.prototype.onTrimMemory = function (level) {
-        gc();
-        java.lang.System.gc();
-        _super.prototype.onTrimMemory.call(this, level);
-    };
-    NativeScriptApplication = __decorate([
-        JavaProxy("com.tns.NativeScriptApplication")
-    ], NativeScriptApplication);
-    return NativeScriptApplication;
-}(android.app.Application));
-function initEvents() {
+function initLifecycleCallbacks() {
     var lifecycleCallbacks = new android.app.Application.ActivityLifecycleCallbacks({
         onActivityCreated: function (activity, bundle) {
             if (!androidApp.startActivity) {
@@ -108,6 +82,47 @@ function initEvents() {
     });
     return lifecycleCallbacks;
 }
+var currentOrientation;
+function initComponentCallbacks() {
+    var componentCallbacks = new android.content.ComponentCallbacks2({
+        onLowMemory: function () {
+            gc();
+            java.lang.System.gc();
+            typedExports.notify({ eventName: typedExports.lowMemoryEvent, object: this, android: this });
+        },
+        onTrimMemory: function (level) {
+        },
+        onConfigurationChanged: function (newConfig) {
+            var newOrientation = newConfig.orientation;
+            if (newOrientation === currentOrientation) {
+                return;
+            }
+            if (!enums) {
+                enums = require("ui/enums");
+            }
+            currentOrientation = newOrientation;
+            var newValue;
+            switch (newOrientation) {
+                case android.content.res.Configuration.ORIENTATION_LANDSCAPE:
+                    newValue = enums.DeviceOrientation.landscape;
+                    break;
+                case android.content.res.Configuration.ORIENTATION_PORTRAIT:
+                    newValue = enums.DeviceOrientation.portrait;
+                    break;
+                default:
+                    newValue = enums.DeviceOrientation.unknown;
+                    break;
+            }
+            typedExports.notify({
+                eventName: typedExports.orientationChangedEvent,
+                android: androidApp.nativeApp,
+                newValue: newValue,
+                object: typedExports.android,
+            });
+        }
+    });
+    return componentCallbacks;
+}
 var AndroidApplication = (function (_super) {
     __extends(AndroidApplication, _super);
     function AndroidApplication() {
@@ -116,11 +131,16 @@ var AndroidApplication = (function (_super) {
         this._pendingReceiverRegistrations = new Array();
     }
     AndroidApplication.prototype.init = function (nativeApp) {
+        if (this.nativeApp) {
+            throw new Error("application.android already initialized.");
+        }
         this.nativeApp = nativeApp;
         this.packageName = nativeApp.getPackageName();
         this.context = nativeApp.getApplicationContext();
-        this._eventsToken = initEvents();
-        this.nativeApp.registerActivityLifecycleCallbacks(this._eventsToken);
+        var lifecycleCallbacks = initLifecycleCallbacks();
+        var componentCallbacks = initComponentCallbacks();
+        this.nativeApp.registerActivityLifecycleCallbacks(lifecycleCallbacks);
+        this.nativeApp.registerComponentCallbacks(componentCallbacks);
         this._registerPendingReceivers();
     };
     AndroidApplication.prototype._registerPendingReceivers = function () {
@@ -198,6 +218,11 @@ function start(entry) {
     if (started) {
         throw new Error("Application is already started.");
     }
+    if (!androidApp.nativeApp) {
+        var utils = require("utils/utils");
+        var nativeApp = utils.ad.getApplication();
+        androidApp.init(nativeApp);
+    }
     started = true;
     if (entry) {
         typedExports.mainEntry = entry;
@@ -205,36 +230,6 @@ function start(entry) {
     loadCss();
 }
 exports.start = start;
-var currentOrientation;
-function setupOrientationListener(androidApp) {
-    androidApp.registerBroadcastReceiver(android.content.Intent.ACTION_CONFIGURATION_CHANGED, onConfigurationChanged);
-    currentOrientation = androidApp.context.getResources().getConfiguration().orientation;
-}
-function onConfigurationChanged(context, intent) {
-    var orientation = context.getResources().getConfiguration().orientation;
-    if (currentOrientation !== orientation) {
-        currentOrientation = orientation;
-        var enums = require("ui/enums");
-        var newValue;
-        switch (orientation) {
-            case android.content.res.Configuration.ORIENTATION_LANDSCAPE:
-                newValue = enums.DeviceOrientation.landscape;
-                break;
-            case android.content.res.Configuration.ORIENTATION_PORTRAIT:
-                newValue = enums.DeviceOrientation.portrait;
-                break;
-            default:
-                newValue = enums.DeviceOrientation.unknown;
-                break;
-        }
-        typedExports.notify({
-            eventName: typedExports.orientationChangedEvent,
-            android: context,
-            newValue: newValue,
-            object: typedExports.android,
-        });
-    }
-}
 function loadCss() {
     typedExports.appSelectors = typedExports.loadCss(typedExports.cssFile) || [];
     if (typedExports.appSelectors.length > 0) {
@@ -253,10 +248,8 @@ global.__onLiveSync = function () {
     if (typedExports.android && typedExports.android.paused) {
         return;
     }
-    var fileResolver = require("file-system/file-name-resolver");
-    fileResolver.clearCache();
+    appModule.__onLiveSync();
     loadCss();
-    frame.reloadPage();
 };
 global.__onUncaughtError = function (error) {
     var types = require("utils/types");

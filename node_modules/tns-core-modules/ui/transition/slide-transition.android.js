@@ -108,6 +108,9 @@ var SlideTransition = (function (_super) {
         animator.setInterpolator(this.getCurve());
         return animator;
     };
+    SlideTransition.prototype.toString = function () {
+        return _super.prototype.toString.call(this) + " " + this._direction;
+    };
     return SlideTransition;
 }(transition.Transition));
 exports.SlideTransition = SlideTransition;

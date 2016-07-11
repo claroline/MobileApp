@@ -10,7 +10,7 @@ function registerProperty(property) {
     }
     propertiesByCssName[property.cssName] = property;
     propertiesByName[property.name] = property;
-    if (property.metadata.inheritable) {
+    if (property.inheritable) {
         inheritableProperties.push(property);
     }
 }
@@ -58,19 +58,15 @@ function getPropertyByCssName(name) {
 exports.getPropertyByCssName = getPropertyByCssName;
 function eachProperty(callback) {
     types.verifyCallback(callback);
-    var i;
-    var key;
-    var keys = Object.keys(propertiesByName);
-    for (i = 0; i < keys.length; i++) {
-        key = keys[i];
+    for (var i = 0, keys = Object.keys(propertiesByName); i < keys.length; i++) {
+        var key = keys[i];
         callback(propertiesByName[key]);
     }
 }
 exports.eachProperty = eachProperty;
 function eachInheritableProperty(callback) {
     types.verifyCallback(callback);
-    var i;
-    for (i = 0; i < inheritableProperties.length; i++) {
+    for (var i = 0; i < inheritableProperties.length; i++) {
         callback(inheritableProperties[i]);
     }
 }
@@ -79,36 +75,10 @@ var Property = (function (_super) {
     __extends(Property, _super);
     function Property(name, cssName, metadata, valueConverter) {
         _super.call(this, name, "Style", metadata, valueConverter);
-        this._cssName = cssName;
+        this.cssName = cssName;
+        this.cssName = cssName;
         registerProperty(this);
     }
-    Object.defineProperty(Property.prototype, "cssName", {
-        get: function () {
-            return this._cssName;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Property.prototype._getEffectiveValue = function (entry) {
-        if (types.isDefined(entry.visualStateValue)) {
-            entry.valueSource = observable.ValueSource.VisualState;
-            return entry.visualStateValue;
-        }
-        if (types.isDefined(entry.localValue)) {
-            entry.valueSource = observable.ValueSource.Local;
-            return entry.localValue;
-        }
-        if (types.isDefined(entry.cssValue)) {
-            entry.valueSource = observable.ValueSource.Css;
-            return entry.cssValue;
-        }
-        if (types.isDefined(entry.inheritedValue)) {
-            entry.valueSource = observable.ValueSource.Inherited;
-            return entry.inheritedValue;
-        }
-        entry.valueSource = observable.ValueSource.Default;
-        return this.metadata.defaultValue;
-    };
     return Property;
 }(observable.Property));
 exports.Property = Property;

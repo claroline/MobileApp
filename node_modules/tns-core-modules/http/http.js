@@ -31,12 +31,9 @@ function getJSON(arg) {
 }
 exports.getJSON = getJSON;
 function getImage(arg) {
-    return new Promise(function (resolve, reject) {
-        httpRequest.request(typeof arg === "string" ? { url: arg, method: "GET" } : arg)
-            .then(function (r) {
-            r.content.toImage().then(function (source) { return resolve(source); }, function (e) { return reject(e); });
-        }, function (e) { return reject(e); });
-    });
+    return httpRequest
+        .request(typeof arg === "string" ? { url: arg, method: "GET" } : arg)
+        .then(function (responce) { return responce.content.toImage(); });
 }
 exports.getImage = getImage;
 function getFile(arg, destinationFilePath) {

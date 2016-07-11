@@ -1,8 +1,33 @@
-var platform = require("platform");
-var types = require("utils/types");
-var trace = require("trace");
+var frame_1 = require("ui/frame");
+var types_1 = require("utils/types");
+var platform_1 = require("platform");
 var lazy_1 = require("utils/lazy");
-var _sdkVersion = lazy_1.default(function () { return parseInt(platform.device.sdkVersion); });
+var trace = require("trace");
+var slideTransition;
+function ensureSlideTransition() {
+    if (!slideTransition) {
+        slideTransition = require("ui/transition/slide-transition");
+    }
+}
+var fadeTransition;
+function ensureFadeTransition() {
+    if (!fadeTransition) {
+        fadeTransition = require("ui/transition/fade-transition");
+    }
+}
+var flipTransition;
+function ensureFlipTransition() {
+    if (!flipTransition) {
+        flipTransition = require("ui/transition/flip-transition");
+    }
+}
+var animation;
+function ensureAnimationModule() {
+    if (!animation) {
+        animation = require("ui/animation");
+    }
+}
+var _sdkVersion = lazy_1.default(function () { return parseInt(platform_1.device.sdkVersion); });
 var _defaultInterpolator = lazy_1.default(function () { return new android.view.animation.AccelerateDecelerateInterpolator(); });
 var enterFakeResourceId = -10;
 var exitFakeResourceId = -20;
@@ -18,18 +43,24 @@ var AndroidTransitionType;
 function _clearBackwardTransitions(fragment) {
     var expandedFragment = fragment;
     if (expandedFragment.enterPopExitTransition) {
-        trace.write("Cleared enterPopExitTransition " + expandedFragment.enterPopExitTransition + " for " + fragment.getTag(), trace.categories.Transition);
+        if (trace.enabled) {
+            trace.write("Cleared enterPopExitTransition " + expandedFragment.enterPopExitTransition + " for " + fragment, trace.categories.Transition);
+        }
         expandedFragment.enterPopExitTransition = undefined;
     }
     if (_sdkVersion() >= 21) {
         var enterTransition = fragment.getEnterTransition();
         if (enterTransition) {
-            trace.write("Cleared Enter " + enterTransition.getClass().getSimpleName() + " transition for " + fragment.getTag(), trace.categories.Transition);
+            if (trace.enabled) {
+                trace.write("Cleared Enter " + enterTransition.getClass().getSimpleName() + " transition for " + fragment, trace.categories.Transition);
+            }
             fragment.setEnterTransition(null);
         }
         var returnTransition = fragment.getReturnTransition();
         if (returnTransition) {
-            trace.write("Cleared Pop Exit " + returnTransition.getClass().getSimpleName() + " transition for " + fragment.getTag(), trace.categories.Transition);
+            if (trace.enabled) {
+                trace.write("Cleared Pop Exit " + returnTransition.getClass().getSimpleName() + " transition for " + fragment, trace.categories.Transition);
+            }
             fragment.setReturnTransition(null);
         }
     }
@@ -38,29 +69,39 @@ exports._clearBackwardTransitions = _clearBackwardTransitions;
 function _clearForwardTransitions(fragment) {
     var expandedFragment = fragment;
     if (expandedFragment.exitPopEnterTransition) {
-        trace.write("Cleared exitPopEnterTransition " + expandedFragment.exitPopEnterTransition + " for " + fragment.getTag(), trace.categories.Transition);
+        if (trace.enabled) {
+            trace.write("Cleared exitPopEnterTransition " + expandedFragment.exitPopEnterTransition + " for " + fragment, trace.categories.Transition);
+        }
         expandedFragment.exitPopEnterTransition = undefined;
     }
     if (_sdkVersion() >= 21) {
         var exitTransition = fragment.getExitTransition();
         if (exitTransition) {
-            trace.write("Cleared Exit " + exitTransition.getClass().getSimpleName() + " transition for " + fragment.getTag(), trace.categories.Transition);
+            if (trace.enabled) {
+                trace.write("Cleared Exit " + exitTransition.getClass().getSimpleName() + " transition for " + fragment, trace.categories.Transition);
+            }
             fragment.setExitTransition(null);
         }
         var reenterTransition = fragment.getReenterTransition();
         if (reenterTransition) {
-            trace.write("Cleared Pop Enter " + reenterTransition.getClass().getSimpleName() + " transition for " + fragment.getTag(), trace.categories.Transition);
+            if (trace.enabled) {
+                trace.write("Cleared Pop Enter " + reenterTransition.getClass().getSimpleName() + " transition for " + fragment, trace.categories.Transition);
+            }
             fragment.setReenterTransition(null);
         }
     }
 }
 exports._clearForwardTransitions = _clearForwardTransitions;
 function _setAndroidFragmentTransitions(navigationTransition, currentFragment, newFragment, fragmentTransaction) {
+    trace.write("Setting Android Fragment Transitions...", trace.categories.Transition);
     var name;
     if (navigationTransition.name) {
         name = navigationTransition.name.toLowerCase();
     }
     var useLollipopTransition = name && (name.indexOf("slide") === 0 || name === "fade" || name === "explode") && _sdkVersion() >= 21;
+    if (frame_1.topmost().android.cachePagesOnNavigate && _sdkVersion() === 23) {
+        useLollipopTransition = false;
+    }
     if (useLollipopTransition) {
         newFragment.setAllowEnterTransitionOverlap(true);
         newFragment.setAllowReturnTransitionOverlap(true);
@@ -153,37 +194,40 @@ function _setAndroidFragmentTransitions(navigationTransition, currentFragment, n
                 currentFragment.setExitTransition(explodeExit);
             }
         }
-        return;
-    }
-    var transition;
-    if (name) {
-        if (name.indexOf("slide") === 0) {
-            var slideTransitionModule = require("ui/transition/slide-transition");
-            var direction = name.substr("slide".length) || "left";
-            transition = new slideTransitionModule.SlideTransition(direction, navigationTransition.duration, navigationTransition.curve);
-        }
-        else if (name === "fade") {
-            var fadeTransitionModule = require("ui/transition/fade-transition");
-            transition = new fadeTransitionModule.FadeTransition(navigationTransition.duration, navigationTransition.curve);
-        }
-        else if (name.indexOf("flip") === 0) {
-            var flipTransitionModule = require("ui/transition/flip-transition");
-            var direction = name.substr("flip".length) || "right";
-            transition = new flipTransitionModule.FlipTransition(direction, navigationTransition.duration, navigationTransition.curve);
-        }
     }
     else {
-        transition = navigationTransition.instance;
-    }
-    if (transition) {
-        var newexpandedFragment = newFragment;
-        newexpandedFragment.enterPopExitTransition = transition;
-        if (currentFragment) {
-            var currentexpandedFragment = currentFragment;
-            currentexpandedFragment.exitPopEnterTransition = transition;
+        var transition = void 0;
+        if (name) {
+            if (name.indexOf("slide") === 0) {
+                var direction = name.substr("slide".length) || "left";
+                ensureSlideTransition();
+                transition = new slideTransition.SlideTransition(direction, navigationTransition.duration, navigationTransition.curve);
+            }
+            else if (name === "fade") {
+                ensureFadeTransition();
+                transition = new fadeTransition.FadeTransition(navigationTransition.duration, navigationTransition.curve);
+            }
+            else if (name.indexOf("flip") === 0) {
+                var direction = name.substr("flip".length) || "right";
+                ensureFlipTransition();
+                transition = new flipTransition.FlipTransition(direction, navigationTransition.duration, navigationTransition.curve);
+            }
         }
-        fragmentTransaction.setCustomAnimations(enterFakeResourceId, exitFakeResourceId, popEnterFakeResourceId, popExitFakeResourceId);
+        else {
+            transition = navigationTransition.instance;
+        }
+        if (transition) {
+            var newExpandedFragment = newFragment;
+            newExpandedFragment.enterPopExitTransition = transition;
+            if (currentFragment) {
+                var currentExpandedFragment = currentFragment;
+                currentExpandedFragment.exitPopEnterTransition = transition;
+            }
+            fragmentTransaction.setCustomAnimations(enterFakeResourceId, exitFakeResourceId, popEnterFakeResourceId, popExitFakeResourceId);
+        }
     }
+    _printTransitions(currentFragment);
+    _printTransitions(newFragment);
 }
 exports._setAndroidFragmentTransitions = _setAndroidFragmentTransitions;
 function _setUpNativeTransition(navigationTransition, nativeTransition) {
@@ -191,7 +235,7 @@ function _setUpNativeTransition(navigationTransition, nativeTransition) {
         nativeTransition.setDuration(navigationTransition.duration);
     }
     if (navigationTransition.curve) {
-        var animation = require("ui/animation");
+        ensureAnimationModule();
         var interpolator = animation._resolveAnimationCurve(navigationTransition.curve);
         nativeTransition.setInterpolator(interpolator);
     }
@@ -200,17 +244,24 @@ function _setUpNativeTransition(navigationTransition, nativeTransition) {
     }
 }
 function _onFragmentShown(fragment, isBack) {
+    if (trace.enabled) {
+        trace.write("_onFragmentShown(" + fragment + ", isBack: " + isBack + ")", trace.categories.Transition);
+    }
     var expandedFragment = fragment;
     var transitionType = isBack ? "Pop Enter" : "Enter";
     var relevantTransition = isBack ? expandedFragment.exitPopEnterTransition : expandedFragment.enterPopExitTransition;
     if (relevantTransition) {
-        trace.write(fragment.getTag() + " has been shown when going " + (isBack ? "back" : "forward") + ", but there is " + transitionType + " " + relevantTransition + ". Will complete page addition when transition ends.", trace.categories.Transition);
+        if (trace.enabled) {
+            trace.write(fragment + " has been shown when going " + (isBack ? "back" : "forward") + ", but there is " + transitionType + " " + relevantTransition + ". Will complete page addition when transition ends.", trace.categories.Transition);
+        }
         expandedFragment.completePageAdditionWhenTransitionEnds = { isBack: isBack };
     }
     else if (_sdkVersion() >= 21) {
         var nativeTransition = isBack ? fragment.getReenterTransition() : fragment.getEnterTransition();
         if (nativeTransition) {
-            trace.write(fragment.getTag() + " has been shown when going " + (isBack ? "back" : "forward") + ", but there is " + transitionType + " " + nativeTransition.getClass().getSimpleName() + " transition. Will complete page addition when transition ends.", trace.categories.Transition);
+            if (trace.enabled) {
+                trace.write(fragment + " has been shown when going " + (isBack ? "back" : "forward") + ", but there is " + transitionType + " " + nativeTransition.getClass().getSimpleName() + " transition. Will complete page addition when transition ends.", trace.categories.Transition);
+            }
             expandedFragment.completePageAdditionWhenTransitionEnds = { isBack: isBack };
         }
     }
@@ -220,17 +271,24 @@ function _onFragmentShown(fragment, isBack) {
 }
 exports._onFragmentShown = _onFragmentShown;
 function _onFragmentHidden(fragment, isBack, destroyed) {
+    if (trace.enabled) {
+        trace.write("_onFragmentHidden(" + fragment + ", isBack: " + isBack + ", destroyed: " + destroyed + ")", trace.categories.Transition);
+    }
     var expandedFragment = fragment;
     var transitionType = isBack ? "Pop Exit" : "Exit";
     var relevantTransition = isBack ? expandedFragment.enterPopExitTransition : expandedFragment.exitPopEnterTransition;
     if (relevantTransition) {
-        trace.write(fragment.getTag() + " has been hidden when going " + (isBack ? "back" : "forward") + ", but there is " + transitionType + " " + relevantTransition + ". Will complete page removal when transition ends.", trace.categories.Transition);
+        if (trace.enabled) {
+            trace.write(fragment + " has been hidden when going " + (isBack ? "back" : "forward") + ", but there is " + transitionType + " " + relevantTransition + ". Will complete page removal when transition ends.", trace.categories.Transition);
+        }
         expandedFragment.completePageRemovalWhenTransitionEnds = { isBack: isBack };
     }
     else if (_sdkVersion() >= 21) {
         var nativeTransition = isBack ? fragment.getReturnTransition() : fragment.getExitTransition();
         if (nativeTransition) {
-            trace.write(fragment.getTag() + " has been hidden when going " + (isBack ? "back" : "forward") + ", but there is " + transitionType + " " + nativeTransition.getClass().getSimpleName() + " transition. Will complete page removal when transition ends.", trace.categories.Transition);
+            if (trace.enabled) {
+                trace.write(fragment + " has been hidden when going " + (isBack ? "back" : "forward") + ", but there is " + transitionType + " " + nativeTransition.getClass().getSimpleName() + " transition. Will complete page removal when transition ends.", trace.categories.Transition);
+            }
             expandedFragment.completePageRemovalWhenTransitionEnds = { isBack: isBack };
         }
     }
@@ -243,48 +301,83 @@ exports._onFragmentHidden = _onFragmentHidden;
 function _completePageAddition(fragment, isBack) {
     var expandedFragment = fragment;
     expandedFragment.completePageAdditionWhenTransitionEnds = undefined;
-    var frame = fragment.frame;
-    var entry = fragment.entry;
+    var frame = fragment._callbacks.frame;
+    var entry = fragment._callbacks.entry;
     var page = entry.resolvedPage;
+    if (trace.enabled) {
+        trace.write("STARTING ADDITION of " + page + "...", trace.categories.Transition);
+    }
     frame._currentEntry = entry;
     page.onNavigatedTo(isBack);
     frame._processNavigationQueue(page);
     entry.isNavigation = undefined;
-    trace.write("ADDITION of " + page + " completed", trace.categories.Transition);
+    if (trace.enabled) {
+        trace.write("ADDITION of " + page + " completed", trace.categories.Transition);
+    }
 }
 function _completePageRemoval(fragment, isBack) {
     var expandedFragment = fragment;
     expandedFragment.completePageRemovalWhenTransitionEnds = undefined;
-    var frame = fragment.frame;
-    var entry = fragment.entry;
+    var frame = fragment._callbacks.frame;
+    var entry = fragment._callbacks.entry;
     var page = entry.resolvedPage;
+    if (trace.enabled) {
+        trace.write("STARTING REMOVAL of " + page + "...", trace.categories.Transition);
+    }
     if (page.frame) {
         frame._removeView(page);
         if (entry.isNavigation) {
             page.onNavigatedFrom(isBack);
         }
-        trace.write("REMOVAL of " + page + " completed", trace.categories.Transition);
+        if (trace.enabled) {
+            trace.write("REMOVAL of " + page + " completed", trace.categories.Transition);
+        }
     }
     else {
-        trace.write("REMOVAL of " + page + " has already been done", trace.categories.Transition);
+        if (trace.enabled) {
+            trace.write("REMOVAL of " + page + " has already been done", trace.categories.Transition);
+        }
     }
     if (expandedFragment.isDestroyed) {
         expandedFragment.isDestroyed = undefined;
         if (page._context) {
             page._onDetached(true);
-            trace.write("DETACHMENT of " + page + " completed", trace.categories.Transition);
+            if (trace.enabled) {
+                trace.write("DETACHMENT of " + page + " completed", trace.categories.Transition);
+            }
         }
         else {
-            trace.write("DETACHMENT of " + page + " has already been done", trace.categories.Transition);
+            if (trace.enabled) {
+                trace.write("DETACHMENT of " + page + " has already been done", trace.categories.Transition);
+            }
+            _removePageNativeViewFromAndroidParent(page);
         }
     }
     entry.isNavigation = undefined;
+}
+function _removePageNativeViewFromAndroidParent(page) {
+    if (page._nativeView && page._nativeView.getParent) {
+        var androidParent = page._nativeView.getParent();
+        if (androidParent && androidParent.removeView) {
+            if (trace.enabled) {
+                trace.write("REMOVED " + page + "._nativeView from its Android parent", trace.categories.Transition);
+            }
+            page._onDetached(true);
+            androidParent.removeView(page._nativeView);
+        }
+    }
+}
+exports._removePageNativeViewFromAndroidParent = _removePageNativeViewFromAndroidParent;
+function _toShortString(nativeTransition) {
+    return nativeTransition.getClass().getSimpleName() + "@" + nativeTransition.hashCode().toString(16);
 }
 function _addNativeTransitionListener(fragment, nativeTransition) {
     var expandedFragment = fragment;
     var transitionListener = new android.transition.Transition.TransitionListener({
         onTransitionCancel: function (transition) {
-            trace.write("CANCEL " + nativeTransition + " transition for " + fragment, trace.categories.Transition);
+            if (trace.enabled) {
+                trace.write("CANCEL " + _toShortString(nativeTransition) + " transition for " + fragment, trace.categories.Transition);
+            }
             if (expandedFragment.completePageRemovalWhenTransitionEnds) {
                 _completePageRemoval(fragment, expandedFragment.completePageRemovalWhenTransitionEnds.isBack);
             }
@@ -293,7 +386,9 @@ function _addNativeTransitionListener(fragment, nativeTransition) {
             }
         },
         onTransitionEnd: function (transition) {
-            trace.write("END " + nativeTransition + " transition for " + fragment, trace.categories.Transition);
+            if (trace.enabled) {
+                trace.write("END " + _toShortString(nativeTransition) + " transition for " + fragment, trace.categories.Transition);
+            }
             if (expandedFragment.completePageRemovalWhenTransitionEnds) {
                 _completePageRemoval(fragment, expandedFragment.completePageRemovalWhenTransitionEnds.isBack);
             }
@@ -302,13 +397,19 @@ function _addNativeTransitionListener(fragment, nativeTransition) {
             }
         },
         onTransitionPause: function (transition) {
-            trace.write("PAUSE " + nativeTransition + " transition for " + fragment, trace.categories.Transition);
+            if (trace.enabled) {
+                trace.write("PAUSE " + _toShortString(nativeTransition) + " transition for " + fragment, trace.categories.Transition);
+            }
         },
         onTransitionResume: function (transition) {
-            trace.write("RESUME " + nativeTransition + " transition for " + fragment, trace.categories.Transition);
+            if (trace.enabled) {
+                trace.write("RESUME " + _toShortString(nativeTransition) + " transition for " + fragment, trace.categories.Transition);
+            }
         },
         onTransitionStart: function (transition) {
-            trace.write("START " + nativeTransition + " transition for " + fragment, trace.categories.Transition);
+            if (trace.enabled) {
+                trace.write("START " + _toShortString(nativeTransition) + " transition for " + fragment, trace.categories.Transition);
+            }
         }
     });
     nativeTransition.addListener(transitionListener);
@@ -330,6 +431,10 @@ function _onFragmentCreateAnimator(fragment, nextAnim) {
             transitionType = AndroidTransitionType.popExit;
             break;
     }
+    if ((nextAnim === popExitFakeResourceId || !nextAnim) && expandedFragment.exitHack) {
+        trace.write("HACK EXIT FOR " + fragment, trace.categories.Transition);
+        transitionType = AndroidTransitionType.exit;
+    }
     var transition;
     switch (transitionType) {
         case AndroidTransitionType.enter:
@@ -344,15 +449,22 @@ function _onFragmentCreateAnimator(fragment, nextAnim) {
     var animator;
     if (transition) {
         animator = transition.createAndroidAnimator(transitionType);
+        trace.write(transition + ".createAndroidAnimator(" + transitionType + "): " + animator, trace.categories.Transition);
         var transitionListener = new android.animation.Animator.AnimatorListener({
             onAnimationStart: function (animator) {
-                trace.write("START " + transitionType + " " + transition + " for " + fragment.getTag(), trace.categories.Transition);
+                if (trace.enabled) {
+                    trace.write("START " + transitionType + " " + transition + " for " + fragment, trace.categories.Transition);
+                }
             },
             onAnimationRepeat: function (animator) {
-                trace.write("REPEAT " + transitionType + " " + transition + " for " + fragment.getTag(), trace.categories.Transition);
+                if (trace.enabled) {
+                    trace.write("REPEAT " + transitionType + " " + transition + " for " + fragment, trace.categories.Transition);
+                }
             },
             onAnimationEnd: function (animator) {
-                trace.write("END " + transitionType + " " + transition, trace.categories.Transition);
+                if (trace.enabled) {
+                    trace.write("END " + transitionType + " " + transition + " for " + fragment, trace.categories.Transition);
+                }
                 if (expandedFragment.completePageRemovalWhenTransitionEnds) {
                     _completePageRemoval(fragment, expandedFragment.completePageRemovalWhenTransitionEnds.isBack);
                 }
@@ -361,7 +473,9 @@ function _onFragmentCreateAnimator(fragment, nextAnim) {
                 }
             },
             onAnimationCancel: function (animator) {
-                trace.write("CANCEL " + transitionType + " " + transition + " for " + fragment.getTag(), trace.categories.Transition);
+                if (trace.enabled) {
+                    trace.write("CANCEL " + transitionType + " " + transition + " for " + fragment, trace.categories.Transition);
+                }
                 if (expandedFragment.completePageRemovalWhenTransitionEnds) {
                     _completePageRemoval(fragment, expandedFragment.completePageRemovalWhenTransitionEnds.isBack);
                 }
@@ -372,21 +486,67 @@ function _onFragmentCreateAnimator(fragment, nextAnim) {
         });
         animator.addListener(transitionListener);
     }
+    if (transitionType && !animator) {
+        animator = _createDummyZeroDurationAnimator();
+    }
     return animator;
 }
 exports._onFragmentCreateAnimator = _onFragmentCreateAnimator;
-var transitionId = 0;
+function _prepareCurrentFragmentForClearHistory(fragment) {
+    trace.write("Preparing " + fragment + " transitions fro clear history...", trace.categories.Transition);
+    var expandedFragment = fragment;
+    expandedFragment.exitHack = true;
+    if (_sdkVersion() >= 21) {
+        var exitTransition = fragment.getExitTransition();
+        fragment.setReturnTransition(exitTransition);
+    }
+    _printTransitions(fragment);
+}
+exports._prepareCurrentFragmentForClearHistory = _prepareCurrentFragmentForClearHistory;
+var intEvaluator;
+function ensureIntEvaluator() {
+    if (!intEvaluator) {
+        intEvaluator = new android.animation.IntEvaluator();
+    }
+}
+function _createDummyZeroDurationAnimator() {
+    if (trace.enabled) {
+        trace.write("_createDummyZeroDurationAnimator()", trace.categories.Transition);
+    }
+    ensureIntEvaluator();
+    var nativeArray = Array.create(java.lang.Object, 2);
+    nativeArray[0] = java.lang.Integer.valueOf(0);
+    nativeArray[1] = java.lang.Integer.valueOf(1);
+    var animator = android.animation.ValueAnimator.ofObject(intEvaluator, nativeArray);
+    animator.setDuration(0);
+    return animator;
+}
+function _printTransitions(f) {
+    if (f && trace.enabled) {
+        var ef = f;
+        var result = ef + " Transitions:";
+        result += "" + (ef.enterPopExitTransition ? " enterPopExit=" + ef.enterPopExitTransition : "");
+        result += "" + (ef.exitPopEnterTransition ? " exitPopEnter=" + ef.exitPopEnterTransition : "");
+        if (_sdkVersion() >= 21) {
+            result += "" + (f.getEnterTransition() ? " enter=" + _toShortString(f.getEnterTransition()) : "");
+            result += "" + (f.getExitTransition() ? " exit=" + _toShortString(f.getExitTransition()) : "");
+            result += "" + (f.getReenterTransition() ? " popEnter=" + _toShortString(f.getReenterTransition()) : "");
+            result += "" + (f.getReturnTransition() ? " popExit=" + _toShortString(f.getReturnTransition()) : "");
+        }
+        trace.write(result, trace.categories.Transition);
+    }
+}
 var Transition = (function () {
     function Transition(duration, curve) {
         this._duration = duration;
         if (curve) {
-            var animation = require("ui/animation");
-            this._interpolator = animation._resolveAnimationCurve(curve);
+            var animation_1 = require("ui/animation");
+            this._interpolator = animation_1._resolveAnimationCurve(curve);
         }
         else {
             this._interpolator = _defaultInterpolator();
         }
-        this._id = transitionId++;
+        this._id = Transition.transitionId++;
     }
     Transition.prototype.getDuration = function () {
         return this._duration;
@@ -401,8 +561,9 @@ var Transition = (function () {
         throw new Error("Abstract method call");
     };
     Transition.prototype.toString = function () {
-        return types.getClass(this) + "@" + this._id;
+        return types_1.getClass(this) + "@" + this._id;
     };
+    Transition.transitionId = 0;
     return Transition;
 }());
 exports.Transition = Transition;

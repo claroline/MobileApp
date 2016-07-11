@@ -252,7 +252,9 @@ var ios;
         var error = new interop.Reference();
         if (!CTFontManagerRegisterGraphicsFont(font, error)) {
             var trace = require("trace");
-            trace.write("Error occur while registering font: " + CFErrorCopyDescription(error.value), trace.categories.Error, trace.messageType.error);
+            if (trace.enabled) {
+                trace.write("Error occur while registering font: " + CFErrorCopyDescription(error.value), trace.categories.Error, trace.messageType.error);
+            }
         }
         areSystemFontSetsValid = false;
     }

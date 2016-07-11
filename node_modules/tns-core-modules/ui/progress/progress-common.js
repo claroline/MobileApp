@@ -1,5 +1,5 @@
-var view = require("ui/core/view");
-var dependencyObservable = require("ui/core/dependency-observable");
+var view_1 = require("ui/core/view");
+var dependency_observable_1 = require("ui/core/dependency-observable");
 var proxy = require("ui/core/proxy");
 var Progress = (function (_super) {
     __extends(Progress, _super);
@@ -32,8 +32,8 @@ var Progress = (function (_super) {
         enumerable: true,
         configurable: true
     });
-    Progress.valueProperty = new dependencyObservable.Property("value", "Progress", new proxy.PropertyMetadata(0, dependencyObservable.PropertyMetadataSettings.AffectsLayout));
-    Progress.maxValueProperty = new dependencyObservable.Property("maxValue", "Progress", new proxy.PropertyMetadata(100, dependencyObservable.PropertyMetadataSettings.AffectsLayout));
+    Progress.valueProperty = new dependency_observable_1.Property("value", "Progress", new proxy.PropertyMetadata(0));
+    Progress.maxValueProperty = new dependency_observable_1.Property("maxValue", "Progress", new proxy.PropertyMetadata(100));
     return Progress;
-}(view.View));
+}(view_1.View));
 exports.Progress = Progress;

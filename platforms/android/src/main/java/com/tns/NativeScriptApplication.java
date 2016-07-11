@@ -1,52 +1,24 @@
 package com.tns;
 
-@com.tns.JavaScriptImplementation(javaScriptFile = "./tns_modules/application/application.js")
-public class NativeScriptApplication extends android.app.Application implements com.tns.NativeScriptHashCodeProvider {
-	private static android.app.Application thiz;
+import android.app.Application;
 
-	public NativeScriptApplication(){
-		super();
-		thiz = this;
-	}
+public class NativeScriptApplication extends android.app.Application {
 
-	public void onCreate()  {
-		new RuntimeHelper(this).initRuntime();
-		if (!Runtime.isInitialized()) {
-			super.onCreate();
-			return;
-		}
-		java.lang.Object[] args = null;
-		com.tns.Runtime.callJSMethod(this, "onCreate", void.class, args);
-	}
+    private static NativeScriptApplication thiz;
 
-	public void onLowMemory()  {
-		if (!Runtime.isInitialized()) {
-			super.onLowMemory();
-			return;
-		}
-		java.lang.Object[] args = null;
-		com.tns.Runtime.callJSMethod(this, "onLowMemory", void.class, args);
-	}
+    public NativeScriptApplication() {
+        thiz = this;
+    }
 
-	public void onTrimMemory(int param_0)  {
-		if (!Runtime.isInitialized()) {
-			super.onTrimMemory(param_0);
-			return;
-		}
-		java.lang.Object[] args = new java.lang.Object[1];
-		args[0] = param_0;
-		com.tns.Runtime.callJSMethod(this, "onTrimMemory", void.class, args);
-	}
+    public void onCreate() {
+		super.onCreate();
+		com.tns.Runtime runtime = RuntimeHelper.initRuntime(this);
+        if (runtime !=null) {
+            runtime.run();
+        }
+    }
 
-	public boolean equals__super(java.lang.Object other) {
-		return super.equals(other);
-	}
-
-	public int hashCode__super() {
-		return super.hashCode();
-	}
-
-	public static android.app.Application getInstance() {
-		return thiz;
-	}
+    public static Application getInstance() {
+        return thiz;
+    }
 }

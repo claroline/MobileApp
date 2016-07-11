@@ -6,27 +6,26 @@ function setNativeDockProperty(data) {
     var view = data.object;
     if (view instanceof view_1.View) {
         var nativeView = view._nativeView;
-        var lp = nativeView.getLayoutParams();
-        if (!(lp instanceof org.nativescript.widgets.CommonLayoutParams)) {
-            lp = new org.nativescript.widgets.CommonLayoutParams();
+        var lp = nativeView.getLayoutParams() || new org.nativescript.widgets.CommonLayoutParams();
+        if (lp instanceof org.nativescript.widgets.CommonLayoutParams) {
+            switch (data.newValue) {
+                case enums_1.Dock.left:
+                    lp.dock = org.nativescript.widgets.Dock.left;
+                    break;
+                case enums_1.Dock.top:
+                    lp.dock = org.nativescript.widgets.Dock.top;
+                    break;
+                case enums_1.Dock.right:
+                    lp.dock = org.nativescript.widgets.Dock.right;
+                    break;
+                case enums_1.Dock.bottom:
+                    lp.dock = org.nativescript.widgets.Dock.bottom;
+                    break;
+                default:
+                    throw new Error("Invalid dock value: " + data.newValue + " on element: " + view);
+            }
+            nativeView.setLayoutParams(lp);
         }
-        switch (data.newValue) {
-            case enums_1.Dock.left:
-                lp.dock = org.nativescript.widgets.Dock.left;
-                break;
-            case enums_1.Dock.top:
-                lp.dock = org.nativescript.widgets.Dock.top;
-                break;
-            case enums_1.Dock.right:
-                lp.dock = org.nativescript.widgets.Dock.right;
-                break;
-            case enums_1.Dock.bottom:
-                lp.dock = org.nativescript.widgets.Dock.bottom;
-                break;
-            default:
-                throw new Error("Invalid dock value: " + data.newValue + " on element: " + view);
-        }
-        nativeView.setLayoutParams(lp);
     }
 }
 common.DockLayout.dockProperty.metadata.onSetNativeValue = setNativeDockProperty;

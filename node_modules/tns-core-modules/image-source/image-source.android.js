@@ -37,6 +37,12 @@ var ImageSource = (function () {
         }
         return this.android != null;
     };
+    ImageSource.prototype.fromResource = function (name) {
+        var _this = this;
+        return new Promise(function (resolve, reject) {
+            resolve(_this.loadFromResource(name));
+        });
+    };
     ImageSource.prototype.loadFromFile = function (path) {
         ensureFS();
         var fileName = types.isString(path) ? path.trim() : "";
@@ -46,9 +52,21 @@ var ImageSource = (function () {
         this.android = android.graphics.BitmapFactory.decodeFile(fileName, null);
         return this.android != null;
     };
+    ImageSource.prototype.fromFile = function (path) {
+        var _this = this;
+        return new Promise(function (resolve, reject) {
+            resolve(_this.loadFromFile(path));
+        });
+    };
     ImageSource.prototype.loadFromData = function (data) {
         this.android = android.graphics.BitmapFactory.decodeStream(data);
         return this.android != null;
+    };
+    ImageSource.prototype.fromData = function (data) {
+        var _this = this;
+        return new Promise(function (resolve, reject) {
+            resolve(_this.loadFromData(data));
+        });
     };
     ImageSource.prototype.loadFromBase64 = function (source) {
         if (types.isString(source)) {
@@ -56,6 +74,12 @@ var ImageSource = (function () {
             this.android = android.graphics.BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
         }
         return this.android != null;
+    };
+    ImageSource.prototype.fromBase64 = function (data) {
+        var _this = this;
+        return new Promise(function (resolve, reject) {
+            resolve(_this.loadFromBase64(data));
+        });
     };
     ImageSource.prototype.setNativeSource = function (source) {
         this.android = source;

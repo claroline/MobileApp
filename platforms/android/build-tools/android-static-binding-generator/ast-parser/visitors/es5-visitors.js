@@ -11,7 +11,9 @@ var es5_visitors = (function () {
 		TYPESCRIPT_EXTEND_STRING = FILE_SEPARATOR + "rnal_ts_helpers_l47_c38",
 		customExtendsArr = [],
 		normalExtendsArr = [],
-		interfacesArr = [];
+		interfacesArr = [],
+
+		customExtendsArrGlobal = [];
 
 	/* 	ENTRY POINT!
 	*	Traverses each passed node with several visitors.
@@ -73,12 +75,13 @@ var es5_visitors = (function () {
 	*	Returns the common extends array generated from visitor
 	*/
 	es5Visitor.getCommonExtendInfo = function () {
-		var res = normalExtendsArr.slice().filter(function (p) {
-			if(p.startsWith("*")) {
-				return false;
+		var res = [];
+		for(var index in normalExtendsArr) {
+			if(normalExtendsArr[index][0] !== "*") {
+				res.push(normalExtendsArr[index]);
 			}
-			return p;
-		});
+		} 
+		
 		normalExtendsArr = [];
 		return res;
 	}
@@ -227,7 +230,7 @@ var es5_visitors = (function () {
 		if(config.logger) {
 			config.logger.info(lineToWrite)
 		}
-		customExtendsArr.push(lineToWrite)
+		addCustomExtend(classNameFromDecorator, config.fullPathName, lineToWrite)
 	}
 
 	/* 
@@ -299,8 +302,9 @@ var es5_visitors = (function () {
 				if(config.logger) {
 					config.logger.info(lineToWrite)
 				}
-				lineToWrite =  _generateLineToWrite(isCorrectExtendClassName ? className : "", extendClass.reverse().join("."), overriddenMethodNames, "", config.fullPathName);
-				customExtendsArr.push(lineToWrite)
+				var classNameFromDecorator = isCorrectExtendClassName ? className : "";
+				lineToWrite =  _generateLineToWrite(classNameFromDecorator, extendClass.reverse().join("."), overriddenMethodNames, "", config.fullPathName);
+				addCustomExtend(classNameFromDecorator, config.fullPathName, lineToWrite)
 				return;
 			}
 
@@ -462,6 +466,22 @@ var es5_visitors = (function () {
 	function _generateLineToWrite(classNameFromDecorator, extendClass, overriddenMethodNames, extendInfo, filePath) {
 		var lineToWrite = extendClass + "*" + extendInfo.replace(/[\\/\\-]/g, "_") + "*" + overriddenMethodNames + "*" + classNameFromDecorator + "*" + filePath;
 		return lineToWrite;
+	}
+
+	function addCustomExtend(param, extendPath, lineToWrite) {
+		if(customExtendsArrGlobal.indexOf(param) === -1) {
+			customExtendsArr.push(lineToWrite)
+			customExtendsArrGlobal.push(param)
+		}
+		else {
+			console.log("Warning: there already is an extend called " + param + ".")
+			if(extendPath.indexOf("tns_modules") === -1) {
+				// app folder will take precedence over tns_modules
+				console.log("Warning: The static binding generator will generate extend from:" + extendPath + " implementation")
+				customExtendsArr.push(lineToWrite)
+				customExtendsArrGlobal.push(param)
+			}
+		}
 	}
 
 	return {

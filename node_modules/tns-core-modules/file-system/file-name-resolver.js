@@ -103,7 +103,9 @@ var FileNameResolver = (function () {
         ext = "." + ext;
         var candidates = this.getFileCandidatesFromFolder(path, ext);
         result = findFileMatch(path, ext, candidates, this._context);
-        trace.write("Resolved file name for \"" + path + ext + "\" result: " + (result ? result : "no match found"), trace.categories.Navigation);
+        if (trace.enabled) {
+            trace.write("Resolved file name for \"" + path + ext + "\" result: " + (result ? result : "no match found"), trace.categories.Navigation);
+        }
         return result;
     };
     FileNameResolver.prototype.getFileCandidatesFromFolder = function (path, ext) {
@@ -122,7 +124,9 @@ var FileNameResolver = (function () {
             });
         }
         else {
-            trace.write("Could not find folder " + folderPath + " when loading " + path + ext, trace.categories.Navigation);
+            if (trace.enabled) {
+                trace.write("Could not find folder " + folderPath + " when loading " + path + ext, trace.categories.Navigation);
+            }
         }
         return candidates;
     };
@@ -132,7 +136,9 @@ exports.FileNameResolver = FileNameResolver;
 function findFileMatch(path, ext, candidates, context) {
     var bestValue = -1;
     var result = null;
-    trace.write("Candidates for " + path + ext + ": " + candidates.join(", "), trace.categories.Navigation);
+    if (trace.enabled) {
+        trace.write("Candidates for " + path + ext + ": " + candidates.join(", "), trace.categories.Navigation);
+    }
     for (var i = 0; i < candidates.length; i++) {
         var filePath = candidates[i];
         var qualifiersStr = filePath.substr(path.length, filePath.length - path.length - ext.length);

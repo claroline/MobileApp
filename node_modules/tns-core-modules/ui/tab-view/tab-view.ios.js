@@ -23,7 +23,9 @@ var UITabBarControllerImpl = (function (_super) {
         return handler;
     };
     UITabBarControllerImpl.prototype.viewDidLayoutSubviews = function () {
-        trace.write("TabView.UITabBarControllerClass.viewDidLayoutSubviews();", trace.categories.Debug);
+        if (trace.enabled) {
+            trace.write("TabView.UITabBarControllerClass.viewDidLayoutSubviews();", trace.categories.Debug);
+        }
         _super.prototype.viewDidLayoutSubviews.call(this);
         var owner = this._owner.get();
         if (owner && owner.isLoaded) {
@@ -43,7 +45,9 @@ var UITabBarControllerDelegateImpl = (function (_super) {
         return delegate;
     };
     UITabBarControllerDelegateImpl.prototype.tabBarControllerDidSelectViewController = function (tabBarController, viewController) {
-        trace.write("TabView.UITabBarControllerDelegateClass.tabBarControllerDidSelectViewController(" + tabBarController + ", " + viewController + ");", trace.categories.Debug);
+        if (trace.enabled) {
+            trace.write("TabView.UITabBarControllerDelegateClass.tabBarControllerDidSelectViewController(" + tabBarController + ", " + viewController + ");", trace.categories.Debug);
+        }
         var owner = this._owner.get();
         if (owner) {
             owner._onViewControllerShown(viewController);
@@ -63,7 +67,9 @@ var UINavigationControllerDelegateImpl = (function (_super) {
         return delegate;
     };
     UINavigationControllerDelegateImpl.prototype.navigationControllerDidShowViewControllerAnimated = function (navigationController, viewController, animated) {
-        trace.write("TabView.UINavigationControllerDelegateClass.navigationControllerDidShowViewControllerAnimated(" + navigationController + ", " + viewController + ", " + animated + ");", trace.categories.Debug);
+        if (trace.enabled) {
+            trace.write("TabView.UINavigationControllerDelegateClass.navigationControllerDidShowViewControllerAnimated(" + navigationController + ", " + viewController + ", " + animated + ");", trace.categories.Debug);
+        }
         navigationController.navigationBar.topItem.rightBarButtonItem = null;
         var owner = this._owner.get();
         if (owner) {
@@ -146,17 +152,23 @@ var TabView = (function (_super) {
         configurable: true
     });
     TabView.prototype._onViewControllerShown = function (viewController) {
-        trace.write("TabView._onViewControllerShown(" + viewController + ");", trace.categories.Debug);
+        if (trace.enabled) {
+            trace.write("TabView._onViewControllerShown(" + viewController + ");", trace.categories.Debug);
+        }
         if (this._ios.viewControllers.containsObject(viewController)) {
             this.selectedIndex = this._ios.viewControllers.indexOfObject(viewController);
             ;
         }
         else {
-            trace.write("TabView._onViewControllerShown: viewController is not one of our viewControllers", trace.categories.Debug);
+            if (trace.enabled) {
+                trace.write("TabView._onViewControllerShown: viewController is not one of our viewControllers", trace.categories.Debug);
+            }
         }
     };
     TabView.prototype._removeTabs = function (oldItems) {
-        trace.write("TabView._removeTabs(" + oldItems + ");", trace.categories.Debug);
+        if (trace.enabled) {
+            trace.write("TabView._removeTabs(" + oldItems + ");", trace.categories.Debug);
+        }
         _super.prototype._removeTabs.call(this, oldItems);
         var i;
         var length = oldItems.length;
@@ -169,7 +181,9 @@ var TabView = (function (_super) {
         this._ios.viewControllers = null;
     };
     TabView.prototype._addTabs = function (newItems) {
-        trace.write("TabView._addTabs(" + newItems + ");", trace.categories.Debug);
+        if (trace.enabled) {
+            trace.write("TabView._addTabs(" + newItems + ");", trace.categories.Debug);
+        }
         _super.prototype._addTabs.call(this, newItems);
         var i;
         var length = newItems.length;
@@ -230,7 +244,9 @@ var TabView = (function (_super) {
     TabView.prototype._onSelectedIndexPropertyChangedSetNativeValue = function (data) {
         _super.prototype._onSelectedIndexPropertyChangedSetNativeValue.call(this, data);
         var newIndex = data.newValue;
-        trace.write("TabView._onSelectedIndexPropertyChangedSetNativeValue(" + newIndex + ")", trace.categories.Debug);
+        if (trace.enabled) {
+            trace.write("TabView._onSelectedIndexPropertyChangedSetNativeValue(" + newIndex + ")", trace.categories.Debug);
+        }
         if (types.isNullOrUndefined(newIndex)) {
             return;
         }

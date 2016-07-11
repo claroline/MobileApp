@@ -2,7 +2,7 @@ var common = require("./scroll-view-common");
 var utils = require("utils/utils");
 var enums = require("ui/enums");
 global.moduleMerge(common, exports);
-common.orientationProperty.metadata.onValueChanged = function scrollViewOrientationChanged(data) {
+common.orientationProperty.onValueChanged = function scrollViewOrientationChanged(data) {
     data.object._onOrientationChanged(data.oldValue, data.newValue);
 };
 var ScrollView = (function (_super) {

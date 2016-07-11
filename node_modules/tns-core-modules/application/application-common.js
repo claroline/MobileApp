@@ -1,5 +1,12 @@
 require("globals");
 var observable = require("data/observable");
+var frame = require("ui/frame");
+var builder;
+function ensureBuilder() {
+    if (!builder) {
+        builder = require("ui/builder");
+    }
+}
 var styleScope = undefined;
 var events = new observable.Observable();
 global.moduleMerge(events, exports);
@@ -58,3 +65,21 @@ function parseCss(cssText, cssFileName) {
     return styleScope.StyleScope.createSelectorsFromCss(cssText, cssFileName, exports.keyframes);
 }
 exports.parseCss = parseCss;
+function __onLiveSync() {
+    if (global.errorPage) {
+        global.errorPage.closeModal();
+        global.errorPage = undefined;
+    }
+    try {
+        var fileResolver = require("file-system/file-name-resolver");
+        fileResolver.clearCache();
+        loadCss();
+        frame.reloadPage();
+    }
+    catch (ex) {
+        ensureBuilder();
+        global.errorPage = builder.parse("<Page><ScrollView><Label text=\"" + ex + "\" textWrap=\"true\" style=\"color: red;\" /></ScrollView></Page>");
+        global.errorPage.showModal();
+    }
+}
+exports.__onLiveSync = __onLiveSync;

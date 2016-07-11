@@ -18,16 +18,22 @@ var MemmoryWarningHandler = (function (_super) {
     MemmoryWarningHandler.prototype.initWithCache = function (cache) {
         this._cache = cache;
         NSNotificationCenter.defaultCenter().addObserverSelectorNameObject(this, "clearCache", "UIApplicationDidReceiveMemoryWarningNotification", null);
-        trace.write("[MemmoryWarningHandler] Added low memory observer.", trace.categories.Debug);
+        if (trace.enabled) {
+            trace.write("[MemmoryWarningHandler] Added low memory observer.", trace.categories.Debug);
+        }
         return this;
     };
     MemmoryWarningHandler.prototype.dealloc = function () {
         NSNotificationCenter.defaultCenter().removeObserverNameObject(this, "UIApplicationDidReceiveMemoryWarningNotification", null);
-        trace.write("[MemmoryWarningHandler] Removed low memory observer.", trace.categories.Debug);
+        if (trace.enabled) {
+            trace.write("[MemmoryWarningHandler] Removed low memory observer.", trace.categories.Debug);
+        }
         _super.prototype.dealloc.call(this);
     };
     MemmoryWarningHandler.prototype.clearCache = function () {
-        trace.write("[MemmoryWarningHandler] Clearing Image Cache.", trace.categories.Debug);
+        if (trace.enabled) {
+            trace.write("[MemmoryWarningHandler] Clearing Image Cache.", trace.categories.Debug);
+        }
         this._cache.removeAllObjects();
         utils.GC();
     };

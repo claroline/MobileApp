@@ -160,3 +160,4 @@ var screen;
 (function (screen) {
     screen.mainScreen = new MainScreen();
 })(screen = exports.screen || (exports.screen = {}));
+exports.isIOS = true;

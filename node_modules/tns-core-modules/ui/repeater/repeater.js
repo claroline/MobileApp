@@ -77,21 +77,27 @@ var Repeater = (function (_super) {
         configurable: true
     });
     Repeater.prototype.onLoaded = function () {
-        trace.write("Repeater.onLoaded()", "Repeater");
+        if (trace.enabled) {
+            trace.write("Repeater.onLoaded()", "Repeater");
+        }
         if (this._isDirty) {
             this.refresh();
         }
         _super.prototype.onLoaded.call(this);
     };
     Repeater.prototype._requestRefresh = function () {
-        trace.write("Repeater._requestRefresh()", "Repeater");
+        if (trace.enabled) {
+            trace.write("Repeater._requestRefresh()", "Repeater");
+        }
         this._isDirty = true;
         if (this.isLoaded) {
             this.refresh();
         }
     };
     Repeater.prototype.refresh = function () {
-        trace.write("Repeater.refresh()", "Repeater");
+        if (trace.enabled) {
+            trace.write("Repeater.refresh()", "Repeater");
+        }
         if (this.itemsLayout) {
             this.itemsLayout.removeChildren();
         }
@@ -108,7 +114,9 @@ var Repeater = (function (_super) {
         this._isDirty = false;
     };
     Repeater.prototype._onItemsPropertyChanged = function (data) {
-        trace.write("Repeater._onItemsPropertyChanged(" + data.oldValue + " => " + data.newValue + ")", "Repeater");
+        if (trace.enabled) {
+            trace.write("Repeater._onItemsPropertyChanged(" + data.oldValue + " => " + data.newValue + ")", "Repeater");
+        }
         if (data.oldValue instanceof observableArray.ObservableArray) {
             weakEvents.removeWeakEventListener(data.oldValue, observableArray.ObservableArray.changeEvent, this._onItemsChanged, this);
         }
@@ -118,11 +126,15 @@ var Repeater = (function (_super) {
         this._requestRefresh();
     };
     Repeater.prototype._onItemTemplatePropertyChanged = function (data) {
-        trace.write("Repeater._onItemTemplatePropertyChanged(" + data.oldValue + " => " + data.newValue + ")", "Repeater");
+        if (trace.enabled) {
+            trace.write("Repeater._onItemTemplatePropertyChanged(" + data.oldValue + " => " + data.newValue + ")", "Repeater");
+        }
         this._requestRefresh();
     };
     Repeater.prototype._onItemsLayoutPropertyPropertyChanged = function (data) {
-        trace.write("Repeater._onItemsLayoutPropertyPropertyChanged(" + data.oldValue + " => " + data.newValue + ")", "Repeater");
+        if (trace.enabled) {
+            trace.write("Repeater._onItemsLayoutPropertyPropertyChanged(" + data.oldValue + " => " + data.newValue + ")", "Repeater");
+        }
         if (data.oldValue instanceof layoutBaseModule.LayoutBase) {
             this._removeView(data.oldValue);
         }
@@ -132,7 +144,9 @@ var Repeater = (function (_super) {
         this._requestRefresh();
     };
     Repeater.prototype._onItemsChanged = function (data) {
-        trace.write("Repeater._onItemsChanged(" + data + ")", "Repeater");
+        if (trace.enabled) {
+            trace.write("Repeater._onItemsChanged(" + data + ")", "Repeater");
+        }
         this._requestRefresh();
     };
     Repeater.prototype._getDefaultItemContent = function (index) {

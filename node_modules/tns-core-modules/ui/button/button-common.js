@@ -1,22 +1,20 @@
-var dependencyObservable = require("ui/core/dependency-observable");
+var dependency_observable_1 = require("ui/core/dependency-observable");
 var view = require("ui/core/view");
 var proxy = require("ui/core/proxy");
 var formattedString = require("text/formatted-string");
 var observable = require("data/observable");
+var enums_1 = require("ui/enums");
+var platform_1 = require("platform");
+var AffectsLayout = platform_1.isAndroid ? dependency_observable_1.PropertyMetadataSettings.None : dependency_observable_1.PropertyMetadataSettings.AffectsLayout;
 var weakEvents;
 function ensureWeakEvents() {
     if (!weakEvents) {
         weakEvents = require("ui/core/weak-event-listener");
     }
 }
-var enums;
-function ensureEnums() {
-    if (!enums) {
-        enums = require("ui/enums");
-    }
-}
-var textProperty = new dependencyObservable.Property("text", "Button", new proxy.PropertyMetadata("", dependencyObservable.PropertyMetadataSettings.AffectsLayout));
-var formattedTextProperty = new dependencyObservable.Property("formattedText", "Button", new proxy.PropertyMetadata("", dependencyObservable.PropertyMetadataSettings.AffectsLayout));
+var textProperty = new dependency_observable_1.Property("text", "Button", new proxy.PropertyMetadata("", AffectsLayout));
+var formattedTextProperty = new dependency_observable_1.Property("formattedText", "Button", new proxy.PropertyMetadata("", AffectsLayout));
+var textWrapProperty = new dependency_observable_1.Property("textWrap", "Button", new proxy.PropertyMetadata(false, AffectsLayout));
 function onTextPropertyChanged(data) {
     var button = data.object;
     button._onTextPropertyChanged(data);
@@ -81,6 +79,16 @@ var Button = (function (_super) {
         enumerable: true,
         configurable: true
     });
+    Object.defineProperty(Button.prototype, "whiteSpace", {
+        get: function () {
+            return this.style.whiteSpace;
+        },
+        set: function (value) {
+            this.style.whiteSpace = value;
+        },
+        enumerable: true,
+        configurable: true
+    });
     Button.prototype.onFormattedTextChanged = function (eventData) {
         var value = eventData.value;
         this._setFormattedTextPropertyToNative(value);
@@ -105,13 +113,12 @@ var Button = (function (_super) {
     Button.tapEvent = "tap";
     Button.textProperty = textProperty;
     Button.formattedTextProperty = formattedTextProperty;
-    Button.textWrapProperty = new dependencyObservable.Property("textWrap", "Button", new proxy.PropertyMetadata(false, dependencyObservable.PropertyMetadataSettings.AffectsLayout));
+    Button.textWrapProperty = textWrapProperty;
     return Button;
 }(view.View));
 exports.Button = Button;
 function onTextWrapPropertyChanged(data) {
     var v = data.object;
-    ensureEnums();
-    v.style.whiteSpace = data.newValue ? enums.WhiteSpace.normal : enums.WhiteSpace.nowrap;
+    v.style.whiteSpace = data.newValue ? enums_1.WhiteSpace.normal : enums_1.WhiteSpace.nowrap;
 }
 Button.textWrapProperty.metadata.onSetNativeValue = onTextWrapPropertyChanged;

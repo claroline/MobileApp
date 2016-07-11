@@ -1,5 +1,6 @@
 var common = require("./search-bar-common");
 var style = require("ui/styling/style");
+var color_1 = require("color");
 var types;
 function ensureTypes() {
     if (!types) {
@@ -12,20 +13,20 @@ function onTextPropertyChanged(data) {
 }
 common.SearchBar.textProperty.metadata.onSetNativeValue = onTextPropertyChanged;
 function onTextFieldBackgroundColorPropertyChanged(data) {
-    var bar = data.object;
-    var color = require("color");
-    if (data.newValue instanceof color.Color) {
-        var tf = bar._textField;
-        if (tf) {
-            tf.backgroundColor = data.newValue.ios;
+    if (data.newValue instanceof color_1.Color) {
+        var bar = data.object;
+        if (bar._textField) {
+            bar._textField.backgroundColor = data.newValue.ios;
         }
     }
 }
 common.SearchBar.textFieldBackgroundColorProperty.metadata.onSetNativeValue = onTextFieldBackgroundColorPropertyChanged;
 function onTextFieldHintColorPropertyChanged(data) {
-    try {
-    }
-    catch (Err) {
+    if (data.newValue instanceof color_1.Color) {
+        var bar = data.object;
+        if (bar._placeholderLabel) {
+            bar._placeholderLabel.textColor = data.newValue.ios;
+        }
     }
 }
 common.SearchBar.textFieldHintColorProperty.metadata.onSetNativeValue = onTextFieldHintColorPropertyChanged;
@@ -112,6 +113,18 @@ var SearchBar = (function (_super) {
                 this.__textField = this.ios.valueForKey("searchField");
             }
             return this.__textField;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(SearchBar.prototype, "_placeholderLabel", {
+        get: function () {
+            if (!this.__placeholderLabel) {
+                if (this._textField) {
+                    this.__placeholderLabel = this._textField.valueForKey("placeholderLabel");
+                }
+            }
+            return this.__placeholderLabel;
         },
         enumerable: true,
         configurable: true
