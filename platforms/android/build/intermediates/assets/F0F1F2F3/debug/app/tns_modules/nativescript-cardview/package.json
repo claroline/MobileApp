@@ -1,0 +1,94 @@
+{
+  "name": "nativescript-cardview",
+  "version": "1.1.7",
+  "description": "A NativeScript plugin to provide an XML widget to implement the Material Design CardView.",
+  "main": "cardview.js",
+  "nativescript": {
+    "platforms": {
+      "android": "1.7.1",
+      "ios": "1.7.0"
+    }
+  },
+  "scripts": {
+    "build": "tsc",
+    "demo.ios": "npm run preparedemo; cd demo; tns emulate ios",
+    "demo.android": "npm run preparedemo; cd demo; tns emulate android",
+    "preparedemo": "npm run build; cd demo; tns plugin remove nativescript-cardview; tns plugin add ..; tns install",
+    "setup": "cd demo; npm install; cd ..; npm run build; cd demo; tns plugin add ..; cd .."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bradmartin/nativescript-cardview.git"
+  },
+  "keywords": [
+    "NativeScript",
+    "native",
+    "script",
+    "TypeScript",
+    "javascript",
+    "Card",
+    "android",
+    "ios",
+    "CardView",
+    "Material Design",
+    "bradmartin",
+    "Thorum"
+  ],
+  "contributors": [
+    {
+      "name": "Nathanael Anderson",
+      "email": "nathan@master-technology",
+      "url": "https://github.com/nathanaela"
+    },
+    {
+      "name": "Nathanael Walker",
+      "email": "nathan.walker@infowrap.com",
+      "url": "https://github.com/NathanWalker"
+    }
+  ],
+  "author": {
+    "name": "Brad Martin",
+    "email": "bradwaynemartin@gmail.com",
+    "url": "https://github.com/bradmartin"
+  },
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/bradmartin/nativescript-cardview/issues"
+  },
+  "homepage": "https://github.com/bradmartin/nativescript-cardview",
+  "gitHead": "f125a9439037c7e0fdd9609960708bc9c18352a2",
+  "_id": "nativescript-cardview@1.1.7",
+  "_shasum": "648d0c5ebe2186e0ea243b26640fdd5cf6629731",
+  "_from": "nativescript-cardview@latest",
+  "_npmVersion": "3.6.0",
+  "_nodeVersion": "5.7.1",
+  "_npmUser": {
+    "name": "bradmartin",
+    "email": "bradmartin0905@gmail.com"
+  },
+  "dist": {
+    "shasum": "648d0c5ebe2186e0ea243b26640fdd5cf6629731",
+    "tarball": "https://registry.npmjs.org/nativescript-cardview/-/nativescript-cardview-1.1.7.tgz"
+  },
+  "maintainers": [
+    {
+      "name": "bradmartin",
+      "email": "bradmartin0905@gmail.com"
+    },
+    {
+      "name": "nathanaela",
+      "email": "nathan@master-technology.com"
+    },
+    {
+      "name": "walkerrunpdx",
+      "email": "walkerrunpdx@gmail.com"
+    }
+  ],
+  "_npmOperationalInternal": {
+    "host": "packages-16-east.internal.npmjs.com",
+    "tmp": "tmp/nativescript-cardview-1.1.7.tgz_1463025145541_0.2559424848295748"
+  },
+  "directories": {},
+  "_resolved": "https://registry.npmjs.org/nativescript-cardview/-/nativescript-cardview-1.1.7.tgz",
+  "readme": "ERROR: No README data found!"
+}

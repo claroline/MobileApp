@@ -1,0 +1,10 @@
+[
+    {
+        "merged": "/home/dat/nativescript_angular2/connect/platforms/android/build/intermediates/res/merged/F0F1F2F3/debug/color-v11/abc_background_cache_hint_selector_material_dark.xml",
+        "source": "/home/dat/nativescript_angular2/connect/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/color-v11/abc_background_cache_hint_selector_material_dark.xml"
+    },
+    {
+        "merged": "/home/dat/nativescript_angular2/connect/platforms/android/build/intermediates/res/merged/F0F1F2F3/debug/color-v11/abc_background_cache_hint_selector_material_light.xml",
+        "source": "/home/dat/nativescript_angular2/connect/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/color-v11/abc_background_cache_hint_selector_material_light.xml"
+    }
+]
