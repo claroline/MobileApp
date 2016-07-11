@@ -2,26 +2,26 @@
   "_args": [
     [
       {
-        "raw": "@angular/core@2.0.0-rc.4",
+        "raw": "@angular/core@2.0.0-rc.3",
         "scope": "@angular",
         "escapedName": "@angular%2fcore",
         "name": "@angular/core",
-        "rawSpec": "2.0.0-rc.4",
-        "spec": "2.0.0-rc.4",
+        "rawSpec": "2.0.0-rc.3",
+        "spec": "2.0.0-rc.3",
         "type": "version"
       },
       "/home/dat/nativescript_angular2/connect"
     ]
   ],
-  "_from": "@angular/core@2.0.0-rc.4",
-  "_id": "@angular/core@2.0.0-rc.4",
+  "_from": "@angular/core@2.0.0-rc.3",
+  "_id": "@angular/core@2.0.0-rc.3",
   "_inCache": true,
   "_installable": true,
   "_location": "/@angular/core",
   "_nodeVersion": "5.4.1",
   "_npmOperationalInternal": {
-    "host": "packages-16-east.internal.npmjs.com",
-    "tmp": "tmp/core-2.0.0-rc.4.tgz_1467308861507_0.20231292047537863"
+    "host": "packages-12-west.internal.npmjs.com",
+    "tmp": "tmp/core-2.0.0-rc.3.tgz_1466553890718_0.7374602861236781"
   },
   "_npmUser": {
     "name": "angular",
@@ -30,22 +30,22 @@
   "_npmVersion": "3.9.2",
   "_phantomChildren": {},
   "_requested": {
-    "raw": "@angular/core@2.0.0-rc.4",
+    "raw": "@angular/core@2.0.0-rc.3",
     "scope": "@angular",
     "escapedName": "@angular%2fcore",
     "name": "@angular/core",
-    "rawSpec": "2.0.0-rc.4",
-    "spec": "2.0.0-rc.4",
+    "rawSpec": "2.0.0-rc.3",
+    "spec": "2.0.0-rc.3",
     "type": "version"
   },
   "_requiredBy": [
     "#USER",
     "/"
   ],
-  "_resolved": "https://registry.npmjs.org/@angular/core/-/core-2.0.0-rc.4.tgz",
-  "_shasum": "f3f98f906fcf0cb87d2c7d7f230ca95ea81cb6e0",
+  "_resolved": "https://registry.npmjs.org/@angular/core/-/core-2.0.0-rc.3.tgz",
+  "_shasum": "cd13cd17172da0fdbe20d0f273519522f3146694",
   "_shrinkwrap": null,
-  "_spec": "@angular/core@2.0.0-rc.4",
+  "_spec": "@angular/core@2.0.0-rc.3",
   "_where": "/home/dat/nativescript_angular2/connect",
   "author": {
     "name": "angular"
@@ -58,8 +58,8 @@
   "devDependencies": {},
   "directories": {},
   "dist": {
-    "shasum": "f3f98f906fcf0cb87d2c7d7f230ca95ea81cb6e0",
-    "tarball": "https://registry.npmjs.org/@angular/core/-/core-2.0.0-rc.4.tgz"
+    "shasum": "cd13cd17172da0fdbe20d0f273519522f3146694",
+    "tarball": "https://registry.npmjs.org/@angular/core/-/core-2.0.0-rc.3.tgz"
   },
   "homepage": "https://github.com/angular/angular#readme",
   "jsnext:main": "esm/index.js",
@@ -84,5 +84,5 @@
   },
   "scripts": {},
   "typings": "index.d.ts",
-  "version": "2.0.0-rc.4"
+  "version": "2.0.0-rc.3"
 }

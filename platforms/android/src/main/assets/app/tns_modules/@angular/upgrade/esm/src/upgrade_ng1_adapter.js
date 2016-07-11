@@ -1,10 +1,3 @@
-/**
- * @license
- * Copyright Google Inc. All Rights Reserved.
- *
- * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
- */
 import { Directive, ElementRef, EventEmitter, Inject } from '@angular/core';
 import * as angular from './angular_js';
 import { NG1_COMPILE, NG1_CONTROLLER, NG1_HTTP_BACKEND, NG1_SCOPE, NG1_TEMPLATE_CACHE } from './constants';
@@ -87,10 +80,7 @@ export class UpgradeNg1ComponentAdapterBuilder {
                             this.outputs.push(outputName);
                             this.outputsRename.push(outputNameRenameChange);
                             this.propertyMap[outputName] = localName;
-                            this.inputs.push(inputName);
-                            this.inputsRename.push(inputNameRename);
-                            this.propertyMap[inputName] = localName;
-                            break;
+                        // don't break; let it fall through to '@'
                         case '@':
                         // handle the '<' binding of angular 1.5 components
                         case '<':

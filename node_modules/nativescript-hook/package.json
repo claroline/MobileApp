@@ -1,8 +1,16 @@
 {
   "_args": [
     [
-      "nativescript-hook@^0.2.0",
-      "/home/dat/nativescript_angular2/mobile/node_modules/nativescript-dev-typescript"
+      {
+        "raw": "nativescript-hook@^0.2.0",
+        "scope": null,
+        "escapedName": "nativescript-hook",
+        "name": "nativescript-hook",
+        "rawSpec": "^0.2.0",
+        "spec": ">=0.2.0 <0.3.0",
+        "type": "range"
+      },
+      "/home/dat/nativescript_angular2/connect/node_modules/nativescript-dev-typescript"
     ]
   ],
   "_from": "nativescript-hook@>=0.2.0 <0.3.0",
@@ -12,16 +20,17 @@
   "_location": "/nativescript-hook",
   "_nodeVersion": "4.2.1",
   "_npmUser": {
-    "email": "hristo@deshev.com",
-    "name": "hdeshev"
+    "name": "hdeshev",
+    "email": "hristo@deshev.com"
   },
   "_npmVersion": "2.14.7",
   "_phantomChildren": {},
   "_requested": {
-    "name": "nativescript-hook",
     "raw": "nativescript-hook@^0.2.0",
-    "rawSpec": "^0.2.0",
     "scope": null,
+    "escapedName": "nativescript-hook",
+    "name": "nativescript-hook",
+    "rawSpec": "^0.2.0",
     "spec": ">=0.2.0 <0.3.0",
     "type": "range"
   },
@@ -32,7 +41,7 @@
   "_shasum": "786225056db20fa49e786451dccd64b52e3864d9",
   "_shrinkwrap": null,
   "_spec": "nativescript-hook@^0.2.0",
-  "_where": "/home/dat/nativescript_angular2/mobile/node_modules/nativescript-dev-typescript",
+  "_where": "/home/dat/nativescript_angular2/connect/node_modules/nativescript-dev-typescript",
   "author": {
     "name": "NativeScript"
   },
@@ -55,32 +64,32 @@
   "main": "index.js",
   "maintainers": [
     {
-      "email": "erjan.gavalji@gmail.com",
-      "name": "erjangavalji"
+      "name": "erjangavalji",
+      "email": "erjan.gavalji@gmail.com"
     },
     {
-      "email": "hristo@deshev.com",
-      "name": "hdeshev"
+      "name": "hdeshev",
+      "email": "hristo@deshev.com"
     },
     {
-      "email": "stefan.dobrev@gmail.com",
-      "name": "ligaz"
+      "name": "ligaz",
+      "email": "stefan.dobrev@gmail.com"
     },
     {
-      "email": "rosen.vladimirov.91@gmail.com",
-      "name": "rosen_vladimirov"
+      "name": "rosen_vladimirov",
+      "email": "rosen.vladimirov.91@gmail.com"
     },
     {
-      "email": "stefan.dobrev@gmail.com",
-      "name": "sdobrev"
+      "name": "sdobrev",
+      "email": "stefan.dobrev@gmail.com"
     },
     {
-      "email": "tailsu@gmail.com",
-      "name": "tailsu"
+      "name": "tailsu",
+      "email": "tailsu@gmail.com"
     },
     {
-      "email": "nativescript@telerik.com",
-      "name": "tns-bot"
+      "name": "tns-bot",
+      "email": "nativescript@telerik.com"
     }
   ],
   "name": "nativescript-hook",

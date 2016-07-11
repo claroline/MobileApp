@@ -2,26 +2,26 @@
   "_args": [
     [
       {
-        "raw": "@angular/platform-browser-dynamic@^2.0.0-rc.4",
+        "raw": "@angular/platform-browser-dynamic@2.0.0-rc.3",
         "scope": "@angular",
         "escapedName": "@angular%2fplatform-browser-dynamic",
         "name": "@angular/platform-browser-dynamic",
-        "rawSpec": "^2.0.0-rc.4",
-        "spec": ">=2.0.0-rc.4 <3.0.0",
-        "type": "range"
+        "rawSpec": "2.0.0-rc.3",
+        "spec": "2.0.0-rc.3",
+        "type": "version"
       },
       "/home/dat/nativescript_angular2/connect"
     ]
   ],
-  "_from": "@angular/platform-browser-dynamic@>=2.0.0-rc.4 <3.0.0",
-  "_id": "@angular/platform-browser-dynamic@2.0.0-rc.4",
+  "_from": "@angular/platform-browser-dynamic@2.0.0-rc.3",
+  "_id": "@angular/platform-browser-dynamic@2.0.0-rc.3",
   "_inCache": true,
   "_installable": true,
   "_location": "/@angular/platform-browser-dynamic",
   "_nodeVersion": "5.4.1",
   "_npmOperationalInternal": {
     "host": "packages-16-east.internal.npmjs.com",
-    "tmp": "tmp/platform-browser-dynamic-2.0.0-rc.4.tgz_1467308883902_0.3862463873811066"
+    "tmp": "tmp/platform-browser-dynamic-2.0.0-rc.3.tgz_1466553913481_0.8608091045171022"
   },
   "_npmUser": {
     "name": "angular",
@@ -30,21 +30,22 @@
   "_npmVersion": "3.9.2",
   "_phantomChildren": {},
   "_requested": {
-    "raw": "@angular/platform-browser-dynamic@^2.0.0-rc.4",
+    "raw": "@angular/platform-browser-dynamic@2.0.0-rc.3",
     "scope": "@angular",
     "escapedName": "@angular%2fplatform-browser-dynamic",
     "name": "@angular/platform-browser-dynamic",
-    "rawSpec": "^2.0.0-rc.4",
-    "spec": ">=2.0.0-rc.4 <3.0.0",
-    "type": "range"
+    "rawSpec": "2.0.0-rc.3",
+    "spec": "2.0.0-rc.3",
+    "type": "version"
   },
   "_requiredBy": [
+    "#USER",
     "/"
   ],
-  "_resolved": "https://registry.npmjs.org/@angular/platform-browser-dynamic/-/platform-browser-dynamic-2.0.0-rc.4.tgz",
-  "_shasum": "8653d31018c54c65a6d88864bb0af8d024691788",
+  "_resolved": "https://registry.npmjs.org/@angular/platform-browser-dynamic/-/platform-browser-dynamic-2.0.0-rc.3.tgz",
+  "_shasum": "badd6e2b1d2bf710182a321a8f3fbc967ef6d5d0",
   "_shrinkwrap": null,
-  "_spec": "@angular/platform-browser-dynamic@^2.0.0-rc.4",
+  "_spec": "@angular/platform-browser-dynamic@2.0.0-rc.3",
   "_where": "/home/dat/nativescript_angular2/connect",
   "author": {
     "name": "angular"
@@ -57,8 +58,8 @@
   "devDependencies": {},
   "directories": {},
   "dist": {
-    "shasum": "8653d31018c54c65a6d88864bb0af8d024691788",
-    "tarball": "https://registry.npmjs.org/@angular/platform-browser-dynamic/-/platform-browser-dynamic-2.0.0-rc.4.tgz"
+    "shasum": "badd6e2b1d2bf710182a321a8f3fbc967ef6d5d0",
+    "tarball": "https://registry.npmjs.org/@angular/platform-browser-dynamic/-/platform-browser-dynamic-2.0.0-rc.3.tgz"
   },
   "homepage": "https://github.com/angular/angular#readme",
   "jsnext:main": "esm/index.js",
@@ -73,10 +74,10 @@
   "name": "@angular/platform-browser-dynamic",
   "optionalDependencies": {},
   "peerDependencies": {
-    "@angular/core": "^2.0.0-rc.4",
-    "@angular/common": "^2.0.0-rc.4",
-    "@angular/compiler": "^2.0.0-rc.4",
-    "@angular/platform-browser": "^2.0.0-rc.4"
+    "@angular/core": "2.0.0-rc.3",
+    "@angular/common": "2.0.0-rc.3",
+    "@angular/compiler": "2.0.0-rc.3",
+    "@angular/platform-browser": "2.0.0-rc.3"
   },
   "readme": "ERROR: No README data found!",
   "repository": {
@@ -85,5 +86,5 @@
   },
   "scripts": {},
   "typings": "index.d.ts",
-  "version": "2.0.0-rc.4"
+  "version": "2.0.0-rc.3"
 }

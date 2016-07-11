@@ -3,7 +3,7 @@
 "use strict";
 
 import {Component, ElementRef, ViewChild, Inject} from "@angular/core";
-import {Router} from "@angular/router-deprecated";
+import {Router} from "@angular/router";
 import {UserService} from "../../shared/user/user.service";
 import {Observable} from "rxjs/Rx";
 import {NotificationsService} from "../../shared/notification/notifications.service";
@@ -85,7 +85,7 @@ export class HomePage {
             this._configService.expire(true);
             this._configService.remove("access_token");
             this._configService.remove("refresh_token");
-            this._router.navigate(['Login']);
+            this._router.navigate(['/login']);
           }
         });
 
@@ -94,7 +94,7 @@ export class HomePage {
     }
 
     newMessage(){
-      
+
     }
 
 

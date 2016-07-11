@@ -2,7 +2,7 @@
     "compilerOptions": {
         "rootDir": ".",
         "module": "commonjs",
-        "moduleResolution" :"node",
+        "moduleResolution": "node",
         "target": "es5",
         "inlineSourceMap": true,
         "experimentalDecorators": true,

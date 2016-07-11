@@ -1,8 +1,16 @@
 {
   "_args": [
     [
-      "nativescript-intl@^0.0.2",
-      "/home/dat/nativescript_angular2/Claroline Connect/node_modules/nativescript-angular"
+      {
+        "raw": "nativescript-intl@^0.0.2",
+        "scope": null,
+        "escapedName": "nativescript-intl",
+        "name": "nativescript-intl",
+        "rawSpec": "^0.0.2",
+        "spec": ">=0.0.2 <0.0.3",
+        "type": "range"
+      },
+      "/home/dat/nativescript_angular2/connect/node_modules/nativescript-angular"
     ]
   ],
   "_from": "nativescript-intl@>=0.0.2 <0.0.3",
@@ -16,16 +24,17 @@
     "tmp": "tmp/nativescript-intl-0.0.2.tgz_1458736653372_0.645918955327943"
   },
   "_npmUser": {
-    "email": "nedyalko.nikolov@telerik.com",
-    "name": "nsndeck"
+    "name": "nsndeck",
+    "email": "nedyalko.nikolov@telerik.com"
   },
   "_npmVersion": "2.14.12",
   "_phantomChildren": {},
   "_requested": {
-    "name": "nativescript-intl",
     "raw": "nativescript-intl@^0.0.2",
-    "rawSpec": "^0.0.2",
     "scope": null,
+    "escapedName": "nativescript-intl",
+    "name": "nativescript-intl",
+    "rawSpec": "^0.0.2",
     "spec": ">=0.0.2 <0.0.3",
     "type": "range"
   },
@@ -36,10 +45,10 @@
   "_shasum": "72e0ab1084e4eeede265e49b5098ace5fed16a1b",
   "_shrinkwrap": null,
   "_spec": "nativescript-intl@^0.0.2",
-  "_where": "/home/dat/nativescript_angular2/Claroline Connect/node_modules/nativescript-angular",
+  "_where": "/home/dat/nativescript_angular2/connect/node_modules/nativescript-angular",
   "author": {
-    "email": "nedyalko.nikolov@telerik.com",
-    "name": "Nedyalko Nikolov"
+    "name": "Nedyalko Nikolov",
+    "email": "nedyalko.nikolov@telerik.com"
   },
   "dependencies": {},
   "description": "Provides API for using Native date, time and number formatting with an API similar to Intl.js",
@@ -60,16 +69,16 @@
   "main": "nativescript-intl.js",
   "maintainers": [
     {
-      "email": "hristo@deshev.com",
-      "name": "hdeshev"
+      "name": "hdeshev",
+      "email": "hristo@deshev.com"
     },
     {
-      "email": "nedyalko.nikolov@telerik.com",
-      "name": "nsndeck"
+      "name": "nsndeck",
+      "email": "nedyalko.nikolov@telerik.com"
     },
     {
-      "email": "nativescript@telerik.com",
-      "name": "tns-bot"
+      "name": "tns-bot",
+      "email": "nativescript@telerik.com"
     }
   ],
   "name": "nativescript-intl",

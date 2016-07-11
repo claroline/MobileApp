@@ -1,8 +1,16 @@
 {
   "_args": [
     [
-      "parse-json@^2.2.0",
-      "/home/dat/nativescript_angular2/mobile/node_modules/typings-core"
+      {
+        "raw": "parse-json@^2.2.0",
+        "scope": null,
+        "escapedName": "parse-json",
+        "name": "parse-json",
+        "rawSpec": "^2.2.0",
+        "spec": ">=2.2.0 <3.0.0",
+        "type": "range"
+      },
+      "/home/dat/nativescript_angular2/connect/node_modules/typings-core"
     ]
   ],
   "_from": "parse-json@>=2.2.0 <3.0.0",
@@ -12,16 +20,17 @@
   "_location": "/parse-json",
   "_nodeVersion": "0.12.7",
   "_npmUser": {
-    "email": "sindresorhus@gmail.com",
-    "name": "sindresorhus"
+    "name": "sindresorhus",
+    "email": "sindresorhus@gmail.com"
   },
   "_npmVersion": "2.11.3",
   "_phantomChildren": {},
   "_requested": {
-    "name": "parse-json",
     "raw": "parse-json@^2.2.0",
-    "rawSpec": "^2.2.0",
     "scope": null,
+    "escapedName": "parse-json",
+    "name": "parse-json",
+    "rawSpec": "^2.2.0",
     "spec": ">=2.2.0 <3.0.0",
     "type": "range"
   },
@@ -33,10 +42,10 @@
   "_shasum": "f480f40434ef80741f8469099f8dea18f55a4dc9",
   "_shrinkwrap": null,
   "_spec": "parse-json@^2.2.0",
-  "_where": "/home/dat/nativescript_angular2/mobile/node_modules/typings-core",
+  "_where": "/home/dat/nativescript_angular2/connect/node_modules/typings-core",
   "author": {
-    "email": "sindresorhus@gmail.com",
     "name": "Sindre Sorhus",
+    "email": "sindresorhus@gmail.com",
     "url": "sindresorhus.com"
   },
   "bugs": {
@@ -53,7 +62,7 @@
   "directories": {},
   "dist": {
     "shasum": "f480f40434ef80741f8469099f8dea18f55a4dc9",
-    "tarball": "http://registry.npmjs.org/parse-json/-/parse-json-2.2.0.tgz"
+    "tarball": "https://registry.npmjs.org/parse-json/-/parse-json-2.2.0.tgz"
   },
   "engines": {
     "node": ">=0.10.0"
@@ -79,8 +88,8 @@
   "license": "MIT",
   "maintainers": [
     {
-      "email": "sindresorhus@gmail.com",
-      "name": "sindresorhus"
+      "name": "sindresorhus",
+      "email": "sindresorhus@gmail.com"
     }
   ],
   "name": "parse-json",

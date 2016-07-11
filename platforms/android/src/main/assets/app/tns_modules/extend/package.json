@@ -1,8 +1,16 @@
 {
   "_args": [
     [
-      "extend@3",
-      "/home/dat/nativescript_angular2/mobile/node_modules/http-proxy-agent"
+      {
+        "raw": "extend@3",
+        "scope": null,
+        "escapedName": "extend",
+        "name": "extend",
+        "rawSpec": "3",
+        "spec": ">=3.0.0 <4.0.0",
+        "type": "range"
+      },
+      "/home/dat/nativescript_angular2/connect/node_modules/http-proxy-agent"
     ]
   ],
   "_from": "extend@>=3.0.0 <4.0.0",
@@ -12,16 +20,17 @@
   "_location": "/extend",
   "_nodeVersion": "2.3.1",
   "_npmUser": {
-    "email": "ljharb@gmail.com",
-    "name": "ljharb"
+    "name": "ljharb",
+    "email": "ljharb@gmail.com"
   },
   "_npmVersion": "2.11.3",
   "_phantomChildren": {},
   "_requested": {
-    "name": "extend",
     "raw": "extend@3",
-    "rawSpec": "3",
     "scope": null,
+    "escapedName": "extend",
+    "name": "extend",
+    "rawSpec": "3",
     "spec": ">=3.0.0 <4.0.0",
     "type": "range"
   },
@@ -34,10 +43,10 @@
   "_shasum": "5a474353b9f3353ddd8176dfd37b91c83a46f1d4",
   "_shrinkwrap": null,
   "_spec": "extend@3",
-  "_where": "/home/dat/nativescript_angular2/mobile/node_modules/http-proxy-agent",
+  "_where": "/home/dat/nativescript_angular2/connect/node_modules/http-proxy-agent",
   "author": {
-    "email": "justmoon@members.fsf.org",
     "name": "Stefan Thomas",
+    "email": "justmoon@members.fsf.org",
     "url": "http://www.justmoon.net"
   },
   "bugs": {
@@ -73,12 +82,12 @@
   "main": "index",
   "maintainers": [
     {
-      "email": "justmoon@members.fsf.org",
-      "name": "justmoon"
+      "name": "justmoon",
+      "email": "justmoon@members.fsf.org"
     },
     {
-      "email": "ljharb@gmail.com",
-      "name": "ljharb"
+      "name": "ljharb",
+      "email": "ljharb@gmail.com"
     }
   ],
   "name": "extend",

@@ -1,7 +1,15 @@
 {
   "_args": [
     [
-      "cli-boxes@^1.0.0",
+      {
+        "raw": "cli-boxes@^1.0.0",
+        "scope": null,
+        "escapedName": "cli-boxes",
+        "name": "cli-boxes",
+        "rawSpec": "^1.0.0",
+        "spec": ">=1.0.0 <2.0.0",
+        "type": "range"
+      },
       "/home/dat/nativescript_angular2/connect/node_modules/boxen"
     ]
   ],
@@ -16,16 +24,17 @@
     "tmp": "tmp/cli-boxes-1.0.0.tgz_1456820449966_0.9008902586065233"
   },
   "_npmUser": {
-    "email": "sindresorhus@gmail.com",
-    "name": "sindresorhus"
+    "name": "sindresorhus",
+    "email": "sindresorhus@gmail.com"
   },
   "_npmVersion": "2.14.12",
   "_phantomChildren": {},
   "_requested": {
-    "name": "cli-boxes",
     "raw": "cli-boxes@^1.0.0",
-    "rawSpec": "^1.0.0",
     "scope": null,
+    "escapedName": "cli-boxes",
+    "name": "cli-boxes",
+    "rawSpec": "^1.0.0",
     "spec": ">=1.0.0 <2.0.0",
     "type": "range"
   },
@@ -38,8 +47,8 @@
   "_spec": "cli-boxes@^1.0.0",
   "_where": "/home/dat/nativescript_angular2/connect/node_modules/boxen",
   "author": {
-    "email": "sindresorhus@gmail.com",
     "name": "Sindre Sorhus",
+    "email": "sindresorhus@gmail.com",
     "url": "sindresorhus.com"
   },
   "bugs": {
@@ -81,8 +90,8 @@
   "license": "MIT",
   "maintainers": [
     {
-      "email": "sindresorhus@gmail.com",
-      "name": "sindresorhus"
+      "name": "sindresorhus",
+      "email": "sindresorhus@gmail.com"
     }
   ],
   "name": "cli-boxes",

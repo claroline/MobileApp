@@ -6,9 +6,9 @@ import {HomePage} from './pages/home/home.component';
 import {ListPage} from './pages/platformsList/list.component';
 
 const routes: RouterConfig = [
-    { path: "/login", component: LoginPage},
-    { path: "/home", component: HomePage},
-    { path: "/", component: ListPage}
+    { path: "login", component: LoginPage},
+    { path: "home", component: HomePage},
+    { path: "", component: ListPage}
 ];
 
 export const APP_ROUTER_PROVIDERS = [

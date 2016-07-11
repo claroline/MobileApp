@@ -1,10 +1,3 @@
-/**
- * @license
- * Copyright Google Inc. All Rights Reserved.
- *
- * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
- */
 import { ApplicationRef, ComponentResolver, NgZone, ReflectiveInjector, Testability } from '@angular/core';
 import { BROWSER_APP_PROVIDERS, browserPlatform } from '@angular/platform-browser';
 import { BROWSER_APP_COMPILER_PROVIDERS } from '@angular/platform-browser-dynamic';
@@ -83,8 +76,6 @@ var upgradeCount = 0;
  *       "ng2[ng1[Hello World!](transclude)](project)");
  * });
  * ```
- *
- * @experimental
  */
 export class UpgradeAdapter {
     constructor() {
@@ -538,8 +529,6 @@ function ng1ComponentDirective(info, idPrefix) {
 }
 /**
  * Use `UgradeAdapterRef` to control a hybrid AngularJS v1 / Angular v2 application.
- *
- * @experimental
  */
 export class UpgradeAdapterRef {
     constructor() {

@@ -1,11 +1,19 @@
 {
   "_args": [
     [
-      "nativescript-pulltorefresh@latest",
+      {
+        "raw": "nativescript-pulltorefresh@^1.1.4",
+        "scope": null,
+        "escapedName": "nativescript-pulltorefresh",
+        "name": "nativescript-pulltorefresh",
+        "rawSpec": "^1.1.4",
+        "spec": ">=1.1.4 <2.0.0",
+        "type": "range"
+      },
       "/home/dat/nativescript_angular2/connect"
     ]
   ],
-  "_from": "nativescript-pulltorefresh@latest",
+  "_from": "nativescript-pulltorefresh@>=1.1.4 <2.0.0",
   "_id": "nativescript-pulltorefresh@1.1.4",
   "_inCache": true,
   "_installable": true,
@@ -16,18 +24,19 @@
     "tmp": "tmp/nativescript-pulltorefresh-1.1.4.tgz_1463024924781_0.614126754924655"
   },
   "_npmUser": {
-    "email": "bradmartin0905@gmail.com",
-    "name": "bradmartin"
+    "name": "bradmartin",
+    "email": "bradmartin0905@gmail.com"
   },
   "_npmVersion": "3.6.0",
   "_phantomChildren": {},
   "_requested": {
-    "name": "nativescript-pulltorefresh",
-    "raw": "nativescript-pulltorefresh@latest",
-    "rawSpec": "latest",
+    "raw": "nativescript-pulltorefresh@^1.1.4",
     "scope": null,
-    "spec": "latest",
-    "type": "tag"
+    "escapedName": "nativescript-pulltorefresh",
+    "name": "nativescript-pulltorefresh",
+    "rawSpec": "^1.1.4",
+    "spec": ">=1.1.4 <2.0.0",
+    "type": "range"
   },
   "_requiredBy": [
     "/"
@@ -35,11 +44,11 @@
   "_resolved": "https://registry.npmjs.org/nativescript-pulltorefresh/-/nativescript-pulltorefresh-1.1.4.tgz",
   "_shasum": "023df2437f833b027d1bd38cded7169ad9fffe17",
   "_shrinkwrap": null,
-  "_spec": "nativescript-pulltorefresh@latest",
+  "_spec": "nativescript-pulltorefresh@^1.1.4",
   "_where": "/home/dat/nativescript_angular2/connect",
   "author": {
-    "email": "bradwaynemartin@gmail.com",
     "name": "Brad Martin",
+    "email": "bradwaynemartin@gmail.com",
     "url": "https://github.com/bradmartin"
   },
   "bugs": {
@@ -47,13 +56,13 @@
   },
   "contributors": [
     {
-      "email": "nathan@master-technology",
       "name": "Nathanael Anderson",
+      "email": "nathan@master-technology",
       "url": "https://github.com/nathanaela"
     },
     {
-      "email": "peter@tangrasoft.com",
       "name": "Peter Staev",
+      "email": "peter@tangrasoft.com",
       "url": "https://github.com/PeterStaev"
     }
   ],
@@ -84,16 +93,16 @@
   "main": "pulltorefresh.js",
   "maintainers": [
     {
-      "email": "bradmartin0905@gmail.com",
-      "name": "bradmartin"
+      "name": "bradmartin",
+      "email": "bradmartin0905@gmail.com"
     },
     {
-      "email": "nathan@master-technology.com",
-      "name": "nathanaela"
+      "name": "nathanaela",
+      "email": "nathan@master-technology.com"
     },
     {
-      "email": "peter.staev@gmail.com",
-      "name": "pstaev"
+      "name": "pstaev",
+      "email": "peter.staev@gmail.com"
     }
   ],
   "name": "nativescript-pulltorefresh",

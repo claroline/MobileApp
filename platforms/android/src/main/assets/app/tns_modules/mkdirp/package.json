@@ -1,8 +1,16 @@
 {
   "_args": [
     [
-      "mkdirp@^0.5.1",
-      "/home/dat/nativescript_angular2/mobile/node_modules/nativescript-hook"
+      {
+        "raw": "mkdirp@^0.5.1",
+        "scope": null,
+        "escapedName": "mkdirp",
+        "name": "mkdirp",
+        "rawSpec": "^0.5.1",
+        "spec": ">=0.5.1 <0.6.0",
+        "type": "range"
+      },
+      "/home/dat/nativescript_angular2/connect/node_modules/nativescript-hook"
     ]
   ],
   "_from": "mkdirp@>=0.5.1 <0.6.0",
@@ -12,30 +20,33 @@
   "_location": "/mkdirp",
   "_nodeVersion": "2.0.0",
   "_npmUser": {
-    "email": "substack@gmail.com",
-    "name": "substack"
+    "name": "substack",
+    "email": "substack@gmail.com"
   },
   "_npmVersion": "2.9.0",
   "_phantomChildren": {},
   "_requested": {
-    "name": "mkdirp",
     "raw": "mkdirp@^0.5.1",
-    "rawSpec": "^0.5.1",
     "scope": null,
+    "escapedName": "mkdirp",
+    "name": "mkdirp",
+    "rawSpec": "^0.5.1",
     "spec": ">=0.5.1 <0.6.0",
     "type": "range"
   },
   "_requiredBy": [
-    "/nativescript-hook"
+    "/configstore",
+    "/nativescript-hook",
+    "/typings-core"
   ],
   "_resolved": "https://registry.npmjs.org/mkdirp/-/mkdirp-0.5.1.tgz",
   "_shasum": "30057438eac6cf7f8c4767f38648d6697d75c903",
   "_shrinkwrap": null,
   "_spec": "mkdirp@^0.5.1",
-  "_where": "/home/dat/nativescript_angular2/mobile/node_modules/nativescript-hook",
+  "_where": "/home/dat/nativescript_angular2/connect/node_modules/nativescript-hook",
   "author": {
-    "email": "mail@substack.net",
     "name": "James Halliday",
+    "email": "mail@substack.net",
     "url": "http://substack.net"
   },
   "bin": {
@@ -67,8 +78,8 @@
   "main": "index.js",
   "maintainers": [
     {
-      "email": "mail@substack.net",
-      "name": "substack"
+      "name": "substack",
+      "email": "mail@substack.net"
     }
   ],
   "name": "mkdirp",
