@@ -1,0 +1,95 @@
+{
+  "_args": [
+    [
+      {
+        "raw": "nativescript-intl@^0.0.2",
+        "scope": null,
+        "escapedName": "nativescript-intl",
+        "name": "nativescript-intl",
+        "rawSpec": "^0.0.2",
+        "spec": ">=0.0.2 <0.0.3",
+        "type": "range"
+      },
+      "/home/dat/nativescript_angular2/connect/node_modules/nativescript-angular"
+    ]
+  ],
+  "_from": "nativescript-intl@>=0.0.2 <0.0.3",
+  "_id": "nativescript-intl@0.0.2",
+  "_inCache": true,
+  "_installable": true,
+  "_location": "/nativescript-intl",
+  "_nodeVersion": "4.2.4",
+  "_npmOperationalInternal": {
+    "host": "packages-12-west.internal.npmjs.com",
+    "tmp": "tmp/nativescript-intl-0.0.2.tgz_1458736653372_0.645918955327943"
+  },
+  "_npmUser": {
+    "name": "nsndeck",
+    "email": "nedyalko.nikolov@telerik.com"
+  },
+  "_npmVersion": "2.14.12",
+  "_phantomChildren": {},
+  "_requested": {
+    "raw": "nativescript-intl@^0.0.2",
+    "scope": null,
+    "escapedName": "nativescript-intl",
+    "name": "nativescript-intl",
+    "rawSpec": "^0.0.2",
+    "spec": ">=0.0.2 <0.0.3",
+    "type": "range"
+  },
+  "_requiredBy": [
+    "/nativescript-angular"
+  ],
+  "_resolved": "https://registry.npmjs.org/nativescript-intl/-/nativescript-intl-0.0.2.tgz",
+  "_shasum": "72e0ab1084e4eeede265e49b5098ace5fed16a1b",
+  "_shrinkwrap": null,
+  "_spec": "nativescript-intl@^0.0.2",
+  "_where": "/home/dat/nativescript_angular2/connect/node_modules/nativescript-angular",
+  "author": {
+    "name": "Nedyalko Nikolov",
+    "email": "nedyalko.nikolov@telerik.com"
+  },
+  "dependencies": {},
+  "description": "Provides API for using Native date, time and number formatting with an API similar to Intl.js",
+  "devDependencies": {},
+  "directories": {},
+  "dist": {
+    "shasum": "72e0ab1084e4eeede265e49b5098ace5fed16a1b",
+    "tarball": "https://registry.npmjs.org/nativescript-intl/-/nativescript-intl-0.0.2.tgz"
+  },
+  "keywords": [
+    "NativeScript",
+    "localization",
+    "globalization",
+    "formatting",
+    "currency",
+    "nativescript-angular"
+  ],
+  "main": "nativescript-intl.js",
+  "maintainers": [
+    {
+      "name": "hdeshev",
+      "email": "hristo@deshev.com"
+    },
+    {
+      "name": "nsndeck",
+      "email": "nedyalko.nikolov@telerik.com"
+    },
+    {
+      "name": "tns-bot",
+      "email": "nativescript@telerik.com"
+    }
+  ],
+  "name": "nativescript-intl",
+  "nativescript": {
+    "platforms": {
+      "android": "1.7.0",
+      "ios": "1.7.0"
+    }
+  },
+  "optionalDependencies": {},
+  "readme": "ERROR: No README data found!",
+  "scripts": {},
+  "version": "0.0.2"
+}

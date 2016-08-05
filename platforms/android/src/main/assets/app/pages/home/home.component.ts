@@ -2,7 +2,7 @@
 
 "use strict";
 
-import {Component, ElementRef, ViewChild, Inject} from "@angular/core";
+import {Component, ElementRef, ViewChild, Inject, OnInit, ChangeDetectorRef} from "@angular/core";
 import {Router} from "@angular/router";
 import {UserService} from "../../shared/user/user.service";
 import {Observable} from "rxjs/Rx";
@@ -13,7 +13,9 @@ import {Message} from "../../shared/message/message";
 import { registerElement, ViewClass } from "nativescript-angular/element-registry";
 import {ConfigService} from "../../shared/config.service";
 import dialogs = require("ui/dialogs");
-
+import { Page } from "ui/page";
+import { RadSideDrawerComponent, SideDrawerType } from "nativescript-telerik-ui/sidedrawer/angular";
+import * as ObservableModule from "data/observable";
 
 registerElement("PullToRefresh", () => require("nativescript-pulltorefresh").PullToRefresh);
 registerElement("CardView", () => require("nativescript-cardview").CardView);
@@ -24,15 +26,16 @@ registerElement("FAB", () => require("nativescript-floatingactionbutton").Fab);
 
 @Component({
   selector: 'home',
-  templateUrl: 'pages/home/home.html',
+  templateUrl: 'pages/home/homev2.html',
   providers: [UserService, NotificationsService, MessageService, ConfigService]
 })
 
 
-export class HomePage {
+export class HomePage extends ObservableModule.Observable implements OnInit {
 
   notificationsList: Observable<Array<Notification>>;
   messagesList: Observable<Array<Message>>;
+
 
 
 
@@ -41,7 +44,9 @@ export class HomePage {
     private _router: Router,
     private _notificationService: NotificationsService,
     private _messageService: MessageService,
-    private _configService: ConfigService) {
+    private _configService: ConfigService,
+  @Inject(Page) private page: Page, private _changeDetectionRef: ChangeDetectorRef) {
+    super();
       this.notificationsList = this._notificationService.load();
       this.messagesList = this._messageService.loadReceivedMessages();
       setInterval(()=>{
@@ -52,6 +57,21 @@ export class HomePage {
 
 
 
+
+
+    }
+
+    @ViewChild(RadSideDrawerComponent) public drawerComponent: RadSideDrawerComponent;
+   private drawer: SideDrawerType;
+
+   ngAfterViewInit() {
+        this.drawer = this.drawerComponent.sideDrawer;
+        this._changeDetectionRef.detectChanges();
+    }
+
+    ngOnInit() {
+        this.set("mainContentText", "SideDrawer for NativeScript can be easily setup in the XML definition of your page by defining main- and drawer-content. The component"
+            + " has a default transition and position and also exposes notifications related to changes in its state. Swipe from left to open side drawer.");
     }
 
     public refreshNotificationPage(args: any) {
@@ -97,6 +117,9 @@ export class HomePage {
 
     }
 
+    public openDrawer() {
+            this.drawer.showDrawer();
+        }
 
 
 

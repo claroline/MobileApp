@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<items version="2" >
+
+    <item
+        jar="/home/dat/nativescript_angular2/Claroline/platforms/android/build/intermediates/exploded-aar/com.android.support/animated-vector-drawable/23.3.0/jars/classes.jar"
+        jumboMode="false"
+        revision="23.0.3"
+        sha1="23be6993826b8fd88bbc8d14928bb3b8960d3d4e">
+        <dex dex="/home/dat/nativescript_angular2/Claroline/platforms/android/build/intermediates/pre-dexed/F0F1F2F3/debug/com.android.support-animated-vector-drawable-23.3.0_b25832da94821902b91768a58301e2fcec2880cf.jar" />
+    </item>
+    <item
+        jar="/home/dat/nativescript_angular2/Claroline/platforms/android/build/intermediates/exploded-aar/Common-2016.2.629-dev-release/jars/classes.jar"
+        jumboMode="false"
+        revision="23.0.3"
+        sha1="211263e4bf749a62596b99a87521950071db2c59">
+        <dex dex="/home/dat/nativescript_angular2/Claroline/platforms/android/build/intermediates/pre-dexed/F0F1F2F3/debug/intermediates-exploded-aar-Common-2016.2.629-dev-release_a4538bf3945d5071e6a9d15932caac0dd0c75b90.jar" />
+    </item>
+    <item
+        jar="/home/dat/nativescript_angular2/Claroline/platforms/android/build/intermediates/exploded-aar/groceries/runtime/unspecified/jars/classes.jar"
+        jumboMode="false"
+        revision="23.0.3"
+        sha1="f8c8ebc987f6538a65f5cfd308d5984746999d79">
+        <dex dex="/home/dat/nativescript_angular2/Claroline/platforms/android/build/intermediates/pre-dexed/F0F1F2F3/debug/groceries-runtime-unspecified_8b210b078bf42f1f39382c805f07210516d4f2a2.jar" />
+    </item>
+    <item
+        jar="/home/dat/nativescript_angular2/Claroline/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/jars/classes.jar"
+        jumboMode="false"
+        revision="23.0.3"
+        sha1="1b8e03daaa43fb0a4cd57e378167c2fd70454c1e">
+        <dex dex="/home/dat/nativescript_angular2/Claroline/platforms/android/build/intermediates/pre-dexed/F0F1F2F3/debug/com.android.support-appcompat-v7-23.3.0_f6994d9d9b63a897f7406023e5c0cc6979daa71c.jar" />
+    </item>
+    <item
+        jar="/home/dat/android-sdk/extras/android/m2repository/com/android/support/support-annotations/23.3.0/support-annotations-23.3.0.jar"
+        jumboMode="false"
+        revision="23.0.3"
+        sha1="db7791d75a07fef9844d06236c1c59ba7bf6997c">
+        <dex dex="/home/dat/nativescript_angular2/Claroline/platforms/android/build/intermediates/pre-dexed/F0F1F2F3/debug/support-annotations-23.3.0_69212ed549b92a7f8a6939630c5cc7eea40c7e83.jar" />
+    </item>
+    <item
+        jar="/home/dat/nativescript_angular2/Claroline/platforms/android/build/intermediates/exploded-aar/com.android.support/design/23.3.0/jars/classes.jar"
+        jumboMode="false"
+        revision="23.0.3"
+        sha1="f0001e71cea6ae432a00021c6f727f5ef0f3d27e">
+        <dex dex="/home/dat/nativescript_angular2/Claroline/platforms/android/build/intermediates/pre-dexed/F0F1F2F3/debug/com.android.support-design-23.3.0_1c6f6f7c0fa7aa3eac192c3c574a516de0328dee.jar" />
+    </item>
+    <item
+        jar="/home/dat/nativescript_angular2/Claroline/platforms/android/build/intermediates/exploded-aar/com.android.support/recyclerview-v7/23.3.0/jars/classes.jar"
+        jumboMode="false"
+        revision="23.0.3"
+        sha1="debf30ce0a7560396b6235edef77e447006454c2">
+        <dex dex="/home/dat/nativescript_angular2/Claroline/platforms/android/build/intermediates/pre-dexed/F0F1F2F3/debug/com.android.support-recyclerview-v7-23.3.0_e1f4eb595edf8d32911aec0345a3810c623e81a2.jar" />
+    </item>
+    <item
+        jar="/home/dat/nativescript_angular2/Claroline/platforms/android/build/intermediates/exploded-aar/widgets-release/jars/classes.jar"
+        jumboMode="false"
+        revision="23.0.3"
+        sha1="f2e5203427159d06a7104c1a113eee1c22e0ceb9">
+        <dex dex="/home/dat/nativescript_angular2/Claroline/platforms/android/build/intermediates/pre-dexed/F0F1F2F3/debug/intermediates-exploded-aar-widgets-release_ea9bf98bac7ce3d17943dc2e4f3749fb17bdcfa8.jar" />
+    </item>
+    <item
+        jar="/home/dat/nativescript_angular2/Claroline/platforms/android/build/intermediates/exploded-aar/Data-2016.2.629-dev-release/jars/classes.jar"
+        jumboMode="false"
+        revision="23.0.3"
+        sha1="188ffb391d6a2743728b338a772eff0a08ff3bd3">
+        <dex dex="/home/dat/nativescript_angular2/Claroline/platforms/android/build/intermediates/pre-dexed/F0F1F2F3/debug/intermediates-exploded-aar-Data-2016.2.629-dev-release_ff8a0fbcbbf6ffa6a4ee0f63a77c3b207ac23873.jar" />
+    </item>
+    <item
+        jar="/home/dat/nativescript_angular2/Claroline/platforms/android/build/intermediates/exploded-aar/List-2016.2.629-dev-release/jars/classes.jar"
+        jumboMode="false"
+        revision="23.0.3"
+        sha1="c43499a3775c5e1b9a89a69d8c01fb2dd82cc979">
+        <dex dex="/home/dat/nativescript_angular2/Claroline/platforms/android/build/intermediates/pre-dexed/F0F1F2F3/debug/intermediates-exploded-aar-List-2016.2.629-dev-release_c325ccaf9fb4927e550f78f322d30ce8ffd2ca7c.jar" />
+    </item>
+    <item
+        jar="/home/dat/nativescript_angular2/Claroline/platforms/android/build/intermediates/exploded-aar/com.android.support/support-v4/23.3.0/jars/classes.jar"
+        jumboMode="false"
+        revision="23.0.3"
+        sha1="8a034dd16c0dfd75fe86c52c2cd581592acc684a">
+        <dex dex="/home/dat/nativescript_angular2/Claroline/platforms/android/build/intermediates/pre-dexed/F0F1F2F3/debug/com.android.support-support-v4-23.3.0_f27ef00278dc9e62f8d172bc2e30c1d5ddff5e21.jar" />
+    </item>
+    <item
+        jar="/home/dat/nativescript_angular2/Claroline/platforms/android/build/intermediates/exploded-aar/com.android.support/support-vector-drawable/23.3.0/jars/classes.jar"
+        jumboMode="false"
+        revision="23.0.3"
+        sha1="a0b5d60246cd9d4f3f2443611b3b4c25265840b5">
+        <dex dex="/home/dat/nativescript_angular2/Claroline/platforms/android/build/intermediates/pre-dexed/F0F1F2F3/debug/com.android.support-support-vector-drawable-23.3.0_9e5ef428e99577aa865171db798699444dbaabd6.jar" />
+    </item>
+    <item
+        jar="/home/dat/nativescript_angular2/Claroline/platforms/android/build/intermediates/exploded-aar/Primitives-2016.2.629-dev-release/jars/classes.jar"
+        jumboMode="false"
+        revision="23.0.3"
+        sha1="461725b4dae6967bc0e6c2557f7e05ab25619e0d">
+        <dex dex="/home/dat/nativescript_angular2/Claroline/platforms/android/build/intermediates/pre-dexed/F0F1F2F3/debug/intermediates-exploded-aar-Primitives-2016.2.629-dev-release_36a6a575e3d3295808165c97d63a440a08a2692d.jar" />
+    </item>
+    <item
+        jar="/home/dat/nativescript_angular2/Claroline/platforms/android/build/intermediates/exploded-aar/groceries/binding-generator/unspecified/jars/classes.jar"
+        jumboMode="false"
+        revision="23.0.3"
+        sha1="cd7dd3d8b3faa7a457003b040d45b12c7e268dc6">
+        <dex dex="/home/dat/nativescript_angular2/Claroline/platforms/android/build/intermediates/pre-dexed/F0F1F2F3/debug/groceries-binding-generator-unspecified_d15af4ddb24b496ab1872eb58198638d9a11c182.jar" />
+    </item>
+    <item
+        jar="/home/dat/nativescript_angular2/Claroline/platforms/android/build/intermediates/exploded-aar/com.android.support/support-v4/23.3.0/jars/libs/internal_impl-23.3.0.jar"
+        jumboMode="false"
+        revision="23.0.3"
+        sha1="4da5a4d697d32497c6f85567a5112e62fdfd0676">
+        <dex dex="/home/dat/nativescript_angular2/Claroline/platforms/android/build/intermediates/pre-dexed/F0F1F2F3/debug/internal_impl-23.3.0_eadcf0b790a4243fb12480444299854c586eeb63.jar" />
+    </item>
+    <item
+        jar="/home/dat/nativescript_angular2/Claroline/platforms/android/build/intermediates/exploded-aar/com.android.support/cardview-v7/23.3.0/jars/classes.jar"
+        jumboMode="false"
+        revision="23.0.3"
+        sha1="82ce13fd19cdfde0e392f03c27edeba8d4333648">
+        <dex dex="/home/dat/nativescript_angular2/Claroline/platforms/android/build/intermediates/pre-dexed/F0F1F2F3/debug/com.android.support-cardview-v7-23.3.0_020a04561cd6b2b43880273e554ccbdbe6e990fe.jar" />
+    </item>
+
+</items>

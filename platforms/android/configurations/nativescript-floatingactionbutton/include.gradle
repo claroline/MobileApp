@@ -1,7 +1,7 @@
 //default elements
 android {
     productFlavors {
-        "nativescriptfloatingactionbutton" {
+        "F3" {
             dimension "nativescriptfloatingactionbutton"
         }
     }
